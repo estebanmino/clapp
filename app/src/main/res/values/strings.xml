@@ -8,4 +8,5 @@
     <string name="hello_my_lessons_fragment">Hello MyLessons fragment</string>
     <string name="hello_lessons_fragment">Hello Lessons fragment</string>
     <string name="hello_microblog_fragment">Hello Microblog fragment</string>
+    <string name="title_activity_lesson">LessonActivity</string>
 </resources>
