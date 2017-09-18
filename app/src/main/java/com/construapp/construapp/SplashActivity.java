@@ -26,7 +26,7 @@ public class SplashActivity extends AppCompatActivity {
         Runnable mRunnble = new Runnable() {
             @Override
             public void run() {
-                startActivity(MainActivity.getIntent(SplashActivity.this));
+                startActivity(LoginActivity.getIntent(SplashActivity.this));
             }
         };
         mHandler.postDelayed(mRunnble, SPLASH_TIME_NS);

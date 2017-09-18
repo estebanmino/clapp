@@ -17,7 +17,6 @@
             android:name=".LessonActivity"
             android:label="@string/title_activity_lesson"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".SplashActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -29,6 +28,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".LoginActivity"></activity>
     </application>
 
 </manifest>
