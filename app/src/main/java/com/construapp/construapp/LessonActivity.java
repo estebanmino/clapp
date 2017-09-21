@@ -16,8 +16,6 @@ public class LessonActivity extends AppCompatActivity {
 
     private static final String USERNAME = "username";
     private static final String DESCRIPTION = "description";
-    private TextView lessonName;
-    private TextView  lessonDescription;
 
     private Lesson lesson = new Lesson();
 
@@ -28,12 +26,7 @@ public class LessonActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        lessonName = (TextView) findViewById(R.id.lesson_name);
-        lessonDescription = (TextView) findViewById(R.id.lesson_description);
         setLesson();
-
-        lessonName.setText(lesson.getName());
-        lessonDescription.setText(lesson.getDescription());
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
