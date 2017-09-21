@@ -20,12 +20,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.construapp.construapp.models.Lesson;
 
 import java.io.File;
+import java.io.IOException;
 
 public class LessonActivity extends AppCompatActivity {
 
@@ -35,11 +37,14 @@ public class LessonActivity extends AppCompatActivity {
     private TextView  lessonDescription;
 
     private Lesson lesson = new Lesson();
+    private ImageView imageSelected;
     private FloatingActionButton fabCamera;
+    private FloatingActionButton fabGallery;
 
     private static final int WRITE_EXTERNAL_REEQUEST = 1886;
     private static final int CAMERA_REQUEST = 1888;
     private static  final int CAMERA_REQUEST_PICTURE = 1887;
+    private static final int SELECT_IMAGE = 1885;
 
     private String mPath;
 
@@ -52,15 +57,32 @@ public class LessonActivity extends AppCompatActivity {
 
         lessonName = (TextView) findViewById(R.id.lesson_name);
         lessonDescription = (TextView) findViewById(R.id.lesson_description);
+        imageSelected = (ImageView) findViewById(R.id.image_selected);
         setLesson();
 
         lessonName.setText(lesson.getName());
         lessonDescription.setText(lesson.getDescription());
 
         fabCamera = (FloatingActionButton) findViewById(R.id.fab_camera);
+        fabGallery = (FloatingActionButton) findViewById(R.id.fab_gallery);
 
         setFabCameraOnClickListener();
+        setFabGalleryOnClickListener();
 
+    }
+
+    public void setFabGalleryOnClickListener() {
+        fabGallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Snackbar.make(view, "Acceso a galería", Snackbar.LENGTH_LONG)
+                //        .setAction("Action", null).show();
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);//
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"),SELECT_IMAGE);
+            }
+        });
     }
 
     public void setFabCameraOnClickListener() {
@@ -160,9 +182,31 @@ public class LessonActivity extends AppCompatActivity {
                                     Log.i("ExternalStorage", "-> Uri"+uri);
                                 }
                             });
-                    //Bitmap bitmap = BitmapFactory.decodeFile(mPath);
-                    //imageView.setImageBitmap(bitmap);
+                    Bitmap bitmap = BitmapFactory.decodeFile(mPath);
+                    //imageSelected.setImageBitmap(bitmap);
                     //setFileToUpload();
+
+                case SELECT_IMAGE:
+
+                    if (data != null)
+                    {
+                        try
+                        {
+
+                            Bitmap bitmapGallery = MediaStore.Images.Media.getBitmap(LessonActivity.this.getContentResolver(), data.getData());
+                            //imageView.setImageBitmap(bitmap);\
+                            //imageSelected.setImageBitmap(bitmapGallery);
+
+
+                        } catch (IOException e)
+                        {
+                            e.printStackTrace();
+                        }
+
+                    } else if (resultCode == Activity.RESULT_CANCELED)
+                    {
+                        Toast.makeText(LessonActivity.this, "Cancelled", Toast.LENGTH_SHORT).show();
+                    }
             }
         }
     }
@@ -180,6 +224,7 @@ public class LessonActivity extends AppCompatActivity {
 
         return intent;
     }
+
 
 
 }
