@@ -48,8 +48,8 @@
         android:layout_alignTop="@+id/fab_camera"
         android:layout_toStartOf="@+id/fab_camera" />
 
-    <ImageButton
-        android:id="@+id/image_button_view"
+    <ImageView
+        android:id="@+id/image_view"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_above="@+id/fab_gallery"

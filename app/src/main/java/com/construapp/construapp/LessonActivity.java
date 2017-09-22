@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -20,13 +19,13 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.CursorLoader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,7 +33,6 @@ import android.widget.Toast;
 import com.construapp.construapp.models.Lesson;
 
 import java.io.File;
-import java.io.IOException;
 
 public class LessonActivity extends AppCompatActivity {
 
@@ -44,7 +42,7 @@ public class LessonActivity extends AppCompatActivity {
     private TextView  lessonDescription;
 
     private Lesson lesson = new Lesson();
-    private ImageButton imageButtonView;
+    private ImageView imageView;
     private FloatingActionButton fabCamera;
     private FloatingActionButton fabGallery;
 
@@ -56,6 +54,8 @@ public class LessonActivity extends AppCompatActivity {
     private String mPath;
     private View mLayout;
 
+    boolean isImageFitToScreen;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,7 +65,7 @@ public class LessonActivity extends AppCompatActivity {
 
         lessonName = (TextView) findViewById(R.id.lesson_name);
         lessonDescription = (TextView) findViewById(R.id.lesson_description);
-        imageButtonView = (ImageButton) findViewById(R.id.image_button_view);
+        imageView = (ImageView) findViewById(R.id.image_view);
         setLesson();
 
         lessonName.setText(lesson.getName());
@@ -185,9 +185,9 @@ public class LessonActivity extends AppCompatActivity {
                                 }
                             });
                     Bitmap bitmap = BitmapFactory.decodeFile(mPath);
-                    //imageButtonView.setImageBitmap(bitmap);
-                    imageButtonView.setImageBitmap(ThumbnailUtils.extractThumbnail(bitmap, 80,80));
-
+                    //imageView.setImageBitmap(bitmap);
+                    imageView.setImageBitmap(ThumbnailUtils.extractThumbnail(bitmap, 80,80));
+                    setImageViewOnClickListener(mPath);
 
                 case SELECT_IMAGE:
 
@@ -195,13 +195,32 @@ public class LessonActivity extends AppCompatActivity {
                     {
                         mPath = getRealPathFromURI_API19(getApplicationContext(),data.getData());
                         Bitmap bitmapGallery = BitmapFactory.decodeFile(mPath);
-                        imageButtonView.setImageBitmap(ThumbnailUtils.extractThumbnail(bitmapGallery, 80,80));
+                        imageView.setImageBitmap(ThumbnailUtils.extractThumbnail(bitmapGallery, 80,80));
+                        setImageViewOnClickListener(mPath);
 
                     } else if (resultCode == Activity.RESULT_CANCELED) {
                         Toast.makeText(LessonActivity.this, "Cancelled", Toast.LENGTH_SHORT).show();
                     }
             }
         }
+    }
+
+    public void setImageViewOnClickListener(String path) {
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isImageFitToScreen) {
+                    isImageFitToScreen=false;
+                    imageView.setLayoutParams(new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
+                    imageView.setAdjustViewBounds(true);
+                }else{
+                    imageView.setImageBitmap(BitmapFactory.decodeFile(mPath));
+                    isImageFitToScreen=true;
+                    imageView.setLayoutParams(new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
+                    imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                }
+            }
+        });
     }
 
     public static String getRealPathFromURI_API19(Context context, Uri uri){
