@@ -5,9 +5,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaScannerConnection;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -20,6 +22,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -38,7 +41,7 @@ public class LessonActivity extends AppCompatActivity {
     private TextView  lessonDescription;
 
     private Lesson lesson = new Lesson();
-    private ImageView imageSelected;
+    private ImageButton imageButtonView;
     private FloatingActionButton fabCamera;
     private FloatingActionButton fabGallery;
 
@@ -59,7 +62,7 @@ public class LessonActivity extends AppCompatActivity {
 
         lessonName = (TextView) findViewById(R.id.lesson_name);
         lessonDescription = (TextView) findViewById(R.id.lesson_description);
-        imageSelected = (ImageView) findViewById(R.id.image_selected);
+        imageButtonView = (ImageButton) findViewById(R.id.image_button_view);
         setLesson();
 
         lessonName.setText(lesson.getName());
@@ -179,7 +182,9 @@ public class LessonActivity extends AppCompatActivity {
                                 }
                             });
                     Bitmap bitmap = BitmapFactory.decodeFile(mPath);
-                    imageSelected.setImageBitmap(bitmap);
+                    //imageButtonView.setImageBitmap(bitmap);
+                    imageButtonView.setImageBitmap(ThumbnailUtils.extractThumbnail(bitmap, 80,80));
+
 
                 case SELECT_IMAGE:
 
@@ -187,7 +192,10 @@ public class LessonActivity extends AppCompatActivity {
                     {
                         try {
                             Bitmap bitmapGallery = MediaStore.Images.Media.getBitmap(LessonActivity.this.getContentResolver(), data.getData());
-                            imageSelected.setImageBitmap(bitmapGallery);
+                            //imageButtonView.setImageBitmap(bitmapGallery);
+                            //imageButtonView.setImageBitmap(decodeSampledBitmapFromResource(getResources(),
+                              //      R.id.image_button_view, 50,50,mPath));
+                            imageButtonView.setImageBitmap(ThumbnailUtils.extractThumbnail(bitmapGallery, 80,80));
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -196,6 +204,45 @@ public class LessonActivity extends AppCompatActivity {
                     }
             }
         }
+    }
+
+    public static Bitmap decodeSampledBitmapFromResource(Resources res, int resId,
+                                                         int reqWidth, int reqHeight, String path) {
+
+        // First decode with inJustDecodeBounds=true to check dimensions
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeResource(res, resId, options);
+
+        // Calculate inSampleSize
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeFile(path, options);
+    }
+
+    public static int calculateInSampleSize(
+            BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) >= reqHeight
+                    && (halfWidth / inSampleSize) >= reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+
+        return inSampleSize;
     }
 
     public void setLesson() {

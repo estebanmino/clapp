@@ -48,13 +48,15 @@
         android:layout_alignTop="@+id/fab_camera"
         android:layout_toStartOf="@+id/fab_camera" />
 
-    <ImageView
-        android:id="@+id/image_selected"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:layout_marginBottom="48dp"
-        app:srcCompat="@android:drawable/ic_menu_report_image"
-        android:layout_above="@+id/fab_camera"
-        android:layout_centerHorizontal="true" />
+    <ImageButton
+        android:id="@+id/image_button_view"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_above="@+id/fab_gallery"
+        android:layout_centerHorizontal="true"
+        android:cropToPadding="false"
+        android:elevation="3dp"
+        android:scaleType="fitXY"
+        app:srcCompat="@android:drawable/ic_menu_report_image" />
 
 </RelativeLayout>
