@@ -21,6 +21,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,6 +48,7 @@ public class LessonActivity extends AppCompatActivity {
     private static final int SELECT_IMAGE = 1885;
 
     private String mPath;
+    private View mLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +67,8 @@ public class LessonActivity extends AppCompatActivity {
 
         fabCamera = (FloatingActionButton) findViewById(R.id.fab_camera);
         fabGallery = (FloatingActionButton) findViewById(R.id.fab_gallery);
+
+        mLayout = findViewById(R.id.lesson_layout);
 
         setFabCameraOnClickListener();
         setFabGalleryOnClickListener();
@@ -89,41 +93,26 @@ public class LessonActivity extends AppCompatActivity {
         fabCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                if (ContextCompat.checkSelfPermission(LessonActivity.this,
-                        Manifest.permission.CAMERA)
+                if (ContextCompat.checkSelfPermission(LessonActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                         != PackageManager.PERMISSION_GRANTED) {
-
-                    // Should we show an explanation?
-                    if (ActivityCompat.shouldShowRequestPermissionRationale(LessonActivity.this,
-                            Manifest.permission.CAMERA)) {
-                        // Show an explanation to the user *asynchronously* -- don't block
-                        // this thread waiting for the user's response! After the user
-                        // sees the explanation, try again to request the permission.
-                        Snackbar.make(view, "Debes autorizar a la aplicación para tomar fotos", Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();
-
-
-                    } else {
-                        // No explanation needed, we can request the permission.
-                        ActivityCompat.requestPermissions(LessonActivity.this,
-                                new String[]{Manifest.permission.CAMERA},
-                                CAMERA_REQUEST);
-                        // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                        // app-defined int constant. The callback method gets the
-                        // result of the request.
-                    }
+                    Log.i("PERMISSION", "Storage Permission");
+                    getStoragePermissions();
+                }
+                else if (ContextCompat.checkSelfPermission(LessonActivity.this, Manifest.permission.CAMERA)
+                        != PackageManager.PERMISSION_GRANTED){
+                    Log.i("PERMISSION", "Camera Permission");
+                    getCameraPermissions();
                 }
                 else {
+                    Log.i("PERMISSION", "Granted");
                     dispatchTakePictureIntent();
-                    //intent = new Intent("android.media.action.IMAGE_CAPTURE");
-                    //startActivityForResult(intent, CAMERA_REQUEST_PICTURE);
                 }
             }
         });
     }
 
     private void dispatchTakePictureIntent() {
+
         String APP_DIRECTORY = "MyConceptsApp";
 
         File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), APP_DIRECTORY);
@@ -132,7 +121,6 @@ public class LessonActivity extends AppCompatActivity {
         if (!isDirectoryCreated) {
             isDirectoryCreated = file.mkdir();
         }
-
         Long timestamp = System.currentTimeMillis() / 1000;
         String imageName = timestamp.toString() + ".jpg";
 
@@ -155,15 +143,24 @@ public class LessonActivity extends AppCompatActivity {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    //intent = new Intent("android.media.action.IMAGE_CAPTURE");
-                    //startActivityForResult(intent, CAMERA_REQUEST_PICTURE);
-                    dispatchTakePictureIntent();
-
-                } else {
-                    Toast.makeText(this, "Hasta que no entregues acceso a la cámara, " +
+                    if (ContextCompat.checkSelfPermission(LessonActivity.this,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE) == 0) {
+                        dispatchTakePictureIntent();
+                    }
+                }   else {
+                    Toast.makeText(this, "Hasta que no entregues acceso a a tu almacenamiento, " +
                             "no la podemos mostrar", Toast.LENGTH_LONG).show();
                 }
                 return;
+            }
+            case WRITE_EXTERNAL_REEQUEST: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    getCameraPermissions();
+                } else {
+                    Toast.makeText(this, "Hasta que no entregues permiso a tu almacienamiento",
+                            Toast.LENGTH_LONG).show();
+                }
             }
         }
     }
@@ -172,7 +169,6 @@ public class LessonActivity extends AppCompatActivity {
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode){
                 case CAMERA_REQUEST_PICTURE:
-
                     MediaScannerConnection.scanFile(this,
                             new String[]{mPath}, null,
                             new MediaScannerConnection.OnScanCompletedListener() {
@@ -183,28 +179,19 @@ public class LessonActivity extends AppCompatActivity {
                                 }
                             });
                     Bitmap bitmap = BitmapFactory.decodeFile(mPath);
-                    //imageSelected.setImageBitmap(bitmap);
-                    //setFileToUpload();
+                    imageSelected.setImageBitmap(bitmap);
 
                 case SELECT_IMAGE:
 
                     if (data != null)
                     {
-                        try
-                        {
-
+                        try {
                             Bitmap bitmapGallery = MediaStore.Images.Media.getBitmap(LessonActivity.this.getContentResolver(), data.getData());
-                            //imageView.setImageBitmap(bitmap);\
-                            //imageSelected.setImageBitmap(bitmapGallery);
-
-
-                        } catch (IOException e)
-                        {
+                            imageSelected.setImageBitmap(bitmapGallery);
+                        } catch (IOException e) {
                             e.printStackTrace();
                         }
-
-                    } else if (resultCode == Activity.RESULT_CANCELED)
-                    {
+                    } else if (resultCode == Activity.RESULT_CANCELED) {
                         Toast.makeText(LessonActivity.this, "Cancelled", Toast.LENGTH_SHORT).show();
                     }
             }
@@ -225,6 +212,69 @@ public class LessonActivity extends AppCompatActivity {
         return intent;
     }
 
+    public void getStoragePermissions() {
+        if (ContextCompat.checkSelfPermission(LessonActivity.this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
 
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(LessonActivity.this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+                Snackbar.make(mLayout, "Para que podamos guardar las fotos, necesitamos acceso a su almacenamiento.",
+                        Snackbar.LENGTH_INDEFINITE).setAction("OK", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // Request the permission
+                        ActivityCompat.requestPermissions(LessonActivity.this,
+                                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                WRITE_EXTERNAL_REEQUEST);
+                    }
+                }).show();
+            } else {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(LessonActivity.this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        WRITE_EXTERNAL_REEQUEST);
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        }
+    }
 
+    public void getCameraPermissions() {
+        if (ContextCompat.checkSelfPermission(LessonActivity.this,
+                Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            if (ActivityCompat.shouldShowRequestPermissionRationale(LessonActivity.this,
+                    Manifest.permission.CAMERA)) {
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+                Snackbar.make(mLayout, "Para que podamos tomar las fotos, necesitamos acceso a su cámara.",
+                        Snackbar.LENGTH_INDEFINITE).setAction("OK", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // Request the permission
+                        ActivityCompat.requestPermissions(LessonActivity.this,
+                                new String[]{Manifest.permission.CAMERA},
+                                CAMERA_REQUEST);
+                    }
+                }).show();
+
+            } else {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(LessonActivity.this,
+                        new String[]{Manifest.permission.CAMERA},
+                        CAMERA_REQUEST);
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        }
+    }
 }
