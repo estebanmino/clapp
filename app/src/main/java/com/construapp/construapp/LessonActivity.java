@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaScannerConnection;
@@ -13,11 +14,13 @@ import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.CursorLoader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -190,15 +193,10 @@ public class LessonActivity extends AppCompatActivity {
 
                     if (data != null)
                     {
-                        try {
-                            Bitmap bitmapGallery = MediaStore.Images.Media.getBitmap(LessonActivity.this.getContentResolver(), data.getData());
-                            //imageButtonView.setImageBitmap(bitmapGallery);
-                            //imageButtonView.setImageBitmap(decodeSampledBitmapFromResource(getResources(),
-                              //      R.id.image_button_view, 50,50,mPath));
-                            imageButtonView.setImageBitmap(ThumbnailUtils.extractThumbnail(bitmapGallery, 80,80));
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        mPath = getRealPathFromURI_API19(getApplicationContext(),data.getData());
+                        Bitmap bitmapGallery = BitmapFactory.decodeFile(mPath);
+                        imageButtonView.setImageBitmap(ThumbnailUtils.extractThumbnail(bitmapGallery, 80,80));
+
                     } else if (resultCode == Activity.RESULT_CANCELED) {
                         Toast.makeText(LessonActivity.this, "Cancelled", Toast.LENGTH_SHORT).show();
                     }
@@ -206,43 +204,28 @@ public class LessonActivity extends AppCompatActivity {
         }
     }
 
-    public static Bitmap decodeSampledBitmapFromResource(Resources res, int resId,
-                                                         int reqWidth, int reqHeight, String path) {
+    public static String getRealPathFromURI_API19(Context context, Uri uri){
+        String filePath = "";
+        String wholeID = DocumentsContract.getDocumentId(uri);
 
-        // First decode with inJustDecodeBounds=true to check dimensions
-        final BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeResource(res, resId, options);
+        // Split at colon, use second item in the array
+        String id = wholeID.split(":")[1];
 
-        // Calculate inSampleSize
-        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+        String[] column = { MediaStore.Images.Media.DATA };
 
-        // Decode bitmap with inSampleSize set
-        options.inJustDecodeBounds = false;
-        return BitmapFactory.decodeFile(path, options);
-    }
+        // where id is equal to
+        String sel = MediaStore.Images.Media._ID + "=?";
 
-    public static int calculateInSampleSize(
-            BitmapFactory.Options options, int reqWidth, int reqHeight) {
-        // Raw height and width of image
-        final int height = options.outHeight;
-        final int width = options.outWidth;
-        int inSampleSize = 1;
+        Cursor cursor = context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                column, sel, new String[]{ id }, null);
 
-        if (height > reqHeight || width > reqWidth) {
+        int columnIndex = cursor.getColumnIndex(column[0]);
 
-            final int halfHeight = height / 2;
-            final int halfWidth = width / 2;
-
-            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
-            // height and width larger than the requested height and width.
-            while ((halfHeight / inSampleSize) >= reqHeight
-                    && (halfWidth / inSampleSize) >= reqWidth) {
-                inSampleSize *= 2;
-            }
+        if (cursor.moveToFirst()) {
+            filePath = cursor.getString(columnIndex);
         }
-
-        return inSampleSize;
+        cursor.close();
+        return filePath;
     }
 
     public void setLesson() {
