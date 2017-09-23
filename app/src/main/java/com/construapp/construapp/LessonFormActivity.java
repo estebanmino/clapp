@@ -242,7 +242,7 @@ public class LessonFormActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
         switch (requestCode) {
-            case CAMERA_REQUEST: {
+            case CAMERA_REQUEST:
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -255,8 +255,8 @@ public class LessonFormActivity extends AppCompatActivity {
                             "no la podemos mostrar", Toast.LENGTH_LONG).show();
                 }
                 return;
-            }
-            case WRITE_EXTERNAL_REEQUEST: {
+
+            case WRITE_EXTERNAL_REEQUEST:
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     getCameraPermissions();
@@ -264,7 +264,7 @@ public class LessonFormActivity extends AppCompatActivity {
                     Toast.makeText(this, "Hasta que no entregues permiso a tu almacienamiento",
                             Toast.LENGTH_LONG).show();
                 }
-            }
+
 
             case READ_EXTERNAL_REQUEST:
                 if (grantResults.length > 0
@@ -322,6 +322,10 @@ public class LessonFormActivity extends AppCompatActivity {
                     } else if (resultCode == Activity.RESULT_CANCELED) {
                         Toast.makeText(LessonFormActivity.this, "Cancelled", Toast.LENGTH_SHORT).show();
                     }
+
+                case FILES_REQUEST:
+                    Uri selectedUri_PDF = data.getData();
+                    Log.i("FILE", selectedUri_PDF.toString());
             }
         }
     }
