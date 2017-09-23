@@ -49,6 +49,7 @@ public class LessonFormActivity extends AppCompatActivity {
     private FloatingActionButton fabCamera;
     private FloatingActionButton fabGallery;
     private FloatingActionButton fabRecordAudio;
+    private FloatingActionButton fabFiles;
 
     private Button btnPlayAudio;
 
@@ -60,6 +61,7 @@ public class LessonFormActivity extends AppCompatActivity {
     private static final int SELECT_IMAGE = 1885;
     private static final int READ_EXTERNAL_REQUEST = 1884;
     private static final int RECORD_AUDIO_REQUEST = 1883;
+    private static final int FILES_REQUEST = 1882;
 
     private String mPath;
     private View mLayout;
@@ -117,21 +119,21 @@ public class LessonFormActivity extends AppCompatActivity {
         mFileName = getExternalCacheDir().getAbsolutePath();
         mFileName += "/audiorecordtest.3gp";
 
-        LinearLayout ll = new LinearLayout(this);
-        //mRecordButton = new RecordButton(this);
-        /**ll.addView(mRecordButton,
-         new LinearLayout.LayoutParams(
-         ViewGroup.LayoutParams.WRAP_CONTENT,
-         ViewGroup.LayoutParams.WRAP_CONTENT,
-         0));
-         mPlayButton = new PlayButton(this);
-         ll.addView(mPlayButton,
-         new LinearLayout.LayoutParams(
-         ViewGroup.LayoutParams.WRAP_CONTENT,
-         ViewGroup.LayoutParams.WRAP_CONTENT,
-         0));
-         setContentView(ll);
-         */
+        //Files
+        fabFiles = (FloatingActionButton) findViewById(R.id.fab_files);
+        setFabFilesOnClickListener();
+    }
+
+    public void setFabFilesOnClickListener(){
+        fabFiles.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                Uri uri = Uri.parse("/scaned/storage/emulated/0/"); // a directory
+                intent.setDataAndType(uri, "*/*");
+                startActivityForResult(Intent.createChooser(intent, "Open"), FILES_REQUEST);
+            }
+        });
 
     }
 

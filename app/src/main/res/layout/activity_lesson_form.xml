@@ -99,5 +99,15 @@
         android:layout_alignStart="@+id/image_view"
         android:layout_marginBottom="58dp" />
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_files"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        app:fabSize="normal"
+        app:srcCompat="@android:drawable/sym_contact_card"
+        android:layout_alignTop="@+id/fab_record_audio"
+        android:layout_alignEnd="@+id/image_view" />
+
 
 </RelativeLayout>
