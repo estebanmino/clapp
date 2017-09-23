@@ -1,5 +1,7 @@
 package com.construapp.construapp.models;
 
+import android.app.Activity;
+import android.app.ActivityManager;
 import android.os.AsyncTask;
 import android.widget.EditText;
 
@@ -14,6 +16,10 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.BufferedWriter;
 import android.util.Log;
+import android.widget.Toast;
+
+import com.construapp.construapp.LoginActivity;
+
 import java.io.BufferedInputStream;
 
 /**
@@ -38,41 +44,24 @@ public class RetrieveFeedTask extends AsyncTask<String, Integer, String> {
         String email = str[0];
         String pass = str[1];
 
-        JSONObject object = new JSONObject();
-        JSONArray Session = new JSONArray();
+       // JSONObject object = new JSONObject();
+        //JSONArray Session = new JSONArray();
 
 
-
-        try {
-
-            object.put("email", email);
-            object.put("password", pass);
-
-        } catch (Exception ex) {
-
-        }
-        Session.put(object);
-        JSONObject obj= new JSONObject();
-
-        try {
-
-            obj.put("Session",Session.toString());
-
-        } catch (Exception ex) {
-
-        }
 
 
 
         try {
-            URL url = new URL("http://construapp-api.ing.puc.cl/sessions/");
+            URL url = new URL("http://construapp-api.ing.puc.cl/sessions");
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setDoOutput(true);
             urlConnection.setDoInput(true);
+            urlConnection.setConnectTimeout(150);
             urlConnection.setRequestMethod("POST");
             urlConnection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-            String input = obj.toString();
-            //urlConnection.connect();
+            String input = "{\"session\":{\"email\":\""+email+"\",\"password\":\""+pass+"\"}}";
+            urlConnection.connect();
+
             //urlConnection.getOutputStream().write(input.getBytes("UTF-8"));
 
 
@@ -86,47 +75,47 @@ public class RetrieveFeedTask extends AsyncTask<String, Integer, String> {
             os.close();
 
 
-            //InputStream response=urlConnection.getInputStream();
-            InputStream _is;
-            InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+            InputStream response=urlConnection.getInputStream();
+            //InputStream _is;
+            int respondecode = urlConnection.getResponseCode();
+            //InputStream in = new BufferedInputStream(urlConnection.getInputStream());
             //String result2 = org.apache.commons.io.IOUtils.toString(in, "UTF-8");
             //JSONObject jsonObject = new JSONObject(result);
 
 
-            in.close();
-            urlConnection.disconnect();
+            //in.close();
+            //urlConnection.disconnect();
 
 
 
 
-            if (urlConnection.getResponseCode() / 100 == 2) { // 2xx code means success
-                _is = urlConnection.getInputStream();
-            } else {
+            //if (urlConnection.getResponseCode() / 100 == 2) { // 2xx code means success
+              //  _is = urlConnection.getInputStream();
+            //} else {
 
-                _is = urlConnection.getErrorStream();
+//                _is = urlConnection.getErrorStream();
 
-                String result2 = _is.toString();
-                Log.i("Error != 2xx", result2);
-            }
-
-
+  //              String result2 = _is.toString();
+    //            Log.i("Error != 2xx", result2);
+      //      }
 
 
 
-            //BufferedReader br = new BufferedReader(new InputStreamReader(
-              //      (response)));
+
+
+            BufferedReader br = new BufferedReader(new InputStreamReader((response)));
 
             String output;
-            //System.out.println("Output from Server .... \n");
-            //while ((output = br.readLine()) != null) {
-                //System.out.println(output);
-            //}
+            System.out.println("Output from Server .... \n");
+            while ((output = br.readLine()) != null) {
+                System.out.println(output);
+            }
 
-            urlConnection.disconnect();
 
             if (urlConnection.getResponseCode() == 200) {
                 // Success
                 // Further processing here
+                urlConnection.disconnect();
             }
 
             else {

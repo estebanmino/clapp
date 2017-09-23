@@ -37,6 +37,7 @@ public class LoginActivity extends AppCompatActivity {
                 myAsyncTask.execute(editEmail.getText().toString(),editPassword.getText().toString());
                 Toast.makeText(LoginActivity.this,myAsyncTask.out,Toast.LENGTH_SHORT).show();
                 //startActivity(MainActivity.getIntent(LoginActivity.this));
+                //TODO agregar un thread.kill para asegurar que se cierre.
             }
         });
 
