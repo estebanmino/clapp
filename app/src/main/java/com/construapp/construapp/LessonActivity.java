@@ -8,6 +8,8 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
+import android.media.MediaRecorder;
 import android.media.MediaScannerConnection;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
@@ -24,6 +26,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -35,6 +38,7 @@ import android.widget.Toast;
 import com.construapp.construapp.models.Lesson;
 
 import java.io.File;
+import java.io.IOException;
 
 public class LessonActivity extends AppCompatActivity {
 
@@ -49,6 +53,8 @@ public class LessonActivity extends AppCompatActivity {
     private FloatingActionButton fabGallery;
     private FloatingActionButton fabRecordAudio;
 
+    private Button btnPlayAudio;
+
     private ProgressBar progressBarRecord;
 
     private static final int WRITE_EXTERNAL_REEQUEST = 1886;
@@ -60,6 +66,22 @@ public class LessonActivity extends AppCompatActivity {
 
     private String mPath;
     private View mLayout;
+
+    //record audio
+    private static final String LOG_TAG = "AudioRecordTest";
+    private static String mFileName = null;
+
+    //private RecordButton mRecordButton = null;
+    private MediaRecorder mRecorder = null;
+
+    //private PlayButton   mPlayButton = null;
+    private MediaPlayer   mPlayer = null;
+
+    boolean mStartRecording = true;
+    boolean mStartPlaying = true;
+
+    boolean isRecording =  false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,14 +102,50 @@ public class LessonActivity extends AppCompatActivity {
         fabGallery = (FloatingActionButton) findViewById(R.id.fab_gallery);
         fabRecordAudio = (FloatingActionButton) findViewById(R.id.fab_record_audio);
 
+        btnPlayAudio = (Button) findViewById(R.id.play_audio_button);
+
         mLayout = findViewById(R.id.lesson_layout);
 
         progressBarRecord =  (ProgressBar) findViewById(R.id.progress_bar_record);
 
         setFabCameraOnClickListener();
         setFabGalleryOnClickListener();
-        setFabRecordAudioOnClickListener();
 
+
+        //Audio recorder
+        setBtnPlayAudioOnClickListener();
+
+        setFabRecordAudioOnClickListener();
+        // Record to the external cache directory for visibility
+        mFileName = getExternalCacheDir().getAbsolutePath();
+        mFileName += "/audiorecordtest.3gp";
+
+        LinearLayout ll = new LinearLayout(this);
+        //mRecordButton = new RecordButton(this);
+        /**ll.addView(mRecordButton,
+                new LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        0));
+        mPlayButton = new PlayButton(this);
+        ll.addView(mPlayButton,
+                new LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        0));
+        setContentView(ll);
+         */
+
+    }
+
+    public void setBtnPlayAudioOnClickListener() {
+        btnPlayAudio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onPlay(mStartPlaying);
+                mStartPlaying = !mStartPlaying;
+            }
+        });
     }
 
     public void setFabRecordAudioOnClickListener() {
@@ -96,6 +154,9 @@ public class LessonActivity extends AppCompatActivity {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 progressBarRecord.setVisibility(View.VISIBLE);
+                if (!isRecording) {
+                    startRecording();
+                }
                 return false;
             }
         });
@@ -104,6 +165,7 @@ public class LessonActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 getRecorAudioPermissions();
+                stopRecording();
                 progressBarRecord.setVisibility(View.INVISIBLE);
                 Log.i("CLICK","CLICKING");
             }
@@ -445,4 +507,69 @@ public class LessonActivity extends AppCompatActivity {
             }
         }
     }
+
+    //RECORD AUDIO
+
+    private void onPlay(boolean start) {
+        if (start) {
+            startPlaying();
+        } else {
+            stopPlaying();
+        }
+    }
+
+    private void startPlaying() {
+        mPlayer = new MediaPlayer();
+        try {
+            mPlayer.setDataSource(mFileName);
+            mPlayer.prepare();
+            mPlayer.start();
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "prepare() failed");
+        }
+    }
+
+    private void stopPlaying() {
+        mPlayer.release();
+        mPlayer = null;
+    }
+
+    private void startRecording() {
+        isRecording = true;
+        mRecorder = new MediaRecorder();
+        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        mRecorder.setOutputFile(mFileName);
+        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+
+        try {
+            mRecorder.prepare();
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "prepare() failed");
+        }
+
+        mRecorder.start();
+    }
+
+    private void stopRecording() {
+        isRecording = false;
+        mRecorder.stop();
+        mRecorder.release();
+        mRecorder = null;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mRecorder != null) {
+            mRecorder.release();
+            mRecorder = null;
+        }
+
+        if (mPlayer != null) {
+            mPlayer.release();
+            mPlayer = null;
+        }
+    }
+
 }
