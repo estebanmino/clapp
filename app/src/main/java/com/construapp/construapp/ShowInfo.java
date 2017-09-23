@@ -16,7 +16,8 @@ public class ShowInfo extends AppCompatActivity {
         Intent intent = getIntent();
         String message = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
         TextView textView = new TextView(this);
-        textView.setTextSize(20);
+        textView.setTextSize(25);
+        textView.setPadding(10,5,0,0);
         textView.setTextColor(Color.parseColor("#08088A"));
         textView.setText(message);
 
