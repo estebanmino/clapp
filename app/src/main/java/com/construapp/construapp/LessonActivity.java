@@ -22,9 +22,12 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,17 +47,19 @@ public class LessonActivity extends AppCompatActivity {
     private ImageView imageView;
     private FloatingActionButton fabCamera;
     private FloatingActionButton fabGallery;
+    private FloatingActionButton fabRecordAudio;
+
+    private ProgressBar progressBarRecord;
 
     private static final int WRITE_EXTERNAL_REEQUEST = 1886;
     private static final int CAMERA_REQUEST = 1888;
     private static  final int CAMERA_REQUEST_PICTURE = 1887;
     private static final int SELECT_IMAGE = 1885;
     private static final int READ_EXTERNAL_REQUEST = 1884;
+    private static final int RECORD_AUDIO_REQUEST = 1883;
 
     private String mPath;
     private View mLayout;
-
-    boolean isImageFitToScreen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,12 +78,36 @@ public class LessonActivity extends AppCompatActivity {
 
         fabCamera = (FloatingActionButton) findViewById(R.id.fab_camera);
         fabGallery = (FloatingActionButton) findViewById(R.id.fab_gallery);
+        fabRecordAudio = (FloatingActionButton) findViewById(R.id.fab_record_audio);
 
         mLayout = findViewById(R.id.lesson_layout);
 
+        progressBarRecord =  (ProgressBar) findViewById(R.id.progress_bar_record);
+
         setFabCameraOnClickListener();
         setFabGalleryOnClickListener();
+        setFabRecordAudioOnClickListener();
 
+    }
+
+    public void setFabRecordAudioOnClickListener() {
+        //
+        fabRecordAudio.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                progressBarRecord.setVisibility(View.VISIBLE);
+                return false;
+            }
+        });
+
+        fabRecordAudio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getRecorAudioPermissions();
+                progressBarRecord.setVisibility(View.INVISIBLE);
+                Log.i("CLICK","CLICKING");
+            }
+        });
     }
 
     public void setFabGalleryOnClickListener() {
@@ -189,6 +218,15 @@ public class LessonActivity extends AppCompatActivity {
                             Toast.LENGTH_LONG).show();
                 }
 
+            case RECORD_AUDIO_REQUEST:
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(this, "Diste permiso para grabar audio",
+                            Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(this, "Debes dar permiso para grabar audio",
+                            Toast.LENGTH_LONG).show();
+                }
         }
     }
 
@@ -368,6 +406,39 @@ public class LessonActivity extends AppCompatActivity {
                 ActivityCompat.requestPermissions(LessonActivity.this,
                         new String[]{Manifest.permission.CAMERA},
                         CAMERA_REQUEST);
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        }
+    }
+
+    public void getRecorAudioPermissions() {
+        if (ContextCompat.checkSelfPermission(LessonActivity.this,
+                Manifest.permission.RECORD_AUDIO)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            if (ActivityCompat.shouldShowRequestPermissionRationale(LessonActivity.this,
+                    Manifest.permission.RECORD_AUDIO)) {
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+                Snackbar.make(mLayout, "Para que podamos grabar audio, necesitamos permiso.",
+                        Snackbar.LENGTH_INDEFINITE).setAction("OK", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // Request the permission
+                        ActivityCompat.requestPermissions(LessonActivity.this,
+                                new String[]{Manifest.permission.RECORD_AUDIO},
+                                RECORD_AUDIO_REQUEST);
+                    }
+                }).show();
+
+            } else {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(LessonActivity.this,
+                        new String[]{Manifest.permission.RECORD_AUDIO},
+                        RECORD_AUDIO_REQUEST);
                 // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
                 // app-defined int constant. The callback method gets the
                 // result of the request.
