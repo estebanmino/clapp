@@ -23,7 +23,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -50,6 +49,7 @@ public class LessonActivity extends AppCompatActivity {
     private static final int CAMERA_REQUEST = 1888;
     private static  final int CAMERA_REQUEST_PICTURE = 1887;
     private static final int SELECT_IMAGE = 1885;
+    private static final int READ_EXTERNAL_REQUEST = 1884;
 
     private String mPath;
     private View mLayout;
@@ -87,10 +87,17 @@ public class LessonActivity extends AppCompatActivity {
             public void onClick(View view) {
                 //Snackbar.make(view, "Acceso a galería", Snackbar.LENGTH_LONG)
                 //        .setAction("Action", null).show();
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);//
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"),SELECT_IMAGE);
+
+                if (ContextCompat.checkSelfPermission(LessonActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED){
+                    getReadStoragePermissions();
+                }
+                else {
+                    Intent intent = new Intent();
+                    intent.setType("image/*");
+                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                    startActivityForResult(Intent.createChooser(intent, "Select Picture"),SELECT_IMAGE);
+                }
             }
         });
     }
@@ -102,7 +109,7 @@ public class LessonActivity extends AppCompatActivity {
                 if (ContextCompat.checkSelfPermission(LessonActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                         != PackageManager.PERMISSION_GRANTED) {
                     Log.i("PERMISSION", "Storage Permission");
-                    getStoragePermissions();
+                    getWriteStoragePermissions();
                 }
                 else if (ContextCompat.checkSelfPermission(LessonActivity.this, Manifest.permission.CAMERA)
                         != PackageManager.PERMISSION_GRANTED){
@@ -168,6 +175,20 @@ public class LessonActivity extends AppCompatActivity {
                             Toast.LENGTH_LONG).show();
                 }
             }
+
+            case READ_EXTERNAL_REQUEST:
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Intent intent = new Intent();
+                    intent.setType("image/*");
+                    intent.setAction(Intent.ACTION_GET_CONTENT);//
+                    startActivityForResult(Intent.createChooser(intent, "Select Picture"),SELECT_IMAGE);
+
+                } else {
+                    Toast.makeText(this, "Hasta que no entregues permiso a tu almacienamiento",
+                            Toast.LENGTH_LONG).show();
+                }
+
         }
     }
 
@@ -201,6 +222,10 @@ public class LessonActivity extends AppCompatActivity {
                     } else if (resultCode == Activity.RESULT_CANCELED) {
                         Toast.makeText(LessonActivity.this, "Cancelled", Toast.LENGTH_SHORT).show();
                     }
+
+                case READ_EXTERNAL_REQUEST:
+
+
             }
         }
     }
@@ -261,7 +286,40 @@ public class LessonActivity extends AppCompatActivity {
         return intent;
     }
 
-    public void getStoragePermissions() {
+    public void getReadStoragePermissions() {
+        if (ContextCompat.checkSelfPermission(LessonActivity.this,
+                Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(LessonActivity.this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+                Snackbar.make(mLayout, "Para que podamos VER las fotos, necesitamos acceso a su almacenamiento.",
+                        Snackbar.LENGTH_INDEFINITE).setAction("OK", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // Request the permission
+                        ActivityCompat.requestPermissions(LessonActivity.this,
+                                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                                READ_EXTERNAL_REQUEST);
+                    }
+                }).show();
+            } else {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(LessonActivity.this,
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        READ_EXTERNAL_REQUEST);
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        }
+    }
+
+    public void getWriteStoragePermissions() {
         if (ContextCompat.checkSelfPermission(LessonActivity.this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
