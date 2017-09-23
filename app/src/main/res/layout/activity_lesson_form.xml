@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:id="@+id/lesson_form_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.construapp.construapp.LessonFormActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.NoActionBar.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.NoActionBar.PopupOverlay" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <include layout="@layout/content_lesson_form"
+        android:id="@+id/include"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_camera"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="19dp"
+        android:layout_marginLeft="@dimen/fab_margin"
+        android:layout_marginRight="@dimen/fab_margin"
+        app:fabSize="normal"
+        app:srcCompat="@android:drawable/ic_menu_camera"
+        android:layout_alignParentBottom="true"
+        android:layout_toEndOf="@+id/fab_gallery"
+        android:layout_marginStart="14dp" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_gallery"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        app:fabSize="normal"
+        app:layout_anchor="@+id/include"
+        app:srcCompat="@android:drawable/ic_menu_gallery"
+        android:layout_alignTop="@+id/fab_camera"
+        android:layout_toEndOf="@+id/play_audio_button"
+        android:layout_marginStart="56dp" />
+
+    <ImageView
+        android:id="@+id/image_view"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:cropToPadding="false"
+        android:elevation="3dp"
+        android:scaleType="fitXY"
+        app:srcCompat="@android:drawable/ic_menu_report_image"
+        android:layout_marginBottom="130dp"
+        android:layout_above="@+id/progress_bar_record"
+        android:layout_toStartOf="@+id/fab_record_audio"
+        android:layout_marginEnd="20dp" />
+
+
+    <ProgressBar
+        android:id="@+id/progress_bar_record"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="47dp"
+        android:indeterminate="false"
+        android:minHeight="100dip"
+        android:minWidth="100dip"
+        android:scrollbarSize="300dp"
+        android:visibility="invisible"
+        android:layout_alignParentBottom="true"
+        android:layout_alignEnd="@+id/fab_gallery" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_record_audio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/fab_margin"
+        app:fabSize="normal"
+        app:srcCompat="@android:drawable/presence_audio_online"
+        android:layout_alignTop="@+id/fab_gallery"
+        android:layout_toEndOf="@+id/fab_files"
+        android:layout_marginStart="10dp" />
+
+    <Button
+        android:id="@+id/play_audio_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:drawable/ic_media_play"
+        android:elevation="0dp"
+        android:layout_above="@+id/progress_bar_record"
+        android:layout_alignStart="@+id/image_view"
+        android:layout_marginBottom="58dp" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_files"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        app:fabSize="normal"
+        app:srcCompat="@android:drawable/sym_contact_card"
+        android:layout_alignTop="@+id/fab_record_audio"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="16dp" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_send"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        app:backgroundTint="@color/colorPrimaryDark"
+        app:fabSize="normal"
+        app:srcCompat="@android:drawable/ic_menu_send"
+        android:layout_alignTop="@+id/fab_camera"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="23dp" />
+
+
+</RelativeLayout>
