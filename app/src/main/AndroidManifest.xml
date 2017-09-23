@@ -47,6 +47,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".LoginActivity" />
+
         <activity
             android:name=".LessonFormActivity"
             android:label="@string/title_activity_lesson_form"
@@ -55,6 +56,9 @@
         <service
             android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
             android:enabled="true" />
+
+        <activity android:name=".ShowInfo"></activity>
+
     </application>
 
 </manifest>
