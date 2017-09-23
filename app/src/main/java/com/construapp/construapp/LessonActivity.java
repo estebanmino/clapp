@@ -208,7 +208,7 @@ public class LessonActivity extends AppCompatActivity {
                     Bitmap bitmap = BitmapFactory.decodeFile(mPath);
                     //imageView.setImageBitmap(bitmap);
                     imageView.setImageBitmap(ThumbnailUtils.extractThumbnail(bitmap, 80,80));
-                    setImageViewOnClickListener(mPath);
+                    setImageViewOnClickListener(data.getData());
 
                 case SELECT_IMAGE:
 
@@ -217,33 +217,23 @@ public class LessonActivity extends AppCompatActivity {
                         mPath = getRealPathFromURI_API19(getApplicationContext(),data.getData());
                         Bitmap bitmapGallery = BitmapFactory.decodeFile(mPath);
                         imageView.setImageBitmap(ThumbnailUtils.extractThumbnail(bitmapGallery, 80,80));
-                        setImageViewOnClickListener(mPath);
+                        setImageViewOnClickListener(data.getData());
 
                     } else if (resultCode == Activity.RESULT_CANCELED) {
                         Toast.makeText(LessonActivity.this, "Cancelled", Toast.LENGTH_SHORT).show();
                     }
-
-                case READ_EXTERNAL_REQUEST:
-
-
             }
         }
     }
 
-    public void setImageViewOnClickListener(String path) {
+    public void setImageViewOnClickListener(final Uri uri) {
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isImageFitToScreen) {
-                    isImageFitToScreen=false;
-                    imageView.setLayoutParams(new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
-                    imageView.setAdjustViewBounds(true);
-                }else{
-                    imageView.setImageBitmap(BitmapFactory.decodeFile(mPath));
-                    isImageFitToScreen=true;
-                    imageView.setLayoutParams(new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
-                    imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-                }
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_VIEW);
+                intent.setDataAndType(Uri.parse(uri.toString()), "image/*");
+                startActivity(intent);
             }
         });
     }
