@@ -8,6 +8,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.construapp.construapp.models.Lesson;
@@ -18,6 +19,7 @@ public class LessonActivity extends AppCompatActivity {
     private static final String DESCRIPTION = "description";
 
     private Lesson lesson = new Lesson();
+    public final static String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +38,14 @@ public class LessonActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+    }
+
+    public void showInfo(View view) {
+        Intent intent = new Intent(this, ShowInfo.class);
+        TextView projectName = (TextView) findViewById(R.id.textView);
+        String message = projectName.getText().toString();
+        intent.putExtra(EXTRA_MESSAGE, message);
+        startActivity(intent);
     }
 
     public void setLesson() {

@@ -73,7 +73,8 @@
             android:scaleType="fitXY"
             app:layout_constraintLeft_toRightOf="@+id/textView"
             android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp" />
+            android:layout_marginStart="8dp"
+            android:onClick="showInfo"/>
 
         <TextView
             android:id="@+id/textView3"
