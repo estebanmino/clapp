@@ -41,10 +41,4 @@ public class Lesson {
         return description;
     }
 
-    public void addMultimediaFile(String path) {
-        MultimediaFile multimediaFile  = new MultimediaFile();
-        multimediaFile.setmPath(path);
-        multimediaFiles.add(multimediaFile);
-    }
-
 }

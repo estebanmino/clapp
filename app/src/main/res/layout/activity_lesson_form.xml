@@ -22,33 +22,35 @@
     </android.support.design.widget.AppBarLayout>
 
     <include layout="@layout/content_lesson_form"
-        android:id="@+id/include" />
+        android:id="@+id/include"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_camera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
         android:layout_gravity="bottom|end"
-        android:layout_marginBottom="22dp"
-        android:layout_marginEnd="21dp"
+        android:layout_marginBottom="19dp"
         android:layout_marginLeft="@dimen/fab_margin"
         android:layout_marginRight="@dimen/fab_margin"
         app:fabSize="normal"
-        app:srcCompat="@android:drawable/ic_menu_camera" />
+        app:srcCompat="@android:drawable/ic_menu_camera"
+        android:layout_alignParentBottom="true"
+        android:layout_toEndOf="@+id/fab_gallery"
+        android:layout_marginStart="14dp" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_gallery"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/fab_camera"
-        android:layout_marginEnd="16dp"
-        android:layout_toStartOf="@+id/fab_camera"
         android:clickable="true"
         app:fabSize="normal"
         app:layout_anchor="@+id/include"
-        app:srcCompat="@android:drawable/ic_menu_gallery" />
+        app:srcCompat="@android:drawable/ic_menu_gallery"
+        android:layout_alignTop="@+id/fab_camera"
+        android:layout_toEndOf="@+id/play_audio_button"
+        android:layout_marginStart="56dp" />
 
     <ImageView
         android:id="@+id/image_view"
@@ -86,8 +88,8 @@
         app:fabSize="normal"
         app:srcCompat="@android:drawable/presence_audio_online"
         android:layout_alignTop="@+id/fab_gallery"
-        android:layout_toStartOf="@+id/fab_gallery"
-        android:layout_marginEnd="14dp" />
+        android:layout_toEndOf="@+id/fab_files"
+        android:layout_marginStart="10dp" />
 
     <Button
         android:id="@+id/play_audio_button"
@@ -107,7 +109,20 @@
         app:fabSize="normal"
         app:srcCompat="@android:drawable/sym_contact_card"
         android:layout_alignTop="@+id/fab_record_audio"
-        android:layout_alignEnd="@+id/image_view" />
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="16dp" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_send"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        app:backgroundTint="@color/colorPrimaryDark"
+        app:fabSize="normal"
+        app:srcCompat="@android:drawable/ic_menu_send"
+        android:layout_alignTop="@+id/fab_camera"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="23dp" />
 
 
 </RelativeLayout>

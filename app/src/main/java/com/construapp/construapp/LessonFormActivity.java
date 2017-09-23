@@ -35,7 +35,15 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amazonaws.auth.CognitoCachingCredentialsProvider;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.construapp.construapp.models.Lesson;
+import com.construapp.construapp.models.MultimediaFile;
+import com.construapp.construapp.models.UploadThread;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,6 +60,7 @@ public class LessonFormActivity extends AppCompatActivity {
     private FloatingActionButton fabGallery;
     private FloatingActionButton fabRecordAudio;
     private FloatingActionButton fabFiles;
+    private FloatingActionButton fabSend;
 
     private Button btnPlayAudio;
 
@@ -64,6 +73,8 @@ public class LessonFormActivity extends AppCompatActivity {
     private static final int READ_EXTERNAL_REQUEST = 1884;
     private static final int RECORD_AUDIO_REQUEST = 1883;
     private static final int FILES_REQUEST = 1882;
+
+    private static final String S3_BUCKET_NAME = "construapp";
 
     private String mPath;
     private View mLayout;
@@ -82,6 +93,11 @@ public class LessonFormActivity extends AppCompatActivity {
     boolean mStartPlaying = true;
 
     boolean isRecording =  false;
+
+    //AmazonS3
+    private TransferUtility transferUtility;
+
+    MultimediaFile multimediaFile;
 
 
     @Override
@@ -102,6 +118,7 @@ public class LessonFormActivity extends AppCompatActivity {
         fabCamera = (FloatingActionButton) findViewById(R.id.fab_camera);
         fabGallery = (FloatingActionButton) findViewById(R.id.fab_gallery);
         fabRecordAudio = (FloatingActionButton) findViewById(R.id.fab_record_audio);
+        fabSend = (FloatingActionButton) findViewById(R.id.fab_send);
 
         btnPlayAudio = (Button) findViewById(R.id.play_audio_button);
 
@@ -111,6 +128,8 @@ public class LessonFormActivity extends AppCompatActivity {
 
         setFabCameraOnClickListener();
         setFabGalleryOnClickListener();
+
+        setFabSendOnClickListener();
 
 
         //Audio recorder
@@ -124,7 +143,31 @@ public class LessonFormActivity extends AppCompatActivity {
         //Files
         fabFiles = (FloatingActionButton) findViewById(R.id.fab_files);
         setFabFilesOnClickListener();
+
+        CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
+                getApplicationContext(),
+                "us-east-1:4990ac44-6c36-4b4c-8193-70148fbd35d6", // Identity pool ID
+                Regions.US_EAST_1 // Region
+        );
+        // Create an S3 client
+        AmazonS3 s3 = new AmazonS3Client(credentialsProvider);
+
+        transferUtility = new TransferUtility(s3, LessonFormActivity.this);
+
+        lesson.initMultimediaFiles();
+
     }
+
+    private void setFabSendOnClickListener(){
+        fabSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                for (MultimediaFile multimediaFile: lesson.getMultimediaFiles()) {
+                    multimediaFile.initUploadThread();
+                }
+            }
+        });
+    };
 
     public void setFabFilesOnClickListener(){
         fabFiles.setOnClickListener(new View.OnClickListener() {
@@ -307,11 +350,11 @@ public class LessonFormActivity extends AppCompatActivity {
                                 }
                             });
                     Bitmap bitmap = BitmapFactory.decodeFile(mPath);
-                    //imageView.setImageBitmap(bitmap);
                     imageView.setImageBitmap(ThumbnailUtils.extractThumbnail(bitmap, 80, 80));
-                    //setImageViewOnClickListener(data.getData());
                     setImageViewOnClickListener(Uri.fromFile(new File(mPath)));
-                    lesson.addMultimediaFile(mPath);
+
+                    lesson.getMultimediaFiles().add(new MultimediaFile(mPath, transferUtility,S3_BUCKET_NAME));
+                    break;
 
                 case SELECT_IMAGE:
 
@@ -321,15 +364,21 @@ public class LessonFormActivity extends AppCompatActivity {
                         Bitmap bitmapGallery = BitmapFactory.decodeFile(mPath);
                         imageView.setImageBitmap(ThumbnailUtils.extractThumbnail(bitmapGallery, 80,80));
                         setImageViewOnClickListener(data.getData());
-                        lesson.addMultimediaFile(mPath);
+
+                        lesson.getMultimediaFiles().add(new MultimediaFile(mPath, transferUtility,S3_BUCKET_NAME));
 
                     } else if (resultCode == Activity.RESULT_CANCELED) {
                         Toast.makeText(LessonFormActivity.this, "Cancelled", Toast.LENGTH_SHORT).show();
                     }
+                    break;
 
                 case FILES_REQUEST:
                     Uri selectedUri = data.getData();
-                    lesson.addMultimediaFile(getPath(LessonFormActivity.this, selectedUri));
+
+                    lesson.getMultimediaFiles().add(new MultimediaFile(
+                            getPath(LessonFormActivity.this, selectedUri), transferUtility,S3_BUCKET_NAME));
+                    break;
+
             }
         }
     }
@@ -529,6 +578,7 @@ public class LessonFormActivity extends AppCompatActivity {
         mPlayer = new MediaPlayer();
         try {
             mPlayer.setDataSource(mFileName);
+            Log.i("AUDIO RECORD SOURCE", mFileName);
             mPlayer.prepare();
             mPlayer.start();
         } catch (IOException e) {
@@ -560,6 +610,9 @@ public class LessonFormActivity extends AppCompatActivity {
 
     private void stopRecording() {
         isRecording = false;
+
+        lesson.getMultimediaFiles().add(new MultimediaFile(mFileName, transferUtility, S3_BUCKET_NAME));
+
         mRecorder.stop();
         mRecorder.release();
         mRecorder = null;
@@ -675,7 +728,6 @@ public class LessonFormActivity extends AppCompatActivity {
         }
         return null;
     }
-
 
     /**
      * @param uri The Uri to check.

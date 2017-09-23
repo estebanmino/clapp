@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.construapp.construapp">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <!-- Camer permissions, uses-feature for specific featurws -->
     <uses-permission android:name="android.permission.CAMERA" />
 
@@ -48,6 +51,10 @@
             android:name=".LessonFormActivity"
             android:label="@string/title_activity_lesson_form"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <service
+            android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
+            android:enabled="true" />
     </application>
 
 </manifest>
