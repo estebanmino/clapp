@@ -8,7 +8,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.construapp.construapp.models.Lesson;
@@ -42,7 +41,7 @@ public class LessonActivity extends AppCompatActivity {
 
     public void showInfo(View view) {
         Intent intent = new Intent(this, ShowInfo.class);
-        TextView projectName = (TextView) findViewById(R.id.textView);
+        TextView projectName = (TextView) findViewById(R.id.textViewNombreProyecto);
         String message = projectName.getText().toString();
         intent.putExtra(EXTRA_MESSAGE, message);
         startActivity(intent);

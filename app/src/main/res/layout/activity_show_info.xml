@@ -34,7 +34,7 @@
             tools:layout_constraintTop_creator="1">
 
             <TextView
-                android:id="@+id/textView9"
+                android:id="@+id/textViewFechaInicioLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="11dp"
@@ -44,10 +44,10 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView8" />
+                app:layout_constraintTop_toBottomOf="@+id/textViewAprobadorLabel" />
 
             <TextView
-                android:id="@+id/textView8"
+                android:id="@+id/textViewAprobadorLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -55,10 +55,10 @@
                 android:textColor="#08088A"
                 android:textSize="20dp"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView6" />
+                app:layout_constraintTop_toBottomOf="@+id/textViewAdministradorLabel" />
 
             <TextView
-                android:id="@+id/textView11"
+                android:id="@+id/textViewDuracionLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -68,10 +68,10 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView9" />
+                app:layout_constraintTop_toBottomOf="@+id/textViewFechaInicioLabel" />
 
             <TextView
-                android:id="@+id/textView6"
+                android:id="@+id/textViewAdministradorLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -81,10 +81,10 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView10" />
+                app:layout_constraintTop_toBottomOf="@+id/textViewUbicacionLabel" />
 
             <TextView
-                android:id="@+id/textView7"
+                android:id="@+id/textViewTipoProyectoLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -94,10 +94,10 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView13" />
+                app:layout_constraintTop_toBottomOf="@+id/textViewTamañoObraLabel" />
 
             <TextView
-                android:id="@+id/textView14"
+                android:id="@+id/textViewTipoContratoLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -107,10 +107,10 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView7" />
+                app:layout_constraintTop_toBottomOf="@+id/textViewTipoProyectoLabel" />
 
             <TextView
-                android:id="@+id/textView15"
+                android:id="@+id/textViewTipoClienteLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -120,10 +120,10 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView14" />
+                app:layout_constraintTop_toBottomOf="@+id/textViewTipoContratoLabel" />
 
             <TextView
-                android:id="@+id/textView13"
+                android:id="@+id/textViewTamañoObraLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -133,10 +133,10 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView12" />
+                app:layout_constraintTop_toBottomOf="@+id/textViewMontoContratoLabel" />
 
             <TextView
-                android:id="@+id/textView12"
+                android:id="@+id/textViewMontoContratoLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="7dp"
@@ -146,10 +146,10 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView11" />
+                app:layout_constraintTop_toBottomOf="@+id/textViewDuracionLabel" />
 
             <TextView
-                android:id="@+id/textView10"
+                android:id="@+id/textViewUbicacionLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -159,10 +159,10 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView17" />
+                app:layout_constraintTop_toBottomOf="@+id/textViewDireccionLabel" />
 
             <TextView
-                android:id="@+id/textView17"
+                android:id="@+id/textViewDireccionLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="55dp"
@@ -175,59 +175,59 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/textView16"
+                android:id="@+id/textViewTipoClienteInput"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:text="Cliente tipo 5"
                 android:textColor="#000000"
                 android:textSize="15dp"
-                app:layout_constraintLeft_toRightOf="@+id/textView15"
+                app:layout_constraintLeft_toRightOf="@+id/textViewTipoClienteLabel"
                 android:layout_marginLeft="8dp"
-                app:layout_constraintBottom_toBottomOf="@+id/textView15"
+                app:layout_constraintBottom_toBottomOf="@+id/textViewTipoClienteLabel"
                 android:layout_marginBottom="0dp" />
 
             <TextView
-                android:id="@+id/textView27"
+                android:id="@+id/textViewTipoProyectoInput"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:text="Proyecto tipo 1"
                 android:textColor="#000000"
                 android:textSize="15dp"
-                app:layout_constraintLeft_toRightOf="@+id/textView7"
+                app:layout_constraintLeft_toRightOf="@+id/textViewTipoProyectoLabel"
                 android:layout_marginLeft="8dp"
-                app:layout_constraintBottom_toBottomOf="@+id/textView7"
+                app:layout_constraintBottom_toBottomOf="@+id/textViewTipoProyectoLabel"
                 android:layout_marginBottom="0dp" />
 
             <TextView
-                android:id="@+id/textView26"
+                android:id="@+id/textViewTipoContratoInput"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:text="Contrato tipo 2"
                 android:textColor="#000000"
                 android:textSize="15dp"
-                app:layout_constraintLeft_toRightOf="@+id/textView14"
+                app:layout_constraintLeft_toRightOf="@+id/textViewTipoContratoLabel"
                 android:layout_marginLeft="8dp"
-                app:layout_constraintBottom_toBottomOf="@+id/textView14"
+                app:layout_constraintBottom_toBottomOf="@+id/textViewTipoContratoLabel"
                 android:layout_marginBottom="0dp" />
 
             <TextView
-                android:id="@+id/textView25"
+                android:id="@+id/textViewTamañoObraInput"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:text="789 m3"
                 android:textColor="#000000"
                 android:textSize="15dp"
-                app:layout_constraintLeft_toRightOf="@+id/textView13"
+                app:layout_constraintLeft_toRightOf="@+id/textViewTamañoObraLabel"
                 android:layout_marginLeft="-7dp"
-                app:layout_constraintBottom_toBottomOf="@+id/textView13"
+                app:layout_constraintBottom_toBottomOf="@+id/textViewTamañoObraLabel"
                 android:layout_marginBottom="-7dp" />
 
             <TextView
-                android:id="@+id/textView24"
+                android:id="@+id/textViewMontoContratoInput"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="0dp"
@@ -236,37 +236,37 @@
                 android:text="456UF"
                 android:textColor="#000000"
                 android:textSize="15dp"
-                app:layout_constraintBottom_toBottomOf="@+id/textView12"
-                app:layout_constraintLeft_toRightOf="@+id/textView12" />
+                app:layout_constraintBottom_toBottomOf="@+id/textViewMontoContratoLabel"
+                app:layout_constraintLeft_toRightOf="@+id/textViewMontoContratoLabel" />
 
             <TextView
-                android:id="@+id/textView23"
+                android:id="@+id/textViewDuracionInput"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:text="123 días"
                 android:textColor="#000000"
                 android:textSize="15dp"
-                app:layout_constraintLeft_toRightOf="@+id/textView11"
+                app:layout_constraintLeft_toRightOf="@+id/textViewDuracionLabel"
                 android:layout_marginLeft="-2dp"
-                app:layout_constraintBottom_toBottomOf="@+id/textView11"
+                app:layout_constraintBottom_toBottomOf="@+id/textViewDuracionLabel"
                 android:layout_marginBottom="0dp" />
 
             <TextView
-                android:id="@+id/textView22"
+                android:id="@+id/textViewFechaInicioInput"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:text="22/09/2017"
                 android:textColor="#000000"
                 android:textSize="15dp"
-                app:layout_constraintLeft_toRightOf="@+id/textView9"
+                app:layout_constraintLeft_toRightOf="@+id/textViewFechaInicioLabel"
                 android:layout_marginLeft="8dp"
-                app:layout_constraintBottom_toBottomOf="@+id/textView9"
+                app:layout_constraintBottom_toBottomOf="@+id/textViewFechaInicioLabel"
                 android:layout_marginBottom="0dp" />
 
             <TextView
-                android:id="@+id/textView21"
+                android:id="@+id/textViewAprobadorInput"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="-8dp"
@@ -275,24 +275,24 @@
                 android:text="Persona Aprobadora"
                 android:textColor="#000000"
                 android:textSize="15dp"
-                app:layout_constraintBottom_toBottomOf="@+id/textView8"
-                app:layout_constraintLeft_toRightOf="@+id/textView8" />
+                app:layout_constraintBottom_toBottomOf="@+id/textViewAprobadorLabel"
+                app:layout_constraintLeft_toRightOf="@+id/textViewAprobadorLabel" />
 
             <TextView
-                android:id="@+id/textView20"
+                android:id="@+id/textViewAdministradorInput"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:text="Persona Admministradora"
                 android:textColor="#000000"
                 android:textSize="15dp"
-                app:layout_constraintLeft_toRightOf="@+id/textView6"
+                app:layout_constraintLeft_toRightOf="@+id/textViewAdministradorLabel"
                 android:layout_marginLeft="8dp"
-                app:layout_constraintBottom_toBottomOf="@+id/textView6"
+                app:layout_constraintBottom_toBottomOf="@+id/textViewAdministradorLabel"
                 android:layout_marginBottom="0dp" />
 
             <TextView
-                android:id="@+id/textView19"
+                android:id="@+id/textViewUbicacionInput"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="-7dp"
@@ -301,20 +301,20 @@
                 android:text="Santiago, Chile"
                 android:textColor="#000000"
                 android:textSize="15dp"
-                app:layout_constraintBottom_toBottomOf="@+id/textView10"
-                app:layout_constraintLeft_toRightOf="@+id/textView10" />
+                app:layout_constraintBottom_toBottomOf="@+id/textViewUbicacionLabel"
+                app:layout_constraintLeft_toRightOf="@+id/textViewUbicacionLabel" />
 
             <TextView
-                android:id="@+id/textView18"
+                android:id="@+id/textViewDireccionInput"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:text="Calle La Construcción 1234, La Reina"
                 android:textColor="#000000"
                 android:textSize="15dp"
-                app:layout_constraintLeft_toRightOf="@+id/textView17"
+                app:layout_constraintLeft_toRightOf="@+id/textViewDireccionLabel"
                 android:layout_marginLeft="8dp"
-                app:layout_constraintBottom_toBottomOf="@+id/textView17"
+                app:layout_constraintBottom_toBottomOf="@+id/textViewDireccionLabel"
                 android:layout_marginBottom="0dp" />
         </android.support.constraint.ConstraintLayout>
     </ScrollView>

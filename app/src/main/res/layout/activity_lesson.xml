@@ -39,7 +39,7 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/textView"
+                android:id="@+id/textViewNombreProyecto"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
@@ -57,19 +57,19 @@
                 tools:layout_constraintTop_creator="1" />
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/textViewMasInfo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="-26dp"
                 android:layout_marginTop="1dp"
                 android:text="Más Info"
-                app:layout_constraintLeft_toLeftOf="@+id/imageButton"
-                app:layout_constraintTop_toBottomOf="@+id/imageButton"
+                app:layout_constraintLeft_toLeftOf="@+id/imageButtonMasInfo"
+                app:layout_constraintTop_toBottomOf="@+id/imageButtonMasInfo"
                 tools:layout_constraintLeft_creator="1"
                 tools:layout_constraintTop_creator="1" />
 
             <ImageButton
-                android:id="@+id/imageButton"
+                android:id="@+id/imageButtonMasInfo"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginEnd="21dp"
@@ -90,18 +90,18 @@
                 tools:layout_constraintTop_creator="1" />
 
             <TextView
-                android:id="@+id/textView3"
+                android:id="@+id/textViewFechaInicio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="22/09/2017"
-                app:layout_constraintLeft_toLeftOf="@+id/textView"
-                app:layout_constraintTop_toBottomOf="@+id/textView"
+                app:layout_constraintLeft_toLeftOf="@+id/textViewNombreProyecto"
+                app:layout_constraintTop_toBottomOf="@+id/textViewNombreProyecto"
                 tools:layout_constraintLeft_creator="1"
                 tools:layout_constraintTop_creator="1" />
 
             <TextView
-                android:id="@+id/textView4"
+                android:id="@+id/textViewDescripcionLeccion"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
@@ -113,7 +113,7 @@
                 android:text="La Escuela de Construcción Civil de la Pontificia Universidad Católica de Chile es la unidad académica que genera, integra, y transfiere conocimientos y experiencias para el desarrollo permanente del sector construcción y forma los profesionales que lo lideran, que en conjunto con los sólidos principios y valores cristianos que inspiran todo el quehacer de nuestra Universidad, contribuye a desarrollar una sociedad más justa."
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView3"
+                app:layout_constraintTop_toBottomOf="@+id/textViewFechaInicio"
                 tools:layout_constraintLeft_creator="1"
                 tools:layout_constraintRight_creator="1"
                 tools:layout_constraintTop_creator="1" />
@@ -128,7 +128,7 @@
                 android:layout_marginTop="10dp"
                 android:background="#E8E8E8"
                 app:layout_constraintRight_toLeftOf="@+id/imageView23"
-                app:layout_constraintTop_toBottomOf="@+id/textView4"
+                app:layout_constraintTop_toBottomOf="@+id/textViewDescripcionLeccion"
                 app:srcCompat="@android:drawable/ic_menu_camera"
                 tools:layout_constraintLeft_creator="1"
                 tools:layout_constraintRight_creator="1" />
@@ -184,9 +184,9 @@
                 android:layout_marginTop="10dp"
                 android:background="#E8E8E8"
                 app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintLeft_toLeftOf="@+id/textView4"
+                app:layout_constraintLeft_toLeftOf="@+id/textViewDescripcionLeccion"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView4"
+                app:layout_constraintTop_toBottomOf="@+id/textViewDescripcionLeccion"
                 app:srcCompat="@android:drawable/ic_menu_camera"
                 tools:layout_constraintLeft_creator="1"
                 tools:layout_constraintTop_creator="1" />
@@ -204,7 +204,7 @@
                 app:layout_constraintHorizontal_bias="0.501"
                 app:layout_constraintLeft_toRightOf="@+id/imageView19"
                 app:layout_constraintRight_toLeftOf="@+id/imageView10"
-                app:layout_constraintTop_toBottomOf="@+id/textView4"
+                app:layout_constraintTop_toBottomOf="@+id/textViewDescripcionLeccion"
                 app:srcCompat="@android:drawable/ic_menu_camera" />
 
             <ImageView
@@ -268,7 +268,7 @@
                 app:layout_constraintHorizontal_bias="0.976"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView4"
+                app:layout_constraintTop_toBottomOf="@+id/textViewDescripcionLeccion"
                 app:srcCompat="@android:drawable/ic_media_next" />
 
         </android.support.constraint.ConstraintLayout>
