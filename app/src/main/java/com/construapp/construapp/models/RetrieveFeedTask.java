@@ -14,6 +14,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.BufferedWriter;
 import android.util.Log;
+import java.io.BufferedInputStream;
 
 /**
  * Created by jose on 22-09-17.
@@ -23,6 +24,8 @@ public class RetrieveFeedTask extends AsyncTask<String, Integer, String> {
 
     private Exception exception;
     public String out;
+
+
 
     protected void onPreExecute() {
         //progressBar.setVisibility(View.VISIBLE);
@@ -67,23 +70,35 @@ public class RetrieveFeedTask extends AsyncTask<String, Integer, String> {
             urlConnection.setDoOutput(true);
             urlConnection.setDoInput(true);
             urlConnection.setRequestMethod("POST");
-            urlConnection.setRequestProperty("Content-Type", "application/json");
+            urlConnection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
             String input = obj.toString();
-            urlConnection.connect();
-            urlConnection.getOutputStream().write(input.getBytes("UTF-8"));
+            //urlConnection.connect();
+            //urlConnection.getOutputStream().write(input.getBytes("UTF-8"));
 
 
             OutputStream os = urlConnection.getOutputStream();
-            BufferedWriter writer = new BufferedWriter(
-                    new OutputStreamWriter(os, "UTF-8"));
-            writer.write(input);
-            writer.flush();
-            writer.close();
+            //BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+            //writer.write(input);
+            //writer.flush();
+            //writer.close();
+            //os.close();
+            os.write(input.getBytes("UTF-8"));
             os.close();
 
 
             //InputStream response=urlConnection.getInputStream();
             InputStream _is;
+            InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+            //String result2 = org.apache.commons.io.IOUtils.toString(in, "UTF-8");
+            //JSONObject jsonObject = new JSONObject(result);
+
+
+            in.close();
+            urlConnection.disconnect();
+
+
+
+
             if (urlConnection.getResponseCode() / 100 == 2) { // 2xx code means success
                 _is = urlConnection.getInputStream();
             } else {
@@ -94,9 +109,6 @@ public class RetrieveFeedTask extends AsyncTask<String, Integer, String> {
                 Log.i("Error != 2xx", result2);
             }
 
-            //OutputStream os = urlConnection.getOutputStream();
-            //os.write(input.getBytes());
-            //os.flush();
 
 
 

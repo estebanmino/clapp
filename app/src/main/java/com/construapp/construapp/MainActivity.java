@@ -19,6 +19,8 @@ import android.view.View;
 
 import com.construapp.construapp.microblog.MicroblogFragment;
 
+import android.content.SharedPreferences;
+
 public class MainActivity extends AppCompatActivity {
 
     /**
