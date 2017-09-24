@@ -35,8 +35,8 @@ public class RetrieveFeedTask extends AsyncTask<String, Integer, String> {
     public String out;
     private OnTaskCompleted listener;
 
-    public RetrieveFeedTask(OnTaskCompleted listener) {
-        this.listener = listener;
+    public RetrieveFeedTask() {
+        //this.listener = listener;
     }
 
 
@@ -54,18 +54,15 @@ public class RetrieveFeedTask extends AsyncTask<String, Integer, String> {
        // JSONObject object = new JSONObject();
         //JSONArray Session = new JSONArray();
 
-
-
-
-
         try {
             URL url = new URL("http://construapp-api.ing.puc.cl/sessions");
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setDoOutput(true);
             urlConnection.setDoInput(true);
-            urlConnection.setConnectTimeout(150);
+            urlConnection.setConnectTimeout(1500);
             urlConnection.setRequestMethod("POST");
             urlConnection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+            //TODO utilizar JSONObject para armar String y no manual
             String input = "{\"session\":{\"email\":\""+email+"\",\"password\":\""+pass+"\"}}";
             urlConnection.connect();
 
@@ -125,7 +122,7 @@ public class RetrieveFeedTask extends AsyncTask<String, Integer, String> {
         } catch (Exception e) {
 
             e.printStackTrace();
-            return null;
+            return "error";
 
         }
 
@@ -133,8 +130,8 @@ public class RetrieveFeedTask extends AsyncTask<String, Integer, String> {
     }
 
     protected void onPostExecute(String response) {
-        if(response == null) {
-            response = "THERE WAS AN ERROR";
+        if(response == "error") {
+            //response = "THERE WAS AN ERROR";
         }
         else
         {

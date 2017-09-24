@@ -13,21 +13,23 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import android.content.SharedPreferences;
+
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import com.construapp.construapp.models.OnTaskCompleted;
 import com.construapp.construapp.models.RetrieveFeedTask;
 
-public class LoginActivity extends AppCompatActivity implements OnTaskCompleted {
+public class LoginActivity extends AppCompatActivity {
 
     private EditText editEmail;
     private EditText editPassword;
     private Button btnSignin;
-    RetrieveFeedTask myAsyncTask;
-    OnTaskCompleted listener;
+    static RetrieveFeedTask myAsyncTask;
+    //OnTaskCompleted listener;
 
 
-    public void onTaskCompleted()
+    //public void onTaskCompleted()
     {
 
     }
@@ -45,32 +47,46 @@ public class LoginActivity extends AppCompatActivity implements OnTaskCompleted 
         btnSignin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Toast.makeText(LoginActivity.this,editEmail.getText().toString(),Toast.LENGTH_SHORT).show();
-                myAsyncTask = new RetrieveFeedTask(LoginActivity.this);
-                myAsyncTask.execute(editEmail.getText().toString(),editPassword.getText().toString());
-
-                while(myAsyncTask.out == null)
-                {
+                myAsyncTask = new RetrieveFeedTask();
+                String request="error";
+                try {
+                     request = myAsyncTask.execute(editEmail.getText().toString(),editPassword.getText().toString()).get();
 
                 }
-                if(myAsyncTask.out!="error")
+                catch (ExecutionException e)
                 {
-                    Toast.makeText(LoginActivity.this,myAsyncTask.out,Toast.LENGTH_SHORT).show();
+                    Log.i("ERR","Execution");
+                }
+                catch (InterruptedException e)
+                {
+                    Log.i("ERR","INTERRUPTED");
+                }
+
+
+
+                if(request!="error")
+                {
+                    Toast.makeText(LoginActivity.this,request,Toast.LENGTH_SHORT).show();
                     SharedPreferences sharedpreferences = getSharedPreferences("ConstruApp", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedpreferences.edit();
 
-                    editor.putString("token", myAsyncTask.out);
+                    editor.putString("token", request);
                     editor.commit();
 
                     startActivity(MainActivity.getIntent(LoginActivity.this));
                 }
                 else
                 {
+                    //myAsyncTask.out=null;
                     Toast.makeText(LoginActivity.this,"Login incorrecto.",Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(LoginActivity.this,myAsyncTask.getStatus().toString(),Toast.LENGTH_SHORT).show();
+
                     myAsyncTask.cancel(true);
+                    //Toast.makeText(LoginActivity.this,myAsyncTask.getStatus().toString(),Toast.LENGTH_SHORT).show();
+
                 }
 
-                //TODO agregar un thread.kill para asegurar que se cierre.
+                
             }
         });
 
