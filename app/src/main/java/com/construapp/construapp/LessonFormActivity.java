@@ -68,7 +68,7 @@ public class LessonFormActivity extends AppCompatActivity {
     private FloatingActionButton fabRecordAudio;
     private FloatingActionButton fabFiles;
     private FloatingActionButton fabSend;
-    private Button btnPlayAudio;
+    private ImageView btnPlayAudio;
     private ProgressBar progressBarRecordAudio;
 
     //LOCAL VARIABLES
@@ -102,8 +102,8 @@ public class LessonFormActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         //FIND XML ELEMENTS
-        lessonName = (TextView) findViewById(R.id.lesson_name);
-        lessonDescription = (TextView) findViewById(R.id.lesson_description);
+        //lessonName = (TextView) findViewById(R.id.lesson_name);
+        //lessonDescription = (TextView) findViewById(R.id.lesson_description);
 
         imageView = (ImageView) findViewById(R.id.image_view);
         mLayout = findViewById(R.id.lesson_form_layout);
@@ -114,14 +114,14 @@ public class LessonFormActivity extends AppCompatActivity {
         fabSend = (FloatingActionButton) findViewById(R.id.fab_send);
         fabFiles = (FloatingActionButton) findViewById(R.id.fab_files);
 
-        btnPlayAudio = (Button) findViewById(R.id.play_audio_button);
+        btnPlayAudio = (ImageView) findViewById(R.id.play_audio_button);
         progressBarRecordAudio =  (ProgressBar) findViewById(R.id.progress_bar_record);
 
         //INIT NEW LESSON
         lesson = new Lesson();
         setLesson();
-        lessonName.setText(lesson.getName());
-        lessonDescription.setText(lesson.getDescription());
+        //lessonName.setText(lesson.getName());
+        //lessonDescription.setText(lesson.getDescription());
         lesson.initMultimediaFiles();
 
         //INIT CONSTANTS
@@ -408,8 +408,8 @@ public class LessonFormActivity extends AppCompatActivity {
     }
 
     public void setLesson() {
-        lesson.setName("Nueva leccion");
-        lesson.setDescription("Agregar form con datos");
+        //lesson.setName("Nueva leccion");
+        //lesson.setDescription("Agregar form con datos");
         lesson.initMultimediaFiles();
     }
 
