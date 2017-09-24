@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
 
             startActivity(LoginActivity.getIntent(MainActivity.this));
 
-            
+
         }
 
         return super.onOptionsItemSelected(item);

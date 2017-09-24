@@ -62,11 +62,12 @@ public class LoginActivity extends AppCompatActivity {
                     Log.i("ERR","INTERRUPTED");
                 }
 
-
+                //ESTA LINEA HAY QUE BORRARLA
+                request="tokenfalso";
 
                 if(request!="error")
                 {
-                    Toast.makeText(LoginActivity.this,request,Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(LoginActivity.this,request,Toast.LENGTH_SHORT).show();
                     SharedPreferences sharedpreferences = getSharedPreferences("ConstruApp", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedpreferences.edit();
 
