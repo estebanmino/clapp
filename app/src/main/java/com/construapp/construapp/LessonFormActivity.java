@@ -68,7 +68,7 @@ public class LessonFormActivity extends AppCompatActivity {
     private FloatingActionButton fabRecordAudio;
     private FloatingActionButton fabFiles;
     private FloatingActionButton fabSend;
-    private Button btnPlayAudio;
+    private ImageView btnPlayAudio;
     private ProgressBar progressBarRecordAudio;
 
     //LOCAL VARIABLES
@@ -114,7 +114,7 @@ public class LessonFormActivity extends AppCompatActivity {
         fabSend = (FloatingActionButton) findViewById(R.id.fab_send);
         fabFiles = (FloatingActionButton) findViewById(R.id.fab_files);
 
-        btnPlayAudio = (Button) findViewById(R.id.play_audio_button);
+        btnPlayAudio = (ImageView) findViewById(R.id.play_audio_button);
         progressBarRecordAudio =  (ProgressBar) findViewById(R.id.progress_bar_record);
 
         //INIT NEW LESSON
