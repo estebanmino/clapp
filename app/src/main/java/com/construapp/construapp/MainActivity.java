@@ -19,6 +19,9 @@ import android.view.View;
 
 import com.construapp.construapp.microblog.MicroblogFragment;
 
+import android.content.SharedPreferences;
+import android.widget.Toast;
+
 public class MainActivity extends AppCompatActivity {
 
     /**
@@ -55,6 +58,10 @@ public class MainActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
+        SharedPreferences sharedpreferences = getSharedPreferences("ConstruApp", Context.MODE_PRIVATE);
+        String token = sharedpreferences.getString("token", "");
+        Toast.makeText(this,"El token es:"+token,Toast.LENGTH_LONG).show();
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,6 +90,30 @@ public class MainActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        }
+        else if (id == R.id.action_logout)
+        {
+            SharedPreferences mySPrefs =getSharedPreferences("ConstruApp", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = mySPrefs.edit();
+            editor.remove("token");
+            editor.apply();
+
+
+            boolean token_exists = mySPrefs.contains("token");
+            if(!token_exists)
+            {
+                Toast.makeText(this,"El token se ha borrado",Toast.LENGTH_LONG).show();
+
+            }
+            else
+            {
+                Toast.makeText(this,"El token NO SE BORRO",Toast.LENGTH_LONG).show();
+
+            }
+
+            startActivity(LoginActivity.getIntent(MainActivity.this));
+
+
         }
 
         return super.onOptionsItemSelected(item);
