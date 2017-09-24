@@ -1,128 +1,210 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:id="@+id/lesson_form_layout"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/lesson_form_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.construapp.construapp.LessonFormActivity">
+    tools:context="com.construapp.construapp.LessonFormActivity"
+    tools:layout_editor_absoluteX="0dp"
+    tools:layout_editor_absoluteY="25dp">
 
-    <android.support.design.widget.AppBarLayout
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.NoActionBar.AppBarOverlay">
+        android:layout_height="56dp"
+        android:background="?attr/colorPrimary"
+        app:layout_constraintDimensionRatio="w,1:1"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:popupTheme="@style/AppTheme.NoActionBar.PopupOverlay" />
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintVertical_bias="0.0">
+
+        <Button
+            android:id="@+id/play_audio_button"
+            android:layout_width="88dp"
+            android:layout_height="80dp"
+            android:layout_marginTop="8dp"
+            android:background="@android:drawable/ic_media_play"
+            android:elevation="0dp"
+            app:layout_constraintLeft_toLeftOf="@+id/image_view"
+            app:layout_constraintTop_toBottomOf="@+id/image_view" />
+
+        <ImageView
+            android:id="@+id/image_view"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginTop="8dp"
+            android:cropToPadding="false"
+            android:elevation="3dp"
+            android:scaleType="fitXY"
+            app:layout_constraintLeft_toLeftOf="@+id/editText"
+            app:layout_constraintTop_toBottomOf="@+id/editText"
+            app:srcCompat="@android:drawable/ic_menu_report_image" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_files"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:clickable="true"
+            app:fabSize="normal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:srcCompat="@android:drawable/sym_contact_card" />
+
+        <include
+            android:id="@+id/include"
+            layout="@layout/content_lesson_form"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_camera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            app:fabSize="normal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.75"
+            app:layout_constraintLeft_toLeftOf="@+id/fab_files"
+            app:layout_constraintRight_toRightOf="parent"
+            app:srcCompat="@android:drawable/ic_menu_camera" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_record_audio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            app:fabSize="normal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.25"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:srcCompat="@android:drawable/presence_audio_online" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_gallery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:clickable="true"
+            app:fabSize="normal"
+            app:layout_anchor="@+id/include"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@+id/fab_files"
+            app:layout_constraintRight_toRightOf="@+id/fab_send"
+            app:srcCompat="@android:drawable/ic_menu_gallery" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:text="Nombre Random de Proyecto"
+            android:textColor="#08088A"
+            android:textSize="20dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_constraintLeft_creator="1"
+            tools:layout_constraintTop_creator="1"
+            android:layout_marginRight="8dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            android:layout_marginEnd="8dp" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:clickable="true"
+            app:backgroundTint="@color/colorPrimaryDark"
+            app:fabSize="normal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:srcCompat="@android:drawable/ic_menu_send" />
+
+        <EditText
+            android:id="@+id/editText"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.NoActionBar.PopupOverlay" />
+            android:layout_height="146dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:ems="10"
+            android:hint="Ingresar descripción de la lección"
+            android:inputType="textMultiLine"
+            app:layout_constraintLeft_toLeftOf="@+id/textView"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView"
+            app:layout_constraintHorizontal_bias="1.0" />
 
-    </android.support.design.widget.AppBarLayout>
-
-    <include layout="@layout/content_lesson_form"
-        android:id="@+id/include"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_camera"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginBottom="19dp"
-        android:layout_marginLeft="@dimen/fab_margin"
-        android:layout_marginRight="@dimen/fab_margin"
-        app:fabSize="normal"
-        app:srcCompat="@android:drawable/ic_menu_camera"
-        android:layout_alignParentBottom="true"
-        android:layout_toEndOf="@+id/fab_gallery"
-        android:layout_marginStart="14dp" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_gallery"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        app:fabSize="normal"
-        app:layout_anchor="@+id/include"
-        app:srcCompat="@android:drawable/ic_menu_gallery"
-        android:layout_alignTop="@+id/fab_camera"
-        android:layout_toEndOf="@+id/play_audio_button"
-        android:layout_marginStart="56dp" />
-
-    <ImageView
-        android:id="@+id/image_view"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:cropToPadding="false"
-        android:elevation="3dp"
-        android:scaleType="fitXY"
-        app:srcCompat="@android:drawable/ic_menu_report_image"
-        android:layout_marginBottom="130dp"
-        android:layout_above="@+id/progress_bar_record"
-        android:layout_toStartOf="@+id/fab_record_audio"
-        android:layout_marginEnd="20dp" />
+        <ProgressBar
+            android:id="@+id/progress_bar_record"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:indeterminate="false"
+            android:minHeight="100dip"
+            android:minWidth="100dip"
+            android:scrollbarSize="300dp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toLeftOf="@+id/fab_record_audio"
+            app:layout_constraintRight_toRightOf="@+id/fab_record_audio" />
+    </android.support.constraint.ConstraintLayout>
 
 
-    <ProgressBar
-        android:id="@+id/progress_bar_record"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="47dp"
-        android:indeterminate="false"
-        android:minHeight="100dip"
-        android:minWidth="100dip"
-        android:scrollbarSize="300dp"
-        android:visibility="invisible"
-        android:layout_alignParentBottom="true"
-        android:layout_alignEnd="@+id/fab_gallery" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_record_audio"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="@dimen/fab_margin"
-        app:fabSize="normal"
-        app:srcCompat="@android:drawable/presence_audio_online"
-        android:layout_alignTop="@+id/fab_gallery"
-        android:layout_toEndOf="@+id/fab_files"
-        android:layout_marginStart="10dp" />
-
-    <Button
-        android:id="@+id/play_audio_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@android:drawable/ic_media_play"
-        android:elevation="0dp"
-        android:layout_above="@+id/progress_bar_record"
-        android:layout_alignStart="@+id/image_view"
-        android:layout_marginBottom="58dp" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_files"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        app:fabSize="normal"
-        app:srcCompat="@android:drawable/sym_contact_card"
-        android:layout_alignTop="@+id/fab_record_audio"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="16dp" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_send"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        app:backgroundTint="@color/colorPrimaryDark"
-        app:fabSize="normal"
-        app:srcCompat="@android:drawable/ic_menu_send"
-        android:layout_alignTop="@+id/fab_camera"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="23dp" />
-
-
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>

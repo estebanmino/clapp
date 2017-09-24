@@ -102,8 +102,8 @@ public class LessonFormActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         //FIND XML ELEMENTS
-        lessonName = (TextView) findViewById(R.id.lesson_name);
-        lessonDescription = (TextView) findViewById(R.id.lesson_description);
+        //lessonName = (TextView) findViewById(R.id.lesson_name);
+        //lessonDescription = (TextView) findViewById(R.id.lesson_description);
 
         imageView = (ImageView) findViewById(R.id.image_view);
         mLayout = findViewById(R.id.lesson_form_layout);
@@ -120,8 +120,8 @@ public class LessonFormActivity extends AppCompatActivity {
         //INIT NEW LESSON
         lesson = new Lesson();
         setLesson();
-        lessonName.setText(lesson.getName());
-        lessonDescription.setText(lesson.getDescription());
+        //lessonName.setText(lesson.getName());
+        //lessonDescription.setText(lesson.getDescription());
         lesson.initMultimediaFiles();
 
         //INIT CONSTANTS
@@ -408,8 +408,8 @@ public class LessonFormActivity extends AppCompatActivity {
     }
 
     public void setLesson() {
-        lesson.setName("Nueva leccion");
-        lesson.setDescription("Agregar form con datos");
+        //lesson.setName("Nueva leccion");
+        //lesson.setDescription("Agregar form con datos");
         lesson.initMultimediaFiles();
     }
 
