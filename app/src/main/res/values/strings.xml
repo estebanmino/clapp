@@ -18,4 +18,5 @@
     <string name="login_activity_user">Ingrese su email</string>
     <string name="login_activity_password">Ingrese su contraseña</string>
     <string name="login_activity_signin">Ingresar</string>
+    <string name="title_activity_lesson_form">LessonFormActivity</string>
 </resources>

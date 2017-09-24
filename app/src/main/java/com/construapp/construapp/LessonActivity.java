@@ -19,10 +19,9 @@ public class LessonActivity extends AppCompatActivity {
 
     private static final String USERNAME = "username";
     private static final String DESCRIPTION = "description";
-    private TextView lessonName;
-    private TextView  lessonDescription;
 
     private Lesson lesson = new Lesson();
+    public final static String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,12 +30,7 @@ public class LessonActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        lessonName = (TextView) findViewById(R.id.lesson_name);
-        lessonDescription = (TextView) findViewById(R.id.lesson_description);
         setLesson();
-
-        lessonName.setText(lesson.getName());
-        lessonDescription.setText(lesson.getDescription());
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -46,6 +40,14 @@ public class LessonActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+    }
+
+    public void showInfo(View view) {
+        Intent intent = new Intent(this, ShowInfo.class);
+        TextView projectName = (TextView) findViewById(R.id.textViewNombreProyecto);
+        String message = projectName.getText().toString();
+        intent.putExtra(EXTRA_MESSAGE, message);
+        startActivity(intent);
     }
 
     public void setLesson() {
