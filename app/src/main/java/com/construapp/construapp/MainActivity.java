@@ -91,6 +91,30 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             return true;
         }
+        else if (id == R.id.action_logout)
+        {
+            SharedPreferences mySPrefs =getSharedPreferences("ConstruApp", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = mySPrefs.edit();
+            editor.remove("token");
+            editor.apply();
+
+
+            boolean token_exists = mySPrefs.contains("token");
+            if(!token_exists)
+            {
+                Toast.makeText(this,"El token se ha borrado",Toast.LENGTH_LONG).show();
+
+            }
+            else
+            {
+                Toast.makeText(this,"El token NO SE BORRO",Toast.LENGTH_LONG).show();
+
+            }
+
+            startActivity(LoginActivity.getIntent(MainActivity.this));
+
+            
+        }
 
         return super.onOptionsItemSelected(item);
     }
