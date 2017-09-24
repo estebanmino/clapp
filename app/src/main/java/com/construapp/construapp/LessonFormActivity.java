@@ -146,8 +146,6 @@ public class LessonFormActivity extends AppCompatActivity {
         setBtnPlayAudioOnClickListener();
         setFabFilesOnClickListener();
 
-
-
     }
 
     private void setFabSendOnClickListener(){
