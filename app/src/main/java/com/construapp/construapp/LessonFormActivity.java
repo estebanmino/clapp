@@ -105,8 +105,8 @@ public class LessonFormActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         //FIND XML ELEMENTS
-        //lessonName = (TextView) findViewById(R.id.lesson_name);
-        //lessonDescription = (TextView) findViewById(R.id.lesson_description);
+        lessonName = (TextView) findViewById(R.id.editText2);
+        lessonDescription = (TextView) findViewById(R.id.editText);
 
         imageView = (ImageView) findViewById(R.id.image_view);
         mLayout = findViewById(R.id.lesson_form_layout);

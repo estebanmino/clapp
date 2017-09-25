@@ -1,10 +1,7 @@
 package com.construapp.construapp;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.net.sip.SipAudioCall;
-import android.net.sip.SipSession;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,9 +12,7 @@ import android.widget.Toast;
 import android.content.SharedPreferences;
 
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 
-import com.construapp.construapp.models.OnTaskCompleted;
 import com.construapp.construapp.models.RetrieveFeedTask;
 
 public class LoginActivity extends AppCompatActivity {

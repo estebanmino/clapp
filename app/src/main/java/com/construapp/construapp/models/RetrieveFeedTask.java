@@ -33,7 +33,6 @@ public class RetrieveFeedTask extends AsyncTask<String, Integer, String> {
 
     private Exception exception;
     public String out;
-    private OnTaskCompleted listener;
     //type values: login, send-lesson
     private String type;
 
@@ -188,7 +187,7 @@ public class RetrieveFeedTask extends AsyncTask<String, Integer, String> {
 
                 return out;*/
 
-                return "input";
+                return input;
 
             }
             catch (Exception e) {
