@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -42,9 +43,11 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.models.MultimediaFile;
+import com.construapp.construapp.models.RetrieveFeedTask;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
 public class LessonFormActivity extends AppCompatActivity {
 
@@ -151,9 +154,30 @@ public class LessonFormActivity extends AppCompatActivity {
         fabSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                SharedPreferences sharedpreferences = getSharedPreferences("ConstruApp", Context.MODE_PRIVATE);
+                String token = sharedpreferences.getString("token", "");
+                String response = "";
+                try {
+                    RetrieveFeedTask r = new RetrieveFeedTask("send-lesson");
+                    response = r.execute(token, lessonName.getText().toString(), lessonDescription.getText().toString()).get();
+                }
+                catch (InterruptedException e)
+                {
+
+                }
+                catch (ExecutionException e)
+                {
+
+                }
+
                 for (MultimediaFile multimediaFile: lesson.getMultimediaFiles()) {
                     multimediaFile.initUploadThread();
+
                 }
+
+                Toast.makeText(LessonFormActivity.this,"El JSON es:"+response,Toast.LENGTH_LONG).show();
+                startActivity(MainActivity.getIntent(LessonFormActivity.this));
+
             }
         });
     };

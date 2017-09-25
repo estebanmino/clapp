@@ -47,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
         btnSignin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                myAsyncTask = new RetrieveFeedTask();
+                myAsyncTask = new RetrieveFeedTask("login");
                 String request="error";
                 try {
                      request = myAsyncTask.execute(editEmail.getText().toString(),editPassword.getText().toString()).get();
