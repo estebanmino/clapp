@@ -115,7 +115,7 @@ public class LessonFormActivity extends AppCompatActivity {
         fabFiles = (FloatingActionButton) findViewById(R.id.fab_files);
 
         btnPlayAudio = (ImageView) findViewById(R.id.play_audio_button);
-        progressBarRecordAudio =  (ProgressBar) findViewById(R.id.progress_bar_record);
+        //progressBarRecordAudio =  (ProgressBar) findViewById(R.id.progress_bar_record);
 
         //INIT NEW LESSON
         lesson = new Lesson();
@@ -185,7 +185,7 @@ public class LessonFormActivity extends AppCompatActivity {
         fabRecordAudio.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                progressBarRecordAudio.setVisibility(View.VISIBLE);
+                //progressBarRecordAudio.setVisibility(View.VISIBLE);
                 if (!isRecording) {
                     startRecording();
                 }
@@ -198,7 +198,7 @@ public class LessonFormActivity extends AppCompatActivity {
             public void onClick(View view) {
                 getRecorAudioPermissions();
                 stopRecording();
-                progressBarRecordAudio.setVisibility(View.INVISIBLE);
+                //progressBarRecordAudio.setVisibility(View.INVISIBLE);
                 Log.i("CLICK","CLICKING");
             }
         });
