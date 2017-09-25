@@ -5,7 +5,7 @@
     android:id="@+id/lesson_form_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.construapp.construapp.LessonFormActivity"
+    tools:context="com.construapp.construapp.lessons_form.LessonFormActivity"
     tools:layout_editor_absoluteX="0dp"
     tools:layout_editor_absoluteY="25dp"
     android:fillViewport="true">
@@ -13,7 +13,7 @@
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="56dp"
         android:background="?attr/colorPrimary"
         app:layout_constraintDimensionRatio="w,1:1"
@@ -49,7 +49,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginLeft="16dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
@@ -72,7 +72,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginLeft="16dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
@@ -94,7 +94,7 @@
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
         android:layout_weight="1"
         app:elevation="2dp"
@@ -105,7 +105,8 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@+id/toolbar"
         app:layout_constraintVertical_bias="1.0"
-        app:srcCompat="@android:drawable/ic_menu_camera" />
+        app:srcCompat="@android:drawable/ic_menu_camera"
+        android:layout_marginStart="16dp" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_files"
@@ -113,7 +114,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginLeft="16dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
@@ -154,7 +155,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintVertical_bias="1.0">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
@@ -175,12 +176,15 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/editText"
-                app:layout_constraintVertical_bias="0.0"
-                app:srcCompat="@android:drawable/ic_media_play" />
+                app:layout_constraintVertical_bias="0.475"
+                app:srcCompat="@android:drawable/ic_media_play"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintHorizontal_bias="0.029" />
 
             <EditText
                 android:id="@+id/editText"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:layout_marginLeft="16dp"
@@ -192,7 +196,9 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView4"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintVertical_bias="0.0"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp" />
 
             <TextView
                 android:id="@+id/textView"
@@ -229,8 +235,10 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/editText"
-                app:layout_constraintVertical_bias="0.32999998"
-                app:srcCompat="@android:drawable/ic_menu_gallery" />
+                app:layout_constraintVertical_bias="0.479"
+                app:srcCompat="@android:drawable/ic_menu_gallery"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp" />
 
             <include
                 android:id="@+id/include"
@@ -291,6 +299,21 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView2"
                 app:layout_constraintVertical_bias="0.0" />
 
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_horizontal_view"
+                android:layout_width="300dp"
+                android:layout_height="100dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="8dp"
+                android:scrollbars="vertical"
+                app:layout_constraintBottom_toTopOf="@+id/image_view"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editText"
+                app:layout_constraintVertical_bias="0.472" />
+
             <ImageView
                 android:id="@+id/imageView3"
                 android:layout_width="100dp"
@@ -300,12 +323,14 @@
                 android:layout_marginRight="8dp"
                 android:layout_marginTop="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintHorizontal_bias="0.925"
+                app:layout_constraintHorizontal_bias="0.97"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/editText"
-                app:layout_constraintVertical_bias="0.32"
-                app:srcCompat="?android:attr/actionModePasteDrawable" />
+                app:layout_constraintVertical_bias="0.475"
+                app:srcCompat="?android:attr/actionModePasteDrawable"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp" />
         </android.support.constraint.ConstraintLayout>
     </ScrollView>
 
