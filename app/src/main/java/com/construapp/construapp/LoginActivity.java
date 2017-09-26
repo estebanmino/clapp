@@ -13,7 +13,7 @@ import android.content.SharedPreferences;
 
 import java.util.concurrent.ExecutionException;
 
-import com.construapp.construapp.models.RetrieveFeedTask;
+import com.construapp.construapp.threading.RetrieveFeedTask;
 
 public class LoginActivity extends AppCompatActivity {
 

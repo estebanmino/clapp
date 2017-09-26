@@ -1,4 +1,4 @@
-package com.construapp.construapp.models;
+package com.construapp.construapp.threading;
 
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -206,7 +206,10 @@ public class RetrieveFeedTask extends AsyncTask<String, Integer, String> {
 
         }
 
-        else if("fetch-lessons")
+        else if(type == "fetch-lessons")
+        {
+
+        }
         else
         {
             return "not implemented";
