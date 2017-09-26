@@ -12,16 +12,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.construapp.construapp.R;
 import com.construapp.construapp.models.MultimediaFile;
 
-import org.w3c.dom.Text;
-
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -39,8 +34,20 @@ public class MultimediaImageAdapter extends RecyclerView.Adapter<MultimediaImage
 
     @Override
     public MultimediaImageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = null;
+        switch(mMultimediaFiles.get(0).getExtension()){
+            case "PICTURE":
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.multimedia_image_picture_card, parent, false);
+                break;
 
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.multimedia_image_card, parent, false);
+            case "AUDIO":
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.multimedia_image_audio_card, parent, false);
+                break;
+
+            case "DOCUMENT":
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.multimedia_image_document_card, parent, false);
+                break;
+        }
         MultimediaImageViewHolder vh = new MultimediaImageViewHolder(view);
         return vh;
     }
