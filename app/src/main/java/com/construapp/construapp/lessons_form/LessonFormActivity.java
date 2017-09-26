@@ -145,13 +145,18 @@ public class LessonFormActivity extends AppCompatActivity {
         setBtnPlayAudioOnClickListener();
         setFabFilesOnClickListener();
 
+        //HORIZONTAL IMAGES SCROLLING
+        final String[] mToppings = new String[3];
+        mToppings[0] = "Cheese";
+        mToppings[1] = "Pepperoni";
+        mToppings[2] = "Black Olives";
 
         RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mRecyclerView.setLayoutManager(layoutManager);
 
-        mRecyclerView.setAdapter(new MultimediaImageAdapter());
+        mRecyclerView.setAdapter(new MultimediaImageAdapter(mToppings));
 
     }
 
