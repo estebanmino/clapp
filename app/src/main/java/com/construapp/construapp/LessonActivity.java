@@ -13,6 +13,7 @@ import android.content.SharedPreferences;
 
 import com.construapp.construapp.models.Lesson;
 
+import org.w3c.dom.Text;
 
 
 public class LessonActivity extends AppCompatActivity {
@@ -29,6 +30,13 @@ public class LessonActivity extends AppCompatActivity {
         setContentView(R.layout.activity_lesson);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        TextView nombre_proyecto = (TextView) findViewById(R.id.textViewNombreProyecto);
+        TextView descripcion_leccion = (TextView) findViewById(R.id.textViewDescripcionLeccion);
+        SharedPreferences spl = getSharedPreferences("Lesson", Context.MODE_PRIVATE);
+
+        nombre_proyecto.setText(spl.getString("lesson_name", ""));
+        descripcion_leccion.setText(spl.getString("lesson_description", ""));
 
         setLesson();
 
