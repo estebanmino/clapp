@@ -16,7 +16,14 @@ public class MultimediaFile {
     private String fileKey;
     private TransferUtility transferUtility;
 
-    public MultimediaFile(String mPath, TransferUtility transferUtility, String s3BucketName){
+    public String getExtension() {
+        return extension;
+    }
+
+    private String extension;
+
+    public MultimediaFile(String extension, String mPath, TransferUtility transferUtility, String s3BucketName){
+        this.extension = extension;
         this.mPath = mPath;
         this.transferUtility = transferUtility;
         this.s3BucketName = s3BucketName;

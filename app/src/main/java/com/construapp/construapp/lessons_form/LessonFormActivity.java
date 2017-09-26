@@ -58,6 +58,7 @@ public class LessonFormActivity extends AppCompatActivity {
     private static final int FILES_REQUEST = 1882;
     private static final String S3_BUCKET_NAME = "construapp";
     private static String ABSOLUTE_STORAGE_PATH;
+    private static final String EXTENSION_PICTURE = "PICTURE";
 
     //XML ELEMENTS
     private TextView lessonName;
@@ -93,6 +94,10 @@ public class LessonFormActivity extends AppCompatActivity {
 
     //CONSTANTS
     private Constants constants;
+
+    //MM ADAPTER
+MultimediaImageAdapter multimediaImageAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,26 +148,33 @@ public class LessonFormActivity extends AppCompatActivity {
         setBtnPlayAudioOnClickListener();
         setFabFilesOnClickListener();
 
-        //HORIZONTAL IMAGES SCROLLING
-        final String[] mToppings = new String[3];
-        mToppings[0] = "Cheese";
-        mToppings[1] = "Pepperoni";
-        mToppings[2] = "Black Olives";
+        ////HORIZONTAL IMAGES SCROLLING
 
-        RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_pictures);
+        //GENRAL LAYOUT SCROLL
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        mRecyclerView.setLayoutManager(layoutManager);
 
-        mRecyclerView.setAdapter(new MultimediaImageAdapter(mToppings));
+        //PICTURES SCROLLING
+        RecyclerView mPicturesRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_pictures);
+        mPicturesRecyclerView.setLayoutManager(layoutManager);
+        multimediaImageAdapter = new MultimediaImageAdapter(lesson.getMultimediaPicturesFiles());
+        mPicturesRecyclerView.setAdapter(multimediaImageAdapter);
 
+        RecyclerView mAudiosRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_audios);
+        //mAudiosRecyclerView.setLayoutManager(layoutManager);
     }
 
     private void setFabSendOnClickListener(){
         fabSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                for (MultimediaFile multimediaFile: lesson.getMultimediaFiles()) {
+                for (MultimediaFile multimediaFile: lesson.getMultimediaPicturesFiles()) {
+                    multimediaFile.initUploadThread();
+                }
+                for (MultimediaFile multimediaFile: lesson.getMultimediaAudioFiles()) {
+                    multimediaFile.initUploadThread();
+                }
+                for (MultimediaFile multimediaFile: lesson.getMultimediaPicturesFiles()) {
                     multimediaFile.initUploadThread();
                 }
             }
@@ -352,7 +364,8 @@ public class LessonFormActivity extends AppCompatActivity {
                     imageView.setImageBitmap(ThumbnailUtils.extractThumbnail(bitmap, 80, 80));
                     setImageViewOnClickListener(Uri.fromFile(new File(mPath)));
 
-                    lesson.getMultimediaFiles().add(new MultimediaFile(mPath, transferUtility,S3_BUCKET_NAME));
+                    lesson.getMultimediaPicturesFiles().add(new MultimediaFile(EXTENSION_PICTURE,mPath, transferUtility,S3_BUCKET_NAME));
+                    multimediaImageAdapter.notifyDataSetChanged();
                     break;
 
                 case SELECT_IMAGE:
@@ -364,7 +377,9 @@ public class LessonFormActivity extends AppCompatActivity {
                         imageView.setImageBitmap(ThumbnailUtils.extractThumbnail(bitmapGallery, 80,80));
                         setImageViewOnClickListener(data.getData());
 
-                        lesson.getMultimediaFiles().add(new MultimediaFile(mPath, transferUtility,S3_BUCKET_NAME));
+                        lesson.getMultimediaPicturesFiles().add(new MultimediaFile(EXTENSION_PICTURE,mPath, transferUtility,S3_BUCKET_NAME));
+                        multimediaImageAdapter.notifyDataSetChanged();
+
 
                     } else if (resultCode == Activity.RESULT_CANCELED) {
                         Toast.makeText(LessonFormActivity.this, "Cancelled", Toast.LENGTH_SHORT).show();
@@ -374,7 +389,7 @@ public class LessonFormActivity extends AppCompatActivity {
                 case FILES_REQUEST:
                     Uri selectedUri = data.getData();
 
-                    lesson.getMultimediaFiles().add(new MultimediaFile(
+                    lesson.getMultimediaPicturesFiles().add(new MultimediaFile("FILE",
                             getPath(LessonFormActivity.this, selectedUri), transferUtility,S3_BUCKET_NAME));
                     break;
 
@@ -610,7 +625,7 @@ public class LessonFormActivity extends AppCompatActivity {
     private void stopRecording() {
         isRecording = false;
 
-        lesson.getMultimediaFiles().add(new MultimediaFile(mRecordFileName, transferUtility, S3_BUCKET_NAME));
+        lesson.getMultimediaPicturesFiles().add(new MultimediaFile("AUDIO",mRecordFileName, transferUtility, S3_BUCKET_NAME));
 
         mRecorder.stop();
         mRecorder.release();
