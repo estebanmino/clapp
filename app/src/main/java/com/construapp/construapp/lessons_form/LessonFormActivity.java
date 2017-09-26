@@ -28,10 +28,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -107,7 +105,7 @@ public class LessonFormActivity extends AppCompatActivity {
         //lessonName = (TextView) findViewById(R.id.lesson_name);
         //lessonDescription = (TextView) findViewById(R.id.lesson_description);
 
-        imageView = (ImageView) findViewById(R.id.image_view);
+        imageView = (ImageView) findViewById(R.id.image_button_thumbnail);
         mLayout = findViewById(R.id.lesson_form_layout);
 
         fabCamera = (FloatingActionButton) findViewById(R.id.fab_camera);
@@ -116,7 +114,7 @@ public class LessonFormActivity extends AppCompatActivity {
         fabSend = (FloatingActionButton) findViewById(R.id.fab_send);
         fabFiles = (FloatingActionButton) findViewById(R.id.fab_files);
 
-        btnPlayAudio = (ImageView) findViewById(R.id.play_audio_button);
+        btnPlayAudio = (ImageView) findViewById(R.id.image_button_audio);
         //progressBarRecordAudio =  (ProgressBar) findViewById(R.id.progress_bar_record);
 
         //INIT NEW LESSON
@@ -151,7 +149,7 @@ public class LessonFormActivity extends AppCompatActivity {
         mToppings[1] = "Pepperoni";
         mToppings[2] = "Black Olives";
 
-        RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_view);
+        RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_pictures);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mRecyclerView.setLayoutManager(layoutManager);
