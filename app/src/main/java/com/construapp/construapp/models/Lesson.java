@@ -30,7 +30,7 @@ public class Lesson {
         this.multimediaPictureFiles = multimediaPictureFiles;
     }
 
-    public ArrayList<MultimediaFile> getMultimediaAudioFiles() {
+    public ArrayList<MultimediaFile> getMultimediaAudiosFiles() {
         return multimediaAudioFiles;
     }
 

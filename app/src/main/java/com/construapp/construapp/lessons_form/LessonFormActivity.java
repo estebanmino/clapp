@@ -96,7 +96,9 @@ public class LessonFormActivity extends AppCompatActivity {
     private Constants constants;
 
     //MM ADAPTER
-MultimediaImageAdapter multimediaImageAdapter;
+    MultimediaImageAdapter multimediaImagePictureAdapter;
+    MultimediaImageAdapter multimediaImageAudioAdapter;
+    MultimediaImageAdapter multimediaImageDocumentAdapter;
 
 
     @Override
@@ -151,17 +153,21 @@ MultimediaImageAdapter multimediaImageAdapter;
         ////HORIZONTAL IMAGES SCROLLING
 
         //GENRAL LAYOUT SCROLL
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-
         //PICTURES SCROLLING
+        LinearLayoutManager picturesLayoutManager = new LinearLayoutManager(this);
+        picturesLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         RecyclerView mPicturesRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_pictures);
-        mPicturesRecyclerView.setLayoutManager(layoutManager);
-        multimediaImageAdapter = new MultimediaImageAdapter(lesson.getMultimediaPicturesFiles());
-        mPicturesRecyclerView.setAdapter(multimediaImageAdapter);
+        mPicturesRecyclerView.setLayoutManager(picturesLayoutManager);
+        multimediaImagePictureAdapter = new MultimediaImageAdapter(lesson.getMultimediaPicturesFiles());
+        mPicturesRecyclerView.setAdapter(multimediaImagePictureAdapter);
 
+        //AUDIOS SCROLLING
+        LinearLayoutManager audiosLayoutManager = new LinearLayoutManager(this);
+        audiosLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         RecyclerView mAudiosRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_audios);
-        //mAudiosRecyclerView.setLayoutManager(layoutManager);
+        mAudiosRecyclerView.setLayoutManager(audiosLayoutManager);
+        multimediaImageAudioAdapter = new MultimediaImageAdapter(lesson.getMultimediaAudiosFiles());
+        mAudiosRecyclerView.setAdapter(multimediaImageAudioAdapter);
     }
 
     private void setFabSendOnClickListener(){
@@ -171,7 +177,7 @@ MultimediaImageAdapter multimediaImageAdapter;
                 for (MultimediaFile multimediaFile: lesson.getMultimediaPicturesFiles()) {
                     multimediaFile.initUploadThread();
                 }
-                for (MultimediaFile multimediaFile: lesson.getMultimediaAudioFiles()) {
+                for (MultimediaFile multimediaFile: lesson.getMultimediaAudiosFiles()) {
                     multimediaFile.initUploadThread();
                 }
                 for (MultimediaFile multimediaFile: lesson.getMultimediaPicturesFiles()) {
@@ -197,7 +203,7 @@ MultimediaImageAdapter multimediaImageAdapter;
         btnPlayAudio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onPlay(mStartPlaying);
+                onPlay(mStartPlaying, mRecordFileName);
                 mStartPlaying = !mStartPlaying;
             }
         });
@@ -208,9 +214,15 @@ MultimediaImageAdapter multimediaImageAdapter;
         fabRecordAudio.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
+                getRecorAudioPermissions();
                 //progressBarRecordAudio.setVisibility(View.VISIBLE);
                 if (!isRecording) {
-                    startRecording();
+                    Long tsLong = System.currentTimeMillis()/1000;
+                    String ts = tsLong.toString();
+                    MultimediaFile audioMultimedia = new MultimediaFile(
+                            "AUDIO",ABSOLUTE_STORAGE_PATH+ts.toString()+".3gp",transferUtility,S3_BUCKET_NAME);
+                    startRecording(audioMultimedia);
+                    lesson.getMultimediaAudiosFiles().add(audioMultimedia);
                 }
                 return false;
             }
@@ -219,7 +231,6 @@ MultimediaImageAdapter multimediaImageAdapter;
         fabRecordAudio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getRecorAudioPermissions();
                 stopRecording();
                 //progressBarRecordAudio.setVisibility(View.INVISIBLE);
                 Log.i("CLICK","CLICKING");
@@ -365,7 +376,7 @@ MultimediaImageAdapter multimediaImageAdapter;
                     setImageViewOnClickListener(Uri.fromFile(new File(mPath)));
 
                     lesson.getMultimediaPicturesFiles().add(new MultimediaFile(EXTENSION_PICTURE,mPath, transferUtility,S3_BUCKET_NAME));
-                    multimediaImageAdapter.notifyDataSetChanged();
+                    multimediaImagePictureAdapter.notifyDataSetChanged();
                     break;
 
                 case SELECT_IMAGE:
@@ -378,7 +389,7 @@ MultimediaImageAdapter multimediaImageAdapter;
                         setImageViewOnClickListener(data.getData());
 
                         lesson.getMultimediaPicturesFiles().add(new MultimediaFile(EXTENSION_PICTURE,mPath, transferUtility,S3_BUCKET_NAME));
-                        multimediaImageAdapter.notifyDataSetChanged();
+                        multimediaImagePictureAdapter.notifyDataSetChanged();
 
 
                     } else if (resultCode == Activity.RESULT_CANCELED) {
@@ -389,7 +400,7 @@ MultimediaImageAdapter multimediaImageAdapter;
                 case FILES_REQUEST:
                     Uri selectedUri = data.getData();
 
-                    lesson.getMultimediaPicturesFiles().add(new MultimediaFile("FILE",
+                    lesson.getMultimediaDocumentsFiles().add(new MultimediaFile("FILE",
                             getPath(LessonFormActivity.this, selectedUri), transferUtility,S3_BUCKET_NAME));
                     break;
 
@@ -580,19 +591,19 @@ MultimediaImageAdapter multimediaImageAdapter;
 
     //RECORD AUDIO
 
-    private void onPlay(boolean start) {
+    public void onPlay(boolean start, String recordFileName) {
         if (start) {
-            startPlaying();
+            startPlaying(recordFileName);
         } else {
             stopPlaying();
         }
     }
 
-    private void startPlaying() {
+    private void startPlaying(String recordFileName) {
         mPlayer = new MediaPlayer();
         try {
-            mPlayer.setDataSource(mRecordFileName);
-            Log.i("AUDIO RECORD SOURCE", mRecordFileName);
+            mPlayer.setDataSource(recordFileName);
+            Log.i("AUDIO RECORD SOURCE", recordFileName);
             mPlayer.prepare();
             mPlayer.start();
         } catch (IOException e) {
@@ -605,31 +616,31 @@ MultimediaImageAdapter multimediaImageAdapter;
         mPlayer = null;
     }
 
-    private void startRecording() {
+    private void startRecording(MultimediaFile multimediaFile) {
         isRecording = true;
         mRecorder = new MediaRecorder();
         mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-        mRecorder.setOutputFile(mRecordFileName);
+        mRecorder.setOutputFile(multimediaFile.getmPath());
         mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
 
         try {
             mRecorder.prepare();
+            mRecorder.start();
         } catch (IOException e) {
             Log.e(LOG_TAG, "prepare() failed");
         }
 
-        mRecorder.start();
     }
 
     private void stopRecording() {
         isRecording = false;
-
-        lesson.getMultimediaPicturesFiles().add(new MultimediaFile("AUDIO",mRecordFileName, transferUtility, S3_BUCKET_NAME));
-
         mRecorder.stop();
         mRecorder.release();
         mRecorder = null;
+        //lesson.getMultimediaAudiosFiles().add(new MultimediaFile("AUDIO",mRecordFileName, transferUtility, S3_BUCKET_NAME));
+        multimediaImageAudioAdapter.notifyDataSetChanged();
+
     }
 
     @Override

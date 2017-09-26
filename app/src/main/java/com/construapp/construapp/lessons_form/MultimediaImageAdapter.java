@@ -3,6 +3,7 @@ package com.construapp.construapp.lessons_form;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
@@ -20,6 +21,7 @@ import com.construapp.construapp.models.MultimediaFile;
 import org.w3c.dom.Text;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -27,6 +29,7 @@ import java.util.ArrayList;
  */
 
 public class MultimediaImageAdapter extends RecyclerView.Adapter<MultimediaImageAdapter.MultimediaImageViewHolder> {
+
     private ArrayList<MultimediaFile> mMultimediaFiles;
 
     public MultimediaImageAdapter(ArrayList<MultimediaFile> mMultimediaFiles) {
@@ -37,7 +40,6 @@ public class MultimediaImageAdapter extends RecyclerView.Adapter<MultimediaImage
     @Override
     public MultimediaImageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        //LessonFormActivity.MultimediaImageViewHolder vh = new LessonFormActivity.MultimediaImageViewHolder(v);
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.multimedia_image_card, parent, false);
         MultimediaImageViewHolder vh = new MultimediaImageViewHolder(view);
         return vh;
@@ -53,6 +55,11 @@ public class MultimediaImageAdapter extends RecyclerView.Adapter<MultimediaImage
                 holder.imageThumbnail.setImageBitmap(ThumbnailUtils.extractThumbnail(bitmap, 80, 80));
                 holder.imageThumbnail.setRotation(90);
                 holder.multimediaFile = multimediaFile;
+                break;
+
+            case "AUDIO":
+                holder.multimediaFile =  multimediaFile;
+                break;
         }
     }
 
@@ -66,21 +73,66 @@ public class MultimediaImageAdapter extends RecyclerView.Adapter<MultimediaImage
             implements View.OnClickListener {
 
         public ImageView imageThumbnail;
+        public Boolean mStartPlaying = true;
         MultimediaFile multimediaFile;
+
+        public void startPlaying(MediaPlayer mPlayer){
+            try {
+                mPlayer.setDataSource(multimediaFile.getmPath());
+                mPlayer.prepare();
+                mPlayer.start();
+            } catch (Exception ex) {
+            }
+        }
+        private void stopPlaying(MediaPlayer mediaPlayer) {
+            Log.d("PLAYING", "stopPlaying: ");
+            try {
+                if (mediaPlayer != null) {
+                    if (mediaPlayer.isPlaying())
+                        mediaPlayer.stop();
+                    mediaPlayer.release();
+                    mediaPlayer = null;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        public void onPlay(boolean start, MediaPlayer mediaPlayer) {
+            if (start) {
+                Log.i("PLAYING", "TRUE");
+                mediaPlayer = new MediaPlayer();
+                startPlaying(mediaPlayer);
+            } else {
+                Log.i("PLAYING", "FALSE");
+                stopPlaying(mediaPlayer);
+                //mediaPlayer = new MediaPlayer();
+            }
+        }
 
         public MultimediaImageViewHolder(View view) {
             super(view);
 
             imageThumbnail = view.findViewById(R.id.image_thumbnail);
+            final MediaPlayer mediaPlayer = new MediaPlayer();
 
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent();
-                    intent.setAction(Intent.ACTION_VIEW);
-                    intent.setDataAndType(Uri.parse(
-                            Uri.fromFile(new File(multimediaFile.getmPath())).toString()), "image/*");
-                    view.getContext().startActivity(intent);
+                    switch (multimediaFile.getExtension()) {
+                        case "PICTURE":
+                            Intent intent = new Intent();
+                            intent.setAction(Intent.ACTION_VIEW);
+                            intent.setDataAndType(Uri.parse(
+                                    Uri.fromFile(new File(multimediaFile.getmPath())).toString()), "image/*");
+                            view.getContext().startActivity(intent);
+                            break;
+                        case "AUDIO":
+                            //CHECK FOR CORRECT MEDIA PLAYER STOP
+                            onPlay(mStartPlaying,mediaPlayer);
+                            mStartPlaying = !mStartPlaying;
+                            break;
+                    }
                 }
             });
         }
@@ -89,6 +141,5 @@ public class MultimediaImageAdapter extends RecyclerView.Adapter<MultimediaImage
         public void onClick(View view) {
         }
     }
-
 }
 
