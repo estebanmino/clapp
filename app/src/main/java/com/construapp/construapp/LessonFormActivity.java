@@ -153,11 +153,18 @@ public class LessonFormActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 SharedPreferences sharedpreferences = getSharedPreferences("ConstruApp", Context.MODE_PRIVATE);
+                String lesson_name = lessonName.getText().toString();
+                String lesson_summary = lessonName.getText().toString();
+                String lesson_motivation = "Aprendizaje";
+                String lesson_learning = lessonDescription.getText().toString();
                 String token = sharedpreferences.getString("token", "");
+                String user_id = sharedpreferences.getString("user_id", "");
+                String company_id = sharedpreferences.getString("company_id", "");
+                String project_id = "2";
                 String response = "";
                 try {
                     RetrieveFeedTask r = new RetrieveFeedTask("send-lesson");
-                    response = r.execute(token, lessonName.getText().toString(), lessonDescription.getText().toString()).get();
+                    response = r.execute(lesson_name,lesson_summary,lesson_motivation,lesson_learning,token,user_id,company_id,project_id).get();
                 }
                 catch (InterruptedException e)
                 {

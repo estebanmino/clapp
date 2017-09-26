@@ -42,8 +42,7 @@ public class RetrieveFeedTask extends AsyncTask<String, Integer, String> {
 
 
     protected void onPreExecute() {
-        //progressBar.setVisibility(View.VISIBLE);
-        //responseView.setText("");
+
     }
 
     protected String doInBackground(String... str) {
@@ -55,9 +54,6 @@ public class RetrieveFeedTask extends AsyncTask<String, Integer, String> {
             boolean result = false;
             String email = str[0];
             String pass = str[1];
-
-            // JSONObject object = new JSONObject();
-            //JSONArray Session = new JSONArray();
 
             try {
                 URL url = new URL("http://construapp-api.ing.puc.cl/sessions");
@@ -110,7 +106,11 @@ public class RetrieveFeedTask extends AsyncTask<String, Integer, String> {
 
 
                 JSONObject object = (JSONObject) new JSONTokener(aux).nextValue();
-                String query = object.getString("auth_token");
+                String t = object.getString("auth_token");
+                String id = object.getString("id");
+                JSONObject company = (JSONObject) object.getJSONObject("company");
+                String company_id = company.getString("id");
+                String query = t+";"+id+";"+company_id;
 
                 out = query;
 
@@ -125,43 +125,50 @@ public class RetrieveFeedTask extends AsyncTask<String, Integer, String> {
         }
         else if(type == "send-lesson")
         {
-            String token = str[0];
-            String name = str[1];
-            String description = str[2];
+
+            String lesson_name = str[0];
+            String lesson_summary = str[1];
+            String lesson_motivation = str[2];
+            String lesson_learning = str[3];
+            String token = str[4];
+            int user_id = Integer.parseInt(str[5]);
+            int company_id = Integer.parseInt(str[6]);
+            int project_id = Integer.parseInt(str[7]);
 
             try {
-                //URL url = new URL("http://construapp-api.ing.puc.cl/lessons");
-                //HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                //urlConnection.setDoOutput(true);
-                //urlConnection.setDoInput(true);
-                //urlConnection.setConnectTimeout(1500);
-                //urlConnection.setRequestMethod("POST");
-                //urlConnection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                //TODO CONSEGUIR ID DE LA EMPRESA
+                String url_string = "http://construapp-api.ing.puc.cl/companies/"+company_id+"/lessons";
+                URL url = new URL(url_string);
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setDoOutput(true);
+                urlConnection.setDoInput(true);
+                urlConnection.setConnectTimeout(1500);
+                urlConnection.setRequestMethod("POST");
+                urlConnection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
                 //TODO utilizar JSONObject para armar String y no manual
-                String input = "{\"lesson\":{\"token\":\"" + token + "\",\"nombre\":\"" +name + "\",\"descripcion\":\"" + description + "\"}}";
-                //urlConnection.connect();
+                String input = "{\"lesson\":{\"name\":\"" + lesson_name + "\",\"summary\":\"" +lesson_summary + "\",\"motivation\":\""+lesson_motivation + "\",\"learning\":\""+lesson_learning + "\",\"user_id\":\""+user_id + "\",\"company_id\":\""+company_id + "\",\"project_id\":\"" + project_id + "\"}}";
+                urlConnection.connect();
 
-                //OutputStream os = urlConnection.getOutputStream();
-                // os.write(input.getBytes("UTF-8"));
-                //os.close();
+                OutputStream os = urlConnection.getOutputStream();
+                os.write(input.getBytes("UTF-8"));
+                os.close();
 
+                int responsecode = urlConnection.getResponseCode();
 
-                //int responsecode = urlConnection.getResponseCode();
-
-                /*if (responsecode != 200) {
+                if (responsecode != 201) {
                     // Success
                     // Further processing here
                     urlConnection.disconnect();
-                    out = "error";
+                    out = "error por code:" + responsecode+". OUTPUT: "+input;
                     return out;
                 }
                 else
                 {
                     //continue
-                }*/
+                }
 
 
-                /*InputStream response = urlConnection.getInputStream();
+                InputStream response = urlConnection.getInputStream();
                 BufferedReader br = new BufferedReader(new InputStreamReader((response)));
 
                 String output = "";
@@ -181,13 +188,13 @@ public class RetrieveFeedTask extends AsyncTask<String, Integer, String> {
 
 
                 JSONObject object = (JSONObject) new JSONTokener(aux).nextValue();
-                String query = object.getString("auth_token");
+                String query = "id:"+object.getString("id")+"created at:"+object.getString("created_at");
 
                 out = query;
 
-                return out;*/
+                return out;
 
-                return input;
+
 
             }
             catch (Exception e) {
@@ -198,6 +205,8 @@ public class RetrieveFeedTask extends AsyncTask<String, Integer, String> {
             }
 
         }
+
+        else if("fetch-lessons")
         else
         {
             return "not implemented";

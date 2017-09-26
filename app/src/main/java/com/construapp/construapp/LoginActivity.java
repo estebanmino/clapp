@@ -21,13 +21,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText editPassword;
     private Button btnSignin;
     static RetrieveFeedTask myAsyncTask;
-    //OnTaskCompleted listener;
 
-
-    //public void onTaskCompleted()
-    {
-
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,15 +52,19 @@ public class LoginActivity extends AppCompatActivity {
                 }
 
                 //ESTA LINEA HAY QUE BORRARLA
-                request="tokenfalso";
+                //request="tokenfalso";
 
                 if(request!="error")
                 {
-                    //Toast.makeText(LoginActivity.this,request,Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this,request,Toast.LENGTH_LONG).show();
                     SharedPreferences sharedpreferences = getSharedPreferences("ConstruApp", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedpreferences.edit();
+                    String[] data = request.split(";");
 
-                    editor.putString("token", request);
+                    editor.putString("token", data[0]);
+                    editor.putString("user_id", data[1]);
+                    editor.putString("company_id", data[2]);
+
                     editor.commit();
 
                     startActivity(MainActivity.getIntent(LoginActivity.this));
