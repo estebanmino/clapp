@@ -31,8 +31,8 @@ public class LessonActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        TextView nombre_proyecto = (TextView) findViewById(R.id.textViewNombreProyecto);
-        TextView descripcion_leccion = (TextView) findViewById(R.id.textViewDescripcionLeccion);
+        TextView nombre_proyecto = (TextView) findViewById(R.id.text_lesson_name);
+        TextView descripcion_leccion = (TextView) findViewById(R.id.text_lesson_description);
         SharedPreferences spl = getSharedPreferences("Lesson", Context.MODE_PRIVATE);
 
         nombre_proyecto.setText(spl.getString("lesson_name", ""));
@@ -40,19 +40,19 @@ public class LessonActivity extends AppCompatActivity {
 
         setLesson();
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
-        });
+        });*/
     }
 
     public void showInfo(View view) {
         Intent intent = new Intent(this, ShowInfo.class);
-        TextView projectName = (TextView) findViewById(R.id.textViewNombreProyecto);
+        TextView projectName = (TextView) findViewById(R.id.text_lesson_name);
         String message = projectName.getText().toString();
         intent.putExtra(EXTRA_MESSAGE, message);
         startActivity(intent);
