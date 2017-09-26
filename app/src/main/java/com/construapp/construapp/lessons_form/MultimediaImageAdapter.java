@@ -11,7 +11,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.construapp.construapp.R;
 import com.construapp.construapp.models.MultimediaFile;
@@ -55,6 +57,7 @@ public class MultimediaImageAdapter extends RecyclerView.Adapter<MultimediaImage
     @Override
     public void onBindViewHolder(MultimediaImageViewHolder holder, int position) {
         MultimediaFile multimediaFile = mMultimediaFiles.get(position);
+        multimediaFile.setArrayPosition(position);
 
         switch (multimediaFile.getExtension()){
             case "PICTURE":
@@ -67,6 +70,15 @@ public class MultimediaImageAdapter extends RecyclerView.Adapter<MultimediaImage
             case "AUDIO":
                 holder.multimediaFile =  multimediaFile;
                 break;
+
+            case "DOCUMENT":
+                String path=multimediaFile.getmPath();
+                String filename=path.substring(path.lastIndexOf("/")+1);
+                holder.textPath.setText(filename);
+                holder.multimediaFile =  multimediaFile;
+                holder.multimediaFileArrayList = mMultimediaFiles;
+
+                break;
         }
     }
 
@@ -75,13 +87,16 @@ public class MultimediaImageAdapter extends RecyclerView.Adapter<MultimediaImage
         return mMultimediaFiles.size();
     }
 
-    public static final class MultimediaImageViewHolder
+    public class MultimediaImageViewHolder
             extends RecyclerView.ViewHolder
             implements View.OnClickListener {
 
         public ImageView imageThumbnail;
+        public TextView textPath;
+        public ImageButton imageButtonDelete;
         public Boolean mStartPlaying = true;
         MultimediaFile multimediaFile;
+        ArrayList<MultimediaFile> multimediaFileArrayList;
 
         public void startPlaying(MediaPlayer mPlayer){
             try {
@@ -121,6 +136,17 @@ public class MultimediaImageAdapter extends RecyclerView.Adapter<MultimediaImage
             super(view);
 
             imageThumbnail = view.findViewById(R.id.image_thumbnail);
+            textPath = view.findViewById(R.id.image_path);
+            imageButtonDelete = view.findViewById(R.id.image_button_delete);
+
+            imageButtonDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    MultimediaImageAdapter.this.mMultimediaFiles.remove(multimediaFile.getArrayPosition());
+                    MultimediaImageAdapter.this.notifyDataSetChanged();
+                }
+            });
+
             final MediaPlayer mediaPlayer = new MediaPlayer();
 
             view.setOnClickListener(new View.OnClickListener() {

@@ -16,6 +16,16 @@ public class MultimediaFile {
     private String fileKey;
     private TransferUtility transferUtility;
 
+    public int getArrayPosition() {
+        return arrayPosition;
+    }
+
+    public void setArrayPosition(int arrayPosition) {
+        this.arrayPosition = arrayPosition;
+    }
+
+    private int arrayPosition;
+
     public String getExtension() {
         return extension;
     }

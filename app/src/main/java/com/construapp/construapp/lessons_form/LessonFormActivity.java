@@ -183,7 +183,7 @@ public class LessonFormActivity extends AppCompatActivity {
                 for (MultimediaFile multimediaFile: lesson.getMultimediaAudiosFiles()) {
                     multimediaFile.initUploadThread();
                 }
-                for (MultimediaFile multimediaFile: lesson.getMultimediaPicturesFiles()) {
+                for (MultimediaFile multimediaFile: lesson.getMultimediaDocumentsFiles()) {
                     multimediaFile.initUploadThread();
                 }
             }
