@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.HttpURLConnection;
 import org.json.JSONObject;
+import org.json.JSONStringer;
 import org.json.JSONTokener;
 import org.json.JSONArray;
 import java.io.BufferedReader;
@@ -63,6 +64,8 @@ public class RetrieveFeedTask extends AsyncTask<String, Integer, String> {
                 urlConnection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
                 //TODO utilizar JSONObject para armar String y no manual
                 String input = "{\"session\":{\"email\":\"" + email + "\",\"password\":\"" + pass + "\"}}";
+                JSONObject obj = new JSONObject(input);
+                input = obj.toString();
                 urlConnection.connect();
 
 
@@ -96,6 +99,7 @@ public class RetrieveFeedTask extends AsyncTask<String, Integer, String> {
                 }
 
                 if (urlConnection.getResponseCode() == 200) {
+                    Log.i("CODE",String.valueOf(urlConnection.getResponseCode()));
                     // Success
                     // Further processing here
                     urlConnection.disconnect();
@@ -106,8 +110,8 @@ public class RetrieveFeedTask extends AsyncTask<String, Integer, String> {
                 JSONObject object = (JSONObject) new JSONTokener(aux).nextValue();
                 String t = object.getString("auth_token");
                 String id = object.getString("id");
-                JSONObject company = (JSONObject) object.getJSONObject("company");
-                String company_id = company.getString("id");
+                String company_id = object.getString("company_id");
+                //String company_id = company.getString("id");
                 String query = t+";"+id+";"+company_id;
 
                 out = query;
@@ -144,7 +148,9 @@ public class RetrieveFeedTask extends AsyncTask<String, Integer, String> {
                 urlConnection.setRequestMethod("POST");
                 urlConnection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
                 //TODO utilizar JSONObject para armar String y no manual
-                String input = "{\"lesson\":{\"name\":\"" + lesson_name + "\",\"summary\":\"" +lesson_summary + "\",\"motivation\":\""+lesson_motivation + "\",\"learning\":\""+lesson_learning + "\",\"user_id\":\""+user_id + "\",\"company_id\":\""+company_id + "\",\"project_id\":\"" + project_id + "\"}}";
+                String input = "{\"lesson\":{\"name\":\"" + lesson_name + "\",\"summary\":\"" + lesson_summary + "\",\"motivation\":\""+lesson_motivation + "\",\"learning\":\""+lesson_learning + "\",\"user_id\":\""+user_id + "\",\"company_id\":\""+company_id + "\",\"project_id\":\"" + project_id + "\"}}";
+                JSONObject N = new JSONObject(input);
+                input = N.toString();
                 urlConnection.connect();
 
                 OutputStream os = urlConnection.getOutputStream();
