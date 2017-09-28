@@ -8,12 +8,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.media.MediaScannerConnection;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -32,8 +29,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,6 +41,8 @@ import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.models.MultimediaFile;
 import com.construapp.construapp.threading.RetrieveFeedTask;
+
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.IOException;
@@ -118,8 +115,8 @@ public class LessonFormActivity extends AppCompatActivity {
         lessonName = (TextView) findViewById(R.id.text_new_lesson_name);
         lessonDescription = (TextView) findViewById(R.id.text_new_lesson_description);
 
-        editLessonName = (EditText) findViewById(R.id.edit_new_lesson_name);
-        editLessonDescription = (EditText) findViewById(R.id.edit_new_lesson_description);
+        editLessonName =(EditText) findViewById(R.id.text_lesson_name);
+        editLessonDescription = (EditText) findViewById(R.id.text_lesson_description);
 
         mLayout = findViewById(R.id.lesson_form_layout);
 
@@ -204,14 +201,8 @@ public class LessonFormActivity extends AppCompatActivity {
                     RetrieveFeedTask r = new RetrieveFeedTask("send-lesson");
                     response = r.execute(lesson_name,lesson_summary,lesson_motivation,lesson_learning,token,user_id,company_id,project_id).get();
                 }
-                catch (InterruptedException e)
-                {
-
-                }
-                catch (ExecutionException e)
-                {
-
-                }
+                catch (InterruptedException e){}
+                catch (ExecutionException e){}
                 if(response != "error")
                 {
                     lesson_id=response;
@@ -226,22 +217,14 @@ public class LessonFormActivity extends AppCompatActivity {
                         path_input+=multimediaFile.getExtension()+"/"+multimediaFile.getmPath().substring(multimediaFile.getmPath().lastIndexOf("/")+1)+";";
                     }
 
-
                     RetrieveFeedTask r2 = new RetrieveFeedTask("fetch-s3");
                     String response2 = "";
                     try {
                         response2 = r2.execute(company_id,lesson_id,path_input).get();
                         Log.i("tagat",response2);
-                    //response2 = "OK";
                     }
-                    catch (InterruptedException e)
-                    {
-
-                    }
-                    catch (ExecutionException e)
-                    {
-
-                    }
+                    catch (InterruptedException e){}
+                    catch (ExecutionException e) {}
 
                     if(response2 == "OK")
                     {
@@ -254,15 +237,10 @@ public class LessonFormActivity extends AppCompatActivity {
                         for (MultimediaFile multimediaFile: lesson.getMultimediaDocumentsFiles()) {
                             multimediaFile.initUploadThread();
                         }
-
                     }
-
-
-
                 }
+                Toast.makeText(LessonFormActivity.this, "Debes dar permiso para tomar fotos", Toast.LENGTH_LONG).show();
 
-
-                Toast.makeText(LessonFormActivity.this,"El JSON es:"+response,Toast.LENGTH_LONG).show();
                 startActivity(MainActivity.getIntent(LessonFormActivity.this));
 
             }
@@ -286,16 +264,20 @@ public class LessonFormActivity extends AppCompatActivity {
         fabRecordAudio.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                getRecorAudioPermissions();
-                //progressBarRecordAudio.setVisibility(View.VISIBLE);
-                if (!isRecording) {
-                    Long tsLong = System.currentTimeMillis()/1000;
-                    String ts = tsLong.toString();
-                    MultimediaFile audioMultimedia = new MultimediaFile(
-                            "AUDIO",ABSOLUTE_STORAGE_PATH+ts.toString()+".3gp",transferUtility,S3_BUCKET_NAME);
-                    startRecording(audioMultimedia);
-                    lesson.getMultimediaAudiosFiles().add(audioMultimedia);
-                }
+                if (ContextCompat.checkSelfPermission(LessonFormActivity.this,
+                        Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
+                    if (!isRecording) {
+                        Long tsLong = System.currentTimeMillis()/1000;
+                        String ts = tsLong.toString();
+                        MultimediaFile audioMultimedia = new MultimediaFile(
+                                "AUDIO",ABSOLUTE_STORAGE_PATH+ts.toString()+".3gp",transferUtility,S3_BUCKET_NAME);
+                        startRecording(audioMultimedia);
+                        lesson.getMultimediaAudiosFiles().add(audioMultimedia);
+                    }
+                } else {
+                    getRecorAudioPermissions();
+                }//progressBarRecordAudio.setVisibility(View.VISIBLE);
+
                 return false;
             }
         });
@@ -303,9 +285,11 @@ public class LessonFormActivity extends AppCompatActivity {
         fabRecordAudio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                stopRecording();
+                if (ContextCompat.checkSelfPermission(LessonFormActivity.this,
+                        Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
+                    stopRecording();
+                } else {}
                 //progressBarRecordAudio.setVisibility(View.INVISIBLE);
-                Log.i("CLICK","CLICKING");
             }
         });
     }
@@ -390,8 +374,7 @@ public class LessonFormActivity extends AppCompatActivity {
                         dispatchTakePictureIntent();
                     }
                 }   else {
-                    Toast.makeText(this, "Hasta que no entregues acceso a a tu almacenamiento, " +
-                            "no la podemos mostrar", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Debes dar permiso para tomar fotos", Toast.LENGTH_LONG).show();
                 }
                 return;
 
@@ -400,7 +383,7 @@ public class LessonFormActivity extends AppCompatActivity {
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     getCameraPermissions();
                 } else {
-                    Toast.makeText(this, "Hasta que no entregues permiso a tu almacienamiento",
+                    Toast.makeText(this, "Debes dar permiso para poder seleccionar foto",
                             Toast.LENGTH_LONG).show();
                 }
 
@@ -414,7 +397,7 @@ public class LessonFormActivity extends AppCompatActivity {
                     startActivityForResult(Intent.createChooser(intent, "Select Picture"),SELECT_IMAGE);
 
                 } else {
-                    Toast.makeText(this, "Hasta que no entregues permiso a tu almacienamiento",
+                    Toast.makeText(this, "Debes dar permiso para poder seleccionar archivos",
                             Toast.LENGTH_LONG).show();
                 }
 

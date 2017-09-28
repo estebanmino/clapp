@@ -12,19 +12,15 @@ import java.util.concurrent.ExecutionException;
 public class MultimediaFile {
 
     private String mPath;
-
-    public UploadMultimediaAsyncTask getUploadThread() {
-        return uploadThread;
-    }
-
-    public void setUploadThread(UploadMultimediaAsyncTask uploadThread) {
-        this.uploadThread = uploadThread;
-    }
-
     private UploadMultimediaAsyncTask uploadThread;
+    private DownloadMultimediaAsyncTask downloadThread;
     private String s3BucketName;
     private String fileKey;
     private TransferUtility transferUtility;
+    private String extension;
+    private int arrayPosition;
+
+
 
     public int getArrayPosition() {
         return arrayPosition;
@@ -34,13 +30,23 @@ public class MultimediaFile {
         this.arrayPosition = arrayPosition;
     }
 
-    private int arrayPosition;
-
     public String getExtension() {
         return extension;
     }
 
-    private String extension;
+    public UploadMultimediaAsyncTask getUploadThread() {
+        return uploadThread;
+    }
+
+    public DownloadMultimediaAsyncTask getDownloadThread() {return downloadThread; }
+
+    public void setUploadThread(UploadMultimediaAsyncTask uploadThread) {
+        this.uploadThread = uploadThread;
+    }
+
+    public void setDownloadThread(DownloadMultimediaAsyncTask downloadThread) {
+        this.downloadThread = downloadThread;
+    }
 
     public MultimediaFile(String extension, String mPath, TransferUtility transferUtility, String s3BucketName){
         this.extension = extension;
@@ -60,7 +66,7 @@ public class MultimediaFile {
     public void initUploadThread() {
         File file = new File(mPath);
         fileKey = file.getName();
-        this.uploadThread = new UploadMultimediaAsyncTask(file,transferUtility,fileKey,s3BucketName);
+        this.uploadThread = new UploadMultimediaAsyncTask(file,transferUtility,fileKey,s3BucketName, extension);
         try {
             this.uploadThread.execute().get();
         } catch (ExecutionException e) {
@@ -68,7 +74,20 @@ public class MultimediaFile {
         } catch (InterruptedException es) {
 
         }
+    }
 
+    public boolean initDownloadThread() {
+        File file = new File(mPath);
+        fileKey = file.getName();
+        this.downloadThread = new DownloadMultimediaAsyncTask(file,transferUtility,fileKey,s3BucketName);
+        try {
+            return (Boolean) this.downloadThread.execute().get();
+        } catch (ExecutionException e) {
+
+        } catch (InterruptedException es) {
+
+        }
+        return false;
     }
 
 

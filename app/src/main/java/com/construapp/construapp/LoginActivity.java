@@ -65,7 +65,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 if(request!="error")
                 {
-                    Toast.makeText(LoginActivity.this,request,Toast.LENGTH_LONG).show();
+                    Toast.makeText(LoginActivity.this,"Bienvenido",Toast.LENGTH_LONG).show();
                     SharedPreferences sharedpreferences = getSharedPreferences("ConstruApp", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedpreferences.edit();
                     String[] data = request.split(";");

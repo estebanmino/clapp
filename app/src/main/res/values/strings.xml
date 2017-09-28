@@ -1,16 +1,15 @@
 <resources>
     <string name="app_name">ConstruApp</string>
-    <string name="title_activity_main2">Main2Activity</string>
-    <string name="action_settings">Settings</string>
-    <string name="action_logout">Logout</string>
+    <string name="action_settings">Configuración</string>
+    <string name="action_logout">Cerrar Sesión</string>
     <string name="section_format">Hello World from section: %1$d</string>
 
     <string name="hello_my_lessons_fragment">Hello MyLessons fragment</string>
     <string name="hello_lessons_fragment">Hello Lessons fragment</string>
     <string name="hello_microblog_fragment">Hello Microblog fragment</string>
-    <string name="title_activity_lesson">LessonActivity</string>
+    <string name="title_activity_lesson">Lección</string>
 
-    <string name="title_activity_splash">SplashActivity</string>
+    <string name="title_activity_splash">ConstruApp</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
 
@@ -18,5 +17,5 @@
     <string name="login_activity_user">Ingrese su email</string>
     <string name="login_activity_password">Ingrese su contraseña</string>
     <string name="login_activity_signin">Ingresar</string>
-    <string name="title_activity_lesson_form">LessonFormActivity</string>
+    <string name="title_activity_lesson_form">Nueva Lección</string>
 </resources>

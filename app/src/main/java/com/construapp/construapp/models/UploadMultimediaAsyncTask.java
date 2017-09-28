@@ -17,12 +17,14 @@ public class UploadMultimediaAsyncTask extends AsyncTask {
     private TransferUtility transferUtility;
     private String fileKey;
     private String s3BucketName;
+    private String extension;
 
-    public UploadMultimediaAsyncTask(File file, TransferUtility transferUtility, String fileKey, String s3BucketName) {
+    public UploadMultimediaAsyncTask(File file, TransferUtility transferUtility, String fileKey, String s3BucketName, String extension) {
         this.file = file;
         this.transferUtility = transferUtility;
         this.fileKey = fileKey;
         this.s3BucketName = s3BucketName;
+        this.extension = extension;
     }
 
     @Override
@@ -30,7 +32,7 @@ public class UploadMultimediaAsyncTask extends AsyncTask {
         try {
             transferUtility.upload(
                     s3BucketName,     /* The bucket to upload to */
-                    fileKey,    /* The key for the uploaded object */
+                    extension+"/"+fileKey,    /* The key for the uploaded object */
                     file        /* The file where the data to upload exists */
             );
         }catch (Exception ex){}
