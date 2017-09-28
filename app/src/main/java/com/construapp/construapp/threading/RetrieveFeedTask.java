@@ -144,7 +144,7 @@ public class RetrieveFeedTask extends AsyncTask<String, Integer, String> {
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setDoOutput(true);
                 urlConnection.setDoInput(true);
-                urlConnection.setConnectTimeout(1500);
+                urlConnection.setConnectTimeout(10000);
                 urlConnection.setRequestMethod("POST");
                 urlConnection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
                 //TODO utilizar JSONObject para armar String y no manual
@@ -192,7 +192,7 @@ public class RetrieveFeedTask extends AsyncTask<String, Integer, String> {
 
 
                 JSONObject object = (JSONObject) new JSONTokener(aux).nextValue();
-                String query = "id:"+object.getString("id")+"created at:"+object.getString("created_at");
+                String query = "id:"+object.getString("id");
 
                 out = query;
 
@@ -204,7 +204,7 @@ public class RetrieveFeedTask extends AsyncTask<String, Integer, String> {
             catch (Exception e) {
 
                 e.printStackTrace();
-                return "error";
+                return e.getMessage();
 
             }
 
@@ -283,7 +283,7 @@ public class RetrieveFeedTask extends AsyncTask<String, Integer, String> {
             } catch (Exception e) {
 
                 e.printStackTrace();
-                return "error";
+                return e.getMessage();
 
             }
 

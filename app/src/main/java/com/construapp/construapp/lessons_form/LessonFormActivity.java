@@ -1,4 +1,4 @@
-package com.construapp.construapp;
+package com.construapp.construapp.lessons_form;
 
 import android.Manifest;
 import android.app.Activity;
@@ -25,10 +25,13 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -37,6 +40,8 @@ import android.widget.Toast;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.construapp.construapp.MainActivity;
+import com.construapp.construapp.R;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.models.MultimediaFile;
@@ -58,18 +63,20 @@ public class LessonFormActivity extends AppCompatActivity {
     private static final int FILES_REQUEST = 1882;
     private static final String S3_BUCKET_NAME = "construapp";
     private static String ABSOLUTE_STORAGE_PATH;
+    private static final String EXTENSION_PICTURE = "PICTURE";
+    private static final String EXTENSION_DOCUMENT = "DOCUMENT";
 
     //XML ELEMENTS
     private TextView lessonName;
     private TextView  lessonDescription;
-    private ImageView imageView;
     private FloatingActionButton fabCamera;
     private FloatingActionButton fabGallery;
     private FloatingActionButton fabRecordAudio;
     private FloatingActionButton fabFiles;
     private FloatingActionButton fabSend;
-    private ImageView btnPlayAudio;
-    private ProgressBar progressBarRecordAudio;
+    private EditText editLessonName;
+    private EditText editLessonDescription;
+
 
     //LOCAL VARIABLES
     private String mPath;
@@ -94,6 +101,12 @@ public class LessonFormActivity extends AppCompatActivity {
     //CONSTANTS
     private Constants constants;
 
+    //MM ADAPTER
+    MultimediaImageAdapter multimediaImagePictureAdapter;
+    MultimediaImageAdapter multimediaImageAudioAdapter;
+    MultimediaImageAdapter multimediaImageDocumentAdapter;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,10 +115,12 @@ public class LessonFormActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         //FIND XML ELEMENTS
-        lessonName = (TextView) findViewById(R.id.editText2);
-        lessonDescription = (TextView) findViewById(R.id.editText);
+        lessonName = (TextView) findViewById(R.id.text_new_lesson_name);
+        lessonDescription = (TextView) findViewById(R.id.text_new_lesson_description);
 
-        imageView = (ImageView) findViewById(R.id.image_view);
+        editLessonName = (EditText) findViewById(R.id.edit_new_lesson_name);
+        editLessonDescription = (EditText) findViewById(R.id.edit_new_lesson_description);
+
         mLayout = findViewById(R.id.lesson_form_layout);
 
         fabCamera = (FloatingActionButton) findViewById(R.id.fab_camera);
@@ -114,8 +129,7 @@ public class LessonFormActivity extends AppCompatActivity {
         fabSend = (FloatingActionButton) findViewById(R.id.fab_send);
         fabFiles = (FloatingActionButton) findViewById(R.id.fab_files);
 
-        btnPlayAudio = (ImageView) findViewById(R.id.play_audio_button);
-        progressBarRecordAudio =  (ProgressBar) findViewById(R.id.progress_bar_record);
+        //progressBarRecordAudio =  (ProgressBar) findViewById(R.id.progress_bar_record);
 
         //INIT NEW LESSON
         lesson = new Lesson();
@@ -128,7 +142,7 @@ public class LessonFormActivity extends AppCompatActivity {
         constants = new Constants();
 
         // Record to the external cache directory for visibility
-        ABSOLUTE_STORAGE_PATH = getExternalCacheDir().getAbsolutePath();;
+        ABSOLUTE_STORAGE_PATH = getExternalCacheDir().getAbsolutePath();
         mRecordFileName = ABSOLUTE_STORAGE_PATH + "/audiorecordtest.3gp";
 
         // Create an S3 client
@@ -140,9 +154,34 @@ public class LessonFormActivity extends AppCompatActivity {
         setFabGalleryOnClickListener();
         setFabSendOnClickListener();
         setFabRecordAudioOnClickListener();
-        setBtnPlayAudioOnClickListener();
         setFabFilesOnClickListener();
 
+        ////HORIZONTAL IMAGES SCROLLING
+
+        //GENRAL LAYOUT SCROLL
+        //PICTURES SCROLLING
+        LinearLayoutManager picturesLayoutManager = new LinearLayoutManager(this);
+        picturesLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        RecyclerView mPicturesRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_pictures);
+        mPicturesRecyclerView.setLayoutManager(picturesLayoutManager);
+        multimediaImagePictureAdapter = new MultimediaImageAdapter(lesson.getMultimediaPicturesFiles());
+        mPicturesRecyclerView.setAdapter(multimediaImagePictureAdapter);
+
+        //AUDIOS SCROLLING
+        LinearLayoutManager audiosLayoutManager = new LinearLayoutManager(this);
+        audiosLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        RecyclerView mAudiosRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_audios);
+        mAudiosRecyclerView.setLayoutManager(audiosLayoutManager);
+        multimediaImageAudioAdapter = new MultimediaImageAdapter(lesson.getMultimediaAudiosFiles());
+        mAudiosRecyclerView.setAdapter(multimediaImageAudioAdapter);
+
+        //DOCUMENTS SCROLLING
+        LinearLayoutManager documentsLayoutManager = new LinearLayoutManager(this);
+        documentsLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        RecyclerView mDocumentsRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_documents);
+        mDocumentsRecyclerView.setLayoutManager(documentsLayoutManager);
+        multimediaImageDocumentAdapter = new MultimediaImageAdapter(lesson.getMultimediaDocumentsFiles());
+        mDocumentsRecyclerView.setAdapter(multimediaImageDocumentAdapter);
     }
 
     private void setFabSendOnClickListener(){
@@ -150,10 +189,10 @@ public class LessonFormActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 SharedPreferences sharedpreferences = getSharedPreferences("ConstruApp", Context.MODE_PRIVATE);
-                String lesson_name = lessonName.getText().toString();
-                String lesson_summary = lessonName.getText().toString();
+                String lesson_name = editLessonName.getText().toString();
+                String lesson_summary = editLessonName.getText().toString();
                 String lesson_motivation = "Aprendizaje";
-                String lesson_learning = lessonDescription.getText().toString();
+                String lesson_learning = editLessonDescription.getText().toString();
                 String token = sharedpreferences.getString("token", "");
                 String user_id = sharedpreferences.getString("user_id", "");
                 String company_id = sharedpreferences.getString("company_id", "");
@@ -172,9 +211,14 @@ public class LessonFormActivity extends AppCompatActivity {
 
                 }
 
-                for (MultimediaFile multimediaFile: lesson.getMultimediaFiles()) {
+                for (MultimediaFile multimediaFile: lesson.getMultimediaPicturesFiles()) {
                     multimediaFile.initUploadThread();
-
+                }
+                for (MultimediaFile multimediaFile: lesson.getMultimediaAudiosFiles()) {
+                    multimediaFile.initUploadThread();
+                }
+                for (MultimediaFile multimediaFile: lesson.getMultimediaDocumentsFiles()) {
+                    multimediaFile.initUploadThread();
                 }
 
                 Toast.makeText(LessonFormActivity.this,"El JSON es:"+response,Toast.LENGTH_LONG).show();
@@ -182,7 +226,7 @@ public class LessonFormActivity extends AppCompatActivity {
 
             }
         });
-    };
+    }
 
     public void setFabFilesOnClickListener(){
         fabFiles.setOnClickListener(new View.OnClickListener() {
@@ -196,24 +240,20 @@ public class LessonFormActivity extends AppCompatActivity {
         });
     }
 
-    public void setBtnPlayAudioOnClickListener() {
-        btnPlayAudio.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onPlay(mStartPlaying);
-                mStartPlaying = !mStartPlaying;
-            }
-        });
-    }
-
     public void setFabRecordAudioOnClickListener() {
         //
         fabRecordAudio.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                progressBarRecordAudio.setVisibility(View.VISIBLE);
+                getRecorAudioPermissions();
+                //progressBarRecordAudio.setVisibility(View.VISIBLE);
                 if (!isRecording) {
-                    startRecording();
+                    Long tsLong = System.currentTimeMillis()/1000;
+                    String ts = tsLong.toString();
+                    MultimediaFile audioMultimedia = new MultimediaFile(
+                            "AUDIO",ABSOLUTE_STORAGE_PATH+ts.toString()+".3gp",transferUtility,S3_BUCKET_NAME);
+                    startRecording(audioMultimedia);
+                    lesson.getMultimediaAudiosFiles().add(audioMultimedia);
                 }
                 return false;
             }
@@ -222,9 +262,8 @@ public class LessonFormActivity extends AppCompatActivity {
         fabRecordAudio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getRecorAudioPermissions();
                 stopRecording();
-                progressBarRecordAudio.setVisibility(View.INVISIBLE);
+                //progressBarRecordAudio.setVisibility(View.INVISIBLE);
                 Log.i("CLICK","CLICKING");
             }
         });
@@ -363,11 +402,9 @@ public class LessonFormActivity extends AppCompatActivity {
                                     Log.i("ExternalStorage", "-> Uri"+uri);
                                 }
                             });
-                    Bitmap bitmap = BitmapFactory.decodeFile(mPath);
-                    imageView.setImageBitmap(ThumbnailUtils.extractThumbnail(bitmap, 80, 80));
-                    setImageViewOnClickListener(Uri.fromFile(new File(mPath)));
 
-                    lesson.getMultimediaFiles().add(new MultimediaFile(mPath, transferUtility,S3_BUCKET_NAME));
+                    lesson.getMultimediaPicturesFiles().add(new MultimediaFile(EXTENSION_PICTURE,mPath, transferUtility,S3_BUCKET_NAME));
+                    multimediaImagePictureAdapter.notifyDataSetChanged();
                     break;
 
                 case SELECT_IMAGE:
@@ -375,11 +412,10 @@ public class LessonFormActivity extends AppCompatActivity {
                     if (data != null)
                     {
                         mPath = getRealPathFromURI_API19(getApplicationContext(),data.getData());
-                        Bitmap bitmapGallery = BitmapFactory.decodeFile(mPath);
-                        imageView.setImageBitmap(ThumbnailUtils.extractThumbnail(bitmapGallery, 80,80));
-                        setImageViewOnClickListener(data.getData());
 
-                        lesson.getMultimediaFiles().add(new MultimediaFile(mPath, transferUtility,S3_BUCKET_NAME));
+                        lesson.getMultimediaPicturesFiles().add(new MultimediaFile(EXTENSION_PICTURE,mPath, transferUtility,S3_BUCKET_NAME));
+                        multimediaImagePictureAdapter.notifyDataSetChanged();
+
 
                     } else if (resultCode == Activity.RESULT_CANCELED) {
                         Toast.makeText(LessonFormActivity.this, "Cancelled", Toast.LENGTH_SHORT).show();
@@ -389,24 +425,13 @@ public class LessonFormActivity extends AppCompatActivity {
                 case FILES_REQUEST:
                     Uri selectedUri = data.getData();
 
-                    lesson.getMultimediaFiles().add(new MultimediaFile(
+                    lesson.getMultimediaDocumentsFiles().add(new MultimediaFile(EXTENSION_DOCUMENT,
                             getPath(LessonFormActivity.this, selectedUri), transferUtility,S3_BUCKET_NAME));
+                    multimediaImageDocumentAdapter.notifyDataSetChanged();
                     break;
 
             }
         }
-    }
-
-    public void setImageViewOnClickListener(final Uri uri) {
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setAction(Intent.ACTION_VIEW);
-                intent.setDataAndType(Uri.parse(uri.toString()), "image/*");
-                startActivity(intent);
-            }
-        });
     }
 
     public static String getRealPathFromURI_API19(Context context, Uri uri){
@@ -580,19 +605,19 @@ public class LessonFormActivity extends AppCompatActivity {
 
     //RECORD AUDIO
 
-    private void onPlay(boolean start) {
+    public void onPlay(boolean start, String recordFileName) {
         if (start) {
-            startPlaying();
+            startPlaying(recordFileName);
         } else {
             stopPlaying();
         }
     }
 
-    private void startPlaying() {
+    private void startPlaying(String recordFileName) {
         mPlayer = new MediaPlayer();
         try {
-            mPlayer.setDataSource(mRecordFileName);
-            Log.i("AUDIO RECORD SOURCE", mRecordFileName);
+            mPlayer.setDataSource(recordFileName);
+            Log.i("AUDIO RECORD SOURCE", recordFileName);
             mPlayer.prepare();
             mPlayer.start();
         } catch (IOException e) {
@@ -605,31 +630,31 @@ public class LessonFormActivity extends AppCompatActivity {
         mPlayer = null;
     }
 
-    private void startRecording() {
+    private void startRecording(MultimediaFile multimediaFile) {
         isRecording = true;
         mRecorder = new MediaRecorder();
         mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-        mRecorder.setOutputFile(mRecordFileName);
+        mRecorder.setOutputFile(multimediaFile.getmPath());
         mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
 
         try {
             mRecorder.prepare();
+            mRecorder.start();
         } catch (IOException e) {
             Log.e(LOG_TAG, "prepare() failed");
         }
 
-        mRecorder.start();
     }
 
     private void stopRecording() {
         isRecording = false;
-
-        lesson.getMultimediaFiles().add(new MultimediaFile(mRecordFileName, transferUtility, S3_BUCKET_NAME));
-
         mRecorder.stop();
         mRecorder.release();
         mRecorder = null;
+        //lesson.getMultimediaAudiosFiles().add(new MultimediaFile("AUDIO",mRecordFileName, transferUtility, S3_BUCKET_NAME));
+        multimediaImageAudioAdapter.notifyDataSetChanged();
+
     }
 
     @Override

@@ -8,21 +8,40 @@ import java.util.ArrayList;
 
 public class Lesson {
 
-    private ArrayList<MultimediaFile> multimediaFiles;
+    private ArrayList<MultimediaFile> multimediaPictureFiles;
+    private ArrayList<MultimediaFile> multimediaAudioFiles;
+    private ArrayList<MultimediaFile> multimediaDocumentsFiles;
     private String name;
     private String description;
 
-
-    public ArrayList<MultimediaFile> getMultimediaFiles() {
-        return multimediaFiles;
+    public ArrayList<MultimediaFile> getMultimediaDocumentsFiles() {
+        return multimediaDocumentsFiles;
     }
 
-    public void setMultimediaFiles(ArrayList<MultimediaFile> multimediaFiles) {
-        this.multimediaFiles = multimediaFiles;
+    public void setMultimediaDocumentsFiles(ArrayList<MultimediaFile> multimediaDocumentsFiles) {
+        this.multimediaDocumentsFiles = multimediaDocumentsFiles;
+    }
+
+    public ArrayList<MultimediaFile> getMultimediaPicturesFiles() {
+        return multimediaPictureFiles;
+    }
+
+    public void setMultimediaPictureFiles(ArrayList<MultimediaFile> multimediaPictureFiles) {
+        this.multimediaPictureFiles = multimediaPictureFiles;
+    }
+
+    public ArrayList<MultimediaFile> getMultimediaAudiosFiles() {
+        return multimediaAudioFiles;
+    }
+
+    public void setMultimediaAudioFiles(ArrayList<MultimediaFile> multimediaAudioFiles) {
+        this.multimediaAudioFiles = multimediaAudioFiles;
     }
 
     public void initMultimediaFiles() {
-        this.multimediaFiles = new ArrayList<>();
+        this.multimediaPictureFiles = new ArrayList<>();
+        this.multimediaAudioFiles = new ArrayList<>();
+        this.multimediaDocumentsFiles = new ArrayList<>();
     }
 
     public void setName(String name) {
