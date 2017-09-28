@@ -60,7 +60,7 @@ public class MultimediaFile {
     public void initUploadThread() {
         File file = new File(mPath);
         fileKey = file.getName();
-        this.uploadThread = new UploadMultimediaAsyncTask(file,transferUtility,fileKey,s3BucketName);
+        this.uploadThread = new UploadMultimediaAsyncTask(file,transferUtility,fileKey,s3BucketName, extension);
         try {
             this.uploadThread.execute().get();
         } catch (ExecutionException e) {

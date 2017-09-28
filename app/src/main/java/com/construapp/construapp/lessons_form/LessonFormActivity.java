@@ -8,12 +8,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.media.MediaScannerConnection;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -32,8 +29,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,6 +41,8 @@ import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.models.MultimediaFile;
 import com.construapp.construapp.threading.RetrieveFeedTask;
+
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.IOException;
@@ -118,8 +115,8 @@ public class LessonFormActivity extends AppCompatActivity {
         lessonName = (TextView) findViewById(R.id.text_new_lesson_name);
         lessonDescription = (TextView) findViewById(R.id.text_new_lesson_description);
 
-        editLessonName = (EditText) findViewById(R.id.edit_new_lesson_name);
-        editLessonDescription = (EditText) findViewById(R.id.edit_new_lesson_description);
+        editLessonName =(EditText) findViewById(R.id.text_lesson_name);
+        editLessonDescription = (EditText) findViewById(R.id.text_lesson_description);
 
         mLayout = findViewById(R.id.lesson_form_layout);
 
