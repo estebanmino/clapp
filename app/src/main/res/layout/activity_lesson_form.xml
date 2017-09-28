@@ -19,7 +19,8 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:popupTheme="@style/AppTheme.NoActionBar.PopupOverlay" />
+        app:popupTheme="@style/AppTheme.NoActionBar.PopupOverlay"
+        app:titleTextColor="#FFFFFF"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_send"
@@ -166,11 +167,11 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
-                android:text="Armeria"
+                android:layout_marginTop="24dp"
+                android:text="Espacio Norte"
                 android:textColor="#08088A"
                 android:textSize="20dp"
-                app:layout_constraintHorizontal_bias="0.458"
+                app:layout_constraintHorizontal_bias="0.457"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"

@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
             boolean token_exists = mySPrefs.contains("token");
             if(!token_exists)
             {
-                Toast.makeText(this,"El token se ha borrado",Toast.LENGTH_LONG).show();
+                Toast.makeText(this,"Se ha  cerrado su sesión",Toast.LENGTH_LONG).show();
 
             }
             else

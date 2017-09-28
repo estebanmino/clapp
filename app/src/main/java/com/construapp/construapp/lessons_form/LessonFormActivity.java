@@ -386,6 +386,7 @@ public class LessonFormActivity extends AppCompatActivity {
                     Toast.makeText(this, "Debes dar permiso para poder seleccionar foto",
                             Toast.LENGTH_LONG).show();
                 }
+                break;
 
 
             case READ_EXTERNAL_REQUEST:
@@ -400,6 +401,8 @@ public class LessonFormActivity extends AppCompatActivity {
                     Toast.makeText(this, "Debes dar permiso para poder seleccionar archivos",
                             Toast.LENGTH_LONG).show();
                 }
+                break;
+
 
             case RECORD_AUDIO_REQUEST:
                 if (grantResults.length > 0
@@ -410,6 +413,8 @@ public class LessonFormActivity extends AppCompatActivity {
                     Toast.makeText(this, "Debes dar permiso para grabar audio",
                             Toast.LENGTH_LONG).show();
                 }
+                break;
+
         }
     }
 
@@ -506,7 +511,7 @@ public class LessonFormActivity extends AppCompatActivity {
                 // Show an explanation to the user *asynchronously* -- don't block
                 // this thread waiting for the user's response! After the user
                 // sees the explanation, try again to request the permission.
-                Snackbar.make(mLayout, "Para que podamos VER las fotos, necesitamos acceso a su almacenamiento.",
+                Snackbar.make(mLayout, "Para que se vean las fotos, necesitamos acceso a su almacenamiento.",
                         Snackbar.LENGTH_INDEFINITE).setAction("OK", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
