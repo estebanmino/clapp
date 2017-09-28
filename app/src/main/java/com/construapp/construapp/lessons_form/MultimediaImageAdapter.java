@@ -1,5 +1,6 @@
 package com.construapp.construapp.lessons_form;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,6 +16,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.construapp.construapp.LessonActivity;
 import com.construapp.construapp.R;
 import com.construapp.construapp.models.MultimediaFile;
 
@@ -28,9 +30,11 @@ import java.util.ArrayList;
 public class MultimediaImageAdapter extends RecyclerView.Adapter<MultimediaImageAdapter.MultimediaImageViewHolder> {
 
     private ArrayList<MultimediaFile> mMultimediaFiles;
+    private Context context;
 
-    public MultimediaImageAdapter(ArrayList<MultimediaFile> mMultimediaFiles) {
+    public MultimediaImageAdapter(ArrayList<MultimediaFile> mMultimediaFiles, Context context) {
         this.mMultimediaFiles = mMultimediaFiles;
+        this.context = context;
 
     }
 
@@ -61,17 +65,29 @@ public class MultimediaImageAdapter extends RecyclerView.Adapter<MultimediaImage
 
         switch (multimediaFile.getExtension()){
             case "PICTURE":
-                Bitmap bitmap = BitmapFactory.decodeFile(multimediaFile.getmPath());
-                holder.imageThumbnail.setImageBitmap(ThumbnailUtils.extractThumbnail(bitmap, 80, 80));
-                holder.imageThumbnail.setRotation(90);
+                if (context.getClass() != LessonActivity.class) {
+
+                    Bitmap bitmap = BitmapFactory.decodeFile(multimediaFile.getmPath());
+                    holder.imageThumbnail.setImageBitmap(ThumbnailUtils.extractThumbnail(bitmap, 80, 80));
+                    holder.imageThumbnail.setRotation(90);
+                } else {
+                    holder.imageButtonDelete.setVisibility(View.GONE);
+                }
                 holder.multimediaFile = multimediaFile;
+
                 break;
 
             case "AUDIO":
+                if (context.getClass() == LessonActivity.class) {
+                    holder.imageButtonDelete.setVisibility(View.GONE);
+                }
                 holder.multimediaFile =  multimediaFile;
                 break;
 
             case "DOCUMENT":
+                if (context.getClass() == LessonActivity.class) {
+                    holder.imageButtonDelete.setVisibility(View.GONE);
+                }
                 String path=multimediaFile.getmPath();
                 String filename=path.substring(path.lastIndexOf("/")+1);
                 holder.textPath.setText(filename);
@@ -95,6 +111,7 @@ public class MultimediaImageAdapter extends RecyclerView.Adapter<MultimediaImage
         public TextView textPath;
         public ImageButton imageButtonDelete;
         public Boolean mStartPlaying = true;
+
         MultimediaFile multimediaFile;
         ArrayList<MultimediaFile> multimediaFileArrayList;
 

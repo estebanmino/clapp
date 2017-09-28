@@ -74,7 +74,7 @@ public class LessonActivity extends AppCompatActivity {
         picturesLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         RecyclerView mPicturesRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_pictures);
         mPicturesRecyclerView.setLayoutManager(picturesLayoutManager);
-        multimediaImagePictureAdapter = new MultimediaImageAdapter(lesson.getMultimediaPicturesFiles());
+        multimediaImagePictureAdapter = new MultimediaImageAdapter(lesson.getMultimediaPicturesFiles(),LessonActivity.this);
         mPicturesRecyclerView.setAdapter(multimediaImagePictureAdapter);
 
         //AUDIOS SCROLLING
@@ -82,7 +82,7 @@ public class LessonActivity extends AppCompatActivity {
         audiosLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         RecyclerView mAudiosRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_audios);
         mAudiosRecyclerView.setLayoutManager(audiosLayoutManager);
-        multimediaImageAudioAdapter = new MultimediaImageAdapter(lesson.getMultimediaAudiosFiles());
+        multimediaImageAudioAdapter = new MultimediaImageAdapter(lesson.getMultimediaAudiosFiles(),LessonActivity.this);
         mAudiosRecyclerView.setAdapter(multimediaImageAudioAdapter);
 
         //DOCUMENTS SCROLLING
@@ -90,7 +90,7 @@ public class LessonActivity extends AppCompatActivity {
         documentsLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         RecyclerView mDocumentsRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_documents);
         mDocumentsRecyclerView.setLayoutManager(documentsLayoutManager);
-        multimediaImageDocumentAdapter = new MultimediaImageAdapter(lesson.getMultimediaDocumentsFiles());
+        multimediaImageDocumentAdapter = new MultimediaImageAdapter(lesson.getMultimediaDocumentsFiles(),LessonActivity.this);
         mDocumentsRecyclerView.setAdapter(multimediaImageDocumentAdapter);
 
         // Create an S3 client
@@ -101,18 +101,35 @@ public class LessonActivity extends AppCompatActivity {
         ABSOLUTE_STORAGE_PATH = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString();
 
         MultimediaFile pictureMultimedia = new MultimediaFile(
-                "PICTURE",ABSOLUTE_STORAGE_PATH+"/MyConceptsApp/1234.jpg",transferUtility,"construapp");
+                "PICTURE",ABSOLUTE_STORAGE_PATH+"/ConstruApp/1234.jpg",transferUtility,"construapp");
 
-        try {
-            Boolean down = pictureMultimedia.initDownloadThread();
-            if (down){
-                lesson.getMultimediaPicturesFiles().add(pictureMultimedia);
-            }
-            multimediaImagePictureAdapter.notifyDataSetChanged();
-            Log.i("DOWNLOAAAAAAAD","TRUEEE");
-        } catch (Exception e) {
-            Log.i("EXCEPTION", e.getMessage());
-        }
+        MultimediaFile audioMultimedia = new MultimediaFile(
+                "AUDIO",ABSOLUTE_STORAGE_PATH+"/ConstruApp/1234.jpg",transferUtility,"construapp");
+
+        MultimediaFile documentMultimedia1 = new MultimediaFile("DOCUMENT",ABSOLUTE_STORAGE_PATH+"/ConstruApp/Planos.pdf",transferUtility,"construapp");
+        MultimediaFile documentMultimedia2 = new MultimediaFile("DOCUMENT",ABSOLUTE_STORAGE_PATH+"/ConstruApp/Horarios.pdf",transferUtility,"construapp");
+        MultimediaFile documentMultimedia3 = new MultimediaFile("DOCUMENT",ABSOLUTE_STORAGE_PATH+"/ConstruApp/Personal.pdf",transferUtility,"construapp");
+        MultimediaFile documentMultimedia4 = new MultimediaFile("DOCUMENT",ABSOLUTE_STORAGE_PATH+"/ConstruApp/Planificación.pdf",transferUtility,"construapp");
+
+        lesson.getMultimediaPicturesFiles().add(pictureMultimedia);
+        lesson.getMultimediaPicturesFiles().add(pictureMultimedia);
+        lesson.getMultimediaPicturesFiles().add(pictureMultimedia);
+        lesson.getMultimediaPicturesFiles().add(pictureMultimedia);
+        lesson.getMultimediaPicturesFiles().add(pictureMultimedia);
+        multimediaImagePictureAdapter.notifyDataSetChanged();
+
+        lesson.getMultimediaAudiosFiles().add(audioMultimedia);
+        lesson.getMultimediaAudiosFiles().add(audioMultimedia);
+        lesson.getMultimediaAudiosFiles().add(audioMultimedia);
+        lesson.getMultimediaAudiosFiles().add(audioMultimedia);
+        lesson.getMultimediaAudiosFiles().add(audioMultimedia);
+        multimediaImageAudioAdapter.notifyDataSetChanged();
+
+        lesson.getMultimediaDocumentsFiles().add(documentMultimedia1);
+        lesson.getMultimediaDocumentsFiles().add(documentMultimedia2);
+        lesson.getMultimediaDocumentsFiles().add(documentMultimedia3);
+        lesson.getMultimediaDocumentsFiles().add(documentMultimedia4);
+        multimediaImageDocumentAdapter.notifyDataSetChanged();
 
     }
 

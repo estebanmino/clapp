@@ -61,7 +61,7 @@ public class LessonsAdapter extends BaseAdapter {
         final String elementDescription = arrayList.get(position).getDescription();
 
         lessonName.setText(elementName);
-        lessonDescription.setText(elementDescription);
+        lessonDescription.setText(elementDescription.substring(0,Math.min(elementDescription.length(), 20))+"...");
 
         return convertView;
     }

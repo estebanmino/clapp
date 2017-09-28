@@ -35,6 +35,7 @@ import android.widget.Toast;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.construapp.construapp.LessonActivity;
 import com.construapp.construapp.MainActivity;
 import com.construapp.construapp.R;
 import com.construapp.construapp.models.Constants;
@@ -161,7 +162,7 @@ public class LessonFormActivity extends AppCompatActivity {
         picturesLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         RecyclerView mPicturesRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_pictures);
         mPicturesRecyclerView.setLayoutManager(picturesLayoutManager);
-        multimediaImagePictureAdapter = new MultimediaImageAdapter(lesson.getMultimediaPicturesFiles());
+        multimediaImagePictureAdapter = new MultimediaImageAdapter(lesson.getMultimediaPicturesFiles(),LessonFormActivity.this);
         mPicturesRecyclerView.setAdapter(multimediaImagePictureAdapter);
 
         //AUDIOS SCROLLING
@@ -169,7 +170,7 @@ public class LessonFormActivity extends AppCompatActivity {
         audiosLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         RecyclerView mAudiosRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_audios);
         mAudiosRecyclerView.setLayoutManager(audiosLayoutManager);
-        multimediaImageAudioAdapter = new MultimediaImageAdapter(lesson.getMultimediaAudiosFiles());
+        multimediaImageAudioAdapter = new MultimediaImageAdapter(lesson.getMultimediaAudiosFiles(),LessonFormActivity.this);
         mAudiosRecyclerView.setAdapter(multimediaImageAudioAdapter);
 
         //DOCUMENTS SCROLLING
@@ -177,7 +178,7 @@ public class LessonFormActivity extends AppCompatActivity {
         documentsLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         RecyclerView mDocumentsRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_documents);
         mDocumentsRecyclerView.setLayoutManager(documentsLayoutManager);
-        multimediaImageDocumentAdapter = new MultimediaImageAdapter(lesson.getMultimediaDocumentsFiles());
+        multimediaImageDocumentAdapter = new MultimediaImageAdapter(lesson.getMultimediaDocumentsFiles(),LessonFormActivity.this);
         mDocumentsRecyclerView.setAdapter(multimediaImageDocumentAdapter);
     }
 
@@ -221,7 +222,6 @@ public class LessonFormActivity extends AppCompatActivity {
                     String response2 = "";
                     try {
                         response2 = r2.execute(company_id,lesson_id,path_input).get();
-                        Log.i("tagat",response2);
                     }
                     catch (InterruptedException e){}
                     catch (ExecutionException e) {}
@@ -239,7 +239,7 @@ public class LessonFormActivity extends AppCompatActivity {
                         }
                     }
                 }
-                Toast.makeText(LessonFormActivity.this, "Debes dar permiso para tomar fotos", Toast.LENGTH_LONG).show();
+                Toast.makeText(LessonFormActivity.this, "Nueva lección creada", Toast.LENGTH_LONG).show();
 
                 startActivity(MainActivity.getIntent(LessonFormActivity.this));
 
@@ -339,7 +339,7 @@ public class LessonFormActivity extends AppCompatActivity {
 
     private void dispatchTakePictureIntent() {
 
-        String APP_DIRECTORY = "MyConceptsApp";
+        String APP_DIRECTORY = "ConstruApp";
 
         File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), APP_DIRECTORY);
         boolean isDirectoryCreated = file.exists();
