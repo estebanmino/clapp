@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -28,23 +29,22 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
-import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.models.MultimediaFile;
+import com.construapp.construapp.threading.RetrieveFeedTask;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
 public class LessonFormActivity extends AppCompatActivity {
 
@@ -102,8 +102,8 @@ public class LessonFormActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         //FIND XML ELEMENTS
-        //lessonName = (TextView) findViewById(R.id.lesson_name);
-        //lessonDescription = (TextView) findViewById(R.id.lesson_description);
+        lessonName = (TextView) findViewById(R.id.editText2);
+        lessonDescription = (TextView) findViewById(R.id.editText);
 
         imageView = (ImageView) findViewById(R.id.image_view);
         mLayout = findViewById(R.id.lesson_form_layout);
@@ -143,17 +143,43 @@ public class LessonFormActivity extends AppCompatActivity {
         setBtnPlayAudioOnClickListener();
         setFabFilesOnClickListener();
 
-
-
     }
 
     private void setFabSendOnClickListener(){
         fabSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                SharedPreferences sharedpreferences = getSharedPreferences("ConstruApp", Context.MODE_PRIVATE);
+                String lesson_name = lessonName.getText().toString();
+                String lesson_summary = lessonName.getText().toString();
+                String lesson_motivation = "Aprendizaje";
+                String lesson_learning = lessonDescription.getText().toString();
+                String token = sharedpreferences.getString("token", "");
+                String user_id = sharedpreferences.getString("user_id", "");
+                String company_id = sharedpreferences.getString("company_id", "");
+                String project_id = "2";
+                String response = "";
+                try {
+                    RetrieveFeedTask r = new RetrieveFeedTask("send-lesson");
+                    response = r.execute(lesson_name,lesson_summary,lesson_motivation,lesson_learning,token,user_id,company_id,project_id).get();
+                }
+                catch (InterruptedException e)
+                {
+
+                }
+                catch (ExecutionException e)
+                {
+
+                }
+
                 for (MultimediaFile multimediaFile: lesson.getMultimediaFiles()) {
                     multimediaFile.initUploadThread();
+
                 }
+
+                Toast.makeText(LessonFormActivity.this,"El JSON es:"+response,Toast.LENGTH_LONG).show();
+                startActivity(MainActivity.getIntent(LessonFormActivity.this));
+
             }
         });
     };

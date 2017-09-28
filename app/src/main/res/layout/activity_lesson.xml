@@ -5,73 +5,56 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.construapp.construapp.LessonActivity">
-
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.NoActionBar.AppBarOverlay">
-
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            android:layout_weight="1"
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.NoActionBar.PopupOverlay" />
-
     </android.support.design.widget.AppBarLayout>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layout_editor_absoluteX="8dp"
         tools:layout_editor_absoluteY="8dp">
-
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
             <TextView
-                android:id="@+id/textViewNombreProyecto"
+                android:id="@+id/text_project_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="16dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="80dp"
                 android:text="Nombre Random de Proyecto"
                 android:textColor="#08088A"
                 android:textSize="20dp"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
                 tools:layout_constraintLeft_creator="1"
-                tools:layout_constraintTop_creator="1" />
-
+                tools:layout_constraintTop_creator="1"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="96dp" />
             <TextView
-                android:id="@+id/textViewMasInfo"
+                android:id="@+id/text_more_information"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="-26dp"
-                android:layout_marginTop="1dp"
                 android:text="Más Info"
-                app:layout_constraintLeft_toLeftOf="@+id/imageButtonMasInfo"
-                app:layout_constraintTop_toBottomOf="@+id/imageButtonMasInfo"
-                tools:layout_constraintLeft_creator="1"
-                tools:layout_constraintTop_creator="1" />
-
+                tools:layout_editor_absoluteX="313dp"
+                tools:layout_editor_absoluteY="161dp" />
             <ImageButton
-                android:id="@+id/imageButtonMasInfo"
+                android:id="@+id/image_button_more_information"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
+                android:layout_marginBottom="8dp"
                 android:layout_marginEnd="21dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="21dp"
@@ -81,6 +64,7 @@
                 android:background="#08088A"
                 android:onClick="showInfo"
                 android:scaleType="fitXY"
+                app:layout_constraintBottom_toTopOf="@+id/text_more_information"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
@@ -88,230 +72,33 @@
                 app:srcCompat="@android:drawable/ic_menu_info_details"
                 tools:layout_constraintRight_creator="1"
                 tools:layout_constraintTop_creator="1" />
-
             <TextView
-                android:id="@+id/textViewNombreLeccion"
+                android:id="@+id/text_lesson_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="Nombre Random Lección"
+                android:layout_margin="16dp"
                 android:textColor="#08088A"
-                android:textSize="16dp"
-                app:layout_constraintLeft_toLeftOf="@+id/textViewNombreProyecto"
-                app:layout_constraintTop_toBottomOf="@+id/textViewNombreProyecto"
-                tools:layout_constraintLeft_creator="1"
-                tools:layout_constraintTop_creator="1" />
-
+                app:layout_constraintHorizontal_bias="0.063"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginTop="16dp"
+                app:layout_constraintTop_toBottomOf="@+id/text_project_name"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp" />
             <TextView
-                android:id="@+id/textViewDescripcionLeccion"
-                android:layout_width="match_parent"
+                android:id="@+id/text_lesson_description"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginLeft="0dp"
-                android:layout_marginRight="0dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="43dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_lesson_name"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
-                android:background="#E8E8E8"
-                android:text="La Escuela de Construcción Civil de la Pontificia Universidad Católica de Chile es la unidad académica que genera, integra, y transfiere conocimientos y experiencias para el desarrollo permanente del sector construcción y forma los profesionales que lo lideran, que en conjunto con los sólidos principios y valores cristianos que inspiran todo el quehacer de nuestra Universidad, contribuye a desarrollar una sociedad más justa."
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textViewNombreLeccion"
-                tools:layout_constraintLeft_creator="1"
-                tools:layout_constraintRight_creator="1"
-                tools:layout_constraintTop_creator="1"
-                app:layout_constraintHorizontal_bias="0.5" />
-
-            <ImageView
-                android:id="@+id/imageView10"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="0dp"
-                android:background="#E8E8E8"
-                app:layout_constraintRight_toLeftOf="@+id/imageView23"
-                app:srcCompat="@android:drawable/ic_menu_camera"
-                tools:layout_constraintLeft_creator="1"
-                tools:layout_constraintRight_creator="1"
-                app:layout_constraintLeft_toRightOf="@+id/imageView"
-                android:layout_marginLeft="8dp"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintTop_toTopOf="@+id/imageView11" />
-
-            <ImageView
-                android:id="@+id/imageView12"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:background="#E8E8E8"
-                app:layout_constraintRight_toRightOf="@+id/imageView10"
-                app:layout_constraintTop_toBottomOf="@+id/imageView10"
-                app:srcCompat="@android:drawable/ic_menu_camera"
-                tools:layout_constraintLeft_creator="1"
-                tools:layout_constraintTop_creator="1" />
-
-            <ImageView
-                android:id="@+id/imageView21"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:background="#E8E8E8"
-                app:layout_constraintRight_toRightOf="@+id/imageView11"
-                app:layout_constraintTop_toBottomOf="@+id/imageView11"
-                app:srcCompat="@android:drawable/ic_menu_camera"
-                tools:layout_constraintLeft_creator="1"
-                tools:layout_constraintTop_creator="1" />
-
-            <ImageView
-                android:id="@+id/imageView20"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_marginTop="8dp"
-                android:background="#E8E8E8"
-                app:layout_constraintLeft_toLeftOf="@+id/imageView19"
-                app:layout_constraintTop_toBottomOf="@+id/imageView19"
-                app:srcCompat="@android:drawable/ic_menu_camera"
-                tools:layout_constraintLeft_creator="1"
-                tools:layout_constraintTop_creator="1" />
-
-            <ImageView
-                android:id="@+id/imageView19"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="0dp"
-                android:background="#E8E8E8"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:srcCompat="@android:drawable/ic_menu_camera"
-                tools:layout_constraintLeft_creator="1"
-                tools:layout_constraintTop_creator="1"
-                app:layout_constraintLeft_toRightOf="@+id/imageView"
-                app:layout_constraintRight_toLeftOf="@+id/imageView23"
-                app:layout_constraintTop_toTopOf="@+id/imageView" />
-
-            <ImageView
-                android:id="@+id/imageView11"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="0dp"
-                android:background="#E8E8E8"
-                app:layout_constraintLeft_toRightOf="@+id/imageView19"
-                app:layout_constraintRight_toLeftOf="@+id/imageView10"
-                app:srcCompat="@android:drawable/ic_menu_camera"
-                app:layout_constraintTop_toTopOf="@+id/imageView19" />
-
-            <ImageView
-                android:id="@+id/imageView15"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginLeft="0dp"
-                android:layout_marginTop="0dp"
-                android:background="#E8E8E8"
-                app:layout_constraintLeft_toLeftOf="@+id/imageView21"
-                app:srcCompat="@android:drawable/presence_audio_online"
-                tools:layout_constraintTop_creator="1"
-                app:layout_constraintTop_toTopOf="@+id/imageView18" />
-
-            <ImageView
-                android:id="@+id/imageView16"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_marginTop="0dp"
-                android:background="#E8E8E8"
-                app:layout_constraintRight_toRightOf="@+id/imageView12"
-                app:srcCompat="@android:drawable/presence_audio_online"
-                tools:layout_constraintTop_creator="1"
-                app:layout_constraintTop_toTopOf="@+id/imageView15"
-                android:layout_marginRight="0dp" />
-
-            <ImageView
-                android:id="@+id/imageView18"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginLeft="0dp"
-                android:layout_marginTop="0dp"
-                android:background="#E8E8E8"
-                app:layout_constraintLeft_toLeftOf="@+id/imageView20"
-                app:srcCompat="@android:drawable/presence_audio_online"
-                tools:layout_constraintTop_creator="1"
-                app:layout_constraintTop_toTopOf="@+id/imageView2" />
-
-            <ImageView
-                android:id="@+id/imageView22"
-                android:layout_width="wrap_content"
-                android:layout_height="80dp"
-                android:layout_marginRight="0dp"
-                android:layout_marginStart="6dp"
-                android:layout_marginTop="7dp"
-                android:background="#E8E8E8"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageView23"
-                app:srcCompat="@android:drawable/ic_media_next"
-                android:layout_marginLeft="8dp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintHorizontal_bias="0.96" />
-
-            <ImageView
-                android:id="@+id/imageView2"
-                android:layout_width="wrap_content"
-                android:layout_height="80dp"
-                android:layout_marginStart="6dp"
-                android:background="#E8E8E8"
-                app:srcCompat="@android:drawable/ic_media_previous"
-                android:layout_marginTop="7dp"
-                app:layout_constraintTop_toBottomOf="@+id/imageView"
-                android:layout_marginRight="8dp"
-                app:layout_constraintRight_toRightOf="@+id/imageView" />
-
-            <ImageView
-                android:id="@+id/imageView23"
-                android:layout_width="wrap_content"
-                android:layout_height="169dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="0dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="0dp"
-                android:background="#E8E8E8"
-                app:layout_constraintHorizontal_bias="0.96"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:srcCompat="@android:drawable/ic_media_next"
-                app:layout_constraintTop_toTopOf="@+id/imageView10" />
-
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="wrap_content"
-                android:layout_height="169dp"
-                android:layout_marginLeft="0dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:background="#E8E8E8"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textViewDescripcionLeccion"
-                app:srcCompat="@android:drawable/ic_media_previous"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginBottom="8dp"
-                app:layout_constraintVertical_bias="0.0" />
-
+                android:layout_marginEnd="16dp" />
         </android.support.constraint.ConstraintLayout>
     </ScrollView>
-
 </android.support.design.widget.CoordinatorLayout>
-

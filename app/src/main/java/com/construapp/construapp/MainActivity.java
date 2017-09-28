@@ -18,9 +18,12 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.construapp.construapp.microblog.MicroblogFragment;
+import com.construapp.construapp.threading.RetrieveFeedTask;
 
 import android.content.SharedPreferences;
 import android.widget.Toast;
+
+import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -60,7 +63,12 @@ public class MainActivity extends AppCompatActivity {
 
         SharedPreferences sharedpreferences = getSharedPreferences("ConstruApp", Context.MODE_PRIVATE);
         String token = sharedpreferences.getString("token", "");
-        Toast.makeText(this,"El token es:"+token,Toast.LENGTH_LONG).show();
+        String user_id = sharedpreferences.getString("user_id", "");
+        String company_id = sharedpreferences.getString("company_id", "");
+        //Toast.makeText(this,"El token es:"+token,Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this,"El User id es:"+user_id,Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this,"El company id es:"+company_id,Toast.LENGTH_SHORT).show();
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
