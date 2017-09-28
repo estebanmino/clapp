@@ -66,11 +66,13 @@ public class LessonsFragment extends Fragment {
                 String name = curr.getString("name");
                 Log.i("ldebug",name);
                 String learning = curr.getString("learning");
+                String id = curr.getString("id");
                 //Log.i("ldebug",learning);
                 //Log.i("ldebug","hola");
                 Lesson lesson_1 = new Lesson();
                 lesson_1.setName(name);
                 lesson_1.setDescription(learning);
+                lesson_1.setId(id);
                 lessonList.add(lesson_1);
                 Log.i("count",String.valueOf(i));
 
@@ -85,16 +87,6 @@ public class LessonsFragment extends Fragment {
 
         }
 
-        //Lesson lesson_1 = new Lesson();
-        //lesson_1.setName("Leccion jose 1");
-        //lesson_1.setDescription("Jose 1");
-
-        Lesson lesson_2 = new Lesson();
-        lesson_2.setName("lECCION JOSE 2");
-        lesson_2.setDescription("JOSE 2");
-
-        lessonList.add(lesson_2);
-        //lessonList.add(lesson_1);
 
         lessonsAdapter = new LessonsAdapter(getActivity(), lessonList);
 
@@ -118,7 +110,9 @@ public class LessonsFragment extends Fragment {
                 SharedPreferences.Editor editor = spl.edit();
                 editor.putString("lesson_name", lesson.getName());
                 editor.putString("lesson_description",lesson.getDescription());
+                editor.putString("lesson_id",lesson.getId());
                 editor.commit();
+                
 
                 startActivity(LessonActivity.getIntent(getActivity(), lesson.getName(),
                         lesson.getDescription()));

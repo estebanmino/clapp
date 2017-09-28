@@ -23,8 +23,10 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.construapp.construapp.LoginActivity;
+import com.construapp.construapp.models.Lesson;
 
 import java.io.BufferedInputStream;
+import java.util.ArrayList;
 
 /**
  * Created by jose on 22-09-17.
@@ -59,7 +61,7 @@ public class RetrieveFeedTask extends AsyncTask<String, Integer, String> {
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setDoOutput(true);
                 urlConnection.setDoInput(true);
-                urlConnection.setConnectTimeout(1500);
+                urlConnection.setConnectTimeout(15000);
                 urlConnection.setRequestMethod("POST");
                 urlConnection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
                 //TODO utilizar JSONObject para armar String y no manual
@@ -110,8 +112,9 @@ public class RetrieveFeedTask extends AsyncTask<String, Integer, String> {
                 JSONObject object = (JSONObject) new JSONTokener(aux).nextValue();
                 String t = object.getString("auth_token");
                 String id = object.getString("id");
-                String company_id = object.getString("company_id");
-                //String company_id = company.getString("id");
+                JSONObject company = object.getJSONObject("company");
+                //String company_id = object.getString("company_id");
+                String company_id = company.getString("id");
                 String query = t+";"+id+";"+company_id;
 
                 out = query;
@@ -138,7 +141,7 @@ public class RetrieveFeedTask extends AsyncTask<String, Integer, String> {
             int project_id = Integer.parseInt(str[7]);
 
             try {
-                //TODO CONSEGUIR ID DE LA EMPRESA
+
                 String url_string = "http://construapp-api.ing.puc.cl/companies/"+company_id+"/lessons";
                 URL url = new URL(url_string);
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
@@ -163,7 +166,7 @@ public class RetrieveFeedTask extends AsyncTask<String, Integer, String> {
                     // Success
                     // Further processing here
                     urlConnection.disconnect();
-                    out = "error por code:" + responsecode+". OUTPUT: "+input;
+                    out = "error";
                     return out;
                 }
                 else
@@ -192,7 +195,7 @@ public class RetrieveFeedTask extends AsyncTask<String, Integer, String> {
 
 
                 JSONObject object = (JSONObject) new JSONTokener(aux).nextValue();
-                String query = "id:"+object.getString("id");
+                String query = object.getString("id");
 
                 out = query;
 
@@ -241,7 +244,7 @@ public class RetrieveFeedTask extends AsyncTask<String, Integer, String> {
                     // Success
                     // Further processing here
                     urlConnection.disconnect();
-                    out = "error: "+responsecode;
+                    out = "error";
                     return out;
                 } else {
                     //continue
@@ -287,6 +290,100 @@ public class RetrieveFeedTask extends AsyncTask<String, Integer, String> {
 
             }
 
+        }
+        else if(type == "fetch-s3")
+        {
+            Log.i("S3","estoy en S3");
+            String company_id = str[0];
+            String lesson_id = str[1];
+            String paths_string = str[2];
+            String[] paths_array = paths_string.split(";");
+            Log.i("company_id",company_id);
+            try {
+                Log.i("LESSON_ID",lesson_id);
+                String url_string = "http://construapp-api.ing.puc.cl/companies/"+company_id+"/lessons/"+lesson_id+"/save_key";
+                URL url = new URL(url_string);
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setDoOutput(true);
+                urlConnection.setDoInput(true);
+                urlConnection.setConnectTimeout(15000);
+                urlConnection.setRequestMethod("POST");
+                urlConnection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                //TODO utilizar JSONObject para armar String y no manual
+                JSONArray routes_array = new JSONArray();
+
+                JSONObject paths = new JSONObject();
+
+                for(int i=0;i<paths_array.length;i++)
+                {
+                    routes_array.put(paths_array[i]);
+                }
+
+                paths.put("array_file_path",routes_array);
+                String rutas_string = paths.toString();
+                Log.i("jsontoprint",rutas_string);
+                urlConnection.connect();
+
+
+                OutputStream os = urlConnection.getOutputStream();
+                os.write(rutas_string.getBytes("UTF-8"));
+                os.close();
+
+
+                int responsecode = urlConnection.getResponseCode();
+
+                Log.i("responsecode",String.valueOf(responsecode));
+
+                if (responsecode != 200) {
+                    // Success
+                    // Further processing here
+                    urlConnection.disconnect();
+                    out = "error: "+responsecode;
+                    return out;
+                } else {
+                    //continue
+                }
+
+
+                InputStream response = urlConnection.getInputStream();
+                BufferedReader br = new BufferedReader(new InputStreamReader((response)));
+
+                String output = "";
+                String aux = "";
+                System.out.println("Output from Server .... \n");
+                while ((output = br.readLine()) != null) {
+                    System.out.println(output);
+                    aux += output;
+                }
+
+                if (urlConnection.getResponseCode() == 200) {
+                    // Success
+                    // Further processing here
+                    urlConnection.disconnect();
+
+                }
+
+
+                //JSONObject object = (JSONObject) new JSONTokener(aux).nextValue();
+                //String t = object.getString("auth_token");
+                //String id = object.getString("id");
+                //JSONObject company = (JSONObject) object.getJSONObject("company");
+                //String company_id = company.getString("id");
+                String query = aux;
+                Log.i("outputLessonsthread",aux);
+                aux = "OK";
+                return aux;
+
+                //out = query;
+
+                //return out;
+
+            } catch (Exception e) {
+
+                e.printStackTrace();
+                return e.getMessage();
+
+            }
         }
         else
         {

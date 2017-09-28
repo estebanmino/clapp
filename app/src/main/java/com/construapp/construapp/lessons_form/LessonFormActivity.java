@@ -196,8 +196,10 @@ public class LessonFormActivity extends AppCompatActivity {
                 String token = sharedpreferences.getString("token", "");
                 String user_id = sharedpreferences.getString("user_id", "");
                 String company_id = sharedpreferences.getString("company_id", "");
+                //TODO FIJAR PROYECTO CUANDO EXISTA
                 String project_id = "2";
                 String response = "";
+                String lesson_id="";
                 try {
                     RetrieveFeedTask r = new RetrieveFeedTask("send-lesson");
                     response = r.execute(lesson_name,lesson_summary,lesson_motivation,lesson_learning,token,user_id,company_id,project_id).get();
@@ -210,16 +212,55 @@ public class LessonFormActivity extends AppCompatActivity {
                 {
 
                 }
+                if(response != "error")
+                {
+                    lesson_id=response;
+                    String path_input = "";
+                    for (MultimediaFile multimediaFile: lesson.getMultimediaPicturesFiles()) {
+                        path_input+=multimediaFile.getExtension()+"/"+multimediaFile.getmPath().substring(multimediaFile.getmPath().lastIndexOf("/")+1)+";";
+                    }
+                    for (MultimediaFile multimediaFile: lesson.getMultimediaAudiosFiles()) {
+                        path_input+=multimediaFile.getExtension()+"/"+multimediaFile.getmPath().substring(multimediaFile.getmPath().lastIndexOf("/")+1)+";";
+                    }
+                    for (MultimediaFile multimediaFile: lesson.getMultimediaDocumentsFiles()) {
+                        path_input+=multimediaFile.getExtension()+"/"+multimediaFile.getmPath().substring(multimediaFile.getmPath().lastIndexOf("/")+1)+";";
+                    }
 
-                for (MultimediaFile multimediaFile: lesson.getMultimediaPicturesFiles()) {
-                    multimediaFile.initUploadThread();
+
+                    RetrieveFeedTask r2 = new RetrieveFeedTask("fetch-s3");
+                    String response2 = "";
+                    try {
+                        response2 = r2.execute(company_id,lesson_id,path_input).get();
+                        Log.i("tagat",response2);
+                    //response2 = "OK";
+                    }
+                    catch (InterruptedException e)
+                    {
+
+                    }
+                    catch (ExecutionException e)
+                    {
+
+                    }
+
+                    if(response2 == "OK")
+                    {
+                        for (MultimediaFile multimediaFile: lesson.getMultimediaPicturesFiles()) {
+                            multimediaFile.initUploadThread();
+                        }
+                        for (MultimediaFile multimediaFile: lesson.getMultimediaAudiosFiles()) {
+                            multimediaFile.initUploadThread();
+                        }
+                        for (MultimediaFile multimediaFile: lesson.getMultimediaDocumentsFiles()) {
+                            multimediaFile.initUploadThread();
+                        }
+
+                    }
+
+
+
                 }
-                for (MultimediaFile multimediaFile: lesson.getMultimediaAudiosFiles()) {
-                    multimediaFile.initUploadThread();
-                }
-                for (MultimediaFile multimediaFile: lesson.getMultimediaDocumentsFiles()) {
-                    multimediaFile.initUploadThread();
-                }
+
 
                 Toast.makeText(LessonFormActivity.this,"El JSON es:"+response,Toast.LENGTH_LONG).show();
                 startActivity(MainActivity.getIntent(LessonFormActivity.this));
