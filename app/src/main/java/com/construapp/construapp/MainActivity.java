@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
             }
             else
             {
-                Toast.makeText(this,"El token NO SE BORRO",Toast.LENGTH_LONG).show();
+                //Toast.makeText(this,"El token NO SE BORRO",Toast.LENGTH_LONG).show();
 
             }
 
