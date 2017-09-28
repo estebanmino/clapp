@@ -43,6 +43,15 @@ public class LoginActivity extends AppCompatActivity {
         editPassword = (EditText) findViewById(R.id.edit_password);
         btnSignin = (Button) findViewById(R.id.btn_sigin);
 
+        //Hacemos manejo por si existe el token
+
+        SharedPreferences mySPrefs =getSharedPreferences("ConstruApp", Context.MODE_PRIVATE);
+        boolean token_exists = mySPrefs.contains("token");
+        if(token_exists)
+        {
+            startActivity(MainActivity.getIntent(LoginActivity.this));
+        }
+
 
         btnSignin.setOnClickListener(new View.OnClickListener() {
             @Override
