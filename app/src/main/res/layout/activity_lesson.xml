@@ -167,7 +167,7 @@
                 app:layout_constraintRight_toRightOf="@+id/recycler_horizontal_pictures"
                 app:layout_constraintTop_toTopOf="@+id/recycler_horizontal_pictures"
                 app:layout_constraintVertical_bias="0.0"
-                app:srcCompat="@android:drawable/ic_menu_gallery" />
+                app:srcCompat="@drawable/ic_gallery_dark" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recycler_horizontal_audios"
@@ -197,7 +197,7 @@
                 app:layout_constraintRight_toRightOf="@+id/recycler_horizontal_audios"
                 app:layout_constraintTop_toTopOf="@+id/recycler_horizontal_audios"
                 app:layout_constraintVertical_bias="0.0"
-                app:srcCompat="@android:drawable/presence_audio_online" />
+                app:srcCompat="@drawable/ic_mic_dark" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recycler_horizontal_documents"
@@ -230,7 +230,7 @@
                 app:layout_constraintRight_toRightOf="@+id/recycler_horizontal_documents"
                 app:layout_constraintTop_toTopOf="@+id/recycler_horizontal_documents"
                 app:layout_constraintVertical_bias="0.0"
-                app:srcCompat="?android:attr/actionModePasteDrawable" />
+                app:srcCompat="@drawable/ic_task_dark" />
 
         </android.support.constraint.ConstraintLayout>
     </android.support.v4.widget.NestedScrollView>
