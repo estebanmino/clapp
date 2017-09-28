@@ -85,16 +85,6 @@ public class LessonsFragment extends Fragment {
 
         }
 
-        //Lesson lesson_1 = new Lesson();
-        //lesson_1.setName("Leccion jose 1");
-        //lesson_1.setDescription("Jose 1");
-
-        Lesson lesson_2 = new Lesson();
-        lesson_2.setName("lECCION JOSE 2");
-        lesson_2.setDescription("JOSE 2");
-
-        lessonList.add(lesson_2);
-        //lessonList.add(lesson_1);
 
         lessonsAdapter = new LessonsAdapter(getActivity(), lessonList);
 
