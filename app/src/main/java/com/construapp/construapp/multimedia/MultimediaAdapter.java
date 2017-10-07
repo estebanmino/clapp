@@ -1,16 +1,8 @@
-package com.construapp.construapp.lessons_form;
+package com.construapp.construapp.multimedia;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.MediaPlayer;
-import android.media.ThumbnailUtils;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,7 +11,6 @@ import com.construapp.construapp.LessonActivity;
 import com.construapp.construapp.R;
 import com.construapp.construapp.models.MultimediaFile;
 
-import java.io.File;
 import java.util.ArrayList;
 
 /**

@@ -16,14 +16,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.construapp.construapp.lessons_form.LessonFormActivity;
 import com.construapp.construapp.microblog.MicroblogFragment;
-import com.construapp.construapp.threading.RetrieveFeedTask;
 
 import android.content.SharedPreferences;
 import android.widget.Toast;
-
-import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 

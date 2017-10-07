@@ -1,4 +1,4 @@
-package com.construapp.construapp.lessons_form;
+package com.construapp.construapp.multimedia;
 
 import android.content.Context;
 import android.content.Intent;
@@ -6,14 +6,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
-
 import com.construapp.construapp.LessonActivity;
 import com.construapp.construapp.R;
 import com.construapp.construapp.models.MultimediaFile;
@@ -56,9 +51,6 @@ public class MultimediaPictureAdapter extends MultimediaAdapter {
     public class MultimediaViewHolder
             extends MultimediaAdapter.MultimediaViewHolder
             implements View.OnClickListener {
-
-        MultimediaFile multimediaFile;
-        ArrayList<MultimediaFile> multimediaFileArrayList;
 
         public MultimediaViewHolder(View view) {
             super(view);

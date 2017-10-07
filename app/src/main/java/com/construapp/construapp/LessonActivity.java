@@ -4,13 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.content.SharedPreferences;
@@ -18,13 +15,12 @@ import android.content.SharedPreferences;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
-import com.construapp.construapp.lessons_form.LessonFormActivity;
-import com.construapp.construapp.lessons_form.MultimediaImageAdapter;
+import com.construapp.construapp.multimedia.MultimediaAudioAdapter;
+import com.construapp.construapp.multimedia.MultimediaDocumentAdapter;
+import com.construapp.construapp.multimedia.MultimediaPictureAdapter;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.models.MultimediaFile;
-
-import org.w3c.dom.Text;
 
 
 public class LessonActivity extends AppCompatActivity {
@@ -43,9 +39,9 @@ public class LessonActivity extends AppCompatActivity {
 
 
     //MM ADAPTER
-    MultimediaImageAdapter multimediaImagePictureAdapter;
-    MultimediaImageAdapter multimediaImageAudioAdapter;
-    MultimediaImageAdapter multimediaImageDocumentAdapter;
+    MultimediaPictureAdapter multimediaPictureAdapter;
+    MultimediaAudioAdapter multimediaAudioAdapter;
+    MultimediaDocumentAdapter multimediaDocumentAdapter;
 
     private static String ABSOLUTE_STORAGE_PATH;
 
@@ -74,24 +70,24 @@ public class LessonActivity extends AppCompatActivity {
         picturesLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         RecyclerView mPicturesRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_pictures);
         mPicturesRecyclerView.setLayoutManager(picturesLayoutManager);
-        multimediaImagePictureAdapter = new MultimediaImageAdapter(lesson.getMultimediaPicturesFiles(),LessonActivity.this);
-        mPicturesRecyclerView.setAdapter(multimediaImagePictureAdapter);
+        multimediaPictureAdapter = new MultimediaPictureAdapter(lesson.getMultimediaPicturesFiles(),LessonActivity.this);
+        mPicturesRecyclerView.setAdapter(multimediaPictureAdapter);
 
         //AUDIOS SCROLLING
         LinearLayoutManager audiosLayoutManager = new LinearLayoutManager(this);
         audiosLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         RecyclerView mAudiosRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_audios);
         mAudiosRecyclerView.setLayoutManager(audiosLayoutManager);
-        multimediaImageAudioAdapter = new MultimediaImageAdapter(lesson.getMultimediaAudiosFiles(),LessonActivity.this);
-        mAudiosRecyclerView.setAdapter(multimediaImageAudioAdapter);
+        multimediaAudioAdapter = new MultimediaAudioAdapter(lesson.getMultimediaAudiosFiles(),LessonActivity.this);
+        mAudiosRecyclerView.setAdapter(multimediaAudioAdapter);
 
         //DOCUMENTS SCROLLING
         LinearLayoutManager documentsLayoutManager = new LinearLayoutManager(this);
         documentsLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         RecyclerView mDocumentsRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_documents);
         mDocumentsRecyclerView.setLayoutManager(documentsLayoutManager);
-        multimediaImageDocumentAdapter = new MultimediaImageAdapter(lesson.getMultimediaDocumentsFiles(),LessonActivity.this);
-        mDocumentsRecyclerView.setAdapter(multimediaImageDocumentAdapter);
+        multimediaDocumentAdapter = new MultimediaDocumentAdapter(lesson.getMultimediaDocumentsFiles(),LessonActivity.this);
+        mDocumentsRecyclerView.setAdapter(multimediaDocumentAdapter);
 
         // Create an S3 client
         constants = new Constants();
@@ -116,20 +112,20 @@ public class LessonActivity extends AppCompatActivity {
         lesson.getMultimediaPicturesFiles().add(pictureMultimedia);
         lesson.getMultimediaPicturesFiles().add(pictureMultimedia);
         lesson.getMultimediaPicturesFiles().add(pictureMultimedia);
-        multimediaImagePictureAdapter.notifyDataSetChanged();
+        multimediaPictureAdapter.notifyDataSetChanged();
 
         lesson.getMultimediaAudiosFiles().add(audioMultimedia);
         lesson.getMultimediaAudiosFiles().add(audioMultimedia);
         lesson.getMultimediaAudiosFiles().add(audioMultimedia);
         lesson.getMultimediaAudiosFiles().add(audioMultimedia);
         lesson.getMultimediaAudiosFiles().add(audioMultimedia);
-        multimediaImageAudioAdapter.notifyDataSetChanged();
+        multimediaAudioAdapter.notifyDataSetChanged();
 
         lesson.getMultimediaDocumentsFiles().add(documentMultimedia1);
         lesson.getMultimediaDocumentsFiles().add(documentMultimedia2);
         lesson.getMultimediaDocumentsFiles().add(documentMultimedia3);
         lesson.getMultimediaDocumentsFiles().add(documentMultimedia4);
-        multimediaImageDocumentAdapter.notifyDataSetChanged();
+        multimediaDocumentAdapter.notifyDataSetChanged();
 
     }
 

@@ -1,4 +1,4 @@
-package com.construapp.construapp.lessons_form;
+package com.construapp.construapp;
 
 import android.Manifest;
 import android.app.Activity;
@@ -35,15 +35,13 @@ import android.widget.Toast;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
-import com.construapp.construapp.LessonActivity;
-import com.construapp.construapp.MainActivity;
-import com.construapp.construapp.R;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.models.MultimediaFile;
+import com.construapp.construapp.multimedia.MultimediaAudioAdapter;
+import com.construapp.construapp.multimedia.MultimediaDocumentAdapter;
+import com.construapp.construapp.multimedia.MultimediaPictureAdapter;
 import com.construapp.construapp.threading.RetrieveFeedTask;
-
-import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.IOException;
@@ -100,9 +98,9 @@ public class LessonFormActivity extends AppCompatActivity {
     private Constants constants;
 
     //MM ADAPTER
-    MultimediaPictureAdapter multimediaImagePictureAdapter;
-    MultimediaImageAdapter multimediaImageAudioAdapter;
-    MultimediaImageAdapter multimediaImageDocumentAdapter;
+    MultimediaPictureAdapter multimediaPictureAdapter;
+    MultimediaAudioAdapter multimediaAudioAdapter;
+    MultimediaDocumentAdapter multimediaDocumentAdapter;
 
 
     @Override
@@ -162,24 +160,24 @@ public class LessonFormActivity extends AppCompatActivity {
         picturesLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         RecyclerView mPicturesRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_pictures);
         mPicturesRecyclerView.setLayoutManager(picturesLayoutManager);
-        multimediaImagePictureAdapter = new MultimediaPictureAdapter(lesson.getMultimediaPicturesFiles(),LessonFormActivity.this);
-        mPicturesRecyclerView.setAdapter(multimediaImagePictureAdapter);
+        multimediaPictureAdapter = new MultimediaPictureAdapter(lesson.getMultimediaPicturesFiles(),LessonFormActivity.this);
+        mPicturesRecyclerView.setAdapter(multimediaPictureAdapter);
 
         //AUDIOS SCROLLING
         LinearLayoutManager audiosLayoutManager = new LinearLayoutManager(this);
         audiosLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         RecyclerView mAudiosRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_audios);
         mAudiosRecyclerView.setLayoutManager(audiosLayoutManager);
-        multimediaImageAudioAdapter = new MultimediaImageAdapter(lesson.getMultimediaAudiosFiles(),LessonFormActivity.this);
-        mAudiosRecyclerView.setAdapter(multimediaImageAudioAdapter);
+        multimediaAudioAdapter = new MultimediaAudioAdapter(lesson.getMultimediaAudiosFiles(),LessonFormActivity.this);
+        mAudiosRecyclerView.setAdapter(multimediaAudioAdapter);
 
         //DOCUMENTS SCROLLING
         LinearLayoutManager documentsLayoutManager = new LinearLayoutManager(this);
         documentsLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         RecyclerView mDocumentsRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_documents);
         mDocumentsRecyclerView.setLayoutManager(documentsLayoutManager);
-        multimediaImageDocumentAdapter = new MultimediaImageAdapter(lesson.getMultimediaDocumentsFiles(),LessonFormActivity.this);
-        mDocumentsRecyclerView.setAdapter(multimediaImageDocumentAdapter);
+        multimediaDocumentAdapter = new MultimediaDocumentAdapter(lesson.getMultimediaDocumentsFiles(),LessonFormActivity.this);
+        mDocumentsRecyclerView.setAdapter(multimediaDocumentAdapter);
     }
 
     private void setFabSendOnClickListener(){
@@ -433,7 +431,7 @@ public class LessonFormActivity extends AppCompatActivity {
                             });
 
                     lesson.getMultimediaPicturesFiles().add(new MultimediaFile(EXTENSION_PICTURE,mPath, transferUtility,S3_BUCKET_NAME));
-                    multimediaImagePictureAdapter.notifyDataSetChanged();
+                    multimediaPictureAdapter.notifyDataSetChanged();
                     break;
 
                 case SELECT_IMAGE:
@@ -443,7 +441,7 @@ public class LessonFormActivity extends AppCompatActivity {
                         mPath = getRealPathFromURI_API19(getApplicationContext(),data.getData());
 
                         lesson.getMultimediaPicturesFiles().add(new MultimediaFile(EXTENSION_PICTURE,mPath, transferUtility,S3_BUCKET_NAME));
-                        multimediaImagePictureAdapter.notifyDataSetChanged();
+                        multimediaPictureAdapter.notifyDataSetChanged();
 
 
                     } else if (resultCode == Activity.RESULT_CANCELED) {
@@ -456,7 +454,7 @@ public class LessonFormActivity extends AppCompatActivity {
 
                     lesson.getMultimediaDocumentsFiles().add(new MultimediaFile(EXTENSION_DOCUMENT,
                             getPath(LessonFormActivity.this, selectedUri), transferUtility,S3_BUCKET_NAME));
-                    multimediaImageDocumentAdapter.notifyDataSetChanged();
+                    multimediaDocumentAdapter.notifyDataSetChanged();
                     break;
 
             }
@@ -682,7 +680,7 @@ public class LessonFormActivity extends AppCompatActivity {
         mRecorder.release();
         mRecorder = null;
         //lesson.getMultimediaAudiosFiles().add(new MultimediaFile("AUDIO",mRecordFileName, transferUtility, S3_BUCKET_NAME));
-        multimediaImageAudioAdapter.notifyDataSetChanged();
+        multimediaAudioAdapter.notifyDataSetChanged();
 
     }
 
