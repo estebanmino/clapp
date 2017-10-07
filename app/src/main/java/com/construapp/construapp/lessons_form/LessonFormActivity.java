@@ -100,7 +100,7 @@ public class LessonFormActivity extends AppCompatActivity {
     private Constants constants;
 
     //MM ADAPTER
-    MultimediaImageAdapter multimediaImagePictureAdapter;
+    MultimediaPictureAdapter multimediaImagePictureAdapter;
     MultimediaImageAdapter multimediaImageAudioAdapter;
     MultimediaImageAdapter multimediaImageDocumentAdapter;
 
@@ -162,7 +162,7 @@ public class LessonFormActivity extends AppCompatActivity {
         picturesLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         RecyclerView mPicturesRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_pictures);
         mPicturesRecyclerView.setLayoutManager(picturesLayoutManager);
-        multimediaImagePictureAdapter = new MultimediaImageAdapter(lesson.getMultimediaPicturesFiles(),LessonFormActivity.this);
+        multimediaImagePictureAdapter = new MultimediaPictureAdapter(lesson.getMultimediaPicturesFiles(),LessonFormActivity.this);
         mPicturesRecyclerView.setAdapter(multimediaImagePictureAdapter);
 
         //AUDIOS SCROLLING
