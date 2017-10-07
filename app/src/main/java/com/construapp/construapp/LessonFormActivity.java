@@ -17,6 +17,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.ConstraintSet;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -28,6 +30,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -72,6 +76,7 @@ public class LessonFormActivity extends AppCompatActivity {
     private FloatingActionButton fabSend;
     private EditText editLessonName;
     private EditText editLessonDescription;
+    private ConstraintLayout constraintMultimediaBar;
 
 
     //LOCAL VARIABLES
@@ -84,7 +89,7 @@ public class LessonFormActivity extends AppCompatActivity {
     private static String mRecordFileName = null;
     private MediaRecorder mRecorder = null;
     private MediaPlayer mPlayer = null;
-    boolean mStartRecording = true;
+    boolean startRecording;
     boolean mStartPlaying = true;
     boolean isRecording =  false;
 
@@ -101,6 +106,9 @@ public class LessonFormActivity extends AppCompatActivity {
     MultimediaPictureAdapter multimediaPictureAdapter;
     MultimediaAudioAdapter multimediaAudioAdapter;
     MultimediaDocumentAdapter multimediaDocumentAdapter;
+
+    //animations
+    private Animation fab_grows;
 
 
     @Override
@@ -125,17 +133,19 @@ public class LessonFormActivity extends AppCompatActivity {
         fabSend = (FloatingActionButton) findViewById(R.id.fab_send);
         fabFiles = (FloatingActionButton) findViewById(R.id.fab_files);
 
-        //progressBarRecordAudio =  (ProgressBar) findViewById(R.id.progress_bar_record);
+        constraintMultimediaBar = (ConstraintLayout) findViewById(R.id.constraint_multimedia_bar);
 
         //INIT NEW LESSON
         lesson = new Lesson();
         setLesson();
-        //lessonName.setText(lesson.getName());
-        //lessonDescription.setText(lesson.getDescription());
         lesson.initMultimediaFiles();
 
         //INIT CONSTANTS
         constants = new Constants();
+
+        startRecording = true;
+
+        fab_grows = AnimationUtils.loadAnimation(getApplicationContext(), R.layout.fab_grows);
 
         // Record to the external cache directory for visibility
         ABSOLUTE_STORAGE_PATH = getExternalCacheDir().getAbsolutePath();
@@ -259,34 +269,37 @@ public class LessonFormActivity extends AppCompatActivity {
 
     public void setFabRecordAudioOnClickListener() {
         //
-        fabRecordAudio.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (ContextCompat.checkSelfPermission(LessonFormActivity.this,
-                        Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
-                    if (!isRecording) {
-                        Long tsLong = System.currentTimeMillis()/1000;
-                        String ts = tsLong.toString();
-                        MultimediaFile audioMultimedia = new MultimediaFile(
-                                "AUDIO",ABSOLUTE_STORAGE_PATH+ts.toString()+".3gp",transferUtility,S3_BUCKET_NAME);
-                        startRecording(audioMultimedia);
-                        lesson.getMultimediaAudiosFiles().add(audioMultimedia);
-                    }
-                } else {
-                    getRecorAudioPermissions();
-                }//progressBarRecordAudio.setVisibility(View.VISIBLE);
-
-                return false;
-            }
-        });
-
         fabRecordAudio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (ContextCompat.checkSelfPermission(LessonFormActivity.this,
                         Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
-                    stopRecording();
-                } else {}
+                    if (startRecording == true) {
+                        Long tsLong = System.currentTimeMillis() / 1000;
+                        String ts = tsLong.toString();
+                        MultimediaFile audioMultimedia = new MultimediaFile(
+                                "AUDIO", ABSOLUTE_STORAGE_PATH + ts.toString() + ".3gp", transferUtility, S3_BUCKET_NAME);
+                        startRecording(audioMultimedia);
+                        lesson.getMultimediaAudiosFiles().add(audioMultimedia);
+                        startRecording = !startRecording;
+                        fabRecordAudio.startAnimation(fab_grows);
+                        fabFiles.setVisibility(View.GONE);
+                        fabGallery.setVisibility(View.GONE);
+                        fabCamera.setVisibility(View.GONE);
+                        fabSend.setVisibility(View.GONE);
+                    }
+                    else{
+                        stopRecording();
+                        startRecording = !startRecording;
+                        fabFiles.setVisibility(View.VISIBLE);
+                        fabGallery.setVisibility(View.VISIBLE);
+                        fabCamera.setVisibility(View.VISIBLE);
+                        fabSend.setVisibility(View.VISIBLE);
+                        startRecording = !startRecording;
+                    }
+                } else {
+                    getRecorAudioPermissions();
+                }
                 //progressBarRecordAudio.setVisibility(View.INVISIBLE);
             }
         });
@@ -632,31 +645,6 @@ public class LessonFormActivity extends AppCompatActivity {
 
     //RECORD AUDIO
 
-    public void onPlay(boolean start, String recordFileName) {
-        if (start) {
-            startPlaying(recordFileName);
-        } else {
-            stopPlaying();
-        }
-    }
-
-    private void startPlaying(String recordFileName) {
-        mPlayer = new MediaPlayer();
-        try {
-            mPlayer.setDataSource(recordFileName);
-            Log.i("AUDIO RECORD SOURCE", recordFileName);
-            mPlayer.prepare();
-            mPlayer.start();
-        } catch (IOException e) {
-            Log.e(LOG_TAG, "prepare() failed");
-        }
-    }
-
-    private void stopPlaying() {
-        mPlayer.release();
-        mPlayer = null;
-    }
-
     private void startRecording(MultimediaFile multimediaFile) {
         isRecording = true;
         mRecorder = new MediaRecorder();
@@ -671,7 +659,6 @@ public class LessonFormActivity extends AppCompatActivity {
         } catch (IOException e) {
             Log.e(LOG_TAG, "prepare() failed");
         }
-
     }
 
     private void stopRecording() {
@@ -679,23 +666,7 @@ public class LessonFormActivity extends AppCompatActivity {
         mRecorder.stop();
         mRecorder.release();
         mRecorder = null;
-        //lesson.getMultimediaAudiosFiles().add(new MultimediaFile("AUDIO",mRecordFileName, transferUtility, S3_BUCKET_NAME));
         multimediaAudioAdapter.notifyDataSetChanged();
-
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (mRecorder != null) {
-            mRecorder.release();
-            mRecorder = null;
-        }
-
-        if (mPlayer != null) {
-            mPlayer.release();
-            mPlayer = null;
-        }
     }
 
     // From here, code from https://github.com/iPaulPro/aFileChooser
