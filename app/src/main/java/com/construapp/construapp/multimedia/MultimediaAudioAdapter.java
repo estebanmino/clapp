@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import com.construapp.construapp.R;
 import com.construapp.construapp.models.MultimediaFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -39,33 +40,29 @@ public class MultimediaAudioAdapter extends MultimediaAdapter {
             implements View.OnClickListener {
 
         Boolean mStartPlaying = true;
+        MediaPlayer mPlayer = null;
 
-        public void startPlaying(MediaPlayer mPlayer){
+        private void startPlaying() {
+            mPlayer = new MediaPlayer();
             try {
                 mPlayer.setDataSource(MultimediaViewHolder.super.multimediaFile.getmPath());
                 mPlayer.prepare();
                 mPlayer.start();
-            } catch (Exception ex) {
-            }
-        }
-        private void stopPlaying(MediaPlayer mediaPlayer) {
-            try {
-                if (mediaPlayer != null) {
-                    if (mediaPlayer.isPlaying())
-                        mediaPlayer.stop();
-                    mediaPlayer.release();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (IOException e) {
             }
         }
 
-        public void onPlay(boolean start, MediaPlayer mediaPlayer) {
+        private void stopPlaying() {
+            mPlayer.release();
+            mPlayer = null;
+        }
+
+        public void onPlay(boolean start) {
             if (start) {
-                mediaPlayer = new MediaPlayer();
-                startPlaying(mediaPlayer);
+                mPlayer = new MediaPlayer();
+                startPlaying();
             } else {
-                stopPlaying(mediaPlayer);
+                stopPlaying();
             }
         }
 
@@ -77,7 +74,7 @@ public class MultimediaAudioAdapter extends MultimediaAdapter {
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    onPlay(mStartPlaying,mediaPlayer);
+                    onPlay(mStartPlaying);
                     mStartPlaying = !mStartPlaying;
                 }
             });

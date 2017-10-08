@@ -93,7 +93,7 @@ public class LessonFormActivity extends AppCompatActivity {
     private static String mRecordFileName = null;
     private MediaRecorder mRecorder = null;
     private MediaPlayer mPlayer = null;
-    boolean startRecording;
+    boolean mStartRecording;
     boolean mStartPlaying = true;
     boolean isRecording =  false;
 
@@ -143,7 +143,7 @@ public class LessonFormActivity extends AppCompatActivity {
         //INIT CONSTANTS
         constants = new Constants();
 
-        startRecording = true;
+        mStartRecording = true;
 
 
         // Record to the external cache directory for visibility
@@ -273,14 +273,8 @@ public class LessonFormActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (ContextCompat.checkSelfPermission(LessonFormActivity.this,
                         Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
-                    if (startRecording == true) {
-                        Long tsLong = System.currentTimeMillis() / 1000;
-                        String ts = tsLong.toString();
-                        MultimediaFile audioMultimedia = new MultimediaFile(
-                                "AUDIO", ABSOLUTE_STORAGE_PATH + ts.toString() + ".3gp", transferUtility, S3_BUCKET_NAME);
-                        startRecording(audioMultimedia);
-                        lesson.getMultimediaAudiosFiles().add(audioMultimedia);
-                        startRecording = !startRecording;
+                    onRecord(mStartRecording);
+                    if (mStartRecording == true) {
                         textRecording.setVisibility(View.VISIBLE);
                         fabRecordAudio.setSize(FloatingActionButton.SIZE_NORMAL);
                         fabFiles.setVisibility(View.GONE);
@@ -289,20 +283,18 @@ public class LessonFormActivity extends AppCompatActivity {
                         fabSend.setVisibility(View.GONE);
                     }
                     else{
-                        stopRecording();
                         fabRecordAudio.setSize(FloatingActionButton.SIZE_MINI);
                         textRecording.setVisibility(View.GONE);
-                        startRecording = !startRecording;
                         fabFiles.setVisibility(View.VISIBLE);
                         fabGallery.setVisibility(View.VISIBLE);
                         fabCamera.setVisibility(View.VISIBLE);
                         fabSend.setVisibility(View.VISIBLE);
-                        startRecording = !startRecording;
                     }
+                    mStartRecording = !mStartRecording;
+
                 } else {
                     getRecorAudioPermissions();
                 }
-                //progressBarRecordAudio.setVisibility(View.INVISIBLE);
             }
         });
     }
@@ -646,9 +638,20 @@ public class LessonFormActivity extends AppCompatActivity {
     }
 
     //RECORD AUDIO
+    private void onRecord(boolean start) {
+        if (start) {
+            Long tsLong = System.currentTimeMillis() / 1000;
+            String ts = tsLong.toString();
+            MultimediaFile audioMultimedia = new MultimediaFile(
+                    "AUDIO", ABSOLUTE_STORAGE_PATH + ts.toString() + ".3gp", transferUtility, S3_BUCKET_NAME);
+            startRecording(audioMultimedia);
+            lesson.getMultimediaAudiosFiles().add(audioMultimedia);
+        } else {
+            stopRecording();
+        }
+    }
 
     private void startRecording(MultimediaFile multimediaFile) {
-        isRecording = true;
         mRecorder = new MediaRecorder();
         mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
@@ -659,12 +662,10 @@ public class LessonFormActivity extends AppCompatActivity {
             mRecorder.prepare();
             mRecorder.start();
         } catch (IOException e) {
-            Log.e(LOG_TAG, "prepare() failed");
         }
     }
 
     private void stopRecording() {
-        isRecording = false;
         mRecorder.stop();
         mRecorder.release();
         mRecorder = null;
