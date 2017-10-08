@@ -28,11 +28,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,6 +49,8 @@ import com.construapp.construapp.multimedia.MultimediaAudioAdapter;
 import com.construapp.construapp.multimedia.MultimediaDocumentAdapter;
 import com.construapp.construapp.multimedia.MultimediaPictureAdapter;
 import com.construapp.construapp.threading.RetrieveFeedTask;
+
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.IOException;
@@ -76,8 +81,7 @@ public class LessonFormActivity extends AppCompatActivity {
     private FloatingActionButton fabSend;
     private EditText editLessonName;
     private EditText editLessonDescription;
-    private ConstraintLayout constraintMultimediaBar;
-
+    private TextView textRecording;
 
     //LOCAL VARIABLES
     private String mPath;
@@ -107,9 +111,6 @@ public class LessonFormActivity extends AppCompatActivity {
     MultimediaAudioAdapter multimediaAudioAdapter;
     MultimediaDocumentAdapter multimediaDocumentAdapter;
 
-    //animations
-    private Animation fab_grows;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,8 +133,7 @@ public class LessonFormActivity extends AppCompatActivity {
         fabRecordAudio = (FloatingActionButton) findViewById(R.id.fab_record_audio);
         fabSend = (FloatingActionButton) findViewById(R.id.fab_send);
         fabFiles = (FloatingActionButton) findViewById(R.id.fab_files);
-
-        constraintMultimediaBar = (ConstraintLayout) findViewById(R.id.constraint_multimedia_bar);
+        textRecording = (TextView) findViewById(R.id.text_recording);
 
         //INIT NEW LESSON
         lesson = new Lesson();
@@ -145,7 +145,6 @@ public class LessonFormActivity extends AppCompatActivity {
 
         startRecording = true;
 
-        fab_grows = AnimationUtils.loadAnimation(getApplicationContext(), R.layout.fab_grows);
 
         // Record to the external cache directory for visibility
         ABSOLUTE_STORAGE_PATH = getExternalCacheDir().getAbsolutePath();
@@ -282,7 +281,8 @@ public class LessonFormActivity extends AppCompatActivity {
                         startRecording(audioMultimedia);
                         lesson.getMultimediaAudiosFiles().add(audioMultimedia);
                         startRecording = !startRecording;
-                        fabRecordAudio.startAnimation(fab_grows);
+                        textRecording.setVisibility(View.VISIBLE);
+                        fabRecordAudio.setSize(FloatingActionButton.SIZE_NORMAL);
                         fabFiles.setVisibility(View.GONE);
                         fabGallery.setVisibility(View.GONE);
                         fabCamera.setVisibility(View.GONE);
@@ -290,6 +290,8 @@ public class LessonFormActivity extends AppCompatActivity {
                     }
                     else{
                         stopRecording();
+                        fabRecordAudio.setSize(FloatingActionButton.SIZE_MINI);
+                        textRecording.setVisibility(View.GONE);
                         startRecording = !startRecording;
                         fabFiles.setVisibility(View.VISIBLE);
                         fabGallery.setVisibility(View.VISIBLE);
