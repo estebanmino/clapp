@@ -209,7 +209,7 @@ public class LessonFormActivity extends AppCompatActivity {
                     lesson_id=response;
                     String path_input = "";
                     for (MultimediaFile multimediaFile: lesson.getMultimediaPicturesFiles()) {
-                        path_input+=multimediaFile.getExtension()+"/"+multimediaFile.getmPath().substring(multimediaFile.getmPath().lastIndexOf("/")+1)+";";
+                        path_input+=multimediaFile.getExtension()+"/"+ multimediaFile.getmPath().substring(multimediaFile.getmPath().lastIndexOf("/")+1)+";";
                     }
                     for (MultimediaFile multimediaFile: lesson.getMultimediaAudiosFiles()) {
                         path_input+=multimediaFile.getExtension()+"/"+multimediaFile.getmPath().substring(multimediaFile.getmPath().lastIndexOf("/")+1)+";";

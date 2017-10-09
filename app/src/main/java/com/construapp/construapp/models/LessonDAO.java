@@ -10,8 +10,11 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Delete;
 
 /**
- * Created by jose on 05-10-17.
+ * @autho - Jose
+ @versión - hoy
+
  */
+
 @Dao
 @TypeConverters(Lesson.class)
 public interface LessonDAO {

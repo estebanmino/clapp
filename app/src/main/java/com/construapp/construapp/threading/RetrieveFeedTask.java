@@ -57,6 +57,7 @@ public class RetrieveFeedTask extends AsyncTask<String, Integer, String> {
             String pass = str[1];
 
             try {
+                //TODO comentar
                 URL url = new URL("http://construapp-api.ing.puc.cl/sessions");
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setDoOutput(true);
@@ -84,7 +85,8 @@ public class RetrieveFeedTask extends AsyncTask<String, Integer, String> {
                     urlConnection.disconnect();
                     out = "error";
                     return out;
-                } else {
+                }
+                else {
                     //continue
                 }
 

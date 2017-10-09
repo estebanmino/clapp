@@ -77,6 +77,7 @@ public class LessonsFragment extends Fragment {
                 Log.i("count",String.valueOf(i));
 
 
+
 //Do stuff with the Prize String here
 //Add it to a list, print it out, etc.
             }
