@@ -437,7 +437,7 @@ public class LessonFormActivity extends AppCompatActivity {
                                 }
                             });
 
-                    lesson.getMultimediaPicturesFiles().add(new MultimediaFile(EXTENSION_PICTURE,mPath, transferUtility,S3_BUCKET_NAME));
+                    lesson.getMultimediaPicturesFiles().add(new MultimediaFile(EXTENSION_PICTURE,mPath, null,transferUtility,S3_BUCKET_NAME));
                     multimediaPictureAdapter.notifyDataSetChanged();
                     break;
 
@@ -447,7 +447,7 @@ public class LessonFormActivity extends AppCompatActivity {
                     {
                         mPath = getRealPathFromURI_API19(getApplicationContext(),data.getData());
 
-                        lesson.getMultimediaPicturesFiles().add(new MultimediaFile(EXTENSION_PICTURE,mPath, transferUtility,S3_BUCKET_NAME));
+                        lesson.getMultimediaPicturesFiles().add(new MultimediaFile(EXTENSION_PICTURE,mPath, null,transferUtility,S3_BUCKET_NAME));
                         multimediaPictureAdapter.notifyDataSetChanged();
 
 
@@ -460,7 +460,7 @@ public class LessonFormActivity extends AppCompatActivity {
                     Uri selectedUri = data.getData();
 
                     lesson.getMultimediaDocumentsFiles().add(new MultimediaFile(EXTENSION_DOCUMENT,
-                            getPath(LessonFormActivity.this, selectedUri), transferUtility,S3_BUCKET_NAME));
+                            getPath(LessonFormActivity.this, selectedUri),null, transferUtility,S3_BUCKET_NAME));
                     multimediaDocumentAdapter.notifyDataSetChanged();
                     break;
 
@@ -643,7 +643,7 @@ public class LessonFormActivity extends AppCompatActivity {
             Long tsLong = System.currentTimeMillis() / 1000;
             String ts = tsLong.toString();
             MultimediaFile audioMultimedia = new MultimediaFile(
-                    "AUDIO", ABSOLUTE_STORAGE_PATH + ts.toString() + ".3gp", transferUtility, S3_BUCKET_NAME);
+                    "AUDIO", ABSOLUTE_STORAGE_PATH + ts.toString() + ".3gp", null,transferUtility, S3_BUCKET_NAME);
             startRecording(audioMultimedia);
             lesson.getMultimediaAudiosFiles().add(audioMultimedia);
         } else {

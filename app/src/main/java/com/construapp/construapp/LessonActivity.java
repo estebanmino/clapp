@@ -95,36 +95,30 @@ public class LessonActivity extends AppCompatActivity {
         transferUtility = new TransferUtility(s3, LessonActivity.this);
 
         ABSOLUTE_STORAGE_PATH = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString();
+        final String CACHE_FOLDER = LessonActivity.this.getCacheDir().toString();
 
-        MultimediaFile pictureMultimedia = new MultimediaFile(
-                "PICTURE",ABSOLUTE_STORAGE_PATH+"/ConstruApp/1234.jpg",transferUtility,"construapp");
-
-        MultimediaFile audioMultimedia = new MultimediaFile(
-                "AUDIO",ABSOLUTE_STORAGE_PATH+"/ConstruApp/1234.jpg",transferUtility,"construapp");
-
-        MultimediaFile documentMultimedia1 = new MultimediaFile("DOCUMENT",ABSOLUTE_STORAGE_PATH+"/ConstruApp/Planos.pdf",transferUtility,"construapp");
-        MultimediaFile documentMultimedia2 = new MultimediaFile("DOCUMENT",ABSOLUTE_STORAGE_PATH+"/ConstruApp/Horarios.pdf",transferUtility,"construapp");
-        MultimediaFile documentMultimedia3 = new MultimediaFile("DOCUMENT",ABSOLUTE_STORAGE_PATH+"/ConstruApp/Personal.pdf",transferUtility,"construapp");
-        MultimediaFile documentMultimedia4 = new MultimediaFile("DOCUMENT",ABSOLUTE_STORAGE_PATH+"/ConstruApp/Planificación.pdf",transferUtility,"construapp");
-
-        lesson.getMultimediaPicturesFiles().add(pictureMultimedia);
-        lesson.getMultimediaPicturesFiles().add(pictureMultimedia);
-        lesson.getMultimediaPicturesFiles().add(pictureMultimedia);
-        lesson.getMultimediaPicturesFiles().add(pictureMultimedia);
-        lesson.getMultimediaPicturesFiles().add(pictureMultimedia);
+        String[] paths = {"PICTURE/1234.jpg", "PICTURE/1506577076.jpg"};
+        for (String path: paths){
+            lesson.getMultimediaPicturesFiles().add(new MultimediaFile(
+                    "PICTURE",CACHE_FOLDER+"/"+path,path,transferUtility,"construapp"));
+        }
         multimediaPictureAdapter.notifyDataSetChanged();
 
-        lesson.getMultimediaAudiosFiles().add(audioMultimedia);
-        lesson.getMultimediaAudiosFiles().add(audioMultimedia);
-        lesson.getMultimediaAudiosFiles().add(audioMultimedia);
+
+        MultimediaFile audioMultimedia = new MultimediaFile(
+                "AUDIO",ABSOLUTE_STORAGE_PATH+"/ConstruApp/1234.jpg",null,transferUtility,"construapp");
+
+        MultimediaFile documentMultimedia1 = new MultimediaFile("DOCUMENT",ABSOLUTE_STORAGE_PATH+"/ConstruApp/Planos.pdf",null,transferUtility,"construapp");
+
+
+
+
+
         lesson.getMultimediaAudiosFiles().add(audioMultimedia);
         lesson.getMultimediaAudiosFiles().add(audioMultimedia);
         multimediaAudioAdapter.notifyDataSetChanged();
 
         lesson.getMultimediaDocumentsFiles().add(documentMultimedia1);
-        lesson.getMultimediaDocumentsFiles().add(documentMultimedia2);
-        lesson.getMultimediaDocumentsFiles().add(documentMultimedia3);
-        lesson.getMultimediaDocumentsFiles().add(documentMultimedia4);
         multimediaDocumentAdapter.notifyDataSetChanged();
 
     }

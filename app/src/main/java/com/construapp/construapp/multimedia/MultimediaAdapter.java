@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.construapp.construapp.LessonActivity;
@@ -67,6 +68,8 @@ public abstract class MultimediaAdapter  extends RecyclerView.Adapter<Multimedia
         public ImageView imageThumbnail;
         public TextView textPath;
         public ImageButton imageButtonDelete;
+        public ProgressBar progressBar;
+
 
         MultimediaFile multimediaFile;
         ArrayList<MultimediaFile> multimediaFileArrayList;
@@ -76,6 +79,7 @@ public abstract class MultimediaAdapter  extends RecyclerView.Adapter<Multimedia
             imageThumbnail = view.findViewById(R.id.image_thumbnail);
             textPath = view.findViewById(R.id.image_path);
             imageButtonDelete = view.findViewById(R.id.image_button_delete);
+            progressBar = view.findViewById(R.id.progress_bar);
 
             imageButtonDelete.setOnClickListener(new View.OnClickListener() {
                 @Override

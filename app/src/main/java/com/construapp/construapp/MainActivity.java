@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.construapp.construapp.cache.LRUCache;
 import com.construapp.construapp.microblog.MicroblogFragment;
 
 import android.content.SharedPreferences;
@@ -23,21 +24,12 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-    /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-     */
-    private SectionsPagerAdapter mSectionsPagerAdapter;
 
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
+    private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
     public final static String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
+    private LRUCache lruCache;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +65,8 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(LessonFormActivity.getIntent(MainActivity.this));
             }
         });
+
+        lruCache = LRUCache.getInstance();
 
     }
 

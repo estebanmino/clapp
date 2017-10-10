@@ -10,6 +10,8 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 
 import java.io.File;
 
+import static com.amazonaws.mobileconnectors.s3.transferutility.TransferState.COMPLETED;
+
 /**
  * Created by ESTEBANFML on 27-09-2017.
  */
@@ -32,14 +34,16 @@ public class DownloadMultimediaAsyncTask extends AsyncTask {
         Log.i("STARTING DOWNLOAD", "DOWNLOADINT");
         try {
             TransferObserver observer = transferUtility.download(
-                    s3BucketName,     /* The bucket to download from */
-                    "PICTURE/1506565837.jpg",    /* The key for the object to download */
+                    "construapp",     /* The bucket to download from */
+                    "PICTURE/1234.jpg",    /* The key for the object to download */
                     file        /* The file to download the object to */
             );
             observer.setTransferListener(new TransferListener() {
                 @Override
                 public void onStateChanged(int id, TransferState state) {
-                    Log.i("DOWNLOADING",state.toString());
+                    if (state == COMPLETED) {
+                        Log.i("DOWNLOAD","COMPLETED");
+                    }
                 }
 
                 @Override
@@ -50,6 +54,7 @@ public class DownloadMultimediaAsyncTask extends AsyncTask {
 
                 @Override
                 public void onError(int id, Exception ex) {
+                    Log.i("DPWNLOADING", "error");
 
                 }
             });
