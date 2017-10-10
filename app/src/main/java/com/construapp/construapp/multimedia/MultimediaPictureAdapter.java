@@ -102,9 +102,15 @@ public class MultimediaPictureAdapter extends MultimediaAdapter {
                 public void onClick(View view) {
                     Intent intent = new Intent();
                     intent.setAction(Intent.ACTION_VIEW);
-                    String path = MediaStore.Images.Media.insertImage(getContext().getContentResolver(),
-                            (Bitmap)LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key()), "Title", null);
-                    intent.setDataAndType(Uri.parse(path), FILE_TYPE);
+                    if (multimediaFile.getFileS3Key() != null) {
+                        String path = MediaStore.Images.Media.insertImage(getContext().getContentResolver(),
+                                (Bitmap) LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key()), "Title", null);
+                        intent.setDataAndType(Uri.parse(path), FILE_TYPE);
+                    } else {
+                        intent.setDataAndType(Uri.parse(
+                                Uri.fromFile(new File(MultimediaViewHolder.super.multimediaFile.getmPath())).toString()
+                        ), FILE_TYPE);
+                    }
                     view.getContext().startActivity(intent);
                 }
             });
