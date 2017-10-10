@@ -24,18 +24,22 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class LessonsFragment extends Fragment {
 
     private LessonsAdapter lessonsAdapter;
+    //muestra los items lesson lesson
     private ListView LessonsList;
+    private ArrayList<Lesson> LessonModelList;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        ArrayList<Lesson> lessonList = new ArrayList<>();
+        LessonModelList = new ArrayList<>();
+        //ArrayList<Lesson> lessonList = new ArrayList<>();
         SharedPreferences sharedpreferences = getActivity().getSharedPreferences("ConstruApp", Context.MODE_PRIVATE);
         String company_id = sharedpreferences.getString("company_id", "");
         RetrieveFeedTask lesson_fetcher=new RetrieveFeedTask("fetch-lessons");
@@ -53,6 +57,11 @@ public class LessonsFragment extends Fragment {
 
         }
         Log.i("TAG",lessons);
+
+        //TODO hacer que se agreguen solo los items que no estaban en la DB
+        //considerar el caso que hayan cambiado alguna leccion/
+        //se podria hacer un fetch de la leccion abierta verificando que los datos sean los ultimos
+        //mediante el param "updated_at" en api_request
 
         try
         {
@@ -73,7 +82,7 @@ public class LessonsFragment extends Fragment {
                 lesson_1.setName(name);
                 lesson_1.setDescription(learning);
                 lesson_1.setId(id);
-                lessonList.add(lesson_1);
+                LessonModelList.add(lesson_1);
                 Log.i("count",String.valueOf(i));
 
 
@@ -89,7 +98,7 @@ public class LessonsFragment extends Fragment {
         }
 
 
-        lessonsAdapter = new LessonsAdapter(getActivity(), lessonList);
+        lessonsAdapter = new LessonsAdapter(getActivity(), LessonModelList);
 
         return inflater.inflate(R.layout.fragment_my_lessons, container, false);
     }
@@ -106,13 +115,18 @@ public class LessonsFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 //Toast.makeText(MyLessonsFragment.this, "" + position, Toast.LENGTH_LONG).show();
                 Lesson lesson = (Lesson) lessonsAdapter.getItem(position);
-                Log.i("OBJECT",lesson.getName());
-                SharedPreferences spl = getActivity().getSharedPreferences("Lesson", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = spl.edit();
-                editor.putString("lesson_name", lesson.getName());
-                editor.putString("lesson_description",lesson.getDescription());
-                editor.putString("lesson_id",lesson.getId());
-                editor.commit();
+                Log.i("ROOM NAME",lesson.getName());
+                Log.i("ROOM DESCR",lesson.getDescription());
+                Log.i("ROOM COMPANYID",lesson.getCompany_id());
+
+
+
+                //SharedPreferences spl = getActivity().getSharedPreferences("Lesson", Context.MODE_PRIVATE);
+                //SharedPreferences.Editor editor = spl.edit();
+                //editor.putString("lesson_name", lesson.getName());
+                //editor.putString("lesson_description",lesson.getDescription());
+                //editor.putString("lesson_id",lesson.getId());
+                //editor.commit();
                 
 
                 startActivity(LessonActivity.getIntent(getActivity(), lesson.getName(),

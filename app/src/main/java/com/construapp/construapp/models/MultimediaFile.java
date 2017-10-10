@@ -1,5 +1,8 @@
 package com.construapp.construapp.models;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 
 import java.io.File;
@@ -9,12 +12,15 @@ import java.util.concurrent.ExecutionException;
  * Created by ESTEBANFML on 23-09-2017.
  */
 
+@Entity
 public class MultimediaFile {
 
     private String mPath;
     private UploadMultimediaAsyncTask uploadThread;
     private DownloadMultimediaAsyncTask downloadThread;
     private String s3BucketName;
+    //TODO hay que definir un key bueno. @ESMINO
+    @PrimaryKey
     private String fileKey;
     private TransferUtility transferUtility;
     private String extension;

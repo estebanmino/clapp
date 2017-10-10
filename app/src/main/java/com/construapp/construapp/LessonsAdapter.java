@@ -18,24 +18,24 @@ import java.util.ArrayList;
 
 public class LessonsAdapter extends BaseAdapter {
     private final Context context;
-    private final ArrayList<Lesson> arrayList;
+    private final ArrayList<Lesson> LessonModelList;
 
     private TextView lessonName;
     private TextView lessonDescription;
 
-    public LessonsAdapter(Context context, ArrayList<Lesson> arrayList) {
+    public LessonsAdapter(Context context, ArrayList<Lesson> LessonModelList) {
         this.context = context;
-        this.arrayList = arrayList;
+        this.LessonModelList = LessonModelList;
     }
 
     @Override
     public int getCount() {
-        return arrayList.size();
+        return LessonModelList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return arrayList.get(position);
+        return LessonModelList.get(position);
     }
 
     @Override
@@ -57,8 +57,8 @@ public class LessonsAdapter extends BaseAdapter {
         lessonName = convertView.findViewById(R.id.lesson_name);
         lessonDescription = convertView.findViewById(R.id.lesson_description);
 
-        final String elementName = arrayList.get(position).getName();
-        final String elementDescription = arrayList.get(position).getDescription();
+        final String elementName = LessonModelList.get(position).getName();
+        final String elementDescription = LessonModelList.get(position).getDescription();
 
         lessonName.setText(elementName);
         lessonDescription.setText(elementDescription.substring(0,Math.min(elementDescription.length(), 20))+"...");

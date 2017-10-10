@@ -186,6 +186,7 @@ public class LessonFormActivity extends AppCompatActivity {
         fabSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //TODO fix params
                 SharedPreferences sharedpreferences = getSharedPreferences("ConstruApp", Context.MODE_PRIVATE);
                 String lesson_name = editLessonName.getText().toString();
                 String lesson_summary = editLessonName.getText().toString();
@@ -194,7 +195,7 @@ public class LessonFormActivity extends AppCompatActivity {
                 String token = sharedpreferences.getString("token", "");
                 String user_id = sharedpreferences.getString("user_id", "");
                 String company_id = sharedpreferences.getString("company_id", "");
-                //TODO FIJAR PROYECTO CUANDO EXISTA
+                //TODO fijar proyecto
                 String project_id = "2";
                 String response = "";
                 String lesson_id="";

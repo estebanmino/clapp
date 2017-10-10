@@ -1,5 +1,7 @@
 package com.construapp.construapp;
 
+import android.arch.persistence.room.Room;
+import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.TabLayout;
@@ -18,6 +20,10 @@ import android.view.View;
 
 import com.construapp.construapp.lessons_form.LessonFormActivity;
 import com.construapp.construapp.microblog.MicroblogFragment;
+import com.construapp.construapp.models.AppDatabase;
+import com.construapp.construapp.models.Lesson;
+import com.construapp.construapp.models.LessonDAO;
+import com.construapp.construapp.models.LessonListViewModel;
 import com.construapp.construapp.threading.RetrieveFeedTask;
 
 import android.content.SharedPreferences;
@@ -77,6 +83,8 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(LessonFormActivity.getIntent(MainActivity.this));
             }
         });
+
+        Toast(LessonListViewModel.class);
 
     }
 
