@@ -27,6 +27,7 @@ public class LessonActivity extends AppCompatActivity {
 
     private static final String USERNAME = "username";
     private static final String DESCRIPTION = "description";
+    private static final String PROJECT_FOLDER = "ConstruApp";
 
     private Lesson lesson = new Lesson();
     public final static String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
@@ -110,13 +111,14 @@ public class LessonActivity extends AppCompatActivity {
                     "AUDIO",CACHE_FOLDER+"/"+audioPath,audioPath,transferUtility,"construapp");
             lesson.getMultimediaAudiosFiles().add(audioMultimedia);
         }
-
-
         multimediaAudioAdapter.notifyDataSetChanged();
 
-
-        MultimediaFile documentMultimedia1 = new MultimediaFile("DOCUMENT",ABSOLUTE_STORAGE_PATH+"/ConstruApp/Planos.pdf",null,transferUtility,"construapp");
-        lesson.getMultimediaDocumentsFiles().add(documentMultimedia1);
+        String[] documentPaths = {"DOCUMENT/The_Jungle_Book_T.pdf"};
+        for (String documentPath: documentPaths) {
+            MultimediaFile documentMultimedia = new MultimediaFile(
+                    "DOCUMENT",ABSOLUTE_STORAGE_PATH+"/"+PROJECT_FOLDER+"/"+documentPath,documentPath,transferUtility,"construapp");
+            lesson.getMultimediaDocumentsFiles().add(documentMultimedia);
+        }
         multimediaDocumentAdapter.notifyDataSetChanged();
 
     }

@@ -3,6 +3,7 @@ package com.construapp.construapp.multimedia;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -69,6 +70,8 @@ public abstract class MultimediaAdapter  extends RecyclerView.Adapter<Multimedia
         public TextView textPath;
         public ImageButton imageButtonDelete;
         public ProgressBar progressBar;
+        public Button btnDownload;
+
 
 
         MultimediaFile multimediaFile;
@@ -80,6 +83,7 @@ public abstract class MultimediaAdapter  extends RecyclerView.Adapter<Multimedia
             textPath = view.findViewById(R.id.image_path);
             imageButtonDelete = view.findViewById(R.id.image_button_delete);
             progressBar = view.findViewById(R.id.progress_bar);
+            btnDownload = view.findViewById(R.id.btn_download);
 
             imageButtonDelete.setOnClickListener(new View.OnClickListener() {
                 @Override

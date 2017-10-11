@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.construapp.construapp.LessonActivity;
 import com.construapp.construapp.R;
 import com.construapp.construapp.cache.LRUCache;
 import com.construapp.construapp.models.Constants;
@@ -42,24 +43,26 @@ public class MultimediaAudioAdapter extends MultimediaAdapter {
         MultimediaFile multimediaFile = super.getmMultimediaFiles().get(position);
         multimediaFile.setArrayPosition(position);
 
-        if(LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key()) == null) {
+        if (super.getContext().getClass() == LessonActivity.class) {
 
-            Constants constants = new Constants();
-            AmazonS3 s3 = new AmazonS3Client(constants.getCredentialsProvider(getContext()));
-            transferUtility = new TransferUtility(s3, getContext());
-            MultimediaAudioDownloader downloadAudioMultimedia = new MultimediaAudioDownloader(
-                    new File(multimediaFile.getmPath()),
-                    transferUtility,
-                    multimediaFile.getFileS3Key(),
-                    BUCKET_NAME,
-                    holder,
-                    multimediaFile);
-            holder.progressBar.setVisibility(View.VISIBLE);
+            if (LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key()) == null) {
 
-            downloadAudioMultimedia.download();
-        }
-        else {
-            File file = (File)LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key());
+                Constants constants = new Constants();
+                AmazonS3 s3 = new AmazonS3Client(constants.getCredentialsProvider(getContext()));
+                transferUtility = new TransferUtility(s3, getContext());
+                MultimediaAudioDownloader downloadAudioMultimedia = new MultimediaAudioDownloader(
+                        new File(multimediaFile.getmPath()),
+                        transferUtility,
+                        multimediaFile.getFileS3Key(),
+                        BUCKET_NAME,
+                        holder,
+                        multimediaFile);
+                holder.progressBar.setVisibility(View.VISIBLE);
+
+                downloadAudioMultimedia.download();
+            } else {
+                File file = (File) LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key());
+            }
         }
     }
 
