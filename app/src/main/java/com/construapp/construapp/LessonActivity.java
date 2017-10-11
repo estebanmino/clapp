@@ -104,20 +104,18 @@ public class LessonActivity extends AppCompatActivity {
         }
         multimediaPictureAdapter.notifyDataSetChanged();
 
-
-        MultimediaFile audioMultimedia = new MultimediaFile(
-                "AUDIO",ABSOLUTE_STORAGE_PATH+"/ConstruApp/1234.jpg",null,transferUtility,"construapp");
-
-        MultimediaFile documentMultimedia1 = new MultimediaFile("DOCUMENT",ABSOLUTE_STORAGE_PATH+"/ConstruApp/Planos.pdf",null,transferUtility,"construapp");
-
-
-
+        String[] audioPaths = {"AUDIO/cache1506569807.3gp"};
+        for (String audioPath: audioPaths) {
+            MultimediaFile audioMultimedia = new MultimediaFile(
+                    "AUDIO",CACHE_FOLDER+"/"+audioPath,audioPath,transferUtility,"construapp");
+            lesson.getMultimediaAudiosFiles().add(audioMultimedia);
+        }
 
 
-        lesson.getMultimediaAudiosFiles().add(audioMultimedia);
-        lesson.getMultimediaAudiosFiles().add(audioMultimedia);
         multimediaAudioAdapter.notifyDataSetChanged();
 
+
+        MultimediaFile documentMultimedia1 = new MultimediaFile("DOCUMENT",ABSOLUTE_STORAGE_PATH+"/ConstruApp/Planos.pdf",null,transferUtility,"construapp");
         lesson.getMultimediaDocumentsFiles().add(documentMultimedia1);
         multimediaDocumentAdapter.notifyDataSetChanged();
 
