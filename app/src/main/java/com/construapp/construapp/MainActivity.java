@@ -73,7 +73,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(LessonFormActivity.getIntent(MainActivity.this));
             }
         });
-
     }
 
 

@@ -57,22 +57,11 @@ public class LessonActivity extends AppCompatActivity {
         constants = new Constants();
 
         final TextView lesson_name = (TextView) findViewById(R.id.text_lesson_name);
-        TextView lesson_description = (TextView) findViewById(R.id.text_lesson_description);
+        final TextView lesson_description = (TextView) findViewById(R.id.text_lesson_description);
         SharedPreferences spl = getSharedPreferences("Lesson", Context.MODE_PRIVATE);
-
-        final ImageView color_boolean = (ImageView) findViewById(R.id.star);
-        color_boolean.setTag(0);
-        color_boolean.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                color_boolean.setTag((int)color_boolean.getTag() + 1);
-                constants.setBackground(color_boolean,(Integer) view.getTag());
-            }
-        });
 
         lesson_name.setText(spl.getString("lesson_name", ""));
         lesson_description.setText(spl.getString("lesson_description", ""));
-
 
         setLesson();
 
@@ -154,6 +143,7 @@ public class LessonActivity extends AppCompatActivity {
         lesson.setName(getIntent().getStringExtra(USERNAME));
         lesson.setDescription(getIntent().getStringExtra(DESCRIPTION));
         lesson.initMultimediaFiles();
+        showPermissions();
     }
 
     public static Intent getIntent(Context context, String name, String description) {
@@ -165,7 +155,28 @@ public class LessonActivity extends AppCompatActivity {
         return intent;
     }
 
-
+    public void showPermissions(){
+        final TextView lesson_name_label = (TextView) findViewById(R.id.text_new_lesson_name);
+        final TextView lesson_description_label = (TextView) findViewById(R.id.text_new_lesson_description);
+        final ImageView color_boolean = (ImageView) findViewById(R.id.star);
+        color_boolean.setTag(0);
+        color_boolean.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int tag = (int)color_boolean.getTag() + 1;
+                color_boolean.setTag(tag);
+                constants.setBackground(color_boolean,(Integer) view.getTag());
+                if (!constants.setPermissionsBoolean(tag)){
+                    lesson_name_label.setVisibility(View.INVISIBLE);
+                    lesson_description_label.setVisibility(View.INVISIBLE);
+                }
+                else {
+                    lesson_name_label.setVisibility(View.VISIBLE);
+                    lesson_description_label.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+    }
 
 
 }

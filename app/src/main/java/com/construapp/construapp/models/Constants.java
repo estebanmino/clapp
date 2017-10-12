@@ -12,7 +12,6 @@ import com.amazonaws.regions.Regions;
  */
 
 public class Constants {
-    public boolean permissions;
     public CognitoCachingCredentialsProvider getCredentialsProvider(Context context) {
         return new CognitoCachingCredentialsProvider(
                 context,
@@ -25,12 +24,22 @@ public class Constants {
         flag = flag%2;
         if (flag == 0){
             view.setBackgroundColor(Color.GREEN);
-            permissions = true;
         }
         else {
             view.setBackgroundColor(Color.RED);
+        }
+    }
+
+    public boolean setPermissionsBoolean(int flag){
+        flag = flag%2;
+        boolean permissions = false;
+        if (flag == 0){
+            permissions = true;
+        }
+        else {
             permissions = false;
         }
+        return  permissions;
     }
 
 }
