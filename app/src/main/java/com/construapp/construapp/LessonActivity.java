@@ -27,6 +27,7 @@ public class LessonActivity extends AppCompatActivity {
 
     private static final String USERNAME = "username";
     private static final String DESCRIPTION = "description";
+    private static final String ID = "id";
     private static final String PROJECT_FOLDER = "ConstruApp";
 
     private Lesson lesson = new Lesson();
@@ -54,15 +55,13 @@ public class LessonActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        TextView nombre_proyecto = (TextView) findViewById(R.id.text_lesson_name);
-        TextView descripcion_leccion = (TextView) findViewById(R.id.text_lesson_description);
-        SharedPreferences spl = getSharedPreferences("Lesson", Context.MODE_PRIVATE);
-
-        nombre_proyecto.setText(spl.getString("lesson_name", ""));
-        descripcion_leccion.setText(spl.getString("lesson_description", ""));
+        TextView lesson_name = (TextView) findViewById(R.id.text_lesson_name);
+        TextView lesson_description = (TextView) findViewById(R.id.text_lesson_description);
 
         setLesson();
 
+        lesson_name.setText(lesson.getName());
+        lesson_description.setText(lesson.getDescription());
         ////HORIZONTAL IMAGES SCROLLING
 
         //GENRAL LAYOUT SCROLL
@@ -134,15 +133,15 @@ public class LessonActivity extends AppCompatActivity {
     public void setLesson() {
         lesson.setName(getIntent().getStringExtra(USERNAME));
         lesson.setDescription(getIntent().getStringExtra(DESCRIPTION));
+        lesson.setId(getIntent().getStringExtra(ID));
         lesson.initMultimediaFiles();
     }
 
-    public static Intent getIntent(Context context, String name, String description) {
+    public static Intent getIntent(Context context, String name, String description, String id) {
         Intent intent = new Intent(context,LessonActivity.class);
         intent.putExtra(USERNAME,name);
         intent.putExtra(DESCRIPTION,description);
-        //intent.putExtra(KEY_CHAT_ROOM_UUID,chatRoomUuid);
-
+        intent.putExtra(ID,id);
         return intent;
     }
 
