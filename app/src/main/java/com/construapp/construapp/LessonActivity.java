@@ -2,6 +2,7 @@ package com.construapp.construapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.content.SharedPreferences;
 
@@ -52,13 +54,25 @@ public class LessonActivity extends AppCompatActivity {
         setContentView(R.layout.activity_lesson);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        constants = new Constants();
 
-        TextView nombre_proyecto = (TextView) findViewById(R.id.text_lesson_name);
-        TextView descripcion_leccion = (TextView) findViewById(R.id.text_lesson_description);
+        final TextView lesson_name = (TextView) findViewById(R.id.text_lesson_name);
+        TextView lesson_description = (TextView) findViewById(R.id.text_lesson_description);
         SharedPreferences spl = getSharedPreferences("Lesson", Context.MODE_PRIVATE);
 
-        nombre_proyecto.setText(spl.getString("lesson_name", ""));
-        descripcion_leccion.setText(spl.getString("lesson_description", ""));
+        final ImageView color_boolean = (ImageView) findViewById(R.id.star);
+        color_boolean.setTag(0);
+        color_boolean.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                color_boolean.setTag((int)color_boolean.getTag() + 1);
+                constants.setBackground(color_boolean,(Integer) view.getTag());
+            }
+        });
+
+        lesson_name.setText(spl.getString("lesson_name", ""));
+        lesson_description.setText(spl.getString("lesson_description", ""));
+
 
         setLesson();
 
@@ -90,7 +104,6 @@ public class LessonActivity extends AppCompatActivity {
         mDocumentsRecyclerView.setAdapter(multimediaDocumentAdapter);
 
         // Create an S3 client
-        constants = new Constants();
         AmazonS3 s3 = new AmazonS3Client(constants.getCredentialsProvider(LessonActivity.this));
         transferUtility = new TransferUtility(s3, LessonActivity.this);
 
@@ -151,6 +164,8 @@ public class LessonActivity extends AppCompatActivity {
 
         return intent;
     }
+
+
 
 
 }
