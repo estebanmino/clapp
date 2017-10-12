@@ -27,7 +27,7 @@ import com.google.gson.reflect.TypeToken;
 public interface LessonDAO {
 
     @Query("select * from Lesson")
-    public ArrayList<Lesson> getAllLessons();
+    public List<Lesson> getAllLessons();
 
     //no usamos livedata porque la db se sincroniza segun el fetch
     //LiveData<List<Lesson>> getAllLessons();
@@ -35,8 +35,11 @@ public interface LessonDAO {
     @Query("select * from Lesson where id = :id")
     Lesson getLessonbyId(String id);
 
+    @Query("SELECT COUNT(*) FROM Lesson")
+    int lessonCount();
+
     @Insert(onConflict = REPLACE)
-    void addLesson(Lesson Lesson);
+    void insertLesson(Lesson Lesson);
 
     @Delete
     void deleteLesson(Lesson Lesson);

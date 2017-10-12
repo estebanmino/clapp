@@ -4,7 +4,7 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
-
+import android.content.Context;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +14,7 @@ import java.util.List;
  */
 
 public class LessonListViewModel extends AndroidViewModel{
-    private final ArrayList<Lesson> LessonList;
+    private final List<Lesson> LessonList;
 
     private AppDatabase appDatabase;
 
@@ -25,10 +25,10 @@ public class LessonListViewModel extends AndroidViewModel{
         appDatabase = AppDatabase.getDatabase(this.getApplication());
 
         //query para obtener todas las lecciones definida en nuestra clase DAO
-        LessonList = appDatabase.LessonModel().getAllLessons();
+        LessonList = AppDatabase.getDatabase(application.getApplicationContext()).lessonDAO().getAllLessons();
     }
 
-    public ArrayList<Lesson> getLessonList(){
+    public List<Lesson> getLessonList(){
         return LessonList;
     }
 
@@ -47,7 +47,7 @@ public class LessonListViewModel extends AndroidViewModel{
 
         @Override
         protected Void doInBackground(final Lesson... params){
-            db.LessonModel().deleteLesson(params[0]);
+            db.lessonDAO().deleteLesson(params[0]);
             return null;
         }
     }

@@ -27,5 +27,5 @@ public abstract class AppDatabase extends RoomDatabase {
         return INSTANCE;
     }
 
-    public abstract LessonDAO LessonModel();
+    public abstract LessonDAO lessonDAO();
 }

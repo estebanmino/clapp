@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import com.construapp.construapp.models.Lesson;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by ESTEBANFML on 18-09-2017.
@@ -18,12 +19,12 @@ import java.util.ArrayList;
 
 public class LessonsAdapter extends BaseAdapter {
     private final Context context;
-    private final ArrayList<Lesson> LessonModelList;
+    private final List<Lesson> LessonModelList;
 
     private TextView lessonName;
     private TextView lessonDescription;
 
-    public LessonsAdapter(Context context, ArrayList<Lesson> LessonModelList) {
+    public LessonsAdapter(Context context, List<Lesson> LessonModelList) {
         this.context = context;
         this.LessonModelList = LessonModelList;
     }
@@ -54,6 +55,7 @@ public class LessonsAdapter extends BaseAdapter {
             convertView = layoutInflater.inflate(R.layout.lesson_list_item,null);
         }
 
+        lessonName = convertView.findViewById(R.id.lesson_name);
         lessonName = convertView.findViewById(R.id.lesson_name);
         lessonDescription = convertView.findViewById(R.id.lesson_description);
 
