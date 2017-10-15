@@ -69,9 +69,11 @@ public class MainActivity extends AppCompatActivity {
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 
-        //fab.setTag("1");
-        Log.i("tag", fab.getTag().toString());
-        if (Integer.parseInt(fab.getTag().toString()) >= 2){
+        //TODO: userPermission se debe obtener consultando a la API
+        int userPermission = 2;
+
+        //Able FloatingActionButton or hide it according to the user permissions
+        if (userPermission >= Integer.parseInt(fab.getTag().toString())){
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
