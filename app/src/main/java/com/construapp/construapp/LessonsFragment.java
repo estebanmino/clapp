@@ -185,7 +185,8 @@ public class LessonsFragment extends Fragment {
                 Lesson lesson = (Lesson) lessonsAdapter.getItem(position);
                 Log.i("ROOM NAME",lesson.getName());
                 Log.i("ROOM DESCR",lesson.getDescription());
-                Log.i("ROOM COMPANYID",lesson.getCompany_id());
+                //Log.i("ROOM COMPANYID",lesson.getCompany_id());
+                Toast.makeText(getActivity(),lesson.getName(),Toast.LENGTH_SHORT).show();
 
 
 

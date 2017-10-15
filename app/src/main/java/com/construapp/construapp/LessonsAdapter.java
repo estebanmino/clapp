@@ -1,6 +1,7 @@
 package com.construapp.construapp;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +35,11 @@ public class LessonsAdapter extends BaseAdapter {
         if(LessonModelList != null) {
             return LessonModelList.size();
         }
-        else return 0;
+
+        else {
+            Log.i("POSITION","entre aca");
+            return 0;
+        }
     }
 
     @Override
