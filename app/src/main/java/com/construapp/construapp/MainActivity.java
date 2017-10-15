@@ -12,11 +12,13 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.construapp.construapp.microblog.MicroblogFragment;
+import com.construapp.construapp.models.Constants;
 
 import android.content.SharedPreferences;
 import android.widget.Toast;
@@ -32,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
     private SectionsPagerAdapter mSectionsPagerAdapter;
+    //CONSTANTS
+    private Constants constants;
 
     /**
      * The {@link ViewPager} that will host the section contents.
@@ -65,15 +69,25 @@ public class MainActivity extends AppCompatActivity {
         //Toast.makeText(this,"El User id es:"+user_id,Toast.LENGTH_SHORT).show();
         //Toast.makeText(this,"El company id es:"+company_id,Toast.LENGTH_SHORT).show();
 
+        constants = new Constants();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(LessonFormActivity.getIntent(MainActivity.this));
-            }
-        });
 
+        int userPermission = constants.getUserPermission();
+        int fabPermission = constants.xmlPermissionTagToInt(fab.getTag().toString());
+
+        //Able FloatingActionButton or hide it according to the user permissions
+        if (userPermission >= fabPermission){
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(LessonFormActivity.getIntent(MainActivity.this));
+                }
+            });
+        }
+        else {
+            fab.setVisibility(View.GONE);
+        }
     }
 
 
@@ -164,6 +178,7 @@ public class MainActivity extends AppCompatActivity {
             }
             return null;
         }
+
     }
 
     public static Intent getIntent(Context context) {

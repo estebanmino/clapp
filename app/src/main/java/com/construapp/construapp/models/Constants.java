@@ -1,6 +1,8 @@
 package com.construapp.construapp.models;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.widget.ImageView;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.regions.Regions;
@@ -10,7 +12,6 @@ import com.amazonaws.regions.Regions;
  */
 
 public class Constants {
-
     public CognitoCachingCredentialsProvider getCredentialsProvider(Context context) {
         return new CognitoCachingCredentialsProvider(
                 context,
@@ -19,4 +20,23 @@ public class Constants {
         );
     }
 
+    public int getUserPermission(){
+        //TODO: acá va la consulta que retorna el string con el permiso del usuario
+        //mientras harcodeamos un tipo de permiso
+        return userPermissionsToInt("admin");
+    }
+
+    public int xmlPermissionTagToInt(String tag){
+        return Integer.parseInt(tag);
+    }
+
+    private int userPermissionsToInt(String permission){
+        switch (permission){
+            case "admin": return 4;
+            case "validate": return 3;
+            case "create": return 2;
+            case "read": return 1;
+            default: return 0;
+        }
+    }
 }
