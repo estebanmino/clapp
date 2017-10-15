@@ -93,18 +93,54 @@ public class LessonsFragment extends Fragment {
             }
             Log.i("ROOM","NO DEBE SALIR NADA");
 
+            final String lessons_json= lessons;
+
 
             try {
 
                 new AsyncTask<Void, Void, String>() {
                     @Override
                     protected String doInBackground(Void... params) {
-                        Lesson lesson_1 = new Lesson();
-                        lesson_1.setName("Prueba Jose");
-                        lesson_1.setDescription("Prueba Room");
-                        lesson_1.setId("1");
-                        AppDatabase.getDatabase(getActivity()).lessonDAO().insertLesson(lesson_1);
-                        Log.i("CREAR","CREE LA LECCION");
+
+                        try {
+
+                            JSONArray lesson_array = new JSONArray(lessons_json);
+                            int num = lesson_array.length();
+                            for (int i = 0; i < lesson_array.length(); i++) {
+
+                                JSONObject curr = lesson_array.getJSONObject(i);
+
+                                String name = curr.getString("name");
+                                Log.i("ldebug", name);
+                                String summary = curr.getString("summary");
+                                String id = curr.getString("id");
+                                //Log.i("ldebug",learning);
+                                //Log.i("ldebug","hola");
+                                Lesson lesson_1 = new Lesson();
+                                lesson_1.setName(name);
+                                lesson_1.setDescription(summary);
+                                lesson_1.setId(id);
+                                //TODO ACA HAY QUE AGREGAR LOS ELEM
+                                //MEDIANTE PARSEO DE JSONARRAY Y CREAR MULTIMEDIA FILES
+                                //AGREGANDOLOS A LA LESSON
+                                //LessonModelList.add(lesson_1);
+                                AppDatabase.getDatabase(getActivity()).lessonDAO().insertLesson(lesson_1);
+                                Log.i("count", String.valueOf(i));
+
+                            }
+
+                        }
+                        catch(JSONException e)
+                        {
+
+                        }
+
+                        //Lesson lesson_1 = new Lesson();
+                        //lesson_1.setName("Prueba Jose");
+                        //lesson_1.setDescription("Prueba Room");
+                        //lesson_1.setId("1");
+                        //AppDatabase.getDatabase(getActivity()).lessonDAO().insertLesson(lesson_1);
+                        Log.i("CREAR","CREE LAS LECCIONES");
                         return "1";
                     }
 
