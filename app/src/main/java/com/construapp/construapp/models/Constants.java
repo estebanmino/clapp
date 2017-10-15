@@ -20,55 +20,23 @@ public class Constants {
         );
     }
 
-    public void setBackground(ImageView view, int flag){
-        flag = flag%2;
-        if (flag == 0){
-            view.setBackgroundColor(Color.GREEN);
-        }
-        else {
-            view.setBackgroundColor(Color.RED);
-        }
-    }
-
-    public boolean setPermissionsBoolean(int flag){
-        flag = flag%2;
-        boolean permissions = false;
-        if (flag == 0){
-            permissions = true;
-        }
-        else {
-            permissions = false;
-        }
-        return  permissions;
-    }
-
     public int getUserPermission(){
         //TODO: acá va la consulta que retorna el string con el permiso del usuario
         //mientras harcodeamos un tipo de permiso
-        int userPermission = userPermissionsToInt("admin");
-        return userPermission;
+        return userPermissionsToInt("admin");
     }
 
     public int xmlPermissionTagToInt(String tag){
-        int xmlPermission = Integer.parseInt(tag);
-        return xmlPermission;
+        return Integer.parseInt(tag);
     }
 
-    public int userPermissionsToInt(String permission){
-        if (permission.equals("admin")){
-            return 4;
-        }
-        else if (permission.equals("validate")){
-            return 3;
-        }
-        else if (permission.equals("create")){
-            return 2;
-        }
-        else if (permission.equals("read")){
-            return 1;
-        }
-        else {
-            return 0;
+    private int userPermissionsToInt(String permission){
+        switch (permission){
+            case "admin": return 4;
+            case "validate": return 3;
+            case "create": return 2;
+            case "read": return 1;
+            default: return 0;
         }
     }
 }
