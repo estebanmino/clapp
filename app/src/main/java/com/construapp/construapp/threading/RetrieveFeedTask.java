@@ -149,7 +149,7 @@ public class RetrieveFeedTask extends AsyncTask<String, Integer, String> {
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setDoOutput(true);
                 urlConnection.setDoInput(true);
-                urlConnection.setConnectTimeout(10000);
+                urlConnection.setConnectTimeout(15000);
                 urlConnection.setRequestMethod("POST");
                 urlConnection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
                 //TODO utilizar JSONObject para armar String y no manual
@@ -225,7 +225,7 @@ public class RetrieveFeedTask extends AsyncTask<String, Integer, String> {
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                 //urlConnection.setDoOutput(true);
                 //urlConnection.setDoInput(false);
-                urlConnection.setConnectTimeout(1500);
+                urlConnection.setConnectTimeout(15000);
                 urlConnection.setRequestMethod("GET");
                 urlConnection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
                 //TODO utilizar JSONObject para armar String y no manual

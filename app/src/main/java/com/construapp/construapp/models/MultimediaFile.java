@@ -12,15 +12,13 @@ import java.util.concurrent.ExecutionException;
  * Created by ESTEBANFML on 23-09-2017.
  */
 
-@Entity
+
 public class MultimediaFile {
 
     private String mPath;
     private UploadMultimediaAsyncTask uploadThread;
     private DownloadMultimediaAsyncTask downloadThread;
     private String s3BucketName;
-    //TODO hay que definir un key bueno. @ESMINO
-    @PrimaryKey
     private String fileKey;
     private TransferUtility transferUtility;
     private String extension;

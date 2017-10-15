@@ -31,7 +31,10 @@ public class LessonsAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return LessonModelList.size();
+        if(LessonModelList != null) {
+            return LessonModelList.size();
+        }
+        else return 0;
     }
 
     @Override

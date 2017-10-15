@@ -23,7 +23,6 @@ import com.google.gson.reflect.TypeToken;
  */
 
 @Dao
-@TypeConverters(Lesson.class)
 public interface LessonDAO {
 
     @Query("select * from Lesson")

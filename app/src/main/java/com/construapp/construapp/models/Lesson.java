@@ -1,6 +1,7 @@
 package com.construapp.construapp.models;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverter;
 import android.arch.persistence.room.TypeConverters;
@@ -18,20 +19,21 @@ import java.util.ArrayList;
 @Entity
 public class Lesson {
 
-    @TypeConverters(MultimediaFile.class)
+
 
 
     public ArrayList<MultimediaFile> getMultimediaPictureFiles() {
         return multimediaPictureFiles;
     }
-
+    @Ignore
     private ArrayList<MultimediaFile> multimediaPictureFiles;
 
     public ArrayList<MultimediaFile> getMultimediaAudioFiles() {
         return multimediaAudioFiles;
     }
-
+    @Ignore
     private ArrayList<MultimediaFile> multimediaAudioFiles;
+    @Ignore
     private ArrayList<MultimediaFile> multimediaDocumentsFiles;
     @PrimaryKey
     private String id;
@@ -137,17 +139,6 @@ public class Lesson {
         return description;
     }
 
-    @TypeConverter
-    public static ArrayList<MultimediaFile> fromString(String value) {
-        Type listType = new TypeToken<ArrayList<MultimediaFile>>() {}.getType();
-        return new Gson().fromJson(value, listType);
-    }
 
-    @TypeConverter
-    public static String fromArrayList(ArrayList<MultimediaFile> list) {
-        Gson gson = new Gson();
-        String json = gson.toJson(list);
-        return json;
-    }
 
 }

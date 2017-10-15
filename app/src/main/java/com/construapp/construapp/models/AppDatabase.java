@@ -12,7 +12,6 @@ import android.arch.persistence.room.Room;
 
 
 @Database(entities = {Lesson.class}, version = 1)
-@TypeConverters({Converters.class})
 
 public abstract class AppDatabase extends RoomDatabase {
 

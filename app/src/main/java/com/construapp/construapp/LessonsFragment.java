@@ -110,6 +110,7 @@ public class LessonsFragment extends Fragment {
 
 
                 }.execute().get();
+
             }
             catch(InterruptedException e)
             {
@@ -143,6 +144,7 @@ public class LessonsFragment extends Fragment {
 
 
                 }.execute().get();
+                Toast.makeText(getActivity(),aux.get(0).getDescription(),Toast.LENGTH_LONG).show();
 
                 //Log.i("MENSAJE ULTRA IMPORTANT","EL VALOR ES "+aux);
                 LessonModelList = aux;
