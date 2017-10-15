@@ -45,12 +45,10 @@ public class LessonsFragment extends Fragment {
         }
         catch(InterruptedException e) {}
         catch (ExecutionException e) {}
-        Log.i("TAG",lessons);
 
         try
         {
             JSONArray lesson_array = new JSONArray(lessons);
-            int num = lesson_array.length();
             for(int i=0;i<lesson_array.length();i++)
             {
                 JSONObject curr = lesson_array.getJSONObject(i);

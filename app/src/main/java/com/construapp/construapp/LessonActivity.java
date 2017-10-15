@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.content.SharedPreferences;
@@ -21,6 +22,10 @@ import com.construapp.construapp.multimedia.MultimediaPictureAdapter;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.models.MultimediaFile;
+import com.construapp.construapp.threading.RetrieveFeedTask;
+import com.construapp.construapp.threading.RetrieveLessonMultimedia;
+
+import java.util.concurrent.ExecutionException;
 
 
 public class LessonActivity extends AppCompatActivity {
@@ -62,6 +67,23 @@ public class LessonActivity extends AppCompatActivity {
 
         lesson_name.setText(lesson.getName());
         lesson_description.setText(lesson.getDescription());
+
+        SharedPreferences sharedpreferences = LessonActivity.this.getSharedPreferences("ConstruApp", Context.MODE_PRIVATE);
+        String company_id = sharedpreferences.getString("company_id", "");
+        String user_token = sharedpreferences.getString("token", "");
+
+        RetrieveLessonMultimedia lesson_fetcher=new RetrieveLessonMultimedia(LessonActivity.this,
+                company_id, lesson.getId(), user_token );
+
+        try {
+            //String
+            //String paths = lesson_fetcher.execute(company_id,lesson.getId()).get();
+            lesson_fetcher.execute(company_id,lesson.getId()).get();
+            //Log.i("S3 PATHS", paths);
+        }
+        catch(InterruptedException e) {}
+        catch (ExecutionException e) {}
+
         ////HORIZONTAL IMAGES SCROLLING
 
         //GENRAL LAYOUT SCROLL

@@ -69,25 +69,17 @@ public class RetrieveFeedTask extends AsyncTask<String, Integer, String> {
                 JSONObject obj = new JSONObject(input);
                 input = obj.toString();
                 urlConnection.connect();
-
-
                 OutputStream os = urlConnection.getOutputStream();
                 os.write(input.getBytes("UTF-8"));
                 os.close();
-
-
                 int responsecode = urlConnection.getResponseCode();
-
                 if (responsecode != 200) {
-                    // Success
-                    // Further processing here
                     urlConnection.disconnect();
                     out = "error";
                     return out;
                 } else {
                     //continue
                 }
-
 
                 InputStream response = urlConnection.getInputStream();
                 BufferedReader br = new BufferedReader(new InputStreamReader((response)));
@@ -101,13 +93,8 @@ public class RetrieveFeedTask extends AsyncTask<String, Integer, String> {
                 }
 
                 if (urlConnection.getResponseCode() == 200) {
-                    Log.i("CODE",String.valueOf(urlConnection.getResponseCode()));
-                    // Success
-                    // Further processing here
                     urlConnection.disconnect();
-
                 }
-
 
                 JSONObject object = (JSONObject) new JSONTokener(aux).nextValue();
                 String t = object.getString("auth_token");
@@ -116,21 +103,16 @@ public class RetrieveFeedTask extends AsyncTask<String, Integer, String> {
                 //String company_id = object.getString("company_id");
                 String company_id = company.getString("id");
                 String query = t+";"+id+";"+company_id;
-
                 out = query;
-
                 return out;
 
             } catch (Exception e) {
-
                 e.printStackTrace();
                 return "error";
-
             }
         }
         else if(type == "send-lesson")
         {
-
             String lesson_name = str[0];
             String lesson_summary = str[1];
             String lesson_motivation = str[2];
@@ -141,7 +123,6 @@ public class RetrieveFeedTask extends AsyncTask<String, Integer, String> {
             int project_id = Integer.parseInt(str[7]);
 
             try {
-
                 String url_string = "http://construapp-api.ing.puc.cl/companies/"+company_id+"/lessons";
                 URL url = new URL(url_string);
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
@@ -155,25 +136,17 @@ public class RetrieveFeedTask extends AsyncTask<String, Integer, String> {
                 JSONObject N = new JSONObject(input);
                 input = N.toString();
                 urlConnection.connect();
-
                 OutputStream os = urlConnection.getOutputStream();
                 os.write(input.getBytes("UTF-8"));
                 os.close();
-
                 int responsecode = urlConnection.getResponseCode();
-
                 if (responsecode != 201) {
-                    // Success
-                    // Further processing here
                     urlConnection.disconnect();
                     out = "error";
                     return out;
                 }
                 else
-                {
-                    //continue
-                }
-
+                {}
 
                 InputStream response = urlConnection.getInputStream();
                 BufferedReader br = new BufferedReader(new InputStreamReader((response)));
@@ -187,41 +160,26 @@ public class RetrieveFeedTask extends AsyncTask<String, Integer, String> {
                 }
 
                 if (urlConnection.getResponseCode() == 200) {
-                    // Success
-                    // Further processing here
                     urlConnection.disconnect();
-
                 }
-
 
                 JSONObject object = (JSONObject) new JSONTokener(aux).nextValue();
                 String query = object.getString("id");
-
                 out = query;
-
                 return out;
-
-
-
             }
             catch (Exception e) {
-
                 e.printStackTrace();
                 return e.getMessage();
-
             }
-
         }
-
         else if(type == "fetch-lessons")
         {
             String company_id = str[0];
-            Log.i("company_id",company_id);
             try {
                 String url_string = "http://construapp-api.ing.puc.cl/companies/"+company_id+"/lessons";
                 URL url = new URL(url_string);
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                //urlConnection.setDoOutput(true);
                 //urlConnection.setDoInput(false);
                 urlConnection.setConnectTimeout(1500);
                 urlConnection.setRequestMethod("GET");
@@ -229,27 +187,16 @@ public class RetrieveFeedTask extends AsyncTask<String, Integer, String> {
                 //TODO utilizar JSONObject para armar String y no manual
                 //String input = "{\"session\":{\"email\":\"" + email + "\",\"password\":\"" + pass + "\"}}";
                 urlConnection.connect();
-
-
                 //OutputStream os = urlConnection.getOutputStream();
                 //os.write(input.getBytes("UTF-8"));
                 //os.close();
 
-
                 int responsecode = urlConnection.getResponseCode();
-
-                Log.i("responsecode",String.valueOf(responsecode));
-
                 if (responsecode != 200) {
-                    // Success
-                    // Further processing here
                     urlConnection.disconnect();
                     out = "error";
                     return out;
-                } else {
-                    //continue
-                }
-
+                } else {}
 
                 InputStream response = urlConnection.getInputStream();
                 BufferedReader br = new BufferedReader(new InputStreamReader((response)));
@@ -261,33 +208,22 @@ public class RetrieveFeedTask extends AsyncTask<String, Integer, String> {
                     System.out.println(output);
                     aux += output;
                 }
-
                 if (urlConnection.getResponseCode() == 200) {
                     // Success
                     // Further processing here
                     urlConnection.disconnect();
-
                 }
-
 
                 //JSONObject object = (JSONObject) new JSONTokener(aux).nextValue();
                 //String t = object.getString("auth_token");
                 //String id = object.getString("id");
                 //JSONObject company = (JSONObject) object.getJSONObject("company");
                 //String company_id = company.getString("id");
-                String query = aux;
                 Log.i("outputLessonsthread",aux);
                 return aux;
-
-                //out = query;
-
-                //return out;
-
             } catch (Exception e) {
-
                 e.printStackTrace();
                 return e.getMessage();
-
             }
 
         }
@@ -318,32 +254,21 @@ public class RetrieveFeedTask extends AsyncTask<String, Integer, String> {
                 {
                     routes_array.put(paths_array[i]);
                 }
-
                 paths.put("array_file_path",routes_array);
                 String rutas_string = paths.toString();
-                Log.i("jsontoprint",rutas_string);
                 urlConnection.connect();
-
 
                 OutputStream os = urlConnection.getOutputStream();
                 os.write(rutas_string.getBytes("UTF-8"));
                 os.close();
 
-
                 int responsecode = urlConnection.getResponseCode();
 
-                Log.i("responsecode",String.valueOf(responsecode));
-
                 if (responsecode != 200) {
-                    // Success
-                    // Further processing here
                     urlConnection.disconnect();
                     out = "error: "+responsecode;
                     return out;
-                } else {
-                    //continue
-                }
-
+                } else {}
 
                 InputStream response = urlConnection.getInputStream();
                 BufferedReader br = new BufferedReader(new InputStreamReader((response)));
@@ -357,12 +282,8 @@ public class RetrieveFeedTask extends AsyncTask<String, Integer, String> {
                 }
 
                 if (urlConnection.getResponseCode() == 200) {
-                    // Success
-                    // Further processing here
                     urlConnection.disconnect();
-
                 }
-
 
                 //JSONObject object = (JSONObject) new JSONTokener(aux).nextValue();
                 //String t = object.getString("auth_token");
@@ -374,33 +295,19 @@ public class RetrieveFeedTask extends AsyncTask<String, Integer, String> {
                 aux = "OK";
                 return aux;
 
-                //out = query;
-
-                //return out;
-
             } catch (Exception e) {
-
                 e.printStackTrace();
                 return e.getMessage();
-
             }
         }
         else
         {
             return "not implemented";
         }
-
-
     }
 
     protected void onPostExecute(String response) {
-        if(response == "error") {
-            //response = "THERE WAS AN ERROR";
-        }
-        else
-        {
-
-        }
+        if(response == "error") {}
 
     }
 }
