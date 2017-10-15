@@ -32,6 +32,7 @@ public class LessonActivity extends AppCompatActivity {
 
     private Lesson lesson = new Lesson();
     public final static String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
+    private int userPermission;
 
     //CONSTANTS
     private Constants constants;
@@ -55,6 +56,7 @@ public class LessonActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         constants = new Constants();
+        userPermission = constants.getUserPermission();
 
         final TextView lesson_name = (TextView) findViewById(R.id.text_lesson_name);
         final TextView lesson_description = (TextView) findViewById(R.id.text_lesson_description);
@@ -156,27 +158,23 @@ public class LessonActivity extends AppCompatActivity {
     }
 
     public void showPermissions(){
-        final TextView lesson_name_label = (TextView) findViewById(R.id.text_new_lesson_name);
-        final TextView lesson_description_label = (TextView) findViewById(R.id.text_new_lesson_description);
-        final ImageView color_boolean = (ImageView) findViewById(R.id.star);
-        color_boolean.setTag(0);
-        color_boolean.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int tag = (int)color_boolean.getTag() + 1;
-                color_boolean.setTag(tag);
-                constants.setBackground(color_boolean,(Integer) view.getTag());
-                if (!constants.setPermissionsBoolean(tag)){
-                    lesson_name_label.setVisibility(View.INVISIBLE);
-                    lesson_description_label.setVisibility(View.INVISIBLE);
-                }
-                else {
-                    lesson_name_label.setVisibility(View.VISIBLE);
-                    lesson_description_label.setVisibility(View.VISIBLE);
-                }
-            }
-        });
-    }
+        final TextView edit_lesson_label = (TextView) findViewById(R.id.text_edit_lesson);
+        final TextView delete_lesson_label = (TextView) findViewById(R.id.text_delete_lesson);
+        final ImageView edit_lesson_image = (ImageView) findViewById(R.id.image_edit_lesson);
+        final ImageView delete_lesson_image = (ImageView) findViewById(R.id.image_delete_lesson);
 
+        int userPermission = constants.getUserPermission();
+        int editPermission = constants.xmlPermissionTagToInt(edit_lesson_image.getTag().toString());
+        int deletePermission = constants.xmlPermissionTagToInt((delete_lesson_image.getTag().toString()));
+
+        if (editPermission > userPermission){
+            edit_lesson_image.setVisibility(View.GONE);
+            edit_lesson_label.setVisibility(View.GONE);
+        }
+        if (deletePermission > userPermission){
+            delete_lesson_image.setVisibility(View.GONE);
+            delete_lesson_label.setVisibility(View.GONE);
+        }
+    }
 
 }

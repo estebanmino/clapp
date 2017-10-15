@@ -42,4 +42,33 @@ public class Constants {
         return  permissions;
     }
 
+    public int getUserPermission(){
+        //TODO: acá va la consulta que retorna el string con el permiso del usuario
+        //mientras harcodeamos un tipo de permiso
+        int userPermission = userPermissionsToInt("admin");
+        return userPermission;
+    }
+
+    public int xmlPermissionTagToInt(String tag){
+        int xmlPermission = Integer.parseInt(tag);
+        return xmlPermission;
+    }
+
+    public int userPermissionsToInt(String permission){
+        if (permission.equals("admin")){
+            return 4;
+        }
+        else if (permission.equals("validate")){
+            return 3;
+        }
+        else if (permission.equals("create")){
+            return 2;
+        }
+        else if (permission.equals("read")){
+            return 1;
+        }
+        else {
+            return 0;
+        }
+    }
 }
