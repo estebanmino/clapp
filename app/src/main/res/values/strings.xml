@@ -18,4 +18,10 @@
     <string name="login_activity_password">Ingrese su contraseña</string>
     <string name="login_activity_signin">Ingresar</string>
     <string name="title_activity_lesson_form">Nueva Lección</string>
+
+    <!-- PERMISSIONS -->
+    <integer name="read_permission">1</integer>
+    <integer name="create_permission">2</integer>
+    <integer name="validate_permission">3</integer>
+    <integer name="admin_permission">4</integer>
 </resources>
