@@ -2,6 +2,7 @@ package com.construapp.construapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.content.SharedPreferences;
 
@@ -50,6 +52,7 @@ public class LessonActivity extends AppCompatActivity {
 
     private Lesson lesson = new Lesson();
     public final static String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
+    private int userPermission;
 
     //CONSTANTS
     private Constants constants;
@@ -72,9 +75,17 @@ public class LessonActivity extends AppCompatActivity {
         setContentView(R.layout.activity_lesson);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        constants = new Constants();
+        userPermission = constants.getUserPermission();
 
-        TextView lesson_name = (TextView) findViewById(R.id.text_lesson_name);
-        TextView lesson_description = (TextView) findViewById(R.id.text_lesson_description);
+
+        final TextView lesson_name = (TextView) findViewById(R.id.text_lesson_name);
+        final TextView lesson_description = (TextView) findViewById(R.id.text_lesson_description);
+        SharedPreferences spl = getSharedPreferences("Lesson", Context.MODE_PRIVATE);
+
+        lesson_name.setText(spl.getString("lesson_name", ""));
+        lesson_description.setText(spl.getString("lesson_description", ""));
+
 
         setLesson();
 
@@ -114,7 +125,6 @@ public class LessonActivity extends AppCompatActivity {
         mDocumentsRecyclerView.setAdapter(multimediaDocumentAdapter);
 
         // Create an S3 client
-        constants = new Constants();
         AmazonS3 s3 = new AmazonS3Client(constants.getCredentialsProvider(LessonActivity.this));
         transferUtility = new TransferUtility(s3, LessonActivity.this);
 
@@ -196,6 +206,7 @@ public class LessonActivity extends AppCompatActivity {
         lesson.setDescription(getIntent().getStringExtra(DESCRIPTION));
         lesson.setId(getIntent().getStringExtra(ID));
         lesson.initMultimediaFiles();
+        showPermissions();
     }
 
     public static Intent getIntent(Context context, String name, String description, String id) {
@@ -209,5 +220,25 @@ public class LessonActivity extends AppCompatActivity {
     public interface VolleyCallback{
         void onSuccess(JSONObject result);
         void onErrorResponse(VolleyError result);
+    }
+
+    public void showPermissions(){
+        final TextView edit_lesson_label = (TextView) findViewById(R.id.text_edit_lesson);
+        final TextView delete_lesson_label = (TextView) findViewById(R.id.text_delete_lesson);
+        final ImageView edit_lesson_image = (ImageView) findViewById(R.id.image_edit_lesson);
+        final ImageView delete_lesson_image = (ImageView) findViewById(R.id.image_delete_lesson);
+
+        int userPermission = constants.getUserPermission();
+        int editPermission = constants.xmlPermissionTagToInt(edit_lesson_image.getTag().toString());
+        int deletePermission = constants.xmlPermissionTagToInt((delete_lesson_image.getTag().toString()));
+
+        if (editPermission > userPermission){
+            edit_lesson_image.setVisibility(View.GONE);
+            edit_lesson_label.setVisibility(View.GONE);
+        }
+        if (deletePermission > userPermission){
+            delete_lesson_image.setVisibility(View.GONE);
+            delete_lesson_label.setVisibility(View.GONE);
+        }
     }
 }
