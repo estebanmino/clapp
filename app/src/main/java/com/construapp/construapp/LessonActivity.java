@@ -58,8 +58,6 @@ public class LessonActivity extends AppCompatActivity {
     MultimediaDocumentAdapter multimediaDocumentAdapter;
 
     private static String ABSOLUTE_STORAGE_PATH;
-    private SharedPreferences sharedpreferences;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +65,7 @@ public class LessonActivity extends AppCompatActivity {
         setContentView(R.layout.activity_lesson);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        sharedpreferences = getSharedPreferences("ConstruApp", Context.MODE_PRIVATE);
+        SharedPreferences sharedpreferences = getSharedPreferences("ConstruApp", Context.MODE_PRIVATE);
         constants = new Constants();
         userPermission = Integer.parseInt(sharedpreferences.getString("user_permission",""));
 
@@ -85,7 +83,6 @@ public class LessonActivity extends AppCompatActivity {
         lesson_name.setText(lesson.getName());
         lesson_description.setText(lesson.getDescription());
 
-        SharedPreferences sharedpreferences = LessonActivity.this.getSharedPreferences("ConstruApp", Context.MODE_PRIVATE);
         String company_id = sharedpreferences.getString("company_id", "");
         String user_token = sharedpreferences.getString("token", "");
 
