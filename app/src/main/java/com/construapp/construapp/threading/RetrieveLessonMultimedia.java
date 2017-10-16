@@ -25,7 +25,6 @@ import java.util.Map;
 
 public class RetrieveLessonMultimedia  extends AsyncTask<String, Integer, String> {
 
-
     private static  String BASE_URL = "http://construapp-api.ing.puc.cl";
     private static  String COMPANIES = "companies";
     private static  String LESSONS = "lessons";
@@ -56,28 +55,21 @@ public class RetrieveLessonMultimedia  extends AsyncTask<String, Integer, String
         RequestQueue queue = Volley.newRequestQueue(context);
         String url = BASE_URL +"/"+COMPANIES+"/"+companyId+"/"+LESSONS+"/"+lessonId;
         String responseAux = "";
-            //Authorization =? token
-        // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        // Display the first 500 characters of the response string.
                         ArrayList pathsList = getPathsFromResponse(response);
                         Log.i("PATHLIST", pathsList.toString());
-                        //responseAux = response;
-
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.i("RESPONSE","Response is:NULL");
             }
         }){
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String,String> params = new HashMap<String, String>();
-                Log.i("TOKEN", userToken);
                 params.put("Authorization",userToken);
                 return params;
             }
