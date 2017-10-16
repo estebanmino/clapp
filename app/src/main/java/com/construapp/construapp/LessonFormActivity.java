@@ -203,7 +203,7 @@ public class LessonFormActivity extends AppCompatActivity {
                 String lesson_motivation = "Aprendizaje";
                 String lesson_learning = editLessonDescription.getText().toString();
                 //TODO FIJAR PROYECTO CUANDO EXISTA
-                String project_id = "3";
+                String project_id = "2";
                 final String response = "";
 
 

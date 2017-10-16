@@ -2,9 +2,9 @@ package com.construapp.construapp;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.content.SharedPreferences;
+import android.widget.Toast;
 
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.services.s3.AmazonS3;
@@ -25,22 +26,16 @@ import com.construapp.construapp.multimedia.MultimediaPictureAdapter;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.models.MultimediaFile;
-import com.construapp.construapp.threading.RetrieveFeedTask;
-import com.construapp.construapp.threading.RetrieveLessonMultimedia;
+import com.construapp.construapp.threading.api.VolleyDeleteLesson;
 import com.construapp.construapp.threading.api.VolleyFetchLessonMultimedia;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.concurrent.Exchanger;
-import java.util.concurrent.ExecutionException;
 
 
 public class LessonActivity extends AppCompatActivity {
@@ -68,6 +63,12 @@ public class LessonActivity extends AppCompatActivity {
 
     private static String ABSOLUTE_STORAGE_PATH;
 
+    ImageView imageEditLesson;
+    ImageView imageDeleteLesson;
+    TextView textEditLesson;
+    TextView textDeleteLesson;
+    TextView textLessonName;
+    TextView textLessonDescription;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,24 +79,25 @@ public class LessonActivity extends AppCompatActivity {
         constants = new Constants();
         userPermission = constants.getUserPermission();
 
+        imageEditLesson = (ImageView) findViewById(R.id.image_edit_lesson);
+        imageDeleteLesson = (ImageView) findViewById(R.id.image_delete_lesson);
+        textEditLesson = (TextView) findViewById(R.id.text_edit_lesson);
+        textDeleteLesson = (TextView) findViewById(R.id.text_delete_lesson);
+        textLessonName = (TextView) findViewById(R.id.text_lesson_name);
+        textLessonDescription = (TextView) findViewById(R.id.text_lesson_description);
 
-        final TextView lesson_name = (TextView) findViewById(R.id.text_lesson_name);
-        final TextView lesson_description = (TextView) findViewById(R.id.text_lesson_description);
         SharedPreferences spl = getSharedPreferences("Lesson", Context.MODE_PRIVATE);
-
-        lesson_name.setText(spl.getString("lesson_name", ""));
-        lesson_description.setText(spl.getString("lesson_description", ""));
-
 
         setLesson();
 
-        lesson_name.setText(lesson.getName());
-        lesson_description.setText(lesson.getDescription());
+        textLessonName.setText(spl.getString("lesson_name", ""));
+        textLessonDescription.setText(spl.getString("lesson_description", ""));
+        textLessonName.setText(lesson.getName());
+        textLessonDescription.setText(lesson.getDescription());
 
         SharedPreferences sharedpreferences = LessonActivity.this.getSharedPreferences("ConstruApp", Context.MODE_PRIVATE);
         String company_id = sharedpreferences.getString("company_id", "");
         String user_token = sharedpreferences.getString("token", "");
-
 
         ////HORIZONTAL IMAGES SCROLLING
 
@@ -130,9 +132,6 @@ public class LessonActivity extends AppCompatActivity {
 
         ABSOLUTE_STORAGE_PATH = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString();
         final String CACHE_FOLDER = LessonActivity.this.getCacheDir().toString();
-
-
-        String[] fileKeyPaths = new String[100];
 
         VolleyFetchLessonMultimedia.volleyFetchLessonMultimedia(new VolleyCallback() {
             @Override
@@ -191,6 +190,31 @@ public class LessonActivity extends AppCompatActivity {
 
             }
         }, LessonActivity.this, lesson.getId());
+
+        setImageDeleteLessonListener();
+        setImageEditLessonListener();
+    }
+
+    public void setImageDeleteLessonListener() {
+        imageDeleteLesson.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //delete
+                Snackbar mySnackbar = Snackbar.make(findViewById(R.id.lesson_form_layout),
+                        "Confirme la eliminacion de lección", Snackbar.LENGTH_LONG);
+                mySnackbar.setAction("Confirmar", new DeleteListener());
+                mySnackbar.show();
+            }
+        });
+    }
+
+    public void setImageEditLessonListener() {
+        imageEditLesson.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //edit
+            }
+        });
     }
 
     public void showInfo(View view) {
@@ -222,23 +246,43 @@ public class LessonActivity extends AppCompatActivity {
         void onErrorResponse(VolleyError result);
     }
 
+    public interface VolleyStringCallback{
+        void onSuccess(String result);
+        void onErrorResponse(VolleyError result);
+    }
+
     public void showPermissions(){
-        final TextView edit_lesson_label = (TextView) findViewById(R.id.text_edit_lesson);
-        final TextView delete_lesson_label = (TextView) findViewById(R.id.text_delete_lesson);
-        final ImageView edit_lesson_image = (ImageView) findViewById(R.id.image_edit_lesson);
-        final ImageView delete_lesson_image = (ImageView) findViewById(R.id.image_delete_lesson);
 
         int userPermission = constants.getUserPermission();
-        int editPermission = constants.xmlPermissionTagToInt(edit_lesson_image.getTag().toString());
-        int deletePermission = constants.xmlPermissionTagToInt((delete_lesson_image.getTag().toString()));
+        int editPermission = constants.xmlPermissionTagToInt(imageEditLesson.getTag().toString());
+        int deletePermission = constants.xmlPermissionTagToInt((imageDeleteLesson.getTag().toString()));
 
         if (editPermission > userPermission){
-            edit_lesson_image.setVisibility(View.GONE);
-            edit_lesson_label.setVisibility(View.GONE);
+            imageEditLesson.setVisibility(View.GONE);
+            textEditLesson.setVisibility(View.GONE);
         }
         if (deletePermission > userPermission){
-            delete_lesson_image.setVisibility(View.GONE);
-            delete_lesson_label.setVisibility(View.GONE);
+            imageDeleteLesson.setVisibility(View.GONE);
+            textDeleteLesson.setVisibility(View.GONE);
+        }
+    }
+
+    public class DeleteListener implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            Log.i("DELETE","Lesson deleted");
+            VolleyDeleteLesson.volleyDeleteLesson(new VolleyStringCallback() {
+                @Override
+                public void onSuccess(String result) {
+                    Toast.makeText(LessonActivity.this, "Eliminada correctamente", Toast.LENGTH_LONG).show();
+                    startActivity(MainActivity.getIntent(LessonActivity.this));
+                }
+
+                @Override
+                public void onErrorResponse(VolleyError result) {
+                    Toast.makeText(LessonActivity.this, "Ocurrio un error, por favor reintentar", Toast.LENGTH_LONG).show();
+                }
+            }, LessonActivity.this, lesson.getId());
         }
     }
 }
