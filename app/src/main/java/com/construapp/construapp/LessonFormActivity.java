@@ -42,6 +42,7 @@ import android.widget.Toast;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.android.volley.VolleyError;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.models.MultimediaFile;
@@ -49,7 +50,9 @@ import com.construapp.construapp.multimedia.MultimediaAudioAdapter;
 import com.construapp.construapp.multimedia.MultimediaDocumentAdapter;
 import com.construapp.construapp.multimedia.MultimediaPictureAdapter;
 import com.construapp.construapp.threading.RetrieveFeedTask;
+import com.construapp.construapp.threading.api.VolleyCreateLesson;
 
+import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.io.File;
@@ -198,19 +201,38 @@ public class LessonFormActivity extends AppCompatActivity {
                 String lesson_summary = editLessonName.getText().toString();
                 String lesson_motivation = "Aprendizaje";
                 String lesson_learning = editLessonDescription.getText().toString();
-                String token = sharedpreferences.getString("token", "");
-                String user_id = sharedpreferences.getString("user_id", "");
-                String company_id = sharedpreferences.getString("company_id", "");
                 //TODO FIJAR PROYECTO CUANDO EXISTA
-                String project_id = "2";
+                String project_id = "3";
                 String response = "";
                 String lesson_id="";
+
+
+                VolleyCreateLesson.volleyCreateLesson(new LoginActivity.VolleyCallback() {
+                    @Override
+                    public void onSuccess(JSONObject result) {
+                        Log.i("RESULTCREATE", result.toString());
+                    }
+
+                    @Override
+                    public void onErrorResponse(VolleyError result) {
+
+                    }
+                }, LessonFormActivity.this, lesson_name, lesson_summary,
+                        lesson_motivation, lesson_learning,
+                        project_id);
+                /*
                 try {
                     RetrieveFeedTask r = new RetrieveFeedTask("send-lesson");
                     response = r.execute(lesson_name,lesson_summary,lesson_motivation,lesson_learning,token,user_id,company_id,project_id).get();
                 }
                 catch (InterruptedException e){}
                 catch (ExecutionException e){}
+                */
+
+
+
+
+/*
                 if(response != "error")
                 {
                     lesson_id=response;
@@ -246,10 +268,10 @@ public class LessonFormActivity extends AppCompatActivity {
                         }
                     }
                 }
-                Toast.makeText(LessonFormActivity.this, "Nueva lección creada", Toast.LENGTH_LONG).show();
 
                 startActivity(MainActivity.getIntent(LessonFormActivity.this));
-
+                */
+                Toast.makeText(LessonFormActivity.this, "Nueva lección creada", Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -736,16 +758,6 @@ public class LessonFormActivity extends AppCompatActivity {
         return null;
     }
 
-    /**
-     * Get the value of the data column for this Uri. This is useful for
-     * MediaStore Uris, and other file-based ContentProviders.
-     *
-     * @param context The context.
-     * @param uri The Uri to query.
-     * @param selection (Optional) Filter used in the query.
-     * @param selectionArgs (Optional) Selection arguments used in the query.
-     * @return The value of the _data column, which is typically a file path.
-     */
     public static String getDataColumn(Context context, Uri uri, String selection,
                                        String[] selectionArgs) {
 
@@ -791,5 +803,10 @@ public class LessonFormActivity extends AppCompatActivity {
      */
     public static boolean isMediaDocument(Uri uri) {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
+    }
+
+    public interface VolleyCallback{
+        void onSuccess(JSONObject result);
+        void onErrorResponse(VolleyError result);
     }
 }

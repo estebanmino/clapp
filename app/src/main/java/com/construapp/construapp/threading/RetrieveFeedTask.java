@@ -50,68 +50,7 @@ public class RetrieveFeedTask extends AsyncTask<String, Integer, String> {
 
     protected String doInBackground(String... str) {
 
-        if(type == "login")
-        {
-
-            String email = str[0];
-            String pass = str[1];
-
-            try {
-                URL url = new URL("http://construapp-api.ing.puc.cl/sessions");
-                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setDoOutput(true);
-                urlConnection.setDoInput(true);
-                urlConnection.setConnectTimeout(15000);
-                urlConnection.setRequestMethod("POST");
-                urlConnection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-                //TODO utilizar JSONObject para armar String y no manual
-                String input = "{\"session\":{\"email\":\"" + email + "\",\"password\":\"" + pass + "\"}}";
-                JSONObject obj = new JSONObject(input);
-                input = obj.toString();
-                urlConnection.connect();
-                OutputStream os = urlConnection.getOutputStream();
-                os.write(input.getBytes("UTF-8"));
-                os.close();
-                int responsecode = urlConnection.getResponseCode();
-                if (responsecode != 200) {
-                    urlConnection.disconnect();
-                    out = "error";
-                    return out;
-                } else {
-                    //continue
-                }
-
-                InputStream response = urlConnection.getInputStream();
-                BufferedReader br = new BufferedReader(new InputStreamReader((response)));
-
-                String output = "";
-                String aux = "";
-                System.out.println("Output from Server .... \n");
-                while ((output = br.readLine()) != null) {
-                    System.out.println(output);
-                    aux += output;
-                }
-
-                if (urlConnection.getResponseCode() == 200) {
-                    urlConnection.disconnect();
-                }
-
-                JSONObject object = (JSONObject) new JSONTokener(aux).nextValue();
-                String t = object.getString("auth_token");
-                String id = object.getString("id");
-                JSONObject company = object.getJSONObject("company");
-                //String company_id = object.getString("company_id");
-                String company_id = company.getString("id");
-                String query = t+";"+id+";"+company_id;
-                out = query;
-                return out;
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                return "error";
-            }
-        }
-        else if(type == "send-lesson")
+        if(type == "send-lesson")
         {
             String lesson_name = str[0];
             String lesson_summary = str[1];
