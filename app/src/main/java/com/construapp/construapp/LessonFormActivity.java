@@ -42,6 +42,7 @@ import android.widget.Toast;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.android.volley.VolleyError;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.models.MultimediaFile;
@@ -49,7 +50,10 @@ import com.construapp.construapp.multimedia.MultimediaAudioAdapter;
 import com.construapp.construapp.multimedia.MultimediaDocumentAdapter;
 import com.construapp.construapp.multimedia.MultimediaPictureAdapter;
 import com.construapp.construapp.threading.RetrieveFeedTask;
+import com.construapp.construapp.threading.api.VolleyCreateLesson;
+import com.construapp.construapp.threading.api.VolleyPostS3;
 
+import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.io.File;
@@ -198,58 +202,57 @@ public class LessonFormActivity extends AppCompatActivity {
                 String lesson_summary = editLessonName.getText().toString();
                 String lesson_motivation = "Aprendizaje";
                 String lesson_learning = editLessonDescription.getText().toString();
-                String token = sharedpreferences.getString("token", "");
-                String user_id = sharedpreferences.getString("user_id", "");
-                String company_id = sharedpreferences.getString("company_id", "");
                 //TODO FIJAR PROYECTO CUANDO EXISTA
-                String project_id = "2";
-                String response = "";
-                String lesson_id="";
-                try {
-                    RetrieveFeedTask r = new RetrieveFeedTask("send-lesson");
-                    response = r.execute(lesson_name,lesson_summary,lesson_motivation,lesson_learning,token,user_id,company_id,project_id).get();
-                }
-                catch (InterruptedException e){}
-                catch (ExecutionException e){}
-                if(response != "error")
-                {
-                    lesson_id=response;
-                    String path_input = "";
-                    for (MultimediaFile multimediaFile: lesson.getMultimediaPicturesFiles()) {
-                        path_input+=multimediaFile.getExtension()+"/"+multimediaFile.getmPath().substring(multimediaFile.getmPath().lastIndexOf("/")+1)+";";
-                    }
-                    for (MultimediaFile multimediaFile: lesson.getMultimediaAudiosFiles()) {
-                        path_input+=multimediaFile.getExtension()+"/"+multimediaFile.getmPath().substring(multimediaFile.getmPath().lastIndexOf("/")+1)+";";
-                    }
-                    for (MultimediaFile multimediaFile: lesson.getMultimediaDocumentsFiles()) {
-                        path_input+=multimediaFile.getExtension()+"/"+multimediaFile.getmPath().substring(multimediaFile.getmPath().lastIndexOf("/")+1)+";";
+                String project_id = "3";
+                final String response = "";
+
+
+                VolleyCreateLesson.volleyCreateLesson(new VolleyCallback() {
+                    @Override
+                    public void onSuccess(JSONObject result) {
+                        try {
+                            final String new_lesson_id = result.get("id").toString();
+                            String path_input = "";
+                            for (MultimediaFile multimediaFile : lesson.getMultimediaPicturesFiles()) {
+                                path_input += multimediaFile.getExtension() + "/" + multimediaFile.getmPath().substring(multimediaFile.getmPath().lastIndexOf("/") + 1) + ";";
+                            }
+                            for (MultimediaFile multimediaFile : lesson.getMultimediaAudiosFiles()) {
+                                path_input += multimediaFile.getExtension() + "/" + multimediaFile.getmPath().substring(multimediaFile.getmPath().lastIndexOf("/") + 1) + ";";
+                            }
+                            for (MultimediaFile multimediaFile : lesson.getMultimediaDocumentsFiles()) {
+                                path_input += multimediaFile.getExtension() + "/" + multimediaFile.getmPath().substring(multimediaFile.getmPath().lastIndexOf("/") + 1) + ";";
+                            }
+
+                            VolleyPostS3.volleyPostS3(new VolleyCallback() {
+                                @Override
+                                public void onSuccess(JSONObject result) {
+                                    for (MultimediaFile multimediaFile: lesson.getMultimediaPicturesFiles()) {
+                                        multimediaFile.initUploadThread();
+                                    }
+                                    for (MultimediaFile multimediaFile: lesson.getMultimediaAudiosFiles()) {
+                                        multimediaFile.initUploadThread();
+                                    }
+                                    for (MultimediaFile multimediaFile: lesson.getMultimediaDocumentsFiles()) {
+                                        multimediaFile.initUploadThread();
+                                    }
+                                }
+
+                                @Override
+                                public void onErrorResponse(VolleyError result) {
+                                }
+                            }, LessonFormActivity.this, new_lesson_id, path_input.split(";"));
+                        } catch (Exception e) {
+                        }
                     }
 
-                    RetrieveFeedTask r2 = new RetrieveFeedTask("fetch-s3");
-                    String response2 = "";
-                    try {
-                        response2 = r2.execute(company_id,lesson_id,path_input).get();
-                    }
-                    catch (InterruptedException e){}
-                    catch (ExecutionException e) {}
+                    @Override
+                    public void onErrorResponse(VolleyError result) {
 
-                    if(response2 == "OK")
-                    {
-                        for (MultimediaFile multimediaFile: lesson.getMultimediaPicturesFiles()) {
-                            multimediaFile.initUploadThread();
-                        }
-                        for (MultimediaFile multimediaFile: lesson.getMultimediaAudiosFiles()) {
-                            multimediaFile.initUploadThread();
-                        }
-                        for (MultimediaFile multimediaFile: lesson.getMultimediaDocumentsFiles()) {
-                            multimediaFile.initUploadThread();
-                        }
                     }
-                }
+                }, LessonFormActivity.this, lesson_name, lesson_summary,
+                        lesson_motivation, lesson_learning,
+                        project_id);
                 Toast.makeText(LessonFormActivity.this, "Nueva lección creada", Toast.LENGTH_LONG).show();
-
-                startActivity(MainActivity.getIntent(LessonFormActivity.this));
-
             }
         });
     }
@@ -437,7 +440,7 @@ public class LessonFormActivity extends AppCompatActivity {
                                 }
                             });
 
-                    lesson.getMultimediaPicturesFiles().add(new MultimediaFile(EXTENSION_PICTURE,mPath, transferUtility,S3_BUCKET_NAME));
+                    lesson.getMultimediaPicturesFiles().add(new MultimediaFile(EXTENSION_PICTURE,mPath, null,transferUtility,S3_BUCKET_NAME));
                     multimediaPictureAdapter.notifyDataSetChanged();
                     break;
 
@@ -447,7 +450,7 @@ public class LessonFormActivity extends AppCompatActivity {
                     {
                         mPath = getRealPathFromURI_API19(getApplicationContext(),data.getData());
 
-                        lesson.getMultimediaPicturesFiles().add(new MultimediaFile(EXTENSION_PICTURE,mPath, transferUtility,S3_BUCKET_NAME));
+                        lesson.getMultimediaPicturesFiles().add(new MultimediaFile(EXTENSION_PICTURE,mPath, null,transferUtility,S3_BUCKET_NAME));
                         multimediaPictureAdapter.notifyDataSetChanged();
 
 
@@ -460,7 +463,7 @@ public class LessonFormActivity extends AppCompatActivity {
                     Uri selectedUri = data.getData();
 
                     lesson.getMultimediaDocumentsFiles().add(new MultimediaFile(EXTENSION_DOCUMENT,
-                            getPath(LessonFormActivity.this, selectedUri), transferUtility,S3_BUCKET_NAME));
+                            getPath(LessonFormActivity.this, selectedUri),null, transferUtility,S3_BUCKET_NAME));
                     multimediaDocumentAdapter.notifyDataSetChanged();
                     break;
 
@@ -643,7 +646,7 @@ public class LessonFormActivity extends AppCompatActivity {
             Long tsLong = System.currentTimeMillis() / 1000;
             String ts = tsLong.toString();
             MultimediaFile audioMultimedia = new MultimediaFile(
-                    "AUDIO", ABSOLUTE_STORAGE_PATH + ts.toString() + ".3gp", transferUtility, S3_BUCKET_NAME);
+                    "AUDIO", ABSOLUTE_STORAGE_PATH + ts.toString() + ".3gp", null,transferUtility, S3_BUCKET_NAME);
             startRecording(audioMultimedia);
             lesson.getMultimediaAudiosFiles().add(audioMultimedia);
         } else {
@@ -736,16 +739,6 @@ public class LessonFormActivity extends AppCompatActivity {
         return null;
     }
 
-    /**
-     * Get the value of the data column for this Uri. This is useful for
-     * MediaStore Uris, and other file-based ContentProviders.
-     *
-     * @param context The context.
-     * @param uri The Uri to query.
-     * @param selection (Optional) Filter used in the query.
-     * @param selectionArgs (Optional) Selection arguments used in the query.
-     * @return The value of the _data column, which is typically a file path.
-     */
     public static String getDataColumn(Context context, Uri uri, String selection,
                                        String[] selectionArgs) {
 
@@ -791,5 +784,10 @@ public class LessonFormActivity extends AppCompatActivity {
      */
     public static boolean isMediaDocument(Uri uri) {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
+    }
+
+    public interface VolleyCallback{
+        void onSuccess(JSONObject result);
+        void onErrorResponse(VolleyError result);
     }
 }

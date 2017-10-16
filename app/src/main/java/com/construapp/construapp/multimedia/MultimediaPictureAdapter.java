@@ -6,12 +6,20 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.construapp.construapp.LessonActivity;
 import com.construapp.construapp.R;
+import com.construapp.construapp.cache.LRUCache;
+import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.MultimediaFile;
+import com.construapp.construapp.threading.MultimediaPictureDownloader;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -21,6 +29,9 @@ import java.util.ArrayList;
  */
 
 public class MultimediaPictureAdapter extends MultimediaAdapter {
+
+    private static String BUCKET_NAME = "construapp";
+    private TransferUtility transferUtility;
 
     private static String FILE_TYPE = "image/*";
 
@@ -39,6 +50,28 @@ public class MultimediaPictureAdapter extends MultimediaAdapter {
             holder.imageThumbnail.setImageBitmap(ThumbnailUtils.extractThumbnail(bitmap, 80, 80));
             holder.imageThumbnail.setRotation(90);
         }
+        else {
+            if(LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key()) == null) {
+                Constants constants = new Constants();
+                AmazonS3 s3 = new AmazonS3Client(constants.getCredentialsProvider(getContext()));
+                transferUtility = new TransferUtility(s3, getContext());
+                MultimediaPictureDownloader downloadPictureMultimedia = new MultimediaPictureDownloader(
+                        new File(multimediaFile.getmPath()),
+                        transferUtility,
+                        multimediaFile.getFileS3Key(),
+                        BUCKET_NAME,
+                        holder,
+                        multimediaFile);
+                holder.progressBar.setVisibility(View.VISIBLE);
+
+                downloadPictureMultimedia.download();
+            }
+            else {
+
+                Bitmap bitmap =  (Bitmap)LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key());
+                holder.imageThumbnail.setImageBitmap(ThumbnailUtils.extractThumbnail(bitmap, 80, 80));
+            }
+        }
     }
 
     @Override
@@ -54,14 +87,21 @@ public class MultimediaPictureAdapter extends MultimediaAdapter {
 
         public MultimediaViewHolder(View view) {
             super(view);
-
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent();
                     intent.setAction(Intent.ACTION_VIEW);
-                    intent.setDataAndType(Uri.parse(
-                            Uri.fromFile(new File(MultimediaViewHolder.super.multimediaFile.getmPath())).toString()), FILE_TYPE);
+                    //IF CACHE
+                    if (multimediaFile.getFileS3Key() != null) {
+                        String path = MediaStore.Images.Media.insertImage(getContext().getContentResolver(),
+                                (Bitmap) LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key()), "Title", null);
+                        intent.setDataAndType(Uri.parse(path), FILE_TYPE);
+                    } else {
+                        intent.setDataAndType(Uri.parse(
+                                Uri.fromFile(new File(MultimediaViewHolder.super.multimediaFile.getmPath())).toString()
+                        ), FILE_TYPE);
+                    }
                     view.getContext().startActivity(intent);
                 }
             });
@@ -71,5 +111,8 @@ public class MultimediaPictureAdapter extends MultimediaAdapter {
         public void onClick(View view) {
         }
     }
+
+
+
 
 }

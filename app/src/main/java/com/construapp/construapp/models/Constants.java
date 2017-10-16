@@ -1,11 +1,17 @@
 package com.construapp.construapp.models;
 
 import android.content.Context;
+import android.util.Log;
 import android.graphics.Color;
 import android.widget.ImageView;
-
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.regions.Regions;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import java.util.ArrayList;
 
 /**
  * Created by ESTEBANFML on 23-09-2017.

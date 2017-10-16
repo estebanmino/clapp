@@ -42,52 +42,28 @@ public class LessonsFragment extends Fragment {
         String lessons="";
         try {
             lessons = lesson_fetcher.execute(company_id).get();
-            //Toast.makeText(this,lessons,Toast.LENGTH_SHORT).show();
         }
-        catch(InterruptedException e)
-        {
-
-        }
-        catch (ExecutionException e)
-        {
-
-        }
-        Log.i("TAG",lessons);
+        catch(InterruptedException e) {}
+        catch (ExecutionException e) {}
 
         try
         {
-
             JSONArray lesson_array = new JSONArray(lessons);
-            int num = lesson_array.length();
             for(int i=0;i<lesson_array.length();i++)
             {
                 JSONObject curr = lesson_array.getJSONObject(i);
-
                 String name = curr.getString("name");
-                Log.i("ldebug",name);
                 String learning = curr.getString("learning");
                 String id = curr.getString("id");
-                //Log.i("ldebug",learning);
-                //Log.i("ldebug","hola");
                 Lesson lesson_1 = new Lesson();
                 lesson_1.setName(name);
                 lesson_1.setDescription(learning);
                 lesson_1.setId(id);
                 lessonList.add(lesson_1);
-                Log.i("count",String.valueOf(i));
-
-
-//Do stuff with the Prize String here
-//Add it to a list, print it out, etc.
             }
-
         }
         catch(JSONException e)
-        {
-
-        }
-
-
+        {}
         lessonsAdapter = new LessonsAdapter(getActivity(), lessonList);
 
         return inflater.inflate(R.layout.fragment_my_lessons, container, false);
@@ -103,19 +79,9 @@ public class LessonsFragment extends Fragment {
         LessonsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                //Toast.makeText(MyLessonsFragment.this, "" + position, Toast.LENGTH_LONG).show();
                 Lesson lesson = (Lesson) lessonsAdapter.getItem(position);
-                Log.i("OBJECT",lesson.getName());
-                SharedPreferences spl = getActivity().getSharedPreferences("Lesson", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = spl.edit();
-                editor.putString("lesson_name", lesson.getName());
-                editor.putString("lesson_description",lesson.getDescription());
-                editor.putString("lesson_id",lesson.getId());
-                editor.commit();
-                
-
                 startActivity(LessonActivity.getIntent(getActivity(), lesson.getName(),
-                        lesson.getDescription()));
+                        lesson.getDescription(), lesson.getId()));
             }
         });
     }
