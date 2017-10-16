@@ -92,69 +92,7 @@ public class RetrieveFeedTask extends AsyncTask<String, Integer, String> {
             }
 
         }
-        else if(type == "fetch-s3")
-        {
-            String company_id = str[0];
-            String lesson_id = str[1];
-            String paths_string = str[2];
-            String[] paths_array = paths_string.split(";");
-            try {
-                String url_string = "http://construapp-api.ing.puc.cl/companies/"+company_id+"/lessons/"+lesson_id+"/save_key";
-                URL url = new URL(url_string);
-                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setDoOutput(true);
-                urlConnection.setDoInput(true);
-                urlConnection.setConnectTimeout(15000);
-                urlConnection.setRequestMethod("POST");
-                urlConnection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-                //TODO utilizar JSONObject para armar String y no manual
-                JSONArray routes_array = new JSONArray();
 
-                JSONObject paths = new JSONObject();
-                for(int i=0;i<paths_array.length;i++)
-                {
-                    routes_array.put(paths_array[i]);
-                }
-                paths.put("array_file_path",routes_array);
-                String rutas_string = paths.toString();
-                urlConnection.connect();
-
-                OutputStream os = urlConnection.getOutputStream();
-                os.write(rutas_string.getBytes("UTF-8"));
-                os.close();
-
-                int responsecode = urlConnection.getResponseCode();
-
-                if (responsecode != 200) {
-                    urlConnection.disconnect();
-                    out = "error: "+responsecode;
-                    return out;
-                } else {}
-
-                InputStream response = urlConnection.getInputStream();
-                BufferedReader br = new BufferedReader(new InputStreamReader((response)));
-
-                String output = "";
-                String aux = "";
-                System.out.println("Output from Server .... \n");
-                while ((output = br.readLine()) != null) {
-                    System.out.println(output);
-                    aux += output;
-                }
-
-                if (urlConnection.getResponseCode() == 200) {
-                    urlConnection.disconnect();
-                }
-
-                String query = aux;
-                aux = "OK";
-                return aux;
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                return e.getMessage();
-            }
-        }
         else
         {
             return "not implemented";
