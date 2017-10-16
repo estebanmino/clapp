@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -253,8 +254,8 @@ public class LessonActivity extends AppCompatActivity {
     public void showPermissions(){
 
 
-        int editPermission = constants.xmlPermissionTagToInt(edit_lesson_image.getTag().toString());
-        int deletePermission = constants.xmlPermissionTagToInt((delete_lesson_image.getTag().toString()));
+        int editPermission = constants.xmlPermissionTagToInt(imageEditLesson.getTag().toString());
+        int deletePermission = constants.xmlPermissionTagToInt((imageDeleteLesson.getTag().toString()));
 
 
         if (editPermission > userPermission){
