@@ -9,7 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -76,8 +75,9 @@ public class LessonActivity extends AppCompatActivity {
         setContentView(R.layout.activity_lesson);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        SharedPreferences sharedpreferences = getSharedPreferences("ConstruApp", Context.MODE_PRIVATE);
         constants = new Constants();
-        userPermission = constants.getUserPermission();
+        userPermission = Integer.parseInt(sharedpreferences.getString("user_permission",""));
 
         imageEditLesson = (ImageView) findViewById(R.id.image_edit_lesson);
         imageDeleteLesson = (ImageView) findViewById(R.id.image_delete_lesson);
@@ -95,7 +95,6 @@ public class LessonActivity extends AppCompatActivity {
         textLessonName.setText(lesson.getName());
         textLessonDescription.setText(lesson.getDescription());
 
-        SharedPreferences sharedpreferences = LessonActivity.this.getSharedPreferences("ConstruApp", Context.MODE_PRIVATE);
         String company_id = sharedpreferences.getString("company_id", "");
         String user_token = sharedpreferences.getString("token", "");
 
@@ -253,9 +252,10 @@ public class LessonActivity extends AppCompatActivity {
 
     public void showPermissions(){
 
-        int userPermission = constants.getUserPermission();
-        int editPermission = constants.xmlPermissionTagToInt(imageEditLesson.getTag().toString());
-        int deletePermission = constants.xmlPermissionTagToInt((imageDeleteLesson.getTag().toString()));
+
+        int editPermission = constants.xmlPermissionTagToInt(edit_lesson_image.getTag().toString());
+        int deletePermission = constants.xmlPermissionTagToInt((delete_lesson_image.getTag().toString()));
+
 
         if (editPermission > userPermission){
             imageEditLesson.setVisibility(View.GONE);

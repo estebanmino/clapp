@@ -12,7 +12,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager mViewPager;
     public final static String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
     private LRUCache lruCache;
+    private int userPermission;
 
 
     @Override
@@ -42,16 +42,6 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-
-        // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
-
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(mViewPager);
 
         SharedPreferences sharedpreferences = getSharedPreferences("ConstruApp", Context.MODE_PRIVATE);
         String token = sharedpreferences.getString("token", "");
@@ -66,8 +56,8 @@ public class MainActivity extends AppCompatActivity {
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 
         lruCache = LRUCache.getInstance();
-
-        int userPermission = constants.getUserPermission();
+        constants.setUserPermission(MainActivity.this);
+        userPermission = Integer.parseInt(sharedpreferences.getString("user_permission",""));
         int fabPermission = constants.xmlPermissionTagToInt(fab.getTag().toString());
 
         //Able FloatingActionButton or hide it according to the user permissions
@@ -82,7 +72,15 @@ public class MainActivity extends AppCompatActivity {
         else {
             fab.setVisibility(View.GONE);
         }
+        // Create the adapter that will return a fragment for each of the three
+        // primary sections of the activity.
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        // Set up the ViewPager with the sections adapter.
+        mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager.setAdapter(mSectionsPagerAdapter);
 
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(mViewPager);
     }
 
 
@@ -106,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
         }
         else if (id == R.id.action_logout)
         {
-            SharedPreferences mySPrefs =getSharedPreferences("ConstruApp", Context.MODE_PRIVATE);
+            SharedPreferences mySPrefs = getSharedPreferences("ConstruApp", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = mySPrefs.edit();
             editor.remove("token");
             editor.apply();
@@ -144,13 +142,27 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            switch (position) {
-                case 0:
-                    return new LessonsFragment();
-                case 1:
-                    return new MyLessonsFragment();
-                case 2:
-                    return new MicroblogFragment();
+            if (userPermission >= 3){
+                switch (position) {
+                    case 0:
+                        return new LessonsFragment();
+                    case 1:
+                        return new MyLessonsFragment();
+                    case 2:
+                        return new MicroblogFragment();
+                    case 3:
+                        return new ValidateFragment();
+                }
+            }
+            else {
+                switch (position) {
+                    case 0:
+                        return new LessonsFragment();
+                    case 1:
+                        return new MyLessonsFragment();
+                    case 2:
+                        return new MicroblogFragment();
+                }
             }
             return null;
         }
@@ -158,18 +170,37 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 3;
+            if (userPermission >= 3){
+                return 4;
+            }
+            else {
+                return 3;
+            }
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return "Lecciones";
-                case 1:
-                    return "Mis lecciones";
-                case 2:
-                    return "Blog";
+            if (userPermission >= 3){
+                switch (position) {
+                    case 0:
+                        return "Lecciones";
+                    case 1:
+                        return "Mis lecciones";
+                    case 2:
+                        return "Blog";
+                    case 3:
+                        return "Validar lecciones";
+                }
+            }
+            else {
+                switch (position) {
+                    case 0:
+                        return "Lecciones";
+                    case 1:
+                        return "Mis lecciones";
+                    case 2:
+                        return "Blog";
+                }
             }
             return null;
         }

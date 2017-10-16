@@ -24,4 +24,7 @@
     <integer name="create_permission">2</integer>
     <integer name="validate_permission">3</integer>
     <integer name="admin_permission">4</integer>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
