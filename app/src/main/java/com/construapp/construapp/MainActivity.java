@@ -12,7 +12,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -66,8 +65,8 @@ public class MainActivity extends AppCompatActivity {
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 
         lruCache = LRUCache.getInstance();
-
-        int userPermission = constants.getUserPermission();
+        constants.setUserPermission(MainActivity.this);
+        int userPermission = Integer.parseInt(sharedpreferences.getString("user_permission",""));
         int fabPermission = constants.xmlPermissionTagToInt(fab.getTag().toString());
 
         //Able FloatingActionButton or hide it according to the user permissions

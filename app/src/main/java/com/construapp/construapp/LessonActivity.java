@@ -2,14 +2,12 @@ package com.construapp.construapp;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,22 +23,15 @@ import com.construapp.construapp.multimedia.MultimediaPictureAdapter;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.models.MultimediaFile;
-import com.construapp.construapp.threading.RetrieveFeedTask;
-import com.construapp.construapp.threading.RetrieveLessonMultimedia;
 import com.construapp.construapp.threading.api.VolleyFetchLessonMultimedia;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.concurrent.Exchanger;
-import java.util.concurrent.ExecutionException;
 
 
 public class LessonActivity extends AppCompatActivity {
@@ -67,6 +58,7 @@ public class LessonActivity extends AppCompatActivity {
     MultimediaDocumentAdapter multimediaDocumentAdapter;
 
     private static String ABSOLUTE_STORAGE_PATH;
+    private SharedPreferences sharedpreferences;
 
 
     @Override
@@ -75,8 +67,9 @@ public class LessonActivity extends AppCompatActivity {
         setContentView(R.layout.activity_lesson);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        sharedpreferences = getSharedPreferences("ConstruApp", Context.MODE_PRIVATE);
         constants = new Constants();
-        userPermission = constants.getUserPermission();
+        userPermission = Integer.parseInt(sharedpreferences.getString("user_permission",""));
 
 
         final TextView lesson_name = (TextView) findViewById(R.id.text_lesson_name);
@@ -228,7 +221,6 @@ public class LessonActivity extends AppCompatActivity {
         final ImageView edit_lesson_image = (ImageView) findViewById(R.id.image_edit_lesson);
         final ImageView delete_lesson_image = (ImageView) findViewById(R.id.image_delete_lesson);
 
-        int userPermission = constants.getUserPermission();
         int editPermission = constants.xmlPermissionTagToInt(edit_lesson_image.getTag().toString());
         int deletePermission = constants.xmlPermissionTagToInt((delete_lesson_image.getTag().toString()));
 
