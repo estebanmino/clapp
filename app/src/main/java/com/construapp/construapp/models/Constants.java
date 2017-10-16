@@ -32,10 +32,12 @@ public class Constants {
         SharedPreferences.Editor editor = sharedpreferences.edit();
         //TODO: acá va la consulta que retorna el string con el permiso del usuario
         //mientras harcodeamos un tipo de permiso
+
         int permissionInt = userPermissionsToInt("admin");
         String permissionString = Integer.toString(permissionInt);
         editor.putString("user_permission", permissionString);
         editor.apply();
+
     }
 
     public int xmlPermissionTagToInt(String tag){
