@@ -181,6 +181,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void onBackPressed()
+    {
+
+    }
+
     public static Intent getIntent(Context context) {
         Intent intent = new Intent(context,MainActivity.class);
         return intent;
