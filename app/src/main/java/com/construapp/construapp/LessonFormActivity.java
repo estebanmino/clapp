@@ -235,6 +235,7 @@ public class LessonFormActivity extends AppCompatActivity {
                                     for (MultimediaFile multimediaFile: lesson.getMultimediaDocumentsFiles()) {
                                         multimediaFile.initUploadThread();
                                     }
+                                    startActivity(MainActivity.getIntent(LessonFormActivity.this));
                                 }
 
                                 @Override

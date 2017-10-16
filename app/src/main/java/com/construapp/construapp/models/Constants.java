@@ -29,7 +29,7 @@ public class Constants {
     public int getUserPermission(){
         //TODO: acá va la consulta que retorna el string con el permiso del usuario
         //mientras harcodeamos un tipo de permiso
-        return userPermissionsToInt("admin");
+        return userPermissionsToInt("create");
     }
 
     public int xmlPermissionTagToInt(String tag){

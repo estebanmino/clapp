@@ -30,8 +30,6 @@ public class MainActivity extends AppCompatActivity {
     private SectionsPagerAdapter mSectionsPagerAdapter;
     //CONSTANTS
     private Constants constants;
-  
-    private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
     public final static String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
     private LRUCache lruCache;
