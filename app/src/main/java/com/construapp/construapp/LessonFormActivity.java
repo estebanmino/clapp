@@ -51,6 +51,7 @@ import com.construapp.construapp.multimedia.MultimediaDocumentAdapter;
 import com.construapp.construapp.multimedia.MultimediaPictureAdapter;
 import com.construapp.construapp.threading.RetrieveFeedTask;
 import com.construapp.construapp.threading.api.VolleyCreateLesson;
+import com.construapp.construapp.threading.api.VolleyPostS3;
 
 import org.json.JSONObject;
 import org.w3c.dom.Text;
@@ -203,14 +204,45 @@ public class LessonFormActivity extends AppCompatActivity {
                 String lesson_learning = editLessonDescription.getText().toString();
                 //TODO FIJAR PROYECTO CUANDO EXISTA
                 String project_id = "3";
-                String response = "";
-                String lesson_id="";
+                final String response = "";
 
 
-                VolleyCreateLesson.volleyCreateLesson(new LoginActivity.VolleyCallback() {
+                VolleyCreateLesson.volleyCreateLesson(new VolleyCallback() {
                     @Override
                     public void onSuccess(JSONObject result) {
-                        Log.i("RESULTCREATE", result.toString());
+                        try {
+                            final String new_lesson_id = result.get("id").toString();
+                            String path_input = "";
+                            for (MultimediaFile multimediaFile : lesson.getMultimediaPicturesFiles()) {
+                                path_input += multimediaFile.getExtension() + "/" + multimediaFile.getmPath().substring(multimediaFile.getmPath().lastIndexOf("/") + 1) + ";";
+                            }
+                            for (MultimediaFile multimediaFile : lesson.getMultimediaAudiosFiles()) {
+                                path_input += multimediaFile.getExtension() + "/" + multimediaFile.getmPath().substring(multimediaFile.getmPath().lastIndexOf("/") + 1) + ";";
+                            }
+                            for (MultimediaFile multimediaFile : lesson.getMultimediaDocumentsFiles()) {
+                                path_input += multimediaFile.getExtension() + "/" + multimediaFile.getmPath().substring(multimediaFile.getmPath().lastIndexOf("/") + 1) + ";";
+                            }
+
+                            VolleyPostS3.volleyPostS3(new VolleyCallback() {
+                                @Override
+                                public void onSuccess(JSONObject result) {
+                                    for (MultimediaFile multimediaFile: lesson.getMultimediaPicturesFiles()) {
+                                        multimediaFile.initUploadThread();
+                                    }
+                                    for (MultimediaFile multimediaFile: lesson.getMultimediaAudiosFiles()) {
+                                        multimediaFile.initUploadThread();
+                                    }
+                                    for (MultimediaFile multimediaFile: lesson.getMultimediaDocumentsFiles()) {
+                                        multimediaFile.initUploadThread();
+                                    }
+                                }
+
+                                @Override
+                                public void onErrorResponse(VolleyError result) {
+                                }
+                            }, LessonFormActivity.this, new_lesson_id, path_input.split(";"));
+                        } catch (Exception e) {
+                        }
                     }
 
                     @Override
@@ -220,57 +252,6 @@ public class LessonFormActivity extends AppCompatActivity {
                 }, LessonFormActivity.this, lesson_name, lesson_summary,
                         lesson_motivation, lesson_learning,
                         project_id);
-                /*
-                try {
-                    RetrieveFeedTask r = new RetrieveFeedTask("send-lesson");
-                    response = r.execute(lesson_name,lesson_summary,lesson_motivation,lesson_learning,token,user_id,company_id,project_id).get();
-                }
-                catch (InterruptedException e){}
-                catch (ExecutionException e){}
-                */
-
-
-
-
-/*
-                if(response != "error")
-                {
-                    lesson_id=response;
-                    String path_input = "";
-                    for (MultimediaFile multimediaFile: lesson.getMultimediaPicturesFiles()) {
-                        path_input+=multimediaFile.getExtension()+"/"+multimediaFile.getmPath().substring(multimediaFile.getmPath().lastIndexOf("/")+1)+";";
-                    }
-                    for (MultimediaFile multimediaFile: lesson.getMultimediaAudiosFiles()) {
-                        path_input+=multimediaFile.getExtension()+"/"+multimediaFile.getmPath().substring(multimediaFile.getmPath().lastIndexOf("/")+1)+";";
-                    }
-                    for (MultimediaFile multimediaFile: lesson.getMultimediaDocumentsFiles()) {
-                        path_input+=multimediaFile.getExtension()+"/"+multimediaFile.getmPath().substring(multimediaFile.getmPath().lastIndexOf("/")+1)+";";
-                    }
-
-                    RetrieveFeedTask r2 = new RetrieveFeedTask("fetch-s3");
-                    String response2 = "";
-                    try {
-                        response2 = r2.execute(company_id,lesson_id,path_input).get();
-                    }
-                    catch (InterruptedException e){}
-                    catch (ExecutionException e) {}
-
-                    if(response2 == "OK")
-                    {
-                        for (MultimediaFile multimediaFile: lesson.getMultimediaPicturesFiles()) {
-                            multimediaFile.initUploadThread();
-                        }
-                        for (MultimediaFile multimediaFile: lesson.getMultimediaAudiosFiles()) {
-                            multimediaFile.initUploadThread();
-                        }
-                        for (MultimediaFile multimediaFile: lesson.getMultimediaDocumentsFiles()) {
-                            multimediaFile.initUploadThread();
-                        }
-                    }
-                }
-
-                startActivity(MainActivity.getIntent(LessonFormActivity.this));
-                */
                 Toast.makeText(LessonFormActivity.this, "Nueva lección creada", Toast.LENGTH_LONG).show();
             }
         });
