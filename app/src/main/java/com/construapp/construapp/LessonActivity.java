@@ -1,10 +1,13 @@
 package com.construapp.construapp;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,6 +23,7 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.android.volley.VolleyError;
+import com.construapp.construapp.models.Connectivity;
 import com.construapp.construapp.multimedia.MultimediaAudioAdapter;
 import com.construapp.construapp.multimedia.MultimediaDocumentAdapter;
 import com.construapp.construapp.multimedia.MultimediaPictureAdapter;
@@ -200,10 +204,24 @@ public class LessonActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //delete
-                Snackbar mySnackbar = Snackbar.make(findViewById(R.id.lesson_form_layout),
-                        "Confirme la eliminacion de lección", Snackbar.LENGTH_LONG);
-                mySnackbar.setAction("Confirmar", new DeleteListener());
-                mySnackbar.show();
+
+                //TODO implementar cola eliminacion
+                if(Connectivity.isConnected(getApplicationContext())) {
+                    Snackbar mySnackbar = Snackbar.make(findViewById(R.id.lesson_form_layout),
+                            "Confirme la eliminacion de lección", Snackbar.LENGTH_LONG);
+                    mySnackbar.setAction("Confirmar", new DeleteListener());
+                    mySnackbar.show();
+                }
+                //if not connected
+                else
+                {
+                    Snackbar mySnackbar = Snackbar.make(findViewById(R.id.lesson_form_layout),
+                            "No se puede eliminar una lección estando sin conexión.", Snackbar.LENGTH_LONG);
+                    mySnackbar.setAction("Confirmar",null);
+                    mySnackbar.show();
+                    //Toast.makeText(getApplicationContext(),"No se puede eliminar una lección estando sin conexión.",Toast.LENGTH_LONG);
+                    //startActivity(MainActivity.getIntent(LessonActivity.this));
+                }
             }
         });
     }
