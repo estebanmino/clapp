@@ -59,8 +59,9 @@ public class MyLessonsFragment extends Fragment {
                 //Toast.makeText(MyLessonsFragment.this, "" + position, Toast.LENGTH_LONG).show();
                 Lesson lesson = (Lesson) lessonsAdapter.getItem(position);
                 Log.i("OBJECT",lesson.getName());
+                // TODO: 12-10-2017 Refactor id
                 startActivity(LessonActivity.getIntent(getActivity(), lesson.getName(),
-                        lesson.getDescription()));
+                        lesson.getDescription(),"0"));
             }
         });
 

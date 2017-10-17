@@ -17,11 +17,18 @@ public class MultimediaFile {
     private DownloadMultimediaAsyncTask downloadThread;
     private String s3BucketName;
     private String fileKey;
+    private String fileS3Key;
     private TransferUtility transferUtility;
     private String extension;
     private int arrayPosition;
 
+    public String getFileKey() {
+        return fileKey;
+    }
 
+    public void setFileKey(String fileKey) {
+        this.fileKey = fileKey;
+    }
 
     public int getArrayPosition() {
         return arrayPosition;
@@ -49,11 +56,23 @@ public class MultimediaFile {
         this.downloadThread = downloadThread;
     }
 
-    public MultimediaFile(String extension, String mPath, TransferUtility transferUtility, String s3BucketName){
+
+
+    public MultimediaFile(String extension, String mPath, String fileS3Key, TransferUtility transferUtility,
+                          String s3BucketName){
         this.extension = extension;
         this.mPath = mPath;
         this.transferUtility = transferUtility;
         this.s3BucketName = s3BucketName;
+        this.fileS3Key = fileS3Key;
+    }
+
+    public String getFileS3Key() {
+        return fileS3Key;
+    }
+
+    public void setFileS3Key(String fileS3Key) {
+        this.fileS3Key = fileS3Key;
     }
 
     public String getmPath() {

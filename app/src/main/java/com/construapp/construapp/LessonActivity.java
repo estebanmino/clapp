@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,28 +11,43 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.content.SharedPreferences;
+import android.widget.Toast;
 
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
-import com.construapp.construapp.lessons_form.LessonFormActivity;
-import com.construapp.construapp.lessons_form.MultimediaImageAdapter;
+import com.android.volley.VolleyError;
+import com.construapp.construapp.multimedia.MultimediaAudioAdapter;
+import com.construapp.construapp.multimedia.MultimediaDocumentAdapter;
+import com.construapp.construapp.multimedia.MultimediaPictureAdapter;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.models.MultimediaFile;
+import com.construapp.construapp.threading.api.VolleyDeleteLesson;
+import com.construapp.construapp.threading.api.VolleyFetchLessonMultimedia;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
-import org.w3c.dom.Text;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 
 public class LessonActivity extends AppCompatActivity {
 
     private static final String USERNAME = "username";
     private static final String DESCRIPTION = "description";
+    private static final String ID = "id";
+    private static final String PROJECT_FOLDER = "ConstruApp";
 
     private Lesson lesson = new Lesson();
     public final static String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
+    private int userPermission;
 
     //CONSTANTS
     private Constants constants;
@@ -43,12 +57,18 @@ public class LessonActivity extends AppCompatActivity {
 
 
     //MM ADAPTER
-    MultimediaImageAdapter multimediaImagePictureAdapter;
-    MultimediaImageAdapter multimediaImageAudioAdapter;
-    MultimediaImageAdapter multimediaImageDocumentAdapter;
+    MultimediaPictureAdapter multimediaPictureAdapter;
+    MultimediaAudioAdapter multimediaAudioAdapter;
+    MultimediaDocumentAdapter multimediaDocumentAdapter;
 
     private static String ABSOLUTE_STORAGE_PATH;
 
+    ImageView imageEditLesson;
+    ImageView imageDeleteLesson;
+    TextView textEditLesson;
+    TextView textDeleteLesson;
+    TextView textLessonName;
+    TextView textLessonDescription;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,15 +76,28 @@ public class LessonActivity extends AppCompatActivity {
         setContentView(R.layout.activity_lesson);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        SharedPreferences sharedpreferences = getSharedPreferences("ConstruApp", Context.MODE_PRIVATE);
+        constants = new Constants();
+        userPermission = Integer.parseInt(sharedpreferences.getString("user_permission",""));
 
-        TextView nombre_proyecto = (TextView) findViewById(R.id.text_lesson_name);
-        TextView descripcion_leccion = (TextView) findViewById(R.id.text_lesson_description);
+        imageEditLesson = (ImageView) findViewById(R.id.image_edit_lesson);
+        imageDeleteLesson = (ImageView) findViewById(R.id.image_delete_lesson);
+        textEditLesson = (TextView) findViewById(R.id.text_edit_lesson);
+        textDeleteLesson = (TextView) findViewById(R.id.text_delete_lesson);
+        textLessonName = (TextView) findViewById(R.id.text_lesson_name);
+        textLessonDescription = (TextView) findViewById(R.id.text_lesson_description);
+
         SharedPreferences spl = getSharedPreferences("Lesson", Context.MODE_PRIVATE);
 
-        nombre_proyecto.setText(spl.getString("lesson_name", ""));
-        descripcion_leccion.setText(spl.getString("lesson_description", ""));
-
         setLesson();
+
+        textLessonName.setText(spl.getString("lesson_name", ""));
+        textLessonDescription.setText(spl.getString("lesson_description", ""));
+        textLessonName.setText(lesson.getName());
+        textLessonDescription.setText(lesson.getDescription());
+
+        String company_id = sharedpreferences.getString("company_id", "");
+        String user_token = sharedpreferences.getString("token", "");
 
         ////HORIZONTAL IMAGES SCROLLING
 
@@ -74,63 +107,114 @@ public class LessonActivity extends AppCompatActivity {
         picturesLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         RecyclerView mPicturesRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_pictures);
         mPicturesRecyclerView.setLayoutManager(picturesLayoutManager);
-        multimediaImagePictureAdapter = new MultimediaImageAdapter(lesson.getMultimediaPicturesFiles(),LessonActivity.this);
-        mPicturesRecyclerView.setAdapter(multimediaImagePictureAdapter);
+        multimediaPictureAdapter = new MultimediaPictureAdapter(lesson.getMultimediaPicturesFiles(),LessonActivity.this);
+        mPicturesRecyclerView.setAdapter(multimediaPictureAdapter);
 
         //AUDIOS SCROLLING
         LinearLayoutManager audiosLayoutManager = new LinearLayoutManager(this);
         audiosLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         RecyclerView mAudiosRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_audios);
         mAudiosRecyclerView.setLayoutManager(audiosLayoutManager);
-        multimediaImageAudioAdapter = new MultimediaImageAdapter(lesson.getMultimediaAudiosFiles(),LessonActivity.this);
-        mAudiosRecyclerView.setAdapter(multimediaImageAudioAdapter);
+        multimediaAudioAdapter = new MultimediaAudioAdapter(lesson.getMultimediaAudiosFiles(),LessonActivity.this);
+        mAudiosRecyclerView.setAdapter(multimediaAudioAdapter);
 
         //DOCUMENTS SCROLLING
         LinearLayoutManager documentsLayoutManager = new LinearLayoutManager(this);
         documentsLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         RecyclerView mDocumentsRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_documents);
         mDocumentsRecyclerView.setLayoutManager(documentsLayoutManager);
-        multimediaImageDocumentAdapter = new MultimediaImageAdapter(lesson.getMultimediaDocumentsFiles(),LessonActivity.this);
-        mDocumentsRecyclerView.setAdapter(multimediaImageDocumentAdapter);
+        multimediaDocumentAdapter = new MultimediaDocumentAdapter(lesson.getMultimediaDocumentsFiles(),LessonActivity.this);
+        mDocumentsRecyclerView.setAdapter(multimediaDocumentAdapter);
 
         // Create an S3 client
-        constants = new Constants();
         AmazonS3 s3 = new AmazonS3Client(constants.getCredentialsProvider(LessonActivity.this));
         transferUtility = new TransferUtility(s3, LessonActivity.this);
 
         ABSOLUTE_STORAGE_PATH = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString();
+        final String CACHE_FOLDER = LessonActivity.this.getCacheDir().toString();
 
-        MultimediaFile pictureMultimedia = new MultimediaFile(
-                "PICTURE",ABSOLUTE_STORAGE_PATH+"/ConstruApp/1234.jpg",transferUtility,"construapp");
+        VolleyFetchLessonMultimedia.volleyFetchLessonMultimedia(new VolleyCallback() {
+            @Override
+            public void onSuccess(JSONObject result) {
+                try{
+                    JsonParser parser = new JsonParser();
+                    JsonObject json = parser.parse(result.toString()).getAsJsonObject();
+                    ArrayList<String> arrayList = new ArrayList<>();
+                    JsonArray jsonArray = (JsonArray) json.get("filekeys");
+                    for (int i = 0; i < jsonArray.size(); i++) {
+                        JsonElement jsonObject = (JsonElement) jsonArray.get(i);
+                        arrayList.add(jsonObject.getAsJsonObject().get("path").toString());
+                    }
 
-        MultimediaFile audioMultimedia = new MultimediaFile(
-                "AUDIO",ABSOLUTE_STORAGE_PATH+"/ConstruApp/1234.jpg",transferUtility,"construapp");
+                    ArrayList<String> picturePathsList  = new ArrayList<>();
+                    ArrayList<String> audioPathsList  = new ArrayList<>();
+                    ArrayList<String> documentPathsList  = new ArrayList<>();
 
-        MultimediaFile documentMultimedia1 = new MultimediaFile("DOCUMENT",ABSOLUTE_STORAGE_PATH+"/ConstruApp/Planos.pdf",transferUtility,"construapp");
-        MultimediaFile documentMultimedia2 = new MultimediaFile("DOCUMENT",ABSOLUTE_STORAGE_PATH+"/ConstruApp/Horarios.pdf",transferUtility,"construapp");
-        MultimediaFile documentMultimedia3 = new MultimediaFile("DOCUMENT",ABSOLUTE_STORAGE_PATH+"/ConstruApp/Personal.pdf",transferUtility,"construapp");
-        MultimediaFile documentMultimedia4 = new MultimediaFile("DOCUMENT",ABSOLUTE_STORAGE_PATH+"/ConstruApp/Planificación.pdf",transferUtility,"construapp");
+                    for (String fileKey: arrayList) {
+                        if (fileKey.contains("PICTURE")){
+                            picturePathsList.add(fileKey);
+                        } else if (fileKey.contains("AUDIO")) {
+                            audioPathsList.add(fileKey);
+                        } else if (fileKey.contains("DOCUMENT")) {
+                            documentPathsList.add(fileKey);
+                        }
+                    }
 
-        lesson.getMultimediaPicturesFiles().add(pictureMultimedia);
-        lesson.getMultimediaPicturesFiles().add(pictureMultimedia);
-        lesson.getMultimediaPicturesFiles().add(pictureMultimedia);
-        lesson.getMultimediaPicturesFiles().add(pictureMultimedia);
-        lesson.getMultimediaPicturesFiles().add(pictureMultimedia);
-        multimediaImagePictureAdapter.notifyDataSetChanged();
+                    String[] pictureArray = picturePathsList.toArray(new String[0]);
+                    for (String path: pictureArray){
+                        lesson.getMultimediaPicturesFiles().add(new MultimediaFile(
+                                "PICTURE",CACHE_FOLDER+"/"+path.replace("\"", ""),path.replace("\"", ""),transferUtility,"construapp"));
+                    }
+                    multimediaPictureAdapter.notifyDataSetChanged();
 
-        lesson.getMultimediaAudiosFiles().add(audioMultimedia);
-        lesson.getMultimediaAudiosFiles().add(audioMultimedia);
-        lesson.getMultimediaAudiosFiles().add(audioMultimedia);
-        lesson.getMultimediaAudiosFiles().add(audioMultimedia);
-        lesson.getMultimediaAudiosFiles().add(audioMultimedia);
-        multimediaImageAudioAdapter.notifyDataSetChanged();
+                    for (String audioPath: audioPathsList) {
+                        MultimediaFile audioMultimedia = new MultimediaFile(
+                                "AUDIO",CACHE_FOLDER+"/"+audioPath.replace("\"", ""),audioPath.replace("\"", ""),transferUtility,"construapp");
+                        lesson.getMultimediaAudiosFiles().add(audioMultimedia);
+                    }
+                    multimediaAudioAdapter.notifyDataSetChanged();
 
-        lesson.getMultimediaDocumentsFiles().add(documentMultimedia1);
-        lesson.getMultimediaDocumentsFiles().add(documentMultimedia2);
-        lesson.getMultimediaDocumentsFiles().add(documentMultimedia3);
-        lesson.getMultimediaDocumentsFiles().add(documentMultimedia4);
-        multimediaImageDocumentAdapter.notifyDataSetChanged();
+                    for (String documentPath: documentPathsList) {
+                        MultimediaFile documentMultimedia = new MultimediaFile(
+                                "DOCUMENT",ABSOLUTE_STORAGE_PATH+"/"+PROJECT_FOLDER+"/"+documentPath.replace("\"", ""),
+                                documentPath.replace("\"", ""),transferUtility,"construapp");
+                        lesson.getMultimediaDocumentsFiles().add(documentMultimedia);
+                    }
+                    multimediaDocumentAdapter.notifyDataSetChanged();
+                }
+                catch (Exception e) {}
+            }
 
+            @Override
+            public void onErrorResponse(VolleyError result) {
+
+            }
+        }, LessonActivity.this, lesson.getId());
+
+        setImageDeleteLessonListener();
+        setImageEditLessonListener();
+    }
+
+    public void setImageDeleteLessonListener() {
+        imageDeleteLesson.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //delete
+                Snackbar mySnackbar = Snackbar.make(findViewById(R.id.lesson_form_layout),
+                        "Confirme la eliminacion de lección", Snackbar.LENGTH_LONG);
+                mySnackbar.setAction("Confirmar", new DeleteListener());
+                mySnackbar.show();
+            }
+        });
+    }
+
+    public void setImageEditLessonListener() {
+        imageEditLesson.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //edit
+            }
+        });
     }
 
     public void showInfo(View view) {
@@ -144,17 +228,62 @@ public class LessonActivity extends AppCompatActivity {
     public void setLesson() {
         lesson.setName(getIntent().getStringExtra(USERNAME));
         lesson.setDescription(getIntent().getStringExtra(DESCRIPTION));
+        lesson.setId(getIntent().getStringExtra(ID));
         lesson.initMultimediaFiles();
+        showPermissions();
     }
 
-    public static Intent getIntent(Context context, String name, String description) {
+    public static Intent getIntent(Context context, String name, String description, String id) {
         Intent intent = new Intent(context,LessonActivity.class);
         intent.putExtra(USERNAME,name);
         intent.putExtra(DESCRIPTION,description);
-        //intent.putExtra(KEY_CHAT_ROOM_UUID,chatRoomUuid);
-
+        intent.putExtra(ID,id);
         return intent;
     }
 
+    public interface VolleyCallback{
+        void onSuccess(JSONObject result);
+        void onErrorResponse(VolleyError result);
+    }
 
+    public interface VolleyStringCallback{
+        void onSuccess(String result);
+        void onErrorResponse(VolleyError result);
+    }
+
+    public void showPermissions(){
+
+
+        int editPermission = constants.xmlPermissionTagToInt(imageEditLesson.getTag().toString());
+        int deletePermission = constants.xmlPermissionTagToInt((imageDeleteLesson.getTag().toString()));
+
+
+        if (editPermission > userPermission){
+            imageEditLesson.setVisibility(View.GONE);
+            textEditLesson.setVisibility(View.GONE);
+        }
+        if (deletePermission > userPermission){
+            imageDeleteLesson.setVisibility(View.GONE);
+            textDeleteLesson.setVisibility(View.GONE);
+        }
+    }
+
+    public class DeleteListener implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            Log.i("DELETE","Lesson deleted");
+            VolleyDeleteLesson.volleyDeleteLesson(new VolleyStringCallback() {
+                @Override
+                public void onSuccess(String result) {
+                    Toast.makeText(LessonActivity.this, "Eliminada correctamente", Toast.LENGTH_LONG).show();
+                    startActivity(MainActivity.getIntent(LessonActivity.this));
+                }
+
+                @Override
+                public void onErrorResponse(VolleyError result) {
+                    Toast.makeText(LessonActivity.this, "Ocurrio un error, por favor reintentar", Toast.LENGTH_LONG).show();
+                }
+            }, LessonActivity.this, lesson.getId());
+        }
+    }
 }
