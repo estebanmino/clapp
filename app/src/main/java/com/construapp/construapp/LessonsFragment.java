@@ -1,7 +1,6 @@
 package com.construapp.construapp;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,7 +13,6 @@ import android.content.SharedPreferences;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
-import android.content.SharedPreferences;
 
 import com.construapp.construapp.models.AppDatabase;
 import com.construapp.construapp.models.Lesson;
@@ -23,9 +21,7 @@ import com.construapp.construapp.threading.RetrieveFeedTask;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONTokener;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -61,146 +57,92 @@ public class LessonsFragment extends Fragment {
         //Log.i("TAG",lessons);
 
         //TODO hacer que se agreguen solo los items que no estaban en la DB
-        //considerar el caso que hayan cambiado alguna leccion/
-        //se podria hacer un fetch de la leccion abierta verificando que los datos sean los ultimos
-        //mediante el param "updated_at" en api_request
+        //en este momento si el item ya existia se sobrescribe, actualizandolo
 
-        try
-        {
-
-            JSONArray lesson_array = new JSONArray(lessons);
-            int num = lesson_array.length();
-            for(int i=0;i<lesson_array.length();i++)
-            {
-//                JSONObject curr = lesson_array.getJSONObject(i);
-//
-//                String name = curr.getString("name");
-//                Log.i("ldebug",name);
-//                String learning = curr.getString("learning");
-//                String id = curr.getString("id");
-//                //Log.i("ldebug",learning);
-//                //Log.i("ldebug","hola");
-//                Lesson lesson_1 = new Lesson();
-//                lesson_1.setName(name);
-//                lesson_1.setDescription(learning);
-//                lesson_1.setId(id);
-//                //TODO ACA HAY QUE AGREGAR LOS ELEM
-//                //MEDIANTE PARSEO DE JSONARRAY Y CREAR MULTIMEDIA FILES
-//                //AGREGANDOLOS A LA LESSON
-//                LessonModelList.add(lesson_1);
-//                Log.i("count",String.valueOf(i));
-
-            }
-            Log.i("ROOM","NO DEBE SALIR NADA");
-
-            final String lessons_json= lessons;
+        final String lessons_json= lessons;
 
 
-            try {
+        try {
 
-                new AsyncTask<Void, Void, String>() {
-                    @Override
-                    protected String doInBackground(Void... params) {
+            new AsyncTask<Object, Object, String>() {
+                @Override
+                protected String doInBackground(Object... params) {
 
-                        try {
+                    try {
 
-                            JSONArray lesson_array = new JSONArray(lessons_json);
-                            int num = lesson_array.length();
-                            for (int i = 0; i < lesson_array.length(); i++) {
+                        JSONArray lesson_array = new JSONArray(lessons_json);
+                        int num = lesson_array.length();
+                        for (int i = 0; i < lesson_array.length(); i++) {
 
-                                JSONObject curr = lesson_array.getJSONObject(i);
+                            JSONObject curr = lesson_array.getJSONObject(i);
 
-                                String name = curr.getString("name");
-                                Log.i("ldebug", name);
-                                String summary = curr.getString("summary");
-                                String id = curr.getString("id");
-                                //Log.i("ldebug",learning);
-                                //Log.i("ldebug","hola");
-                                Lesson lesson_1 = new Lesson();
-                                lesson_1.setName(name);
-                                lesson_1.setDescription(summary);
-                                lesson_1.setId(id);
-                                //TODO ACA HAY QUE AGREGAR LOS ELEM
-                                //MEDIANTE PARSEO DE JSONARRAY Y CREAR MULTIMEDIA FILES
-                                //AGREGANDOLOS A LA LESSON
-                                //LessonModelList.add(lesson_1);
-                                AppDatabase.getDatabase(getActivity()).lessonDAO().insertLesson(lesson_1);
-                                Log.i("count", String.valueOf(i));
+                            String name = curr.getString("name");
+                            String summary = curr.getString("summary");
+                            String id = curr.getString("id");
 
-                            }
+                            Lesson lesson_1 = new Lesson();
+                            lesson_1.setName(name);
+                            lesson_1.setDescription(summary);
+                            lesson_1.setId(id);
+                            //Add elements to db
 
-                        }
-                        catch(JSONException e)
-                        {
+                            AppDatabase.getDatabase(getActivity()).lessonDAO().insertLesson(lesson_1);
+                            Log.i("count", String.valueOf(i));
 
                         }
 
-                        //Lesson lesson_1 = new Lesson();
-                        //lesson_1.setName("Prueba Jose");
-                        //lesson_1.setDescription("Prueba Room");
-                        //lesson_1.setId("1");
-                        //AppDatabase.getDatabase(getActivity()).lessonDAO().insertLesson(lesson_1);
-                        Log.i("CREAR","CREE LAS LECCIONES");
-                        return "1";
+                    }
+                    catch(JSONException e)
+                    {
+
                     }
 
-
-                }.execute().get();
-
-            }
-            catch(InterruptedException e)
-            {
-                Log.i("INTERRUPTED","ERROR");
-
-            }
-            catch(ExecutionException e)
-            {
-                Log.i("EXECUTION","ERROR");
-            }
-
-            Log.i("intermedio","sali de crear la leccion");
+                    Log.i("CREAR","CREE LAS LECCIONES");
 
 
-            try {
-
-                //LessonModelList = new List<Lesson>();
-
-                List<Lesson> aux = new AsyncTask<Void, Void, List<Lesson>>() {
-                    @Override
-                    protected List<Lesson> doInBackground(Void... params) {
-//                        Lesson lesson_1 = new Lesson();
-//                        lesson_1.setName("Prueba Jose");
-//                        lesson_1.setDescription("Prueba Room");
-//                        lesson_1.setId("1");
-//                        AppDatabase.getDatabase(getActivity()).lessonDAO().insertLesson(lesson_1);
-                        Log.i("OBTENER","OBTENDRE LECCION");
-
-                        return AppDatabase.getDatabase(getActivity()).lessonDAO().getAllLessons();
-                    }
+                    return "1";
+                }
 
 
-                }.execute().get();
-                Toast.makeText(getActivity(),aux.get(0).getDescription(),Toast.LENGTH_LONG).show();
 
-                //Log.i("MENSAJE ULTRA IMPORTANT","EL VALOR ES "+aux);
-                LessonModelList = aux;
-            }
-            catch(InterruptedException e)
-            {
-                Log.i("INTERRUPTED","ERROR");
-
-            }
-            catch(ExecutionException e)
-            {
-                Log.i("EXECUTION","ERROR lessons");
-            }
+            }.execute().get();
 
         }
-        catch(JSONException e)
+        catch(InterruptedException e)
         {
+            Log.i("INTERRUPTED","ERROR");
 
         }
+        catch(ExecutionException e)
+        {
+            Log.i("EXECUTION","ERROR");
+        }
 
+
+        try {
+
+            List<Lesson> lesson_list_aux = new AsyncTask<Void, Void, List<Lesson>>() {
+                @Override
+                protected List<Lesson> doInBackground(Void... params) {
+
+                    Log.i("OBTENER","OBTENDRE LECCION");
+                    return AppDatabase.getDatabase(getActivity()).lessonDAO().getAllLessons();
+                }
+
+
+            }.execute().get();
+
+            LessonModelList = lesson_list_aux;
+        }
+        catch(InterruptedException e)
+        {
+            Log.i("INTERRUPTED","ERROR");
+
+        }
+        catch(ExecutionException e)
+        {
+            Log.i("EXECUTION","ERROR lessons");
+        }
 
         lessonsAdapter = new LessonsAdapter(getActivity(), LessonModelList);
 
@@ -223,8 +165,6 @@ public class LessonsFragment extends Fragment {
                 Log.i("ROOM DESCR",lesson.getDescription());
                 //Log.i("ROOM COMPANYID",lesson.getCompany_id());
                 Toast.makeText(getActivity(),lesson.getName(),Toast.LENGTH_SHORT).show();
-
-
 
                 //TODO esta SP pasa los params de lesson
                 SharedPreferences spl = getActivity().getSharedPreferences("Lesson", Context.MODE_PRIVATE);

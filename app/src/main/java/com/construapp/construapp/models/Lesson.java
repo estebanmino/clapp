@@ -3,13 +3,7 @@ package com.construapp.construapp.models;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
-import android.arch.persistence.room.TypeConverter;
-import android.arch.persistence.room.TypeConverters;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 /**
@@ -19,18 +13,9 @@ import java.util.ArrayList;
 @Entity
 public class Lesson {
 
-
-
-
-    public ArrayList<MultimediaFile> getMultimediaPictureFiles() {
-        return multimediaPictureFiles;
-    }
     @Ignore
     private ArrayList<MultimediaFile> multimediaPictureFiles;
 
-    public ArrayList<MultimediaFile> getMultimediaAudioFiles() {
-        return multimediaAudioFiles;
-    }
     @Ignore
     private ArrayList<MultimediaFile> multimediaAudioFiles;
     @Ignore
@@ -93,6 +78,7 @@ public class Lesson {
     }
 
 
+    //Getter & Setter MultimediaDocuments
     public ArrayList<MultimediaFile> getMultimediaDocumentsFiles() {
         return multimediaDocumentsFiles;
     }
@@ -101,6 +87,7 @@ public class Lesson {
         this.multimediaDocumentsFiles = multimediaDocumentsFiles;
     }
 
+    //Getter & Setter MultimediaPictures
     public ArrayList<MultimediaFile> getMultimediaPicturesFiles() {
         return multimediaPictureFiles;
     }
@@ -109,6 +96,7 @@ public class Lesson {
         this.multimediaPictureFiles = multimediaPictureFiles;
     }
 
+    //Getter & Setter MultimediaDocuments
     public ArrayList<MultimediaFile> getMultimediaAudiosFiles() {
         return multimediaAudioFiles;
     }
@@ -138,7 +126,5 @@ public class Lesson {
     public String getDescription() {
         return description;
     }
-
-
 
 }

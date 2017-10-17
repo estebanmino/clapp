@@ -84,9 +84,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //TODO este toast esta malo, usar para probar la bbdd
-        //Toast(LessonListViewModel.class);
-
     }
 
 
