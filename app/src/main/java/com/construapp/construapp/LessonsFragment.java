@@ -1,7 +1,7 @@
 package com.construapp.construapp;
 
 import android.content.Context;
-import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,27 +14,30 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
-import android.content.SharedPreferences;
 
+import com.construapp.construapp.models.AppDatabase;
 import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.threading.RetrieveFeedTask;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONTokener;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class LessonsFragment extends Fragment {
 
     private LessonsAdapter lessonsAdapter;
+    //muestra los items lesson lesson
     private ListView LessonsList;
+    private List<Lesson> LessonModelList;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
         ArrayList<Lesson> lessonList = new ArrayList<>();
         SharedPreferences sharedpreferences = getActivity().getSharedPreferences("ConstruApp", Context.MODE_PRIVATE);
         String company_id = sharedpreferences.getString("company_id", "");

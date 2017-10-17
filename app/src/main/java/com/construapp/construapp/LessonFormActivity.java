@@ -197,15 +197,15 @@ public class LessonFormActivity extends AppCompatActivity {
         fabSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //TODO fix params, working with sharedpreferences
                 SharedPreferences sharedpreferences = getSharedPreferences("ConstruApp", Context.MODE_PRIVATE);
                 String lesson_name = editLessonName.getText().toString();
                 String lesson_summary = editLessonName.getText().toString();
                 String lesson_motivation = "Aprendizaje";
                 String lesson_learning = editLessonDescription.getText().toString();
                 //TODO FIJAR PROYECTO CUANDO EXISTA
-                String project_id = "2";
+                String project_id = "11";
                 final String response = "";
-
 
                 VolleyCreateLesson.volleyCreateLesson(new VolleyCallback() {
                     @Override
