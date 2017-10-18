@@ -19,6 +19,7 @@ import android.view.View;
 import com.construapp.construapp.cache.LRUCache;
 import com.construapp.construapp.microblog.MicroblogFragment;
 import com.construapp.construapp.models.Constants;
+import com.construapp.construapp.models.General;
 
 import android.content.SharedPreferences;
 import android.widget.Toast;
@@ -28,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
     //CONSTANTS
-    private Constants constants;
+    private General constants;
     private ViewPager mViewPager;
     public final static String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
     private LRUCache lruCache;
@@ -43,21 +44,14 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        SharedPreferences sharedpreferences = getSharedPreferences("ConstruApp", Context.MODE_PRIVATE);
-        String token = sharedpreferences.getString("token", "");
-        String user_id = sharedpreferences.getString("user_id", "");
-        String company_id = sharedpreferences.getString("company_id", "");
-        //Toast.makeText(this,"El token es:"+token,Toast.LENGTH_SHORT).show();
-        //Toast.makeText(this,"El User id es:"+user_id,Toast.LENGTH_SHORT).show();
-        //Toast.makeText(this,"El company id es:"+company_id,Toast.LENGTH_SHORT).show();
+        SharedPreferences sharedpreferences = getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
 
-        constants = new Constants();
+        constants = new General();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-
         lruCache = LRUCache.getInstance();
         constants.setUserPermission(MainActivity.this);
-        userPermission = Integer.parseInt(sharedpreferences.getString("user_permission",""));
+        userPermission = Integer.parseInt(sharedpreferences.getString(Constants.SP_USER_PERMISSION,""));
         int fabPermission = constants.xmlPermissionTagToInt(fab.getTag().toString());
 
         //Able FloatingActionButton or hide it according to the user permissions
@@ -72,17 +66,13 @@ public class MainActivity extends AppCompatActivity {
         else {
             fab.setVisibility(View.GONE);
         }
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-        // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -93,38 +83,18 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
         else if (id == R.id.action_logout)
         {
-            SharedPreferences mySPrefs = getSharedPreferences("ConstruApp", Context.MODE_PRIVATE);
+            SharedPreferences mySPrefs = getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = mySPrefs.edit();
-            editor.remove("token");
+            editor.clear();
             editor.apply();
-
-
-            boolean token_exists = mySPrefs.contains("token");
-            if(!token_exists)
-            {
-                Toast.makeText(this,"Se ha  cerrado su sesión",Toast.LENGTH_LONG).show();
-
-            }
-            else
-            {
-                //Toast.makeText(this,"El token NO SE BORRO",Toast.LENGTH_LONG).show();
-
-            }
-
+            Toast.makeText(this,"Se ha  cerrado su sesión",Toast.LENGTH_LONG).show();
             startActivity(LoginActivity.getIntent(MainActivity.this));
-
-
         }
 
         return super.onOptionsItemSelected(item);
@@ -204,12 +174,10 @@ public class MainActivity extends AppCompatActivity {
             }
             return null;
         }
-
     }
 
     public void onBackPressed()
     {
-
     }
 
     public static Intent getIntent(Context context) {

@@ -56,16 +56,10 @@ public class MyLessonsFragment extends Fragment {
         myLessonsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                //Toast.makeText(MyLessonsFragment.this, "" + position, Toast.LENGTH_LONG).show();
                 Lesson lesson = (Lesson) lessonsAdapter.getItem(position);
-                Log.i("OBJECT",lesson.getName());
-                // TODO: 12-10-2017 Refactor id
                 startActivity(LessonActivity.getIntent(getActivity(), lesson.getName(),
-                        lesson.getDescription(),"0"));
+                        lesson.getDescription(),lesson.getId()));
             }
         });
-
-
     }
-
 }

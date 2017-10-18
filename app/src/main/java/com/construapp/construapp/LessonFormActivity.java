@@ -34,6 +34,7 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.android.volley.VolleyError;
 import com.construapp.construapp.lessonForm.RealPathUtil;
 import com.construapp.construapp.models.Constants;
+import com.construapp.construapp.models.General;
 import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.models.MultimediaFile;
 import com.construapp.construapp.multimedia.MultimediaAudioAdapter;
@@ -57,10 +58,9 @@ public class LessonFormActivity extends AppCompatActivity {
     private static final int READ_EXTERNAL_REQUEST = 1884;
     private static final int RECORD_AUDIO_REQUEST = 1883;
     private static final int FILES_REQUEST = 1882;
-    private static final String S3_BUCKET_NAME = "construapp";
+
     private static String ABSOLUTE_STORAGE_PATH;
-    private static final String EXTENSION_PICTURE = "PICTURE";
-    private static final String EXTENSION_DOCUMENT = "DOCUMENT";
+    private static final String EXTENSION_AUDIO_FORMAT = ".3gp";
 
     //XML ELEMENTS
     private TextView lessonName;
@@ -95,7 +95,7 @@ public class LessonFormActivity extends AppCompatActivity {
     private Lesson lesson;
 
     //CONSTANTS
-    private Constants constants;
+    private General constants;
 
     //MM ADAPTER
     MultimediaPictureAdapter multimediaPictureAdapter;
@@ -132,7 +132,7 @@ public class LessonFormActivity extends AppCompatActivity {
         lesson.initMultimediaFiles();
 
         //INIT CONSTANTS
-        constants = new Constants();
+        constants = new General();
 
         mStartRecording = true;
 
@@ -185,14 +185,13 @@ public class LessonFormActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //TODO fix params, working with sharedpreferences
-                SharedPreferences sharedpreferences = getSharedPreferences("ConstruApp", Context.MODE_PRIVATE);
+                SharedPreferences sharedpreferences = getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
                 String lesson_name = editLessonName.getText().toString();
                 String lesson_summary = editLessonName.getText().toString();
                 String lesson_motivation = "Aprendizaje";
                 String lesson_learning = editLessonDescription.getText().toString();
                 //TODO FIJAR PROYECTO CUANDO EXISTA
-                String project_id = "11";
-                final String response = "";
+                String project_id = sharedpreferences.getString(Constants.SP_ACTUAL_PROJECT,"");
 
                 VolleyCreateLesson.volleyCreateLesson(new VolleyCallback() {
                     @Override
@@ -201,13 +200,22 @@ public class LessonFormActivity extends AppCompatActivity {
                             final String new_lesson_id = result.get("id").toString();
                             String path_input = "";
                             for (MultimediaFile multimediaFile : lesson.getMultimediaPicturesFiles()) {
-                                path_input += multimediaFile.getExtension() + "/" + multimediaFile.getmPath().substring(multimediaFile.getmPath().lastIndexOf("/") + 1) + ";";
+                                multimediaFile.setExtension(Constants.S3_LESSONS_PATH+ "/"+ new_lesson_id +"/" +
+                                        multimediaFile.getExtension());
+                                path_input += multimediaFile.getExtension() + "/" +
+                                        multimediaFile.getmPath().substring(multimediaFile.getmPath().lastIndexOf("/") + 1) + ";";
                             }
                             for (MultimediaFile multimediaFile : lesson.getMultimediaAudiosFiles()) {
-                                path_input += multimediaFile.getExtension() + "/" + multimediaFile.getmPath().substring(multimediaFile.getmPath().lastIndexOf("/") + 1) + ";";
+                                multimediaFile.setExtension(Constants.S3_LESSONS_PATH+ "/"+ new_lesson_id +"/" +
+                                        multimediaFile.getExtension());
+                                path_input += multimediaFile.getExtension() + "/"
+                                        + multimediaFile.getmPath().substring(multimediaFile.getmPath().lastIndexOf("/") + 1) + ";";
                             }
                             for (MultimediaFile multimediaFile : lesson.getMultimediaDocumentsFiles()) {
-                                path_input += multimediaFile.getExtension() + "/" + multimediaFile.getmPath().substring(multimediaFile.getmPath().lastIndexOf("/") + 1) + ";";
+                                multimediaFile.setExtension(Constants.S3_LESSONS_PATH+ "/"+ new_lesson_id +"/" +
+                                        multimediaFile.getExtension());
+                                path_input += multimediaFile.getExtension() + "/"
+                                        + multimediaFile.getmPath().substring(multimediaFile.getmPath().lastIndexOf("/") + 1) + ";";
                             }
 
                             VolleyPostS3.volleyPostS3(new VolleyCallback() {
@@ -294,8 +302,6 @@ public class LessonFormActivity extends AppCompatActivity {
         fabGallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Snackbar.make(view, "Acceso a galería", Snackbar.LENGTH_LONG)
-                //        .setAction("Action", null).show();
 
                 if (ContextCompat.checkSelfPermission(LessonFormActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)
                         != PackageManager.PERMISSION_GRANTED){
@@ -317,16 +323,13 @@ public class LessonFormActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (ContextCompat.checkSelfPermission(LessonFormActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                         != PackageManager.PERMISSION_GRANTED) {
-                    Log.i("PERMISSION", "Storage Permission");
                     getWriteStoragePermissions();
                 }
                 else if (ContextCompat.checkSelfPermission(LessonFormActivity.this, Manifest.permission.CAMERA)
                         != PackageManager.PERMISSION_GRANTED){
-                    Log.i("PERMISSION", "Camera Permission");
                     getCameraPermissions();
                 }
                 else {
-                    Log.i("PERMISSION", "Granted");
                     dispatchTakePictureIntent();
                 }
             }
@@ -428,7 +431,7 @@ public class LessonFormActivity extends AppCompatActivity {
                                 }
                             });
 
-                    lesson.getMultimediaPicturesFiles().add(new MultimediaFile(EXTENSION_PICTURE,mPath, null,transferUtility,S3_BUCKET_NAME));
+                    lesson.getMultimediaPicturesFiles().add(new MultimediaFile(Constants.S3_IMAGES_PATH,mPath, null,transferUtility));
                     multimediaPictureAdapter.notifyDataSetChanged();
                     break;
 
@@ -442,7 +445,7 @@ public class LessonFormActivity extends AppCompatActivity {
                             mPath = RealPathUtil.getRealPathFromURI_API19(getApplicationContext(), data.getData());
                         }
 
-                        lesson.getMultimediaPicturesFiles().add(new MultimediaFile(EXTENSION_PICTURE,mPath, null,transferUtility,S3_BUCKET_NAME));
+                        lesson.getMultimediaPicturesFiles().add(new MultimediaFile(Constants.S3_IMAGES_PATH,mPath, null,transferUtility));
                         multimediaPictureAdapter.notifyDataSetChanged();
 
 
@@ -457,8 +460,8 @@ public class LessonFormActivity extends AppCompatActivity {
                     } else {
                         mPath = RealPathUtil.getRealPathFromURI_API19(getApplicationContext(), data.getData());
                     }
-                    lesson.getMultimediaDocumentsFiles().add(new MultimediaFile(EXTENSION_DOCUMENT,
-                            mPath,null, transferUtility,S3_BUCKET_NAME));
+                    lesson.getMultimediaDocumentsFiles().add(new MultimediaFile(Constants.S3_DOCS_PATH,
+                            mPath,null, transferUtility));
                     multimediaDocumentAdapter.notifyDataSetChanged();
                     break;
 
@@ -617,7 +620,7 @@ public class LessonFormActivity extends AppCompatActivity {
             Long tsLong = System.currentTimeMillis() / 1000;
             String ts = tsLong.toString();
             MultimediaFile audioMultimedia = new MultimediaFile(
-                    "AUDIO", ABSOLUTE_STORAGE_PATH + ts.toString() + ".3gp", null,transferUtility, S3_BUCKET_NAME);
+                    Constants.S3_AUDIOS_PATH, ABSOLUTE_STORAGE_PATH + ts.toString() + EXTENSION_AUDIO_FORMAT, null,transferUtility);
             startRecording(audioMultimedia);
             lesson.getMultimediaAudiosFiles().add(audioMultimedia);
         } else {

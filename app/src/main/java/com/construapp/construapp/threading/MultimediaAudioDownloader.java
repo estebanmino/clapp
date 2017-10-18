@@ -11,6 +11,7 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.construapp.construapp.cache.LRUCache;
+import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.MultimediaFile;
 import com.construapp.construapp.multimedia.MultimediaAdapter;
 
@@ -26,19 +27,17 @@ public class MultimediaAudioDownloader {
     private File file;
     private TransferUtility transferUtility;
     private String fileKey;
-    private String s3BucketName;
     private MultimediaAdapter.MultimediaViewHolder holder;
     private MultimediaFile multimediaFile;
 
 
     public MultimediaAudioDownloader(File file, TransferUtility transferUtility,
-                                       String fileKey, String s3BucketName, MultimediaAdapter.MultimediaViewHolder holder,
-                                       MultimediaFile multimediaFile)
+                                     String fileKey, MultimediaAdapter.MultimediaViewHolder holder,
+                                     MultimediaFile multimediaFile)
     {
         this.file = file;
         this.transferUtility = transferUtility;
         this.fileKey = fileKey;
-        this.s3BucketName = s3BucketName;
         this.holder = holder;
         this.multimediaFile = multimediaFile;
     }
@@ -46,7 +45,7 @@ public class MultimediaAudioDownloader {
     public void download(){
         try {
             TransferObserver observer = transferUtility.download(
-                    s3BucketName,     /* The bucket to download from */
+                    Constants.S3_BUCKET,     /* The bucket to download from */
                     fileKey,    /* The key for the object to download */
                     file        /* The file to download the object to */
             );

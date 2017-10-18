@@ -2,9 +2,7 @@ package com.construapp.construapp.multimedia;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,9 +14,8 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.construapp.construapp.LessonActivity;
 import com.construapp.construapp.R;
 import com.construapp.construapp.cache.LRUCache;
-import com.construapp.construapp.models.Constants;
+import com.construapp.construapp.models.General;
 import com.construapp.construapp.models.MultimediaFile;
-import com.construapp.construapp.threading.MultimediaAudioDownloader;
 import com.construapp.construapp.threading.MultimediaDocumentDownloader;
 
 import java.io.File;
@@ -55,14 +52,13 @@ public class MultimediaDocumentAdapter extends MultimediaAdapter {
                     public void onClick(View view) {
                         holder.progressBar.setVisibility(View.VISIBLE);
                         holder.btnDownload.setVisibility(View.GONE);
-                        Constants constants = new Constants();
+                        General constants = new General();
                         AmazonS3 s3 = new AmazonS3Client(constants.getCredentialsProvider(getContext()));
                         transferUtility = new TransferUtility(s3, getContext());
                         MultimediaDocumentDownloader downloadDocumentMultimedia = new MultimediaDocumentDownloader(
                                 new File(multimediaFile.getmPath()),
                                 transferUtility,
                                 multimediaFile.getFileS3Key(),
-                                BUCKET_NAME,
                                 holder,
                                 multimediaFile);
                         downloadDocumentMultimedia.download();

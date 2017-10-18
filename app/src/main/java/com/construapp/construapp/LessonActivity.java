@@ -20,10 +20,11 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.android.volley.VolleyError;
+import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.multimedia.MultimediaAudioAdapter;
 import com.construapp.construapp.multimedia.MultimediaDocumentAdapter;
 import com.construapp.construapp.multimedia.MultimediaPictureAdapter;
-import com.construapp.construapp.models.Constants;
+import com.construapp.construapp.models.General;
 import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.models.MultimediaFile;
 import com.construapp.construapp.threading.api.VolleyDeleteLesson;
@@ -40,17 +41,16 @@ import java.util.ArrayList;
 
 public class LessonActivity extends AppCompatActivity {
 
-    private static final String USERNAME = "username";
-    private static final String DESCRIPTION = "description";
-    private static final String ID = "id";
+    private static final String LESSON_NAME = "username";
+    private static final String LESSON_DESCRIPTION = "description";
+    private static final String LESSON_ID = "id";
     private static final String PROJECT_FOLDER = "ConstruApp";
 
     private Lesson lesson = new Lesson();
-    public final static String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
     private int userPermission;
 
     //CONSTANTS
-    private Constants constants;
+    private General constants;
 
     //AmazonS3
     private TransferUtility transferUtility;
@@ -76,9 +76,9 @@ public class LessonActivity extends AppCompatActivity {
         setContentView(R.layout.activity_lesson);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        SharedPreferences sharedpreferences = getSharedPreferences("ConstruApp", Context.MODE_PRIVATE);
-        constants = new Constants();
-        userPermission = Integer.parseInt(sharedpreferences.getString("user_permission",""));
+        SharedPreferences sharedpreferences = getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
+        constants = new General();
+        userPermission = Integer.parseInt(sharedpreferences.getString(Constants.SP_USER_PERMISSION,""));
 
         imageEditLesson = (ImageView) findViewById(R.id.image_edit_lesson);
         imageDeleteLesson = (ImageView) findViewById(R.id.image_delete_lesson);
@@ -87,17 +87,10 @@ public class LessonActivity extends AppCompatActivity {
         textLessonName = (TextView) findViewById(R.id.text_lesson_name);
         textLessonDescription = (TextView) findViewById(R.id.text_lesson_description);
 
-        SharedPreferences spl = getSharedPreferences("Lesson", Context.MODE_PRIVATE);
-
         setLesson();
 
-        textLessonName.setText(spl.getString("lesson_name", ""));
-        textLessonDescription.setText(spl.getString("lesson_description", ""));
         textLessonName.setText(lesson.getName());
         textLessonDescription.setText(lesson.getDescription());
-
-        String company_id = sharedpreferences.getString("company_id", "");
-        String user_token = sharedpreferences.getString("token", "");
 
         ////HORIZONTAL IMAGES SCROLLING
 
@@ -151,11 +144,11 @@ public class LessonActivity extends AppCompatActivity {
                     ArrayList<String> documentPathsList  = new ArrayList<>();
 
                     for (String fileKey: arrayList) {
-                        if (fileKey.contains("PICTURE")){
+                        if (fileKey.contains(Constants.S3_IMAGES_PATH)){
                             picturePathsList.add(fileKey);
-                        } else if (fileKey.contains("AUDIO")) {
+                        } else if (fileKey.contains(Constants.S3_AUDIOS_PATH)) {
                             audioPathsList.add(fileKey);
-                        } else if (fileKey.contains("DOCUMENT")) {
+                        } else if (fileKey.contains(Constants.S3_DOCS_PATH)) {
                             documentPathsList.add(fileKey);
                         }
                     }
@@ -163,21 +156,24 @@ public class LessonActivity extends AppCompatActivity {
                     String[] pictureArray = picturePathsList.toArray(new String[0]);
                     for (String path: pictureArray){
                         lesson.getMultimediaPicturesFiles().add(new MultimediaFile(
-                                "PICTURE",CACHE_FOLDER+"/"+path.replace("\"", ""),path.replace("\"", ""),transferUtility,"construapp"));
+                                Constants.S3_LESSONS_PATH+"/"+lesson.getId()+"/"+
+                                        Constants.S3_IMAGES_PATH,CACHE_FOLDER+"/"+path.substring(path.lastIndexOf("/")+1),path.replace("\"", ""),transferUtility));
                     }
                     multimediaPictureAdapter.notifyDataSetChanged();
 
                     for (String audioPath: audioPathsList) {
                         MultimediaFile audioMultimedia = new MultimediaFile(
-                                "AUDIO",CACHE_FOLDER+"/"+audioPath.replace("\"", ""),audioPath.replace("\"", ""),transferUtility,"construapp");
+                                Constants.S3_LESSONS_PATH+"/"+lesson.getId()+"/"+
+                                    Constants.S3_AUDIOS_PATH,CACHE_FOLDER+"/"+audioPath.substring(audioPath.lastIndexOf("/")+1),audioPath.replace("\"", ""),transferUtility);
                         lesson.getMultimediaAudiosFiles().add(audioMultimedia);
                     }
                     multimediaAudioAdapter.notifyDataSetChanged();
 
                     for (String documentPath: documentPathsList) {
                         MultimediaFile documentMultimedia = new MultimediaFile(
-                                "DOCUMENT",ABSOLUTE_STORAGE_PATH+"/"+PROJECT_FOLDER+"/"+documentPath.replace("\"", ""),
-                                documentPath.replace("\"", ""),transferUtility,"construapp");
+                                Constants.S3_LESSONS_PATH+"/"+lesson.getId()+"/"+
+                                    Constants.S3_DOCS_PATH,ABSOLUTE_STORAGE_PATH+"/"+PROJECT_FOLDER+"/"+documentPath.substring(documentPath.lastIndexOf("/")+1),
+                                documentPath.replace("\"", ""),transferUtility);
                         lesson.getMultimediaDocumentsFiles().add(documentMultimedia);
                     }
                     multimediaDocumentAdapter.notifyDataSetChanged();
@@ -221,23 +217,22 @@ public class LessonActivity extends AppCompatActivity {
         Intent intent = new Intent(this, ShowInfo.class);
         TextView projectName = (TextView) findViewById(R.id.text_lesson_name);
         String message = projectName.getText().toString();
-        intent.putExtra(EXTRA_MESSAGE, message);
         startActivity(intent);
     }
 
     public void setLesson() {
-        lesson.setName(getIntent().getStringExtra(USERNAME));
-        lesson.setDescription(getIntent().getStringExtra(DESCRIPTION));
-        lesson.setId(getIntent().getStringExtra(ID));
+        lesson.setName(getIntent().getStringExtra(LESSON_NAME));
+        lesson.setDescription(getIntent().getStringExtra(LESSON_DESCRIPTION));
+        lesson.setId(getIntent().getStringExtra(LESSON_ID));
         lesson.initMultimediaFiles();
         showPermissions();
     }
 
     public static Intent getIntent(Context context, String name, String description, String id) {
         Intent intent = new Intent(context,LessonActivity.class);
-        intent.putExtra(USERNAME,name);
-        intent.putExtra(DESCRIPTION,description);
-        intent.putExtra(ID,id);
+        intent.putExtra(LESSON_NAME,name);
+        intent.putExtra(LESSON_DESCRIPTION,description);
+        intent.putExtra(LESSON_ID,id);
         return intent;
     }
 
