@@ -28,8 +28,26 @@ public class Lesson {
     private String description;
     private String motivation;
     private String learning;
+    private String validation;
     private String user_id;
+    private String project_id;
     private String company_id;
+
+    public String getProject_id() {
+        return project_id;
+    }
+
+    public void setProject_id(String project_id) {
+        this.project_id = project_id;
+    }
+
+    public String getValidation() {
+        return validation;
+    }
+
+    public void setValidation(String validation) {
+        this.validation = validation;
+    }
 
     public String getMotivation() {
         return motivation;

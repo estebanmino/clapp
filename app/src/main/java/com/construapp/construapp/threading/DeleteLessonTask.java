@@ -12,27 +12,18 @@ import com.construapp.construapp.models.Lesson;
 
 public class DeleteLessonTask extends AsyncTask<Void,Void,Boolean> {
 
-    private String name;
-    private String summary;
-    private String id;
+    private Lesson lesson;
     private Context context;
-    public DeleteLessonTask(String name,String summary,String id,Context context)
+    public DeleteLessonTask(Lesson lesson,Context context)
     {
-        this.name=name;
-        this.summary=summary;
-        this.id=id;
+        this.lesson=lesson;
         this.context=context;
 
     }
     @Override
     protected Boolean doInBackground(Void... params) {
 
-        Lesson lesson = new Lesson();
-        lesson.setName(name);
-        lesson.setDescription(summary);
-        lesson.setId(id);
-
-        AppDatabase.getDatabase(context.getApplicationContext()).lessonDAO().insertLesson(lesson);
+        AppDatabase.getDatabase(context.getApplicationContext()).lessonDAO().deleteLesson(lesson);
 
         return true;
     }

@@ -30,6 +30,7 @@ import com.construapp.construapp.multimedia.MultimediaPictureAdapter;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.models.MultimediaFile;
+import com.construapp.construapp.threading.DeleteLessonTask;
 import com.construapp.construapp.threading.api.VolleyDeleteLesson;
 import com.construapp.construapp.threading.api.VolleyFetchLessonMultimedia;
 import com.google.gson.JsonArray;
@@ -40,6 +41,7 @@ import com.google.gson.JsonParser;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 
 public class LessonActivity extends AppCompatActivity {
@@ -290,6 +292,14 @@ public class LessonActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             Log.i("DELETE","Lesson deleted");
+            try {
+                //Delete the lesson from DB
+                new DeleteLessonTask(lesson,getApplicationContext()).execute().get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
             VolleyDeleteLesson.volleyDeleteLesson(new VolleyStringCallback() {
                 @Override
                 public void onSuccess(String result) {

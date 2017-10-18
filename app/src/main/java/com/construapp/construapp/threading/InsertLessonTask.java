@@ -20,6 +20,7 @@ public class InsertLessonTask extends AsyncTask<Void,Void,Boolean> {
     public InsertLessonTask(Lesson lesson,Context context)
     {
         this.lesson=lesson;
+        this.context=context;
 
     }
     @Override

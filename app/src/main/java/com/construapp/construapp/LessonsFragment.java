@@ -62,11 +62,31 @@ public class LessonsFragment extends Fragment {
                 JSONArray lesson_json_array = new JSONArray(lessons);
                 for (int i = 0; i < lesson_json_array.length(); i++) {
                     JSONObject current_object = lesson_json_array.getJSONObject(i);
+                    Lesson lesson = new Lesson();
+                    String id = current_object.getString("id");
                     String name = current_object.getString("name");
                     String summary = current_object.getString("summary");
-                    String id = current_object.getString("id");
+                    String motivation = current_object.getString("motivation");
+                    String learning = current_object.getString("learning");
+                    String validation = current_object.getString("validation");
+                    String user_id= current_object.getString("user_id");
+                    String project_id = current_object.getString("project_id");
+                    //company_id is already defined on the fetch
+                    //String company_id = current_object.getString("company_id");
+                    lesson.setName(name);
+                    lesson.setId(id);
+                    //TODO fix description as learning and not summary
+                    lesson.setDescription(learning);
+                    lesson.setMotivation(motivation);
+                    lesson.setLearning(learning);
+                    lesson.setValidation(validation);
+                    lesson.setUser_id(user_id);
+                    lesson.setProject_id(project_id);
+                    lesson.setCompany_id(company_id);
+
+
                     try {
-                        new InsertLessonTask(name, summary, id, getActivity()).execute().get();
+                        new InsertLessonTask(lesson, getContext()).execute().get();
                         //databaseThread.addLesson(getActivity(),name,summary,id);
                         Log.i("ROOM", "hice inserts!");
                     } catch (ExecutionException e) {
