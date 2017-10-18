@@ -14,6 +14,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.construapp.construapp.LessonFormActivity;
 import com.construapp.construapp.LoginActivity;
+import com.construapp.construapp.models.Constants;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -33,18 +34,14 @@ public class VolleyPostS3 {
     public static void volleyPostS3(final LessonFormActivity.VolleyCallback callback,
                                     Context context, String lesson_id, String[] lesson_key_files) {
 
-        String BASE_URL = "http://construapp-api.ing.puc.cl";
-        String COMPANIES = "companies";
-        String LESSONS = "lessons";
-        String SAVE_KEY = "save_key";
-
         SharedPreferences sharedpreferences = context.getSharedPreferences("ConstruApp", Context.MODE_PRIVATE);
         String company_id = sharedpreferences.getString("company_id", "");
 
-        String user_id = sharedpreferences.getString("user_id", "");
-        final String userToken = sharedpreferences.getString("token", "");
+        String user_id = sharedpreferences.getString(Constants.SP_USER, "");
+        final String userToken = sharedpreferences.getString(Constants.SP_TOKEN, "");
 
-        String url = BASE_URL + "/" + COMPANIES + "/" + company_id + "/" + LESSONS + "/" + lesson_id + "/" + SAVE_KEY;
+        String url = Constants.BASE_URL + "/" + Constants.COMPANIES + "/" + company_id + "/" +
+                Constants.LESSONS + "/" + lesson_id + "/" + Constants.SAVE_KEY;
         final RequestQueue queue = Volley.newRequestQueue(context);
 
         JSONObject jsonObject = new JSONObject();
@@ -71,14 +68,14 @@ public class VolleyPostS3 {
         }) {
             @Override
             public String getBodyContentType() {
-                return "application/json; charset=utf-8";
+                return Constants.Q_CONTENTTYPE_JSON_UTF8;
             }
 
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String,String> params = new HashMap<String, String>();
-                params.put("Content-Type","application/json");
-                params.put("Authorization",userToken);
+                params.put(Constants.Q_CONTENTTYPE,Constants.Q_CONTENTTYPE_JSON);
+                params.put(Constants.Q_AUTHORIZATION,userToken);
                 return params;
             }
 

@@ -12,6 +12,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.construapp.construapp.LoginActivity;
+import com.construapp.construapp.models.Constants;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,14 +26,10 @@ public class VolleyGetUserProject {
     public static void volleyGetUserProject(final LoginActivity.VolleyProjectsCallback callback,
                                             Context context, String user_id) {
 
-        String BASE_URL = "http://construapp-api.ing.puc.cl";
-        String GET_PROJECTS = "get_projects";
-        String USERS = "users";
+        SharedPreferences sharedpreferences = context.getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
+        final String userToken = sharedpreferences.getString(Constants.SP_TOKEN, "");
 
-        SharedPreferences sharedpreferences = context.getSharedPreferences("ConstruApp", Context.MODE_PRIVATE);
-        final String userToken = sharedpreferences.getString("token", "");
-
-        final String url = BASE_URL + "/" + USERS + "/" + user_id + "/" + GET_PROJECTS;
+        final String url = Constants.BASE_URL + "/" + Constants.USERS + "/" + user_id + "/" + Constants.GET_PROJECTS;
 
         final RequestQueue queue = Volley.newRequestQueue(context);
 
@@ -55,8 +53,8 @@ public class VolleyGetUserProject {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String,String> params = new HashMap<String, String>();
-                params.put("Content-Type","application/json");
-                params.put("Authorization",userToken);
+                params.put(Constants.Q_CONTENTTYPE,Constants.Q_CONTENTTYPE_JSON);
+                params.put(Constants.Q_AUTHORIZATION,userToken);
                 return params;
             }
 

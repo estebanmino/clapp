@@ -1,23 +1,19 @@
 package com.construapp.construapp;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.content.SharedPreferences;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import com.construapp.construapp.models.AppDatabase;
+import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.Lesson;
-import com.construapp.construapp.threading.RetrieveFeedTask;
+import com.construapp.construapp.threading.api.RetrieveFeedTask;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,9 +35,11 @@ public class LessonsFragment extends Fragment {
         // Inflate the layout for this fragment
 
         ArrayList<Lesson> lessonList = new ArrayList<>();
-        SharedPreferences sharedpreferences = getActivity().getSharedPreferences("ConstruApp", Context.MODE_PRIVATE);
-        String company_id = sharedpreferences.getString("company_id", "");
-        if (sharedpreferences.getBoolean("has_projects", false)) {
+        SharedPreferences sharedpreferences = getActivity().getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
+        String company_id = sharedpreferences.getString(Constants.SP_COMPANY, "");
+
+        // TODO: 18-10-2017 refactor to volley
+        if (sharedpreferences.getBoolean(Constants.SP_HAS_PROJECTS, false)) {
             RetrieveFeedTask lesson_fetcher = new RetrieveFeedTask("fetch-lessons");
             String lessons = "";
             try {

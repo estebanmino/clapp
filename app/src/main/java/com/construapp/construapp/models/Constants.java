@@ -1,53 +1,45 @@
 package com.construapp.construapp.models;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.util.Log;
-import android.graphics.Color;
-import android.widget.ImageView;
-import com.amazonaws.auth.CognitoCachingCredentialsProvider;
-import com.amazonaws.regions.Regions;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
-import java.util.ArrayList;
-
 /**
- * Created by ESTEBANFML on 23-09-2017.
+ * Created by ESTEBANFML on 18-10-2017.
  */
 
-public class Constants {
-    public CognitoCachingCredentialsProvider getCredentialsProvider(Context context) {
-        return new CognitoCachingCredentialsProvider(
-                context,
-                "us-east-1:4990ac44-6c36-4b4c-8193-70148fbd35d6", // Identity pool ID
-                Regions.US_EAST_1 // Region
-        );
-    }
+public interface Constants {
 
-    public void setUserPermission(Context context){
-        SharedPreferences sharedpreferences = context.getSharedPreferences("ConstruApp", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedpreferences.edit();
-        int permissionInt = userPermissionsToInt(sharedpreferences.getString("name_permission",""));
-        String permissionString = Integer.toString(permissionInt);
-        editor.putString("user_permission", permissionString);
-        editor.apply();
+    // General
+    public static final String BASE_URL = "http://construapp-api.ing.puc.cl";
+    public static final String COMPANIES = "companies";
+    public static final String LESSONS = "lessons";
+    public static final String USERS = "users";
+    public static final String GET_PROJECTS = "get_projects";
+    public static final String GET_PERMISSION = "get_permission";
+    public static final String PROJECTS = "projects";
+    public static final String SESSIONS = "sessions";
+    public static final String SAVE_KEY = "save_key";
 
-    }
 
-    public int xmlPermissionTagToInt(String tag){
-        return Integer.parseInt(tag);
-    }
+    // Shared preferences
+    public static final String SP_CONSTRUAPP = "ConstruApp";
+    public static final String SP_COMPANY = "company_id";
+    public static final String SP_USER = "user_id";
+    public static final String SP_TOKEN = "token";
+    public static final String SP_HAS_PROJECTS = "has_projects";
+    public static final String SP_HAS_PERMISSION = "has_permission";
+    public static final String SP_PROJECTS = "projects";
+    public static final String SP_ACTUAL_PROJECT = "actual_projects";
+    public static final String SP_USER_PERMISSION_NAME = "name_permission";
+    public static final String SP_USER_PERMISSION = "user_permission";
 
-    private int userPermissionsToInt(String permission){
-        switch (permission){
-            case "admin": return 4;
-            case "validate": return 3;
-            case "create": return 2;
-            case "read": return 1;
-            default: return 0;
-        }
-    }
+    //Queries
+    public static final String Q_AUTHORIZATION = "Authorization";
+    public static final String Q_CONTENTTYPE = "Content-Type";
+    public static final String Q_CONTENTTYPE_JSON = "application/json";
+    public static final String Q_CONTENTTYPE_JSON_UTF8 = "application/json; charset=utf-8";
+
+    //S3
+    public static final String S3_BUCKET = "construapp";
+
+
+
+
 }

@@ -14,6 +14,8 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.construapp.construapp.LessonFormActivity;
 import com.construapp.construapp.LoginActivity;
+import com.construapp.construapp.models.Constants;
+import com.construapp.construapp.models.General;
 
 import org.json.JSONObject;
 
@@ -32,19 +34,22 @@ public class VolleyCreateLesson {
                                           String lesson_motivation, String lesson_learning,
                                           String project_id) {
 
-        String BASE_URL = "http://construapp-api.ing.puc.cl";
-        String COMPANIES = "companies";
-        String LESSONS = "lessons";
-        SharedPreferences sharedpreferences = context.getSharedPreferences("ConstruApp", Context.MODE_PRIVATE);
-        String company_id = sharedpreferences.getString("company_id", "");
-        String user_id = sharedpreferences.getString("user_id", "");
-        final String userToken = sharedpreferences.getString("token", "");
+        SharedPreferences sharedpreferences = context.getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
+        String company_id = sharedpreferences.getString(Constants.SP_COMPANY, "");
+        String user_id = sharedpreferences.getString(Constants.SP_USER, "");
+        final String userToken = sharedpreferences.getString(Constants.SP_TOKEN, "");
 
-        String url = BASE_URL + "/" + COMPANIES + "/" + company_id + "/" + LESSONS;
+        String url = Constants.BASE_URL + "/" + Constants.COMPANIES + "/" + company_id + "/" + Constants.LESSONS;
+
         final RequestQueue queue = Volley.newRequestQueue(context);
 
         JSONObject jsonObject = new JSONObject();
-        final String requestBody = "{\"lesson\":{\"name\":\"" + lesson_name + "\",\"summary\":\"" + lesson_summary + "\",\"motivation\":\""+lesson_motivation + "\",\"learning\":\""+lesson_learning + "\",\"user_id\":\""+user_id + "\",\"company_id\":\""+company_id + "\",\"project_id\":\"" + project_id + "\"}}";
+        // TODO: 18-10-2017 refactor json body
+        final String requestBody =
+                "{\"lesson\":{\"name\":\"" + lesson_name + "\",\"summary\":\"" + lesson_summary + "\"," +
+                        "\"motivation\":\""+lesson_motivation + "\",\"learning\":\""+lesson_learning + "\"," +
+                        "\"user_id\":\""+user_id + "\",\"company_id\":\""+company_id + "\"," +
+                        "\"project_id\":\"" + project_id + "\"}}";
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url,jsonObject,
                 new com.android.volley.Response.Listener<JSONObject>() {
@@ -67,14 +72,14 @@ public class VolleyCreateLesson {
         }) {
             @Override
             public String getBodyContentType() {
-                return "application/json; charset=utf-8";
+                return Constants.Q_CONTENTTYPE_JSON_UTF8;
             }
 
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String,String> params = new HashMap<String, String>();
-                params.put("Content-Type","application/json");
-                params.put("Authorization",userToken);
+                params.put(Constants.Q_CONTENTTYPE,Constants.Q_CONTENTTYPE_JSON);
+                params.put(Constants.Q_AUTHORIZATION,userToken);
                 return params;
             }
 

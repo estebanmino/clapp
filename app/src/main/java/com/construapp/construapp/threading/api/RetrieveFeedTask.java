@@ -1,4 +1,4 @@
-package com.construapp.construapp.threading;
+package com.construapp.construapp.threading.api;
 
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -36,7 +36,6 @@ public class RetrieveFeedTask extends AsyncTask<String, Integer, String> {
 
     private Exception exception;
     public String out;
-    //type values: login, send-lesson
     private String type;
 
     public RetrieveFeedTask(String type) {

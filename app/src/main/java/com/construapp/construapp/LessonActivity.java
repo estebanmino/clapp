@@ -23,7 +23,7 @@ import com.android.volley.VolleyError;
 import com.construapp.construapp.multimedia.MultimediaAudioAdapter;
 import com.construapp.construapp.multimedia.MultimediaDocumentAdapter;
 import com.construapp.construapp.multimedia.MultimediaPictureAdapter;
-import com.construapp.construapp.models.Constants;
+import com.construapp.construapp.models.General;
 import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.models.MultimediaFile;
 import com.construapp.construapp.threading.api.VolleyDeleteLesson;
@@ -50,7 +50,7 @@ public class LessonActivity extends AppCompatActivity {
     private int userPermission;
 
     //CONSTANTS
-    private Constants constants;
+    private General constants;
 
     //AmazonS3
     private TransferUtility transferUtility;
@@ -77,7 +77,7 @@ public class LessonActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         SharedPreferences sharedpreferences = getSharedPreferences("ConstruApp", Context.MODE_PRIVATE);
-        constants = new Constants();
+        constants = new General();
         userPermission = Integer.parseInt(sharedpreferences.getString("user_permission",""));
 
         imageEditLesson = (ImageView) findViewById(R.id.image_edit_lesson);
@@ -163,13 +163,13 @@ public class LessonActivity extends AppCompatActivity {
                     String[] pictureArray = picturePathsList.toArray(new String[0]);
                     for (String path: pictureArray){
                         lesson.getMultimediaPicturesFiles().add(new MultimediaFile(
-                                "PICTURE",CACHE_FOLDER+"/"+path.replace("\"", ""),path.replace("\"", ""),transferUtility,"construapp"));
+                                "PICTURE",CACHE_FOLDER+"/"+path.replace("\"", ""),path.replace("\"", ""),transferUtility));
                     }
                     multimediaPictureAdapter.notifyDataSetChanged();
 
                     for (String audioPath: audioPathsList) {
                         MultimediaFile audioMultimedia = new MultimediaFile(
-                                "AUDIO",CACHE_FOLDER+"/"+audioPath.replace("\"", ""),audioPath.replace("\"", ""),transferUtility,"construapp");
+                                "AUDIO",CACHE_FOLDER+"/"+audioPath.replace("\"", ""),audioPath.replace("\"", ""),transferUtility);
                         lesson.getMultimediaAudiosFiles().add(audioMultimedia);
                     }
                     multimediaAudioAdapter.notifyDataSetChanged();
@@ -177,7 +177,7 @@ public class LessonActivity extends AppCompatActivity {
                     for (String documentPath: documentPathsList) {
                         MultimediaFile documentMultimedia = new MultimediaFile(
                                 "DOCUMENT",ABSOLUTE_STORAGE_PATH+"/"+PROJECT_FOLDER+"/"+documentPath.replace("\"", ""),
-                                documentPath.replace("\"", ""),transferUtility,"construapp");
+                                documentPath.replace("\"", ""),transferUtility);
                         lesson.getMultimediaDocumentsFiles().add(documentMultimedia);
                     }
                     multimediaDocumentAdapter.notifyDataSetChanged();

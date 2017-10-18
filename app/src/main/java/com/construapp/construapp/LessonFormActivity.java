@@ -17,8 +17,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
-import android.support.constraint.ConstraintLayout;
-import android.support.constraint.ConstraintSet;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -28,14 +26,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,22 +35,19 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.android.volley.VolleyError;
-import com.construapp.construapp.models.Constants;
+import com.construapp.construapp.models.General;
 import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.models.MultimediaFile;
 import com.construapp.construapp.multimedia.MultimediaAudioAdapter;
 import com.construapp.construapp.multimedia.MultimediaDocumentAdapter;
 import com.construapp.construapp.multimedia.MultimediaPictureAdapter;
-import com.construapp.construapp.threading.RetrieveFeedTask;
 import com.construapp.construapp.threading.api.VolleyCreateLesson;
 import com.construapp.construapp.threading.api.VolleyPostS3;
 
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.concurrent.ExecutionException;
 
 public class LessonFormActivity extends AppCompatActivity {
 
@@ -108,7 +97,7 @@ public class LessonFormActivity extends AppCompatActivity {
     private Lesson lesson;
 
     //CONSTANTS
-    private Constants constants;
+    private General constants;
 
     //MM ADAPTER
     MultimediaPictureAdapter multimediaPictureAdapter;
@@ -145,7 +134,7 @@ public class LessonFormActivity extends AppCompatActivity {
         lesson.initMultimediaFiles();
 
         //INIT CONSTANTS
-        constants = new Constants();
+        constants = new General();
 
         mStartRecording = true;
 
@@ -441,7 +430,7 @@ public class LessonFormActivity extends AppCompatActivity {
                                 }
                             });
 
-                    lesson.getMultimediaPicturesFiles().add(new MultimediaFile(EXTENSION_PICTURE,mPath, null,transferUtility,S3_BUCKET_NAME));
+                    lesson.getMultimediaPicturesFiles().add(new MultimediaFile(EXTENSION_PICTURE,mPath, null,transferUtility));
                     multimediaPictureAdapter.notifyDataSetChanged();
                     break;
 
@@ -451,7 +440,7 @@ public class LessonFormActivity extends AppCompatActivity {
                     {
                         mPath = getRealPathFromURI_API19(getApplicationContext(),data.getData());
 
-                        lesson.getMultimediaPicturesFiles().add(new MultimediaFile(EXTENSION_PICTURE,mPath, null,transferUtility,S3_BUCKET_NAME));
+                        lesson.getMultimediaPicturesFiles().add(new MultimediaFile(EXTENSION_PICTURE,mPath, null,transferUtility));
                         multimediaPictureAdapter.notifyDataSetChanged();
 
 
@@ -464,7 +453,7 @@ public class LessonFormActivity extends AppCompatActivity {
                     Uri selectedUri = data.getData();
 
                     lesson.getMultimediaDocumentsFiles().add(new MultimediaFile(EXTENSION_DOCUMENT,
-                            getPath(LessonFormActivity.this, selectedUri),null, transferUtility,S3_BUCKET_NAME));
+                            getPath(LessonFormActivity.this, selectedUri),null, transferUtility));
                     multimediaDocumentAdapter.notifyDataSetChanged();
                     break;
 
@@ -647,7 +636,7 @@ public class LessonFormActivity extends AppCompatActivity {
             Long tsLong = System.currentTimeMillis() / 1000;
             String ts = tsLong.toString();
             MultimediaFile audioMultimedia = new MultimediaFile(
-                    "AUDIO", ABSOLUTE_STORAGE_PATH + ts.toString() + ".3gp", null,transferUtility, S3_BUCKET_NAME);
+                    "AUDIO", ABSOLUTE_STORAGE_PATH + ts.toString() + ".3gp", null,transferUtility);
             startRecording(audioMultimedia);
             lesson.getMultimediaAudiosFiles().add(audioMultimedia);
         } else {

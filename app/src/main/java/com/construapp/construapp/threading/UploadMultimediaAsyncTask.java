@@ -1,10 +1,11 @@
-package com.construapp.construapp.models;
+package com.construapp.construapp.threading;
 
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.construapp.construapp.models.Constants;
 
 import java.io.File;
 
@@ -16,14 +17,12 @@ public class UploadMultimediaAsyncTask extends AsyncTask {
     private File file;
     private TransferUtility transferUtility;
     private String fileKey;
-    private String s3BucketName;
     private String extension;
 
-    public UploadMultimediaAsyncTask(File file, TransferUtility transferUtility, String fileKey, String s3BucketName, String extension) {
+    public UploadMultimediaAsyncTask(File file, TransferUtility transferUtility, String fileKey, String extension) {
         this.file = file;
         this.transferUtility = transferUtility;
         this.fileKey = fileKey;
-        this.s3BucketName = s3BucketName;
         this.extension = extension;
     }
 
@@ -31,7 +30,7 @@ public class UploadMultimediaAsyncTask extends AsyncTask {
     protected Object doInBackground(Object[] objects) {
         try {
             transferUtility.upload(
-                    s3BucketName,     /* The bucket to upload to */
+                    Constants.S3_BUCKET,     /* The bucket to upload to */
                     extension+"/"+fileKey,    /* The key for the uploaded object */
                     file        /* The file where the data to upload exists */
             );

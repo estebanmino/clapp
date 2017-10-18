@@ -11,6 +11,7 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.construapp.construapp.LoginActivity;
+import com.construapp.construapp.models.Constants;
 
 import org.json.JSONObject;
 
@@ -22,14 +23,14 @@ import java.io.UnsupportedEncodingException;
 
 public class VolleyLoginConnection {
 
-    public static void volleyLoginConnection(final LoginActivity.VolleyCallback callback, Context context, String email, String password) {
-        String BASE_URL = "http://construapp-api.ing.puc.cl";
-        String SESSIONS = "sessions";
-        String url = BASE_URL + "/" + SESSIONS;
+    public static void volleyLoginConnection(final LoginActivity.VolleyCallback callback,
+                                             Context context, String email, String password) {
+
+        String url = Constants.BASE_URL + "/" + Constants.SESSIONS;
         final RequestQueue queue = Volley.newRequestQueue(context);
 
-
         JSONObject jsonObject = new JSONObject();
+        // TODO: 18-10-2017 refactor json
         final String requestBody = "{\"session\":{\"email\":\"" + email + "\",\"password\":\"" + password + "\"}}";
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url,jsonObject,
@@ -48,7 +49,7 @@ public class VolleyLoginConnection {
         }) {
             @Override
             public String getBodyContentType() {
-                return "application/json; charset=utf-8";
+                return Constants.Q_CONTENTTYPE_JSON_UTF8;
             }
 
             @Override

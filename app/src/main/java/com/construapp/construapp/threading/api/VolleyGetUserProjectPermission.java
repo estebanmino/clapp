@@ -13,6 +13,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.construapp.construapp.LoginActivity;
+import com.construapp.construapp.models.Constants;
 
 import org.json.JSONObject;
 
@@ -28,16 +29,11 @@ public class VolleyGetUserProjectPermission {
     public static void volleyGetUserProjectPermission(final LoginActivity.VolleyProjectPermissionCallback callback,
                                             Context context, String user_id, String project_id) {
 
-        String BASE_URL = "http://construapp-api.ing.puc.cl";
-        String GET_PERMISSION = "get_permission";
-        String USERS = "users";
-        String PROJECTS = "projects";
+        SharedPreferences sharedpreferences = context.getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
+        final String userToken = sharedpreferences.getString(Constants.SP_TOKEN, "");
 
-
-        SharedPreferences sharedpreferences = context.getSharedPreferences("ConstruApp", Context.MODE_PRIVATE);
-        final String userToken = sharedpreferences.getString("token", "");
-
-        final String url = BASE_URL + "/" + USERS + "/" + user_id + "/" + PROJECTS + "/" + project_id + "/" + GET_PERMISSION;
+        final String url = Constants.BASE_URL + "/" + Constants.USERS + "/" + user_id + "/" +
+                Constants.PROJECTS + "/" + project_id + "/" + Constants.GET_PERMISSION;
 
         final RequestQueue queue = Volley.newRequestQueue(context);
 
@@ -62,8 +58,8 @@ public class VolleyGetUserProjectPermission {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String,String> params = new HashMap<String, String>();
-                params.put("Content-Type","application/json");
-                params.put("Authorization",userToken);
+                params.put(Constants.Q_CONTENTTYPE,Constants.Q_CONTENTTYPE_JSON);
+                params.put(Constants.Q_AUTHORIZATION,userToken);
                 return params;
             }
 

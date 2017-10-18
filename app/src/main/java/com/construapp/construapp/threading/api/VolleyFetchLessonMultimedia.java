@@ -13,6 +13,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.construapp.construapp.LessonActivity;
 import com.construapp.construapp.LessonFormActivity;
+import com.construapp.construapp.models.Constants;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -30,15 +31,11 @@ public class VolleyFetchLessonMultimedia {
     public static void volleyFetchLessonMultimedia(final LessonActivity.VolleyCallback callback,
                                     Context context,String lessonId) {
 
-        String BASE_URL = "http://construapp-api.ing.puc.cl";
-        String COMPANIES = "companies";
-        String LESSONS = "lessons";
+        SharedPreferences sharedpreferences = context.getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
+        String companyId = sharedpreferences.getString(Constants.SP_COMPANY, "");
+        final String userToken = sharedpreferences.getString(Constants.SP_TOKEN, "");
 
-        SharedPreferences sharedpreferences = context.getSharedPreferences("ConstruApp", Context.MODE_PRIVATE);
-        String companyId = sharedpreferences.getString("company_id", "");
-        final String userToken = sharedpreferences.getString("token", "");
-
-        String url = BASE_URL +"/"+COMPANIES+"/"+companyId+"/"+LESSONS+"/"+lessonId;
+        String url = Constants.BASE_URL +"/"+Constants.COMPANIES+"/"+companyId+"/"+Constants.LESSONS+"/"+lessonId;
 
         final RequestQueue queue = Volley.newRequestQueue(context);
 
@@ -60,14 +57,14 @@ public class VolleyFetchLessonMultimedia {
         }) {
             @Override
             public String getBodyContentType() {
-                return "application/json; charset=utf-8";
+                return Constants.Q_CONTENTTYPE_JSON_UTF8;
             }
 
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String,String> params = new HashMap<String, String>();
-                params.put("Content-Type","application/json");
-                params.put("Authorization",userToken);
+                params.put(Constants.Q_CONTENTTYPE,Constants.Q_CONTENTTYPE_JSON);
+                params.put(Constants.Q_AUTHORIZATION,userToken);
                 return params;
             }
         };
