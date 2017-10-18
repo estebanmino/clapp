@@ -9,18 +9,9 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.construapp.construapp.LessonFormActivity;
 import com.construapp.construapp.LoginActivity;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonParser;
-
-import org.json.JSONObject;
-
-import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,10 +19,10 @@ import java.util.Map;
  * Created by ESTEBANFML on 18-10-2017.
  */
 
-public class VolleyGetProjectPermission {
+public class VolleyGetUserProject {
 
-    public static void volleyGetProjectPermission(final LoginActivity.VolleyProjectsCallback callback,
-                                          Context context, String user_id) {
+    public static void volleyGetUserProject(final LoginActivity.VolleyProjectsCallback callback,
+                                            Context context, String user_id) {
 
         String BASE_URL = "http://construapp-api.ing.puc.cl";
         String GET_PROJECTS = "get_projects";
@@ -57,7 +48,7 @@ public class VolleyGetProjectPermission {
                 Log.i("RESPONSEPER", error.toString());
                 Log.i("URL",url);
                 Log.i("TOKEN",userToken);
-                //callback.onErrorResponse(error);
+                callback.onErrorResponse(error);
             }
 
         }) {

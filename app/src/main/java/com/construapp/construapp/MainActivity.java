@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
         {
             SharedPreferences mySPrefs = getSharedPreferences("ConstruApp", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = mySPrefs.edit();
-            editor.remove("token");
+            editor.clear();
             editor.apply();
 
 

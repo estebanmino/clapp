@@ -15,7 +15,8 @@ import android.content.SharedPreferences;
 
 import com.android.volley.VolleyError;
 import com.construapp.construapp.threading.RetrieveFeedTask;
-import com.construapp.construapp.threading.api.VolleyGetProjectPermission;
+import com.construapp.construapp.threading.api.VolleyGetUserProject;
+import com.construapp.construapp.threading.api.VolleyGetUserProjectPermission;
 import com.construapp.construapp.threading.api.VolleyLoginConnection;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -46,10 +47,6 @@ public class LoginActivity extends AppCompatActivity {
 
         SharedPreferences mySPrefs =getSharedPreferences("ConstruApp", Context.MODE_PRIVATE);
         boolean token_exists = mySPrefs.contains("token");
-        if(token_exists)
-        {
-            startActivity(MainActivity.getIntent(LoginActivity.this));
-        }
 
         btnSignin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,15 +69,39 @@ public class LoginActivity extends AppCompatActivity {
                         editor.putString("company_id", company_id);
                         editor.apply();
 
-                        VolleyGetProjectPermission.volleyGetProjectPermission(new VolleyProjectsCallback() {
+                        VolleyGetUserProject.volleyGetUserProject(new VolleyProjectsCallback() {
                             @Override
                             public void onSuccess(String result) {
                                 JsonParser parser = new JsonParser();
                                 JsonArray obj = (JsonArray) parser.parse(result);
                                 editor.putString("projects", result);
-                                JsonElement jsonObject = obj.get(0);
-                                editor.putString("actual_project", jsonObject.getAsJsonObject().get("id").toString());
-                                editor.apply();
+                                if (obj.size() != 0) {
+                                    editor.putBoolean("has_projects", true);
+                                    editor.apply();
+                                    JsonElement jsonObject = obj.get(0);
+                                    editor.putString("actual_project", jsonObject.getAsJsonObject().get("id").toString());
+                                    editor.apply();
+                                    VolleyGetUserProjectPermission.volleyGetUserProjectPermission(new VolleyProjectPermissionCallback() {
+                                        @Override
+                                        public void onSuccess(JSONObject result) {
+                                            try {
+                                                editor.putString("name_permission", result.get("has_permission").toString());
+                                                editor.apply();
+                                                startActivity(MainActivity.getIntent(LoginActivity.this));
+                                            } catch (Exception e) {
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onErrorResponse(VolleyError result) {
+
+                                        }
+                                    }, LoginActivity.this, user_id, jsonObject.getAsJsonObject().get("id").toString());
+                                }
+                                else {
+                                    editor.putBoolean("has_projects", false);
+                                    editor.apply();
+                                }
                             }
 
                             @Override
@@ -141,6 +162,11 @@ public class LoginActivity extends AppCompatActivity {
 
     public interface VolleyProjectsCallback{
         void onSuccess(String result);
+        void onErrorResponse(VolleyError result);
+    }
+
+    public interface VolleyProjectPermissionCallback{
+        void onSuccess(JSONObject result);
         void onErrorResponse(VolleyError result);
     }
 

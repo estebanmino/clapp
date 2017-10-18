@@ -41,33 +41,32 @@ public class LessonsFragment extends Fragment {
         ArrayList<Lesson> lessonList = new ArrayList<>();
         SharedPreferences sharedpreferences = getActivity().getSharedPreferences("ConstruApp", Context.MODE_PRIVATE);
         String company_id = sharedpreferences.getString("company_id", "");
-        RetrieveFeedTask lesson_fetcher=new RetrieveFeedTask("fetch-lessons");
-        String lessons="";
-        try {
-            lessons = lesson_fetcher.execute(company_id).get();
-        }
-        catch(InterruptedException e) {}
-        catch (ExecutionException e) {}
-
-        try
-        {
-            JSONArray lesson_array = new JSONArray(lessons);
-            for(int i=0;i<lesson_array.length();i++)
-            {
-                JSONObject curr = lesson_array.getJSONObject(i);
-                String name = curr.getString("name");
-                String learning = curr.getString("learning");
-                String id = curr.getString("id");
-                Lesson lesson_1 = new Lesson();
-                lesson_1.setName(name);
-                lesson_1.setDescription(learning);
-                lesson_1.setId(id);
-                lessonList.add(lesson_1);
+        if (sharedpreferences.getBoolean("has_projects", false)) {
+            RetrieveFeedTask lesson_fetcher = new RetrieveFeedTask("fetch-lessons");
+            String lessons = "";
+            try {
+                lessons = lesson_fetcher.execute(company_id).get();
+            } catch (InterruptedException e) {
+            } catch (ExecutionException e) {
             }
+
+            try {
+                JSONArray lesson_array = new JSONArray(lessons);
+                for (int i = 0; i < lesson_array.length(); i++) {
+                    JSONObject curr = lesson_array.getJSONObject(i);
+                    String name = curr.getString("name");
+                    String learning = curr.getString("learning");
+                    String id = curr.getString("id");
+                    Lesson lesson_1 = new Lesson();
+                    lesson_1.setName(name);
+                    lesson_1.setDescription(learning);
+                    lesson_1.setId(id);
+                    lessonList.add(lesson_1);
+                }
+            } catch (JSONException e) {
+            }
+            lessonsAdapter = new LessonsAdapter(getActivity(), lessonList);
         }
-        catch(JSONException e)
-        {}
-        lessonsAdapter = new LessonsAdapter(getActivity(), lessonList);
 
         return inflater.inflate(R.layout.fragment_my_lessons, container, false);
     }
