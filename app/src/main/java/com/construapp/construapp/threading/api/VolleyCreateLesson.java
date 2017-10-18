@@ -13,12 +13,8 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.construapp.construapp.LessonFormActivity;
-import com.construapp.construapp.LoginActivity;
 import com.construapp.construapp.models.Constants;
-import com.construapp.construapp.models.General;
-
 import org.json.JSONObject;
-
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
