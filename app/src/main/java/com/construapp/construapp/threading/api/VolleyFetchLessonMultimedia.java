@@ -68,6 +68,7 @@ public class VolleyFetchLessonMultimedia {
                 Map<String,String> params = new HashMap<String, String>();
                 params.put("Content-Type","application/json");
                 params.put("Authorization",userToken);
+
                 return params;
             }
         };
