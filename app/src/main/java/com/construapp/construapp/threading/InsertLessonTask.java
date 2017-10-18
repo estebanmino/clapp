@@ -14,28 +14,16 @@ import java.util.concurrent.ExecutionException;
 
 public class InsertLessonTask extends AsyncTask<Void,Void,Boolean> {
 
-    private String name;
-    private String summary;
-    private String id;
+    private Lesson lesson;
     private Context context;
 
-    public InsertLessonTask(String name,String summary,String id,Context context)
+    public InsertLessonTask(Lesson lesson,Context context)
     {
-        this.name=name;
-        this.summary=summary;
-        this.id=id;
-        this.context=context;
+        this.lesson=lesson;
 
     }
     @Override
     protected Boolean doInBackground(Void... params) {
-
-
-
-                    Lesson lesson = new Lesson();
-                    lesson.setName(name);
-                    lesson.setDescription(summary);
-                    lesson.setId(id);
 
                     AppDatabase.getDatabase(context.getApplicationContext()).lessonDAO().insertLesson(lesson);
 
