@@ -46,15 +46,7 @@ public class LessonActivity extends AppCompatActivity {
     private static final String LESSON_ID = "id";
     private static final String PROJECT_FOLDER = "ConstruApp";
 
-    private static final String EXTENSION_PICTURE = "PICTURE";
-    private static final String EXTENSION_DOCUMENT = "DOCUMENT";
-    private static final String EXTENSION_AUDIO = "AUDIO";
-
-
-
-
     private Lesson lesson = new Lesson();
-    public final static String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
     private int userPermission;
 
     //CONSTANTS
@@ -152,11 +144,11 @@ public class LessonActivity extends AppCompatActivity {
                     ArrayList<String> documentPathsList  = new ArrayList<>();
 
                     for (String fileKey: arrayList) {
-                        if (fileKey.contains(EXTENSION_PICTURE)){
+                        if (fileKey.contains(Constants.S3_IMAGES_PATH)){
                             picturePathsList.add(fileKey);
-                        } else if (fileKey.contains(EXTENSION_AUDIO)) {
+                        } else if (fileKey.contains(Constants.S3_AUDIOS_PATH)) {
                             audioPathsList.add(fileKey);
-                        } else if (fileKey.contains(EXTENSION_DOCUMENT)) {
+                        } else if (fileKey.contains(Constants.S3_DOCS_PATH)) {
                             documentPathsList.add(fileKey);
                         }
                     }
@@ -164,20 +156,20 @@ public class LessonActivity extends AppCompatActivity {
                     String[] pictureArray = picturePathsList.toArray(new String[0]);
                     for (String path: pictureArray){
                         lesson.getMultimediaPicturesFiles().add(new MultimediaFile(
-                                EXTENSION_PICTURE,CACHE_FOLDER+"/"+path.replace("\"", ""),path.replace("\"", ""),transferUtility));
+                                Constants.S3_IMAGES_PATH,CACHE_FOLDER+"/"+path.replace("\"", ""),path.replace("\"", ""),transferUtility));
                     }
                     multimediaPictureAdapter.notifyDataSetChanged();
 
                     for (String audioPath: audioPathsList) {
                         MultimediaFile audioMultimedia = new MultimediaFile(
-                                EXTENSION_AUDIO,CACHE_FOLDER+"/"+audioPath.replace("\"", ""),audioPath.replace("\"", ""),transferUtility);
+                                Constants.S3_AUDIOS_PATH,CACHE_FOLDER+"/"+audioPath.replace("\"", ""),audioPath.replace("\"", ""),transferUtility);
                         lesson.getMultimediaAudiosFiles().add(audioMultimedia);
                     }
                     multimediaAudioAdapter.notifyDataSetChanged();
 
                     for (String documentPath: documentPathsList) {
                         MultimediaFile documentMultimedia = new MultimediaFile(
-                                EXTENSION_DOCUMENT,ABSOLUTE_STORAGE_PATH+"/"+PROJECT_FOLDER+"/"+documentPath.replace("\"", ""),
+                                Constants.S3_DOCS_PATH,ABSOLUTE_STORAGE_PATH+"/"+PROJECT_FOLDER+"/"+documentPath.replace("\"", ""),
                                 documentPath.replace("\"", ""),transferUtility);
                         lesson.getMultimediaDocumentsFiles().add(documentMultimedia);
                     }
@@ -222,7 +214,6 @@ public class LessonActivity extends AppCompatActivity {
         Intent intent = new Intent(this, ShowInfo.class);
         TextView projectName = (TextView) findViewById(R.id.text_lesson_name);
         String message = projectName.getText().toString();
-        intent.putExtra(EXTRA_MESSAGE, message);
         startActivity(intent);
     }
 

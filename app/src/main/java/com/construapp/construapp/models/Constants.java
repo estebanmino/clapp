@@ -26,7 +26,7 @@ public interface Constants {
     public static final String SP_HAS_PROJECTS = "has_projects";
     public static final String SP_HAS_PERMISSION = "has_permission";
     public static final String SP_PROJECTS = "projects";
-    public static final String SP_ACTUAL_PROJECT = "actual_projects";
+    public static final String SP_ACTUAL_PROJECT = "actual_project";
     public static final String SP_USER_PERMISSION_NAME = "name_permission";
     public static final String SP_USER_PERMISSION = "user_permission";
 
@@ -40,7 +40,7 @@ public interface Constants {
     public static final String S3_BUCKET = "construapp";
     public static final String S3_IMAGES_PATH = "images";
     public static final String S3_VIDEOS_PATH = "videos";
-    public static final String S3_AUDIOS_PATH = "sudios";
+    public static final String S3_AUDIOS_PATH = "audios";
     public static final String S3_DOCS_PATH = "docs";
 
 

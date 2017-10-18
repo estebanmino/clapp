@@ -62,9 +62,6 @@ public class LessonFormActivity extends AppCompatActivity {
     private static final int FILES_REQUEST = 1882;
 
     private static String ABSOLUTE_STORAGE_PATH;
-    private static final String EXTENSION_PICTURE = "PICTURE";
-    private static final String EXTENSION_DOCUMENT = "DOCUMENT";
-    private static final String EXTENSION_AUDIO = "AUDIO";
     private static final String EXTENSION_AUDIO_FORMAT = ".3gp";
 
     //XML ELEMENTS
@@ -430,7 +427,7 @@ public class LessonFormActivity extends AppCompatActivity {
                                 }
                             });
 
-                    lesson.getMultimediaPicturesFiles().add(new MultimediaFile(EXTENSION_PICTURE,mPath, null,transferUtility));
+                    lesson.getMultimediaPicturesFiles().add(new MultimediaFile(Constants.S3_IMAGES_PATH,mPath, null,transferUtility));
                     multimediaPictureAdapter.notifyDataSetChanged();
                     break;
 
@@ -440,7 +437,7 @@ public class LessonFormActivity extends AppCompatActivity {
                     {
                         mPath = getRealPathFromURI_API19(getApplicationContext(),data.getData());
 
-                        lesson.getMultimediaPicturesFiles().add(new MultimediaFile(EXTENSION_PICTURE,mPath, null,transferUtility));
+                        lesson.getMultimediaPicturesFiles().add(new MultimediaFile(Constants.S3_IMAGES_PATH,mPath, null,transferUtility));
                         multimediaPictureAdapter.notifyDataSetChanged();
 
 
@@ -452,7 +449,7 @@ public class LessonFormActivity extends AppCompatActivity {
                 case FILES_REQUEST:
                     Uri selectedUri = data.getData();
 
-                    lesson.getMultimediaDocumentsFiles().add(new MultimediaFile(EXTENSION_DOCUMENT,
+                    lesson.getMultimediaDocumentsFiles().add(new MultimediaFile(Constants.S3_DOCS_PATH,
                             getPath(LessonFormActivity.this, selectedUri),null, transferUtility));
                     multimediaDocumentAdapter.notifyDataSetChanged();
                     break;
@@ -636,7 +633,7 @@ public class LessonFormActivity extends AppCompatActivity {
             Long tsLong = System.currentTimeMillis() / 1000;
             String ts = tsLong.toString();
             MultimediaFile audioMultimedia = new MultimediaFile(
-                    EXTENSION_AUDIO, ABSOLUTE_STORAGE_PATH + ts.toString() + EXTENSION_AUDIO_FORMAT, null,transferUtility);
+                    Constants.S3_AUDIOS_PATH, ABSOLUTE_STORAGE_PATH + ts.toString() + EXTENSION_AUDIO_FORMAT, null,transferUtility);
             startRecording(audioMultimedia);
             lesson.getMultimediaAudiosFiles().add(audioMultimedia);
         } else {
