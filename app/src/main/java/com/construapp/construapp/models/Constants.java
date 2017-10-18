@@ -38,6 +38,10 @@ public interface Constants {
 
     //S3
     public static final String S3_BUCKET = "construapp";
+    public static final String S3_IMAGES_PATH = "images";
+    public static final String S3_VIDEOS_PATH = "videos";
+    public static final String S3_AUDIOS_PATH = "sudios";
+    public static final String S3_DOCS_PATH = "docs";
 
 
 
