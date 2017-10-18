@@ -204,7 +204,7 @@ public class LessonFormActivity extends AppCompatActivity {
                 String lesson_motivation = "Aprendizaje";
                 String lesson_learning = editLessonDescription.getText().toString();
                 //TODO FIJAR PROYECTO CUANDO EXISTA
-                String project_id = "11";
+                String project_id = sharedpreferences.getString("actual_project","");
                 final String response = "";
 
                 VolleyCreateLesson.volleyCreateLesson(new VolleyCallback() {
