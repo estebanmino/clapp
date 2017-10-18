@@ -42,6 +42,7 @@ public interface Constants {
     public static final String S3_VIDEOS_PATH = "videos";
     public static final String S3_AUDIOS_PATH = "audios";
     public static final String S3_DOCS_PATH = "docs";
+    public static final String S3_LESSONS_PATH = "lessons";
 
 
 

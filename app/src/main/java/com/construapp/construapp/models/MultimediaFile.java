@@ -18,6 +18,11 @@ public class MultimediaFile {
     private String fileKey;
     private String fileS3Key;
     private TransferUtility transferUtility;
+
+    public void setExtension(String extension) {
+        this.extension = extension;
+    }
+
     private String extension;
     private int arrayPosition;
 

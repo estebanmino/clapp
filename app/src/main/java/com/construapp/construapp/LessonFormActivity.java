@@ -202,14 +202,20 @@ public class LessonFormActivity extends AppCompatActivity {
                             final String new_lesson_id = result.get("id").toString();
                             String path_input = "";
                             for (MultimediaFile multimediaFile : lesson.getMultimediaPicturesFiles()) {
-                                path_input += multimediaFile.getExtension() + "/"
-                                        + multimediaFile.getmPath().substring(multimediaFile.getmPath().lastIndexOf("/") + 1) + ";";
+                                multimediaFile.setExtension(Constants.S3_LESSONS_PATH+ "/"+ new_lesson_id +"/" +
+                                        multimediaFile.getExtension());
+                                path_input += multimediaFile.getExtension() + "/" +
+                                        multimediaFile.getmPath().substring(multimediaFile.getmPath().lastIndexOf("/") + 1) + ";";
                             }
                             for (MultimediaFile multimediaFile : lesson.getMultimediaAudiosFiles()) {
+                                multimediaFile.setExtension(Constants.S3_LESSONS_PATH+ "/"+ new_lesson_id +"/" +
+                                        multimediaFile.getExtension());
                                 path_input += multimediaFile.getExtension() + "/"
                                         + multimediaFile.getmPath().substring(multimediaFile.getmPath().lastIndexOf("/") + 1) + ";";
                             }
                             for (MultimediaFile multimediaFile : lesson.getMultimediaDocumentsFiles()) {
+                                multimediaFile.setExtension(Constants.S3_LESSONS_PATH+ "/"+ new_lesson_id +"/" +
+                                        multimediaFile.getExtension());
                                 path_input += multimediaFile.getExtension() + "/"
                                         + multimediaFile.getmPath().substring(multimediaFile.getmPath().lastIndexOf("/") + 1) + ";";
                             }

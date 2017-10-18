@@ -156,20 +156,23 @@ public class LessonActivity extends AppCompatActivity {
                     String[] pictureArray = picturePathsList.toArray(new String[0]);
                     for (String path: pictureArray){
                         lesson.getMultimediaPicturesFiles().add(new MultimediaFile(
-                                Constants.S3_IMAGES_PATH,CACHE_FOLDER+"/"+path.replace("\"", ""),path.replace("\"", ""),transferUtility));
+                                Constants.S3_LESSONS_PATH+"/"+lesson.getId()+"/"+
+                                        Constants.S3_IMAGES_PATH,CACHE_FOLDER+"/"+path.substring(path.lastIndexOf("/")+1),path.replace("\"", ""),transferUtility));
                     }
                     multimediaPictureAdapter.notifyDataSetChanged();
 
                     for (String audioPath: audioPathsList) {
                         MultimediaFile audioMultimedia = new MultimediaFile(
-                                Constants.S3_AUDIOS_PATH,CACHE_FOLDER+"/"+audioPath.replace("\"", ""),audioPath.replace("\"", ""),transferUtility);
+                                Constants.S3_LESSONS_PATH+"/"+lesson.getId()+"/"+
+                                    Constants.S3_AUDIOS_PATH,CACHE_FOLDER+"/"+audioPath.substring(audioPath.lastIndexOf("/")+1),audioPath.replace("\"", ""),transferUtility);
                         lesson.getMultimediaAudiosFiles().add(audioMultimedia);
                     }
                     multimediaAudioAdapter.notifyDataSetChanged();
 
                     for (String documentPath: documentPathsList) {
                         MultimediaFile documentMultimedia = new MultimediaFile(
-                                Constants.S3_DOCS_PATH,ABSOLUTE_STORAGE_PATH+"/"+PROJECT_FOLDER+"/"+documentPath.replace("\"", ""),
+                                Constants.S3_LESSONS_PATH+"/"+lesson.getId()+"/"+
+                                    Constants.S3_DOCS_PATH,ABSOLUTE_STORAGE_PATH+"/"+PROJECT_FOLDER+"/"+documentPath.substring(documentPath.lastIndexOf("/")+1),
                                 documentPath.replace("\"", ""),transferUtility);
                         lesson.getMultimediaDocumentsFiles().add(documentMultimedia);
                     }
