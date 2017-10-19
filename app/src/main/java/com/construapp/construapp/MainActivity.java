@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -12,6 +13,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,9 +22,22 @@ import com.construapp.construapp.cache.LRUCache;
 import com.construapp.construapp.microblog.MicroblogFragment;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.General;
+import com.construapp.construapp.models.Lesson;
+import com.construapp.construapp.models.Project;
+import com.construapp.construapp.sidebar.SidebarAdapter;
 
 import android.content.SharedPreferences;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,16 +50,46 @@ public class MainActivity extends AppCompatActivity {
     private LRUCache lruCache;
     private int userPermission;
 
+    private String[] mProjectTitles;
+    private DrawerLayout mDrawerLayout;
+    private ListView mDrawerList;
+
+    private SidebarAdapter sidebarAdapter;
+    private SharedPreferences sharedpreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        sharedpreferences = getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
+        try {
+            JSONArray jsonArray = new JSONArray(sharedpreferences.getString(Constants.SP_PROJECTS, ""));
+            mProjectTitles = new String[(jsonArray.length())];
+
+            Map<String, String> projects = new HashMap<String, String>();
+            for (int i=0; i < jsonArray.length(); i++) {
+                JSONObject project = (JSONObject) jsonArray.get(i);
+                projects.put(project.getString("name"),project.getString("id"));
+                mProjectTitles[i] = project.getString("name");
+            }
+            mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+            mDrawerList = (ListView) findViewById(R.id.left_drawer);
+
+
+            // Set the adapter for the list view
+            sidebarAdapter = new SidebarAdapter(this, projects);
+            mDrawerList.setAdapter(sidebarAdapter);
+            // Set the list's click listener
+            //mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+            setDrawerListOnClickListener();
+        } catch (Exception e) {}
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        SharedPreferences sharedpreferences = getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
+        sharedpreferences = getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
 
         constants = new General();
 
@@ -72,6 +117,18 @@ public class MainActivity extends AppCompatActivity {
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
+    }
+
+    public void setDrawerListOnClickListener(){
+        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                String map = (String) sidebarAdapter.getItem(position);
+                final SharedPreferences.Editor editor = sharedpreferences.edit();
+                editor.putString(Constants.SP_ACTUAL_PROJECT,map);
+                editor.apply();
+            }
+        });
     }
 
     @Override
