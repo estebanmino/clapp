@@ -18,7 +18,8 @@ import com.construapp.construapp.models.Connectivity;
 import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.threading.GetLessonsTask;
 import com.construapp.construapp.threading.InsertLessonTask;
-import com.construapp.construapp.threading.RetrieveFeedTask;
+import com.construapp.construapp.threading.api.RetrieveFeedTask;
+import com.construapp.construapp.models.Constants;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,10 +41,9 @@ public class LessonsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
-        lessonList = new ArrayList<>();
-        SharedPreferences sharedpreferences = getActivity().getSharedPreferences("ConstruApp", Context.MODE_PRIVATE);
-        String company_id = sharedpreferences.getString("company_id", "");
+        List<Lesson> lessonList = new ArrayList<>();
+        SharedPreferences sharedpreferences = getActivity().getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
+        String company_id = sharedpreferences.getString(Constants.SP_COMPANY, "");
         RetrieveFeedTask lesson_fetcher=new RetrieveFeedTask("fetch-lessons");
         String lessons="";
 
@@ -83,7 +83,6 @@ public class LessonsFragment extends Fragment {
                     lesson.setUser_id(user_id);
                     lesson.setProject_id(project_id);
                     lesson.setCompany_id(company_id);
-
 
                     try {
                         new InsertLessonTask(lesson, getContext()).execute().get();
@@ -125,6 +124,7 @@ public class LessonsFragment extends Fragment {
         }
 
         lessonsAdapter = new LessonsAdapter(getActivity(), lessonList);
+
 
         return inflater.inflate(R.layout.fragment_my_lessons, container, false);
     }

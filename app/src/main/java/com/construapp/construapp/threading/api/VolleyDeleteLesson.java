@@ -15,6 +15,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.construapp.construapp.LessonActivity;
 import com.construapp.construapp.LessonFormActivity;
+import com.construapp.construapp.models.Constants;
 
 import org.json.JSONObject;
 
@@ -32,17 +33,12 @@ public class VolleyDeleteLesson {
                                           Context context,
                                           String lesson_id) {
 
-        String BASE_URL = "http://construapp-api.ing.puc.cl";
-        String COMPANIES = "companies";
-        String LESSONS = "lessons";
-        SharedPreferences sharedpreferences = context.getSharedPreferences("ConstruApp", Context.MODE_PRIVATE);
-        String company_id = sharedpreferences.getString("company_id", "");
-        String user_id = sharedpreferences.getString("user_id", "");
-        final String userToken = sharedpreferences.getString("token", "");
+        SharedPreferences sharedpreferences = context.getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
+        String company_id = sharedpreferences.getString(Constants.SP_COMPANY, "");
+        final String userToken = sharedpreferences.getString(Constants.SP_TOKEN, "");
 
-        String url = BASE_URL + "/" + COMPANIES + "/" + company_id + "/" + LESSONS + "/" + lesson_id;
+        String url = Constants.BASE_URL + "/" + Constants.COMPANIES + "/" + company_id + "/" + Constants.LESSONS + "/" + lesson_id;
         final RequestQueue queue = Volley.newRequestQueue(context);
-
 
         StringRequest jsonObjectRequest = new StringRequest(Request.Method.DELETE, url,
             new Response.Listener<String>()
@@ -58,13 +54,12 @@ public class VolleyDeleteLesson {
                     callback.onErrorResponse(error);
                 }
             }
-
         ){
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String,String> params = new HashMap<String, String>();
-                params.put("Content-Type","application/json");
-                params.put("Authorization",userToken);
+                params.put(Constants.Q_CONTENTTYPE,Constants.Q_CONTENTTYPE_JSON);
+                params.put(Constants.Q_AUTHORIZATION,userToken);
                 return params;
             }
         };
