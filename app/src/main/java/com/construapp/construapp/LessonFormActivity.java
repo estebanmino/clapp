@@ -236,6 +236,13 @@ public class LessonFormActivity extends AppCompatActivity {
                                         + multimediaFile.getmPath().substring(multimediaFile.getmPath().lastIndexOf("/") + 1) + ";";
                             }
 
+                            for (MultimediaFile multimediaFile : lesson.getMultimediaVideosFiles()) {
+                                multimediaFile.setExtension(Constants.S3_LESSONS_PATH+ "/"+ new_lesson_id +"/" +
+                                        multimediaFile.getExtension());
+                                path_input += multimediaFile.getExtension() + "/"
+                                        + multimediaFile.getmPath().substring(multimediaFile.getmPath().lastIndexOf("/") + 1) + ";";
+                            }
+
                             VolleyPostS3.volleyPostS3(new VolleyCallback() {
                                 @Override
                                 public void onSuccess(JSONObject result) {
@@ -246,6 +253,9 @@ public class LessonFormActivity extends AppCompatActivity {
                                         multimediaFile.initUploadThread();
                                     }
                                     for (MultimediaFile multimediaFile: lesson.getMultimediaDocumentsFiles()) {
+                                        multimediaFile.initUploadThread();
+                                    }
+                                    for (MultimediaFile multimediaFile: lesson.getMultimediaVideosFiles()) {
                                         multimediaFile.initUploadThread();
                                     }
                                     startActivity(MainActivity.getIntent(LessonFormActivity.this));
