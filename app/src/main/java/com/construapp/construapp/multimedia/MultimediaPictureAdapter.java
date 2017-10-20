@@ -30,7 +30,6 @@ import java.util.ArrayList;
 
 public class MultimediaPictureAdapter extends MultimediaAdapter {
 
-    private static String BUCKET_NAME = "construapp";
     private TransferUtility transferUtility;
 
     private static String FILE_TYPE = "image/*";

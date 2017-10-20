@@ -40,6 +40,7 @@ import com.construapp.construapp.models.MultimediaFile;
 import com.construapp.construapp.multimedia.MultimediaAudioAdapter;
 import com.construapp.construapp.multimedia.MultimediaDocumentAdapter;
 import com.construapp.construapp.multimedia.MultimediaPictureAdapter;
+import com.construapp.construapp.multimedia.MultimediaVideoAdapter;
 import com.construapp.construapp.threading.api.VolleyCreateLesson;
 import com.construapp.construapp.threading.api.VolleyPostS3;
 
@@ -58,9 +59,14 @@ public class LessonFormActivity extends AppCompatActivity {
     private static final int READ_EXTERNAL_REQUEST = 1884;
     private static final int RECORD_AUDIO_REQUEST = 1883;
     private static final int FILES_REQUEST = 1882;
+    private static final int CAMERA_REQUEST_FOR_VIDEO = 1880;
+
 
     private static String ABSOLUTE_STORAGE_PATH;
     private static final String EXTENSION_AUDIO_FORMAT = ".3gp";
+    private static final String VIDEO_FORMAT = ".mp4";
+    private static String APP_DIRECTORY = "ConstruApp";
+
 
     //XML ELEMENTS
     private TextView lessonName;
@@ -70,6 +76,7 @@ public class LessonFormActivity extends AppCompatActivity {
     private FloatingActionButton fabRecordAudio;
     private FloatingActionButton fabFiles;
     private FloatingActionButton fabSend;
+    private FloatingActionButton fabVideo;
     private EditText editLessonName;
     private EditText editLessonDescription;
     private TextView textRecording;
@@ -99,6 +106,7 @@ public class LessonFormActivity extends AppCompatActivity {
 
     //MM ADAPTER
     MultimediaPictureAdapter multimediaPictureAdapter;
+    MultimediaVideoAdapter multimediaVideoAdapter;
     MultimediaAudioAdapter multimediaAudioAdapter;
     MultimediaDocumentAdapter multimediaDocumentAdapter;
 
@@ -124,6 +132,7 @@ public class LessonFormActivity extends AppCompatActivity {
         fabRecordAudio = (FloatingActionButton) findViewById(R.id.fab_record_audio);
         fabSend = (FloatingActionButton) findViewById(R.id.fab_send);
         fabFiles = (FloatingActionButton) findViewById(R.id.fab_files);
+        fabVideo = (FloatingActionButton) findViewById(R.id.fab_video);
         textRecording = (TextView) findViewById(R.id.text_recording);
 
         //INIT NEW LESSON
@@ -151,6 +160,7 @@ public class LessonFormActivity extends AppCompatActivity {
         setFabSendOnClickListener();
         setFabRecordAudioOnClickListener();
         setFabFilesOnClickListener();
+        setFabVideoOnClickListener();
 
         ////HORIZONTAL IMAGES SCROLLING
 
@@ -162,6 +172,14 @@ public class LessonFormActivity extends AppCompatActivity {
         mPicturesRecyclerView.setLayoutManager(picturesLayoutManager);
         multimediaPictureAdapter = new MultimediaPictureAdapter(lesson.getMultimediaPicturesFiles(),LessonFormActivity.this);
         mPicturesRecyclerView.setAdapter(multimediaPictureAdapter);
+
+        //VIDEOS SCROLLING
+        LinearLayoutManager videosLayoutManager = new LinearLayoutManager(this);
+        videosLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        RecyclerView mVideosRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_videos);
+        mVideosRecyclerView.setLayoutManager(videosLayoutManager);
+        multimediaVideoAdapter = new MultimediaVideoAdapter(lesson.getMultimediaVideosFiles(),LessonFormActivity.this);
+        mVideosRecyclerView.setAdapter(multimediaVideoAdapter);
 
         //AUDIOS SCROLLING
         LinearLayoutManager audiosLayoutManager = new LinearLayoutManager(this);
@@ -336,9 +354,26 @@ public class LessonFormActivity extends AppCompatActivity {
         });
     }
 
-    private void dispatchTakePictureIntent() {
+    public void setFabVideoOnClickListener() {
+        fabVideo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (ContextCompat.checkSelfPermission(LessonFormActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    getWriteStoragePermissions();
+                }
+                else if (ContextCompat.checkSelfPermission(LessonFormActivity.this, Manifest.permission.CAMERA)
+                        != PackageManager.PERMISSION_GRANTED){
+                    getCameraPermissions();
+                }
+                else {
+                    dispatchRecordVideoIntent();
+                }
+            }
+        });
+    }
 
-        String APP_DIRECTORY = "ConstruApp";
+    private void dispatchTakePictureIntent() {
 
         File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), APP_DIRECTORY);
         boolean isDirectoryCreated = file.exists();
@@ -358,6 +393,30 @@ public class LessonFormActivity extends AppCompatActivity {
         takePictureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(newFile));
         startActivityForResult(takePictureIntent, CAMERA_REQUEST_PICTURE);
+    }
+
+    private void dispatchRecordVideoIntent() {
+
+        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), APP_DIRECTORY);
+        boolean isDirectoryCreated = file.exists();
+
+        if (!isDirectoryCreated) {
+            file.mkdir();
+        }
+        Long timestamp = System.currentTimeMillis() / 1000;
+        String imageName = timestamp.toString() + VIDEO_FORMAT;
+
+        mPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) +
+                File.separator +
+                APP_DIRECTORY + File.separator + imageName;
+        File newFile = new File(file, imageName);
+
+        Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+        takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(newFile));
+        takeVideoIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        if (takeVideoIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takeVideoIntent, CAMERA_REQUEST_FOR_VIDEO);
+        }
     }
 
     @Override
@@ -402,6 +461,18 @@ public class LessonFormActivity extends AppCompatActivity {
                 }
                 break;
 
+            case CAMERA_REQUEST_FOR_VIDEO:
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (ContextCompat.checkSelfPermission(LessonFormActivity.this,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE) == 0) {
+                        dispatchRecordVideoIntent();
+                    }
+                }   else {
+                    Toast.makeText(this, "Debes dar permiso para grabar videos", Toast.LENGTH_LONG).show();
+                }
+                break;
+
 
             case RECORD_AUDIO_REQUEST:
                 if (grantResults.length > 0
@@ -433,6 +504,27 @@ public class LessonFormActivity extends AppCompatActivity {
 
                     lesson.getMultimediaPicturesFiles().add(new MultimediaFile(Constants.S3_IMAGES_PATH,mPath, null,transferUtility));
                     multimediaPictureAdapter.notifyDataSetChanged();
+                    break;
+
+                case CAMERA_REQUEST_FOR_VIDEO:
+                    MediaScannerConnection.scanFile(this,
+                            new String[]{mPath}, null,
+                            new MediaScannerConnection.OnScanCompletedListener() {
+                                @Override
+                                public void onScanCompleted(String path, Uri uri) {
+                                    Log.i("ExternalStorage", "scanned"+path+":");
+                                    Log.i("ExternalStorage", "-> Uri"+uri);
+                                }
+                            });
+                    //Uri videoUri = data.getData();
+                    //mPath = filesHandler.getPath(ChatRoomActivity.this, videoUri);
+                    //multimedia = "videos/"+mPath.substring(mPath.lastIndexOf("/") + 1);
+                    //imageAttachment.setImageDrawable(ContextCompat.getDrawable(ChatRoomActivity.this, R.drawable.ic_play_video));
+                    //imageAttachment.setVisibility(View.VISIBLE);
+
+                    lesson.getMultimediaVideosFiles().add(new MultimediaFile(Constants.S3_VIDEOS_PATH,mPath, null,transferUtility));
+                    multimediaVideoAdapter.notifyDataSetChanged();
+
                     break;
 
                 case SELECT_IMAGE:
