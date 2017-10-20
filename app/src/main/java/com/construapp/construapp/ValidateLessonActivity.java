@@ -12,7 +12,10 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -72,6 +75,16 @@ public class ValidateLessonActivity extends AppCompatActivity {
     TextView textDeleteLesson;
     TextView textLessonName;
     TextView textLessonDescription;
+    Switch validateNameSwitch;
+    Switch validateDescriptionSwitch;
+    Switch validateImagesSwitch;
+    Switch validateAudiosSwitch;
+    Switch validateDocumentsSwitch;
+    EditText validateNameComment;
+    EditText validateDescriptionComment;
+    EditText validateImagesComment;
+    EditText validateAudiosComment;
+    EditText validateDocumentsComment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,10 +103,82 @@ public class ValidateLessonActivity extends AppCompatActivity {
         textLessonName = (TextView) findViewById(R.id.text_lesson_name);
         textLessonDescription = (TextView) findViewById(R.id.text_lesson_description);
 
+        validateNameSwitch = (Switch) findViewById(R.id.switch_lesson_name);
+        validateDescriptionSwitch = (Switch) findViewById(R.id.switch_lesson_description);
+        validateImagesSwitch = (Switch) findViewById(R.id.switch_lesson_images);
+        validateAudiosSwitch = (Switch) findViewById(R.id.switch_lesson_audios);
+        validateDocumentsSwitch = (Switch) findViewById(R.id.switch_lesson_documents);
+
+        validateNameComment = (EditText) findViewById(R.id.editText_validate_name_comment);
+        validateDescriptionComment = (EditText) findViewById(R.id.editText_validate_description_comment);
+        validateImagesComment = (EditText) findViewById(R.id.editText_validate_images_comment);
+        validateAudiosComment = (EditText) findViewById(R.id.editText_validate_audios_comment);
+        validateDocumentsComment = (EditText) findViewById(R.id.editText_validate_documents_comment);
+
         setLesson();
 
         textLessonName.setText(lesson.getName());
         textLessonDescription.setText(lesson.getDescription());
+
+        validateNameSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (isChecked){
+                    validateNameComment.setVisibility(View.VISIBLE);
+                }
+                else {
+                    validateNameComment.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        validateDescriptionSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (isChecked){
+                    validateDescriptionComment.setVisibility(View.VISIBLE);
+                }
+                else {
+                    validateDescriptionComment.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        validateImagesSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (isChecked){
+                    validateImagesComment.setVisibility(View.VISIBLE);
+                }
+                else {
+                    validateImagesComment.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        validateAudiosSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (isChecked){
+                    validateAudiosComment.setVisibility(View.VISIBLE);
+                }
+                else {
+                    validateAudiosComment.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        validateDocumentsSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (isChecked){
+                    validateDocumentsComment.setVisibility(View.VISIBLE);
+                }
+                else {
+                    validateDocumentsComment.setVisibility(View.GONE);
+                }
+            }
+        });
 
         ////HORIZONTAL IMAGES SCROLLING
 
@@ -235,6 +320,15 @@ public class ValidateLessonActivity extends AppCompatActivity {
         TextView projectName = (TextView) findViewById(R.id.text_lesson_name);
         String message = projectName.getText().toString();
         startActivity(intent);
+    }
+
+    public boolean checkedComments(){
+        if (validateNameSwitch.isChecked() || validateDescriptionSwitch.isChecked() || validateImagesSwitch.isChecked() || validateAudiosSwitch.isChecked() || validateDocumentsSwitch.isChecked()){
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     public void setLesson() {
