@@ -30,6 +30,7 @@ import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.sidebar.SidebarAdapter;
 import com.construapp.construapp.dbTasks.DeleteLessonTable;
 import com.construapp.construapp.dbTasks.InsertLessonTask;
+import com.construapp.construapp.threading.GetLessons;
 import com.construapp.construapp.validations.ValidateFragment;
 
 import android.content.SharedPreferences;
@@ -59,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
 
     private SidebarAdapter sidebarAdapter;
     private SharedPreferences sharedpreferences;
-    private JSONArray jsonLessons;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +89,10 @@ public class MainActivity extends AppCompatActivity {
             //mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
             setDrawerListOnClickListener();
         } catch (Exception e) {}
-        getLessons();
+
+        try {
+            new GetLessons(MainActivity.this).execute().get();
+        } catch (Exception e) {}
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -124,52 +127,7 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(mViewPager);
     }
 
-    public void getLessons() {
-        boolean is_connected = Connectivity.isConnected(MainActivity.this);
-        final Lesson lesson = new Lesson();
-        if(is_connected) {
 
-            VolleyGetLessons.volleyGetLessons(new VolleyStringCallback() {
-                @Override
-                public void onSuccess(String result) {
-                    Log.i("RESULT",result);
-                    try {
-                        jsonLessons = new JSONArray(result);
-                        for (int i = 0; i  < jsonLessons.length(); i++) {
-                            Log.i("JSON",jsonLessons.get(i).toString());
-                            JSONObject object = (JSONObject) jsonLessons.get(i);
-                            lesson.setName(object.get("name").toString());
-                            lesson.setDescription(object.get("summary").toString());
-                            lesson.setId(object.get("id").toString());
-                            //lesson.setDescription(learning);
-                            lesson.setMotivation(object.get("motivation").toString());
-                            lesson.setLearning(object.get("learning").toString());
-                            lesson.setValidation(object.get("validation").toString());
-                            lesson.setUser_id(object.get("user_id").toString());
-                            lesson.setProject_id(object.get("project_id").toString());
-                            lesson.setCompany_id(object.get("company_id").toString());
-                            try {
-                                new InsertLessonTask(lesson, MainActivity.this).execute().get();
-                                //databaseThread.addLesson(getActivity(),name,summary,id);
-                            } catch (ExecutionException e) {
-                                e.printStackTrace();
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        }
-
-
-                    } catch (Exception e) {}
-                }
-
-                @Override
-                public void onErrorResponse(VolleyError result) {
-
-                }
-            }, MainActivity.this);
-        }
-
-    }
 
     public void setDrawerListOnClickListener(){
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {

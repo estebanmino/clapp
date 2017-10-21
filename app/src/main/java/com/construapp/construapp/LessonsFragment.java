@@ -47,14 +47,14 @@ public class LessonsFragment extends Fragment {
 
         lessonsAdapter = new LessonsAdapter(getActivity(), lessonList);
 
-        return inflater.inflate(R.layout.fragment_my_lessons, container, false);
+        return inflater.inflate(R.layout.fragment_lessons, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        LessonsList = view.findViewById(R.id.my_lessons_list);
+        LessonsList = view.findViewById(R.id.lessons_list);
 
         LessonsList.setAdapter(lessonsAdapter);
         LessonsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
