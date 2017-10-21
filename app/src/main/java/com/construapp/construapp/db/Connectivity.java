@@ -1,4 +1,4 @@
-package com.construapp.construapp.models;
+package com.construapp.construapp.db;
 
 /**
  * Created by jose on 17-10-17.

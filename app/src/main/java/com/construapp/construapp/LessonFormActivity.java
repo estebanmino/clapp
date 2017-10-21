@@ -33,6 +33,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.android.volley.VolleyError;
 import com.construapp.construapp.lessonForm.RealPathUtil;
+import com.construapp.construapp.listeners.VolleyJSONCallback;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.General;
 import com.construapp.construapp.models.Lesson;
@@ -41,8 +42,8 @@ import com.construapp.construapp.multimedia.MultimediaAudioAdapter;
 import com.construapp.construapp.multimedia.MultimediaDocumentAdapter;
 import com.construapp.construapp.multimedia.MultimediaPictureAdapter;
 import com.construapp.construapp.multimedia.MultimediaVideoAdapter;
-import com.construapp.construapp.threading.api.VolleyCreateLesson;
-import com.construapp.construapp.threading.api.VolleyPostS3;
+import com.construapp.construapp.api.VolleyCreateLesson;
+import com.construapp.construapp.api.VolleyPostS3;
 
 import org.json.JSONObject;
 
@@ -211,7 +212,7 @@ public class LessonFormActivity extends AppCompatActivity {
                 //TODO FIJAR PROYECTO CUANDO EXISTA
                 String project_id = sharedpreferences.getString(Constants.SP_ACTUAL_PROJECT,"");
 
-                VolleyCreateLesson.volleyCreateLesson(new VolleyCallback() {
+                VolleyCreateLesson.volleyCreateLesson(new VolleyJSONCallback() {
                     @Override
                     public void onSuccess(JSONObject result) {
                         try {
@@ -243,7 +244,7 @@ public class LessonFormActivity extends AppCompatActivity {
                                         + multimediaFile.getmPath().substring(multimediaFile.getmPath().lastIndexOf("/") + 1) + ";";
                             }
 
-                            VolleyPostS3.volleyPostS3(new VolleyCallback() {
+                            VolleyPostS3.volleyPostS3(new VolleyJSONCallback() {
                                 @Override
                                 public void onSuccess(JSONObject result) {
                                     for (MultimediaFile multimediaFile: lesson.getMultimediaPicturesFiles()) {
@@ -753,8 +754,4 @@ public class LessonFormActivity extends AppCompatActivity {
         multimediaAudioAdapter.notifyDataSetChanged();
     }
 
-    public interface VolleyCallback{
-        void onSuccess(JSONObject result);
-        void onErrorResponse(VolleyError result);
-    }
 }

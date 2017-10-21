@@ -1,4 +1,4 @@
-package com.construapp.construapp.threading.api;
+package com.construapp.construapp.api;
 
 import android.content.Context;
 import android.util.Log;
@@ -11,6 +11,7 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.construapp.construapp.LoginActivity;
+import com.construapp.construapp.listeners.VolleyJSONCallback;
 import com.construapp.construapp.models.Constants;
 
 import org.json.JSONObject;
@@ -23,7 +24,7 @@ import java.io.UnsupportedEncodingException;
 
 public class VolleyLoginConnection {
 
-    public static void volleyLoginConnection(final LoginActivity.VolleyCallback callback,
+    public static void volleyLoginConnection(final VolleyJSONCallback callback,
                                              Context context, String email, String password) {
 
         String url = Constants.BASE_URL + "/" + Constants.SESSIONS;

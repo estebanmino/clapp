@@ -1,7 +1,8 @@
-package com.construapp.construapp.threading.api;
+package com.construapp.construapp.api;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -10,27 +11,29 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.construapp.construapp.LessonActivity;
+import com.construapp.construapp.LoginActivity;
+import com.construapp.construapp.listeners.VolleyJSONCallback;
 import com.construapp.construapp.models.Constants;
 
 import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by ESTEBANFML on 16-10-2017.
+ * Created by ESTEBANFML on 18-10-2017.
  */
 
-public class VolleyFetchLessonMultimedia {
+public class VolleyGetUserProjectPermission {
 
-    public static void volleyFetchLessonMultimedia(final LessonActivity.VolleyCallback callback,
-                                    Context context,String lessonId) {
+    public static void volleyGetUserProjectPermission(final VolleyJSONCallback callback,
+                                                      Context context, String user_id, String project_id) {
 
         SharedPreferences sharedpreferences = context.getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
-        String companyId = sharedpreferences.getString(Constants.SP_COMPANY, "");
         final String userToken = sharedpreferences.getString(Constants.SP_TOKEN, "");
 
-        String url = Constants.BASE_URL +"/"+Constants.COMPANIES+"/"+companyId+"/"+Constants.LESSONS+"/"+lessonId;
+        final String url = Constants.BASE_URL + "/" + Constants.USERS + "/" + user_id + "/" +
+                Constants.PROJECTS + "/" + project_id + "/" + Constants.GET_PERMISSION;
 
         final RequestQueue queue = Volley.newRequestQueue(context);
 
@@ -41,20 +44,17 @@ public class VolleyFetchLessonMultimedia {
                     @Override
                     public void onResponse(JSONObject  response) {
                         callback.onSuccess(response);
-
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                Log.i("RESPONSEPER", error.toString());
+                Log.i("URL",url);
+                Log.i("TOKEN",userToken);
                 callback.onErrorResponse(error);
             }
 
         }) {
-            @Override
-            public String getBodyContentType() {
-                return Constants.Q_CONTENTTYPE_JSON_UTF8;
-            }
-
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String,String> params = new HashMap<String, String>();
@@ -62,6 +62,7 @@ public class VolleyFetchLessonMultimedia {
                 params.put(Constants.Q_AUTHORIZATION,userToken);
                 return params;
             }
+
         };
         queue.add(jsonObjectRequest);
     }

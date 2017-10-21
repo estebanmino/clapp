@@ -1,8 +1,9 @@
-package com.construapp.construapp.models;
+package com.construapp.construapp.db;
 
 import android.arch.persistence.room.TypeConverter;
 import android.util.Log;
 
+import com.construapp.construapp.models.MultimediaFile;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 

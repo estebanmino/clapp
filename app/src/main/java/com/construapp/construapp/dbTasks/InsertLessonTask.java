@@ -1,12 +1,10 @@
-package com.construapp.construapp.threading;
+package com.construapp.construapp.dbTasks;
 
 import android.content.Context;
 import android.os.AsyncTask;
 
-import com.construapp.construapp.models.AppDatabase;
+import com.construapp.construapp.db.AppDatabase;
 import com.construapp.construapp.models.Lesson;
-
-import java.util.concurrent.ExecutionException;
 
 /**
  * Created by jose on 17-10-17.

@@ -1,10 +1,9 @@
-package com.construapp.construapp.threading;
+package com.construapp.construapp.dbTasks;
 
 import android.content.Context;
 import android.os.AsyncTask;
 
-import com.construapp.construapp.models.AppDatabase;
-import com.construapp.construapp.models.Lesson;
+import com.construapp.construapp.db.AppDatabase;
 
 /**
  * Created by ESTEBANFML on 20-10-2017.

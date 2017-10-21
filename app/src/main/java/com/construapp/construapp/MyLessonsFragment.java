@@ -14,31 +14,36 @@ import android.widget.ListView;
 import android.widget.Toast;
 import android.content.SharedPreferences;
 
+import com.construapp.construapp.dbTasks.GetLessonsTask;
+import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.Lesson;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class MyLessonsFragment extends Fragment {
 
     private ListView myLessonsList;
     private LessonsAdapter lessonsAdapter;
+    private List<Lesson> lessonList;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        ArrayList<Lesson> lessonList = new ArrayList<>();
+        SharedPreferences sharedpreferences = getActivity().getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
+        String user_id = sharedpreferences.getString(Constants.SP_USER,"");
+        String project_id = sharedpreferences.getString(Constants.SP_ACTUAL_PROJECT,"");
 
-        Lesson lesson_1 = new Lesson();
-        lesson_1.setName("Lección 1");
-        lesson_1.setDescription("Descripción 1");
-
-        Lesson lesson_2 = new Lesson();
-        lesson_2.setName("Lección 2");
-        lesson_2.setDescription("Descripción 2");
-
-        lessonList.add(lesson_2);
-        lessonList.add(lesson_1);
+        try {
+            lessonList = new GetLessonsTask(getActivity(),project_id,user_id).execute().get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
 
         lessonsAdapter = new LessonsAdapter(getActivity(), lessonList);
 

@@ -1,11 +1,12 @@
-package com.construapp.construapp.models;
+package com.construapp.construapp.db;
 
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
-import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
-import android.content.Context;
-import java.util.ArrayList;
+
+import com.construapp.construapp.db.AppDatabase;
+import com.construapp.construapp.models.Lesson;
+
 import java.util.List;
 
 

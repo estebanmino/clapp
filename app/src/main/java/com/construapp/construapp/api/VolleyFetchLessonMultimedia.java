@@ -1,4 +1,4 @@
-package com.construapp.construapp.threading.api;
+package com.construapp.construapp.api;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -8,16 +8,13 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.construapp.construapp.LessonFormActivity;
+import com.construapp.construapp.LessonActivity;
+import com.construapp.construapp.listeners.VolleyJSONCallback;
 import com.construapp.construapp.models.Constants;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
-
-import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,29 +22,22 @@ import java.util.Map;
  * Created by ESTEBANFML on 16-10-2017.
  */
 
-public class VolleyPostS3 {
+public class VolleyFetchLessonMultimedia {
 
-
-    public static void volleyPostS3(final LessonFormActivity.VolleyCallback callback,
-                                    Context context, String lesson_id, String[] lesson_key_files) {
+    public static void volleyFetchLessonMultimedia(final VolleyJSONCallback callback,
+                                                   Context context, String lessonId) {
 
         SharedPreferences sharedpreferences = context.getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
-        String company_id = sharedpreferences.getString(Constants.SP_COMPANY, "");
+        String companyId = sharedpreferences.getString(Constants.SP_COMPANY, "");
         final String userToken = sharedpreferences.getString(Constants.SP_TOKEN, "");
 
-        String url = Constants.BASE_URL + "/" + Constants.COMPANIES + "/" + company_id + "/" +
-                Constants.LESSONS + "/" + lesson_id + "/" + Constants.SAVE_KEY;
+        String url = Constants.BASE_URL +"/"+Constants.COMPANIES+"/"+companyId+"/"+Constants.LESSONS+"/"+lessonId;
+
         final RequestQueue queue = Volley.newRequestQueue(context);
 
         JSONObject jsonObject = new JSONObject();
-        JSONArray routes_array = new JSONArray();
 
-        for(int i=0;i<lesson_key_files.length;i++)
-        {
-            routes_array.put(lesson_key_files[i]);
-        }
-        final String requestBody = "{\"array_file_path\":"+routes_array+"}";
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url,jsonObject,
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url,jsonObject,
                 new com.android.volley.Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject  response) {
@@ -73,18 +63,7 @@ public class VolleyPostS3 {
                 params.put(Constants.Q_AUTHORIZATION,userToken);
                 return params;
             }
-
-            @Override
-            public byte[] getBody()  {
-                try {
-                    return requestBody == null ? null : requestBody.getBytes("utf-8");
-                } catch (UnsupportedEncodingException uee) {
-                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
-                    return null;
-                }
-            }
         };
         queue.add(jsonObjectRequest);
     }
-
 }

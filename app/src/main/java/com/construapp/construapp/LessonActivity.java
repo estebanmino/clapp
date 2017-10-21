@@ -1,13 +1,10 @@
 package com.construapp.construapp;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,9 +20,10 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.android.volley.VolleyError;
-import com.construapp.construapp.models.Connectivity;
+import com.construapp.construapp.db.Connectivity;
+import com.construapp.construapp.listeners.VolleyJSONCallback;
+import com.construapp.construapp.listeners.VolleyStringCallback;
 import com.construapp.construapp.models.Constants;
-import com.construapp.construapp.models.LessonListViewModel;
 import com.construapp.construapp.multimedia.MultimediaAudioAdapter;
 import com.construapp.construapp.multimedia.MultimediaDocumentAdapter;
 import com.construapp.construapp.multimedia.MultimediaPictureAdapter;
@@ -33,9 +31,9 @@ import com.construapp.construapp.models.General;
 import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.models.MultimediaFile;
 import com.construapp.construapp.multimedia.MultimediaVideoAdapter;
-import com.construapp.construapp.threading.DeleteLessonTask;
-import com.construapp.construapp.threading.api.VolleyDeleteLesson;
-import com.construapp.construapp.threading.api.VolleyFetchLessonMultimedia;
+import com.construapp.construapp.dbTasks.DeleteLessonTask;
+import com.construapp.construapp.api.VolleyDeleteLesson;
+import com.construapp.construapp.api.VolleyFetchLessonMultimedia;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -142,7 +140,7 @@ public class LessonActivity extends AppCompatActivity {
         ABSOLUTE_STORAGE_PATH = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString();
         final String CACHE_FOLDER = LessonActivity.this.getCacheDir().toString();
 
-        VolleyFetchLessonMultimedia.volleyFetchLessonMultimedia(new VolleyCallback() {
+        VolleyFetchLessonMultimedia.volleyFetchLessonMultimedia(new VolleyJSONCallback() {
             @Override
             public void onSuccess(JSONObject result) {
                 try{
@@ -281,16 +279,6 @@ public class LessonActivity extends AppCompatActivity {
         intent.putExtra(LESSON_DESCRIPTION,description);
         intent.putExtra(LESSON_ID,id);
         return intent;
-    }
-
-    public interface VolleyCallback{
-        void onSuccess(JSONObject result);
-        void onErrorResponse(VolleyError result);
-    }
-
-    public interface VolleyStringCallback{
-        void onSuccess(String result);
-        void onErrorResponse(VolleyError result);
     }
 
     public void showPermissions(){
