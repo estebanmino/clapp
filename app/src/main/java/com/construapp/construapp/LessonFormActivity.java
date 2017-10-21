@@ -2,12 +2,10 @@ package com.construapp.construapp;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.media.MediaScannerConnection;
@@ -15,7 +13,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -35,6 +32,7 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.android.volley.VolleyError;
+import com.construapp.construapp.lessonForm.RealPathUtil;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.General;
 import com.construapp.construapp.models.Lesson;
@@ -42,6 +40,7 @@ import com.construapp.construapp.models.MultimediaFile;
 import com.construapp.construapp.multimedia.MultimediaAudioAdapter;
 import com.construapp.construapp.multimedia.MultimediaDocumentAdapter;
 import com.construapp.construapp.multimedia.MultimediaPictureAdapter;
+import com.construapp.construapp.multimedia.MultimediaVideoAdapter;
 import com.construapp.construapp.threading.api.VolleyCreateLesson;
 import com.construapp.construapp.threading.api.VolleyPostS3;
 
@@ -60,9 +59,14 @@ public class LessonFormActivity extends AppCompatActivity {
     private static final int READ_EXTERNAL_REQUEST = 1884;
     private static final int RECORD_AUDIO_REQUEST = 1883;
     private static final int FILES_REQUEST = 1882;
+    private static final int CAMERA_REQUEST_FOR_VIDEO = 1880;
+
 
     private static String ABSOLUTE_STORAGE_PATH;
     private static final String EXTENSION_AUDIO_FORMAT = ".3gp";
+    private static final String VIDEO_FORMAT = ".mp4";
+    private static String APP_DIRECTORY = "ConstruApp";
+
 
     //XML ELEMENTS
     private TextView lessonName;
@@ -72,6 +76,7 @@ public class LessonFormActivity extends AppCompatActivity {
     private FloatingActionButton fabRecordAudio;
     private FloatingActionButton fabFiles;
     private FloatingActionButton fabSend;
+    private FloatingActionButton fabVideo;
     private EditText editLessonName;
     private EditText editLessonDescription;
     private TextView textRecording;
@@ -101,6 +106,7 @@ public class LessonFormActivity extends AppCompatActivity {
 
     //MM ADAPTER
     MultimediaPictureAdapter multimediaPictureAdapter;
+    MultimediaVideoAdapter multimediaVideoAdapter;
     MultimediaAudioAdapter multimediaAudioAdapter;
     MultimediaDocumentAdapter multimediaDocumentAdapter;
 
@@ -126,6 +132,7 @@ public class LessonFormActivity extends AppCompatActivity {
         fabRecordAudio = (FloatingActionButton) findViewById(R.id.fab_record_audio);
         fabSend = (FloatingActionButton) findViewById(R.id.fab_send);
         fabFiles = (FloatingActionButton) findViewById(R.id.fab_files);
+        fabVideo = (FloatingActionButton) findViewById(R.id.fab_video);
         textRecording = (TextView) findViewById(R.id.text_recording);
 
         //INIT NEW LESSON
@@ -153,6 +160,7 @@ public class LessonFormActivity extends AppCompatActivity {
         setFabSendOnClickListener();
         setFabRecordAudioOnClickListener();
         setFabFilesOnClickListener();
+        setFabVideoOnClickListener();
 
         ////HORIZONTAL IMAGES SCROLLING
 
@@ -164,6 +172,14 @@ public class LessonFormActivity extends AppCompatActivity {
         mPicturesRecyclerView.setLayoutManager(picturesLayoutManager);
         multimediaPictureAdapter = new MultimediaPictureAdapter(lesson.getMultimediaPicturesFiles(),LessonFormActivity.this);
         mPicturesRecyclerView.setAdapter(multimediaPictureAdapter);
+
+        //VIDEOS SCROLLING
+        LinearLayoutManager videosLayoutManager = new LinearLayoutManager(this);
+        videosLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        RecyclerView mVideosRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_videos);
+        mVideosRecyclerView.setLayoutManager(videosLayoutManager);
+        multimediaVideoAdapter = new MultimediaVideoAdapter(lesson.getMultimediaVideosFiles(),LessonFormActivity.this);
+        mVideosRecyclerView.setAdapter(multimediaVideoAdapter);
 
         //AUDIOS SCROLLING
         LinearLayoutManager audiosLayoutManager = new LinearLayoutManager(this);
@@ -220,6 +236,13 @@ public class LessonFormActivity extends AppCompatActivity {
                                         + multimediaFile.getmPath().substring(multimediaFile.getmPath().lastIndexOf("/") + 1) + ";";
                             }
 
+                            for (MultimediaFile multimediaFile : lesson.getMultimediaVideosFiles()) {
+                                multimediaFile.setExtension(Constants.S3_LESSONS_PATH+ "/"+ new_lesson_id +"/" +
+                                        multimediaFile.getExtension());
+                                path_input += multimediaFile.getExtension() + "/"
+                                        + multimediaFile.getmPath().substring(multimediaFile.getmPath().lastIndexOf("/") + 1) + ";";
+                            }
+
                             VolleyPostS3.volleyPostS3(new VolleyCallback() {
                                 @Override
                                 public void onSuccess(JSONObject result) {
@@ -230,6 +253,9 @@ public class LessonFormActivity extends AppCompatActivity {
                                         multimediaFile.initUploadThread();
                                     }
                                     for (MultimediaFile multimediaFile: lesson.getMultimediaDocumentsFiles()) {
+                                        multimediaFile.initUploadThread();
+                                    }
+                                    for (MultimediaFile multimediaFile: lesson.getMultimediaVideosFiles()) {
                                         multimediaFile.initUploadThread();
                                     }
                                     startActivity(MainActivity.getIntent(LessonFormActivity.this));
@@ -282,6 +308,7 @@ public class LessonFormActivity extends AppCompatActivity {
                         fabGallery.setVisibility(View.GONE);
                         fabCamera.setVisibility(View.GONE);
                         fabSend.setVisibility(View.GONE);
+                        fabVideo.setVisibility(View.GONE);
                     }
                     else{
                         fabRecordAudio.setSize(FloatingActionButton.SIZE_MINI);
@@ -290,6 +317,7 @@ public class LessonFormActivity extends AppCompatActivity {
                         fabGallery.setVisibility(View.VISIBLE);
                         fabCamera.setVisibility(View.VISIBLE);
                         fabSend.setVisibility(View.VISIBLE);
+                        fabVideo.setVisibility(View.VISIBLE);
                     }
                     mStartRecording = !mStartRecording;
 
@@ -338,9 +366,26 @@ public class LessonFormActivity extends AppCompatActivity {
         });
     }
 
-    private void dispatchTakePictureIntent() {
+    public void setFabVideoOnClickListener() {
+        fabVideo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (ContextCompat.checkSelfPermission(LessonFormActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    getWriteStoragePermissions();
+                }
+                else if (ContextCompat.checkSelfPermission(LessonFormActivity.this, Manifest.permission.CAMERA)
+                        != PackageManager.PERMISSION_GRANTED){
+                    getCameraPermissions();
+                }
+                else {
+                    dispatchRecordVideoIntent();
+                }
+            }
+        });
+    }
 
-        String APP_DIRECTORY = "ConstruApp";
+    private void dispatchTakePictureIntent() {
 
         File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), APP_DIRECTORY);
         boolean isDirectoryCreated = file.exists();
@@ -360,6 +405,30 @@ public class LessonFormActivity extends AppCompatActivity {
         takePictureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(newFile));
         startActivityForResult(takePictureIntent, CAMERA_REQUEST_PICTURE);
+    }
+
+    private void dispatchRecordVideoIntent() {
+
+        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), APP_DIRECTORY);
+        boolean isDirectoryCreated = file.exists();
+
+        if (!isDirectoryCreated) {
+            file.mkdir();
+        }
+        Long timestamp = System.currentTimeMillis() / 1000;
+        String imageName = timestamp.toString() + VIDEO_FORMAT;
+
+        mPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) +
+                File.separator +
+                APP_DIRECTORY + File.separator + imageName;
+        File newFile = new File(file, imageName);
+
+        Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+        takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(newFile));
+        takeVideoIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        if (takeVideoIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takeVideoIntent, CAMERA_REQUEST_FOR_VIDEO);
+        }
     }
 
     @Override
@@ -404,6 +473,18 @@ public class LessonFormActivity extends AppCompatActivity {
                 }
                 break;
 
+            case CAMERA_REQUEST_FOR_VIDEO:
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (ContextCompat.checkSelfPermission(LessonFormActivity.this,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE) == 0) {
+                        dispatchRecordVideoIntent();
+                    }
+                }   else {
+                    Toast.makeText(this, "Debes dar permiso para grabar videos", Toast.LENGTH_LONG).show();
+                }
+                break;
+
 
             case RECORD_AUDIO_REQUEST:
                 if (grantResults.length > 0
@@ -437,11 +518,36 @@ public class LessonFormActivity extends AppCompatActivity {
                     multimediaPictureAdapter.notifyDataSetChanged();
                     break;
 
+                case CAMERA_REQUEST_FOR_VIDEO:
+                    MediaScannerConnection.scanFile(this,
+                            new String[]{mPath}, null,
+                            new MediaScannerConnection.OnScanCompletedListener() {
+                                @Override
+                                public void onScanCompleted(String path, Uri uri) {
+                                    Log.i("ExternalStorage", "scanned"+path+":");
+                                    Log.i("ExternalStorage", "-> Uri"+uri);
+                                }
+                            });
+                    //Uri videoUri = data.getData();
+                    //mPath = filesHandler.getPath(ChatRoomActivity.this, videoUri);
+                    //multimedia = "videos/"+mPath.substring(mPath.lastIndexOf("/") + 1);
+                    //imageAttachment.setImageDrawable(ContextCompat.getDrawable(ChatRoomActivity.this, R.drawable.ic_play_video));
+                    //imageAttachment.setVisibility(View.VISIBLE);
+
+                    lesson.getMultimediaVideosFiles().add(new MultimediaFile(Constants.S3_VIDEOS_PATH,mPath, null,transferUtility));
+                    multimediaVideoAdapter.notifyDataSetChanged();
+
+                    break;
+
                 case SELECT_IMAGE:
 
                     if (data != null)
                     {
-                        mPath = getRealPathFromURI_API19(getApplicationContext(),data.getData());
+                        if (Build.VERSION.SDK_INT < 19) {
+                            mPath = RealPathUtil.getRealPathFromURI_API11to18(getApplicationContext(), data.getData());
+                        } else {
+                            mPath = RealPathUtil.getRealPathFromURI_API19(getApplicationContext(), data.getData());
+                        }
 
                         lesson.getMultimediaPicturesFiles().add(new MultimediaFile(Constants.S3_IMAGES_PATH,mPath, null,transferUtility));
                         multimediaPictureAdapter.notifyDataSetChanged();
@@ -453,39 +559,18 @@ public class LessonFormActivity extends AppCompatActivity {
                     break;
 
                 case FILES_REQUEST:
-                    Uri selectedUri = data.getData();
-
+                    if (Build.VERSION.SDK_INT < 19) {
+                        mPath = RealPathUtil.getRealPathFromURI_API11to18(getApplicationContext(), data.getData());
+                    } else {
+                        mPath = RealPathUtil.getRealPathFromURI_API19(getApplicationContext(), data.getData());
+                    }
                     lesson.getMultimediaDocumentsFiles().add(new MultimediaFile(Constants.S3_DOCS_PATH,
-                            getPath(LessonFormActivity.this, selectedUri),null, transferUtility));
+                            mPath,null, transferUtility));
                     multimediaDocumentAdapter.notifyDataSetChanged();
                     break;
 
             }
         }
-    }
-
-    public static String getRealPathFromURI_API19(Context context, Uri uri){
-        String filePath = "";
-        String wholeID = DocumentsContract.getDocumentId(uri);
-
-        // Split at colon, use second item in the array
-        String id = wholeID.split(":")[1];
-
-        String[] column = { MediaStore.Images.Media.DATA };
-
-        // where id is equal to
-        String sel = MediaStore.Images.Media._ID + "=?";
-
-        Cursor cursor = context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                column, sel, new String[]{ id }, null);
-
-        int columnIndex = cursor.getColumnIndex(column[0]);
-
-        if (cursor.moveToFirst()) {
-            filePath = cursor.getString(columnIndex);
-        }
-        cursor.close();
-        return filePath;
     }
 
     public void setLesson() {
@@ -666,117 +751,6 @@ public class LessonFormActivity extends AppCompatActivity {
         mRecorder.release();
         mRecorder = null;
         multimediaAudioAdapter.notifyDataSetChanged();
-    }
-
-    // From here, code from https://github.com/iPaulPro/aFileChooser
-
-    public static String getPath(final Context context, final Uri uri) {
-
-        final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
-
-        // DocumentProvider
-        if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
-            // ExternalStorageProvider
-            if (isExternalStorageDocument(uri)) {
-                final String docId = DocumentsContract.getDocumentId(uri);
-                final String[] split = docId.split(":");
-                final String type = split[0];
-
-                if ("primary".equalsIgnoreCase(type)) {
-                    return Environment.getExternalStorageDirectory() + "/" + split[1];
-                }
-
-                // TODO handle non-primary volumes
-            }
-            // DownloadsProvider
-            else if (isDownloadsDocument(uri)) {
-
-                final String id = DocumentsContract.getDocumentId(uri);
-                final Uri contentUri = ContentUris.withAppendedId(
-                        Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
-
-                return getDataColumn(context, contentUri, null, null);
-            }
-            // MediaProvider
-            else if (isMediaDocument(uri)) {
-                final String docId = DocumentsContract.getDocumentId(uri);
-                final String[] split = docId.split(":");
-                final String type = split[0];
-
-                Uri contentUri = null;
-                if ("image".equals(type)) {
-                    contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-                } else if ("video".equals(type)) {
-                    contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-                } else if ("audio".equals(type)) {
-                    contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-                }
-
-                final String selection = "_id=?";
-                final String[] selectionArgs = new String[] {
-                        split[1]
-                };
-
-                return getDataColumn(context, contentUri, selection, selectionArgs);
-            }
-        }
-        // MediaStore (and general)
-        else if ("content".equalsIgnoreCase(uri.getScheme())) {
-            return getDataColumn(context, uri, null, null);
-        }
-        // File
-        else if ("file".equalsIgnoreCase(uri.getScheme())) {
-            return uri.getPath();
-        }
-
-        return null;
-    }
-
-    public static String getDataColumn(Context context, Uri uri, String selection,
-                                       String[] selectionArgs) {
-
-        Cursor cursor = null;
-        final String column = "_data";
-        final String[] projection = {
-                column
-        };
-
-        try {
-            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs,
-                    null);
-            if (cursor != null && cursor.moveToFirst()) {
-                final int column_index = cursor.getColumnIndexOrThrow(column);
-                return cursor.getString(column_index);
-            }
-        } finally {
-            if (cursor != null)
-                cursor.close();
-        }
-        return null;
-    }
-
-    /**
-     * @param uri The Uri to check.
-     * @return Whether the Uri authority is ExternalStorageProvider.
-     */
-    public static boolean isExternalStorageDocument(Uri uri) {
-        return "com.android.externalstorage.documents".equals(uri.getAuthority());
-    }
-
-    /**
-     * @param uri The Uri to check.
-     * @return Whether the Uri authority is DownloadsProvider.
-     */
-    public static boolean isDownloadsDocument(Uri uri) {
-        return "com.android.providers.downloads.documents".equals(uri.getAuthority());
-    }
-
-    /**
-     * @param uri The Uri to check.
-     * @return Whether the Uri authority is MediaProvider.
-     */
-    public static boolean isMediaDocument(Uri uri) {
-        return "com.android.providers.media.documents".equals(uri.getAuthority());
     }
 
     public interface VolleyCallback{

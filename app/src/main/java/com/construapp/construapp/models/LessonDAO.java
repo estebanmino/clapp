@@ -42,6 +42,9 @@ public interface LessonDAO {
 
     @Delete
     void deleteLesson(Lesson Lesson);
+
+    @Query("DELETE FROM Lesson")
+    public void nukeTable();
 }
 
 

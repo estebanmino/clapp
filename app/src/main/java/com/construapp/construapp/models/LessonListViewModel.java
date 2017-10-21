@@ -48,6 +48,24 @@ public class LessonListViewModel extends AndroidViewModel{
         @Override
         protected Void doInBackground(final Lesson... params){
             db.lessonDAO().deleteLesson(params[0]);
+
+            return null;
+        }
+    }
+
+    private static class destroyLessonTable extends AsyncTask<Lesson,Void, Void>{
+
+        private AppDatabase db;
+
+        destroyLessonTable(AppDatabase appDatabase)
+        {
+            db = appDatabase;
+        }
+
+        @Override
+        protected Void doInBackground(final Lesson... params){
+            db.lessonDAO().nukeTable();
+
             return null;
         }
     }

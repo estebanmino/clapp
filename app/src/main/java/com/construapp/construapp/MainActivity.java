@@ -22,22 +22,17 @@ import com.construapp.construapp.cache.LRUCache;
 import com.construapp.construapp.microblog.MicroblogFragment;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.General;
-import com.construapp.construapp.models.Lesson;
-import com.construapp.construapp.models.Project;
 import com.construapp.construapp.sidebar.SidebarAdapter;
-
+import com.construapp.construapp.threading.DeleteLessonTable;
 import android.content.SharedPreferences;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -150,6 +145,14 @@ public class MainActivity extends AppCompatActivity {
             SharedPreferences.Editor editor = mySPrefs.edit();
             editor.clear();
             editor.apply();
+            try {
+                //DESTROY LESSON TABLE
+                new DeleteLessonTable(getApplicationContext()).execute().get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
             Toast.makeText(this,"Se ha  cerrado su sesión",Toast.LENGTH_LONG).show();
             startActivity(LoginActivity.getIntent(MainActivity.this));
         }
