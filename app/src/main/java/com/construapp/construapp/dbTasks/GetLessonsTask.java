@@ -18,7 +18,7 @@ public class GetLessonsTask extends AsyncTask<Void,Void,List<Lesson>>{
     private Context context;
     private String projectId;
     private String userId;
-
+    private List<Lesson> list;
 
     public GetLessonsTask(Context context, String projectId, String userId)
     {
@@ -28,23 +28,25 @@ public class GetLessonsTask extends AsyncTask<Void,Void,List<Lesson>>{
     }
     @Override
     protected List<Lesson> doInBackground(Void... params) {
+        AppDatabase appDatabase = AppDatabase.getDatabase(context.getApplicationContext());
         if  (projectId.equals("null") && userId.equals("null")) {
             Log.i("JSON", "byall");
 
-            return AppDatabase.getDatabase(context.getApplicationContext()).lessonDAO().getAllLessons();
+            list = AppDatabase.getDatabase(context.getApplicationContext()).lessonDAO().getAllLessons();
         }
         else if (!projectId.equals("null") && userId.equals("null")) {
             Log.i("JSON", "byprojectid");
-            return AppDatabase.getDatabase(context.getApplicationContext()).lessonDAO().getLessonByProjectId(projectId);
+            list = AppDatabase.getDatabase(context.getApplicationContext()).lessonDAO().getLessonByProjectId(projectId);
         }
         else if (projectId.equals("null") && !userId.equals("null")) {
             Log.i("JSON", "byuserid");
 
-            return AppDatabase.getDatabase(context.getApplicationContext()).lessonDAO().getLessonByUserId(userId);
+            list = AppDatabase.getDatabase(context.getApplicationContext()).lessonDAO().getLessonByUserId(userId);
         }
         else {
             Log.i("JSON", "byuserprojectid");
-            return AppDatabase.getDatabase(context.getApplicationContext()).lessonDAO().getLessonByUserAndProjectId(userId,projectId);
+            list = AppDatabase.getDatabase(context.getApplicationContext()).lessonDAO().getLessonByUserAndProjectId(userId,projectId);
         }
+        return  list;
     }
 }

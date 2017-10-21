@@ -25,7 +25,6 @@ public class InsertLessonTask extends AsyncTask<Void,Void,Boolean> {
     protected Boolean doInBackground(Void... params) {
 
                     AppDatabase.getDatabase(context.getApplicationContext()).lessonDAO().insertLesson(lesson);
-
                     return true;
                 }
 
