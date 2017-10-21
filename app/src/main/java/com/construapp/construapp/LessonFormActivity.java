@@ -308,6 +308,7 @@ public class LessonFormActivity extends AppCompatActivity {
                         fabGallery.setVisibility(View.GONE);
                         fabCamera.setVisibility(View.GONE);
                         fabSend.setVisibility(View.GONE);
+                        fabVideo.setVisibility(View.GONE);
                     }
                     else{
                         fabRecordAudio.setSize(FloatingActionButton.SIZE_MINI);
@@ -316,6 +317,7 @@ public class LessonFormActivity extends AppCompatActivity {
                         fabGallery.setVisibility(View.VISIBLE);
                         fabCamera.setVisibility(View.VISIBLE);
                         fabSend.setVisibility(View.VISIBLE);
+                        fabVideo.setVisibility(View.VISIBLE);
                     }
                     mStartRecording = !mStartRecording;
 

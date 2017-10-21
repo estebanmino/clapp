@@ -48,20 +48,16 @@ public class LessonsFragment extends Fragment {
         String lessons="";
 
         boolean is_connected = Connectivity.isConnected(getActivity());
-        Toast.makeText(getActivity(),"Estado conexion: "+is_connected,Toast.LENGTH_SHORT).show();
 
         if(is_connected) {
             try {
                 lessons = lesson_fetcher.execute(company_id).get();
-                Log.i("ISCONNECTEDDDD",lessons.toString());
             } catch (InterruptedException e) {
             } catch (ExecutionException e) {
             }
 
-            Log.i("ISCONNECTEDDDD", "SSS");
             try {
                 JSONArray lesson_json_array = new JSONArray(lessons);
-                Log.i("GETLESSONS", lesson_json_array.toString());
                 for (int i = 0; i < lesson_json_array.length(); i++) {
                     JSONObject current_object = lesson_json_array.getJSONObject(i);
                     Lesson lesson = new Lesson();
