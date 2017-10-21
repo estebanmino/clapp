@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.widget.EditText;
 
@@ -23,6 +24,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.construapp.construapp.LoginActivity;
+import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.Lesson;
 
 import java.io.BufferedInputStream;
@@ -37,9 +39,11 @@ public class RetrieveFeedTask extends AsyncTask<String, Integer, String> {
     private Exception exception;
     public String out;
     private String type;
+    private Context context;
 
-    public RetrieveFeedTask(String type) {
+    public RetrieveFeedTask(String type, Context context) {
         this.type = type;
+        this.context = context;
     }
 
 
@@ -48,6 +52,7 @@ public class RetrieveFeedTask extends AsyncTask<String, Integer, String> {
     }
 
     protected String doInBackground(String... str) {
+        SharedPreferences sharedpreferences = context.getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
 
         if(type == "fetch-lessons")
         {
@@ -59,12 +64,15 @@ public class RetrieveFeedTask extends AsyncTask<String, Integer, String> {
                 //urlConnection.setDoInput(false);
                 urlConnection.setConnectTimeout(15000);
                 urlConnection.setRequestMethod("GET");
+
+                urlConnection.setRequestProperty("Authorization", sharedpreferences.getString(Constants.SP_TOKEN, ""));
                 urlConnection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
                 //TODO utilizar JSONObject para armar String y no manual
                 //String input = "{\"session\":{\"email\":\"" + email + "\",\"password\":\"" + pass + "\"}}";
                 urlConnection.connect();
 
                 int responsecode = urlConnection.getResponseCode();
+                Log.i("ISCONNECTEDDDD", Integer.toString(responsecode));
                 if (responsecode != 200) {
                     urlConnection.disconnect();
                     out = "error";

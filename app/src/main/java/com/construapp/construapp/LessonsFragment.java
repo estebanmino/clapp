@@ -44,7 +44,7 @@ public class LessonsFragment extends Fragment {
         List<Lesson> lessonList = new ArrayList<>();
         SharedPreferences sharedpreferences = getActivity().getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
         String company_id = sharedpreferences.getString(Constants.SP_COMPANY, "");
-        RetrieveFeedTask lesson_fetcher=new RetrieveFeedTask("fetch-lessons");
+        RetrieveFeedTask lesson_fetcher=new RetrieveFeedTask("fetch-lessons", getContext());
         String lessons="";
 
         boolean is_connected = Connectivity.isConnected(getActivity());
@@ -53,13 +53,15 @@ public class LessonsFragment extends Fragment {
         if(is_connected) {
             try {
                 lessons = lesson_fetcher.execute(company_id).get();
+                Log.i("ISCONNECTEDDDD",lessons.toString());
             } catch (InterruptedException e) {
             } catch (ExecutionException e) {
             }
 
-
+            Log.i("ISCONNECTEDDDD", "SSS");
             try {
                 JSONArray lesson_json_array = new JSONArray(lessons);
+                Log.i("GETLESSONS", lesson_json_array.toString());
                 for (int i = 0; i < lesson_json_array.length(); i++) {
                     JSONObject current_object = lesson_json_array.getJSONObject(i);
                     Lesson lesson = new Lesson();
