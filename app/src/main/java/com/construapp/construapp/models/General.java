@@ -43,6 +43,7 @@ public class General {
     }
 
     private int userPermissionsToInt(String permission){
+        Log.i("PERMISSION",permission);
         switch (permission){
             case "admin": return 4;
             case "validate": return 3;

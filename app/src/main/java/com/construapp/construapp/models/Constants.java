@@ -22,6 +22,7 @@ public interface Constants {
     public static final String SP_CONSTRUAPP = "ConstruApp";
     public static final String SP_COMPANY = "company_id";
     public static final String SP_USER = "user_id";
+    public static final String SP_ADMIN = "admin";
     public static final String SP_TOKEN = "token";
     public static final String SP_HAS_PROJECTS = "has_projects";
     public static final String SP_HAS_PERMISSION = "has_permission";

@@ -76,6 +76,9 @@ public class LessonActivity extends AppCompatActivity {
     TextView textLessonName;
     TextView textLessonDescription;
 
+    private SharedPreferences sharedPreferences;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,6 +88,8 @@ public class LessonActivity extends AppCompatActivity {
         SharedPreferences sharedpreferences = getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
         constants = new General();
         userPermission = Integer.parseInt(sharedpreferences.getString(Constants.SP_USER_PERMISSION,""));
+
+        sharedPreferences = LessonActivity.this.getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
 
         imageEditLesson = (ImageView) findViewById(R.id.image_edit_lesson);
         imageDeleteLesson = (ImageView) findViewById(R.id.image_delete_lesson);
@@ -287,12 +292,13 @@ public class LessonActivity extends AppCompatActivity {
         int editPermission = constants.xmlPermissionTagToInt(imageEditLesson.getTag().toString());
         int deletePermission = constants.xmlPermissionTagToInt((imageDeleteLesson.getTag().toString()));
 
-
-        if (editPermission > userPermission){
+        Log.i("PERMISSION",Integer.toString(editPermission));
+        Log.i("PERMISSION",Integer.toString(userPermission));
+        if (editPermission > userPermission || sharedPreferences.getString(Constants.SP_ADMIN, "") != "1"){
             imageEditLesson.setVisibility(View.GONE);
             textEditLesson.setVisibility(View.GONE);
         }
-        if (deletePermission > userPermission){
+        if (deletePermission > userPermission || sharedPreferences.getString(Constants.SP_ADMIN, "") != "1"){
             imageDeleteLesson.setVisibility(View.GONE);
             textDeleteLesson.setVisibility(View.GONE);
         }

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -34,6 +35,7 @@ public class LoginActivity extends AppCompatActivity {
     private String auth_token = "";
     private String user_id = "";
     private String company_id = "";
+    private String admin = "";
     private JSONObject company;
 
     @Override
@@ -59,6 +61,7 @@ public class LoginActivity extends AppCompatActivity {
                             final SharedPreferences.Editor editor = sharedPreferences.edit();
                             try {
                                 auth_token = result.getString("auth_token");
+                                admin = result.getString("admin");
                                 user_id = result.getString("id");
                                 company = result.getJSONObject("company");
                                 company_id = company.getString("id");
@@ -68,6 +71,8 @@ public class LoginActivity extends AppCompatActivity {
                             editor.putString(Constants.SP_TOKEN, auth_token);
                             editor.putString(Constants.SP_USER, user_id);
                             editor.putString(Constants.SP_COMPANY, company_id);
+                            editor.putString(Constants.SP_ADMIN, admin);
+                            Log.i("PERMISSION",admin);
                             editor.apply();
 
                             VolleyGetUserProject.volleyGetUserProject(new VolleyStringCallback() {
