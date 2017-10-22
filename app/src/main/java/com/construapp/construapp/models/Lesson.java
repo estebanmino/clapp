@@ -20,6 +20,8 @@ public class Lesson {
     private ArrayList<MultimediaFile> multimediaAudioFiles;
     @Ignore
     private ArrayList<MultimediaFile> multimediaDocumentsFiles;
+    @Ignore
+    private ArrayList<MultimediaFile> multimediaVideosFiles;
     @PrimaryKey
     private String id;
     private String name;
@@ -74,8 +76,6 @@ public class Lesson {
         this.user_id = user_id;
     }
 
-
-
     public String getCompany_id() {
         return company_id;
     }
@@ -84,9 +84,6 @@ public class Lesson {
         this.company_id = company_id;
     }
 
-
-
-
     public String getId() {
         return id;
     }
@@ -94,7 +91,6 @@ public class Lesson {
     public void setId(String id) {
         this.id = id;
     }
-
 
     //Getter & Setter MultimediaDocuments
     public ArrayList<MultimediaFile> getMultimediaDocumentsFiles() {
@@ -114,6 +110,15 @@ public class Lesson {
         this.multimediaPictureFiles = multimediaPictureFiles;
     }
 
+    //Getter & Setter MultimediaVideos
+    public ArrayList<MultimediaFile> getMultimediaVideosFiles() {
+        return multimediaVideosFiles;
+    }
+
+    public void setMultimediaVideosFiles(ArrayList<MultimediaFile> multimediaVideosFiles) {
+        this.multimediaVideosFiles = multimediaVideosFiles;
+    }
+
     //Getter & Setter MultimediaDocuments
     public ArrayList<MultimediaFile> getMultimediaAudiosFiles() {
         return multimediaAudioFiles;
@@ -127,6 +132,7 @@ public class Lesson {
         this.multimediaPictureFiles = new ArrayList<>();
         this.multimediaAudioFiles = new ArrayList<>();
         this.multimediaDocumentsFiles = new ArrayList<>();
+        this.multimediaVideosFiles = new ArrayList<>();
     }
 
     public void setName(String name) {

@@ -24,7 +24,9 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.android.volley.VolleyError;
-import com.construapp.construapp.models.Connectivity;
+import com.construapp.construapp.db.Connectivity;
+import com.construapp.construapp.listeners.VolleyJSONCallback;
+import com.construapp.construapp.listeners.VolleyStringCallback;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.General;
 import com.construapp.construapp.models.Lesson;
@@ -32,9 +34,9 @@ import com.construapp.construapp.models.MultimediaFile;
 import com.construapp.construapp.multimedia.MultimediaAudioAdapter;
 import com.construapp.construapp.multimedia.MultimediaDocumentAdapter;
 import com.construapp.construapp.multimedia.MultimediaPictureAdapter;
-import com.construapp.construapp.threading.DeleteLessonTask;
-import com.construapp.construapp.threading.api.VolleyDeleteLesson;
-import com.construapp.construapp.threading.api.VolleyFetchLessonMultimedia;
+import com.construapp.construapp.dbTasks.DeleteLessonTask;
+import com.construapp.construapp.api.VolleyDeleteLesson;
+import com.construapp.construapp.api.VolleyFetchLessonMultimedia;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -229,7 +231,7 @@ public class ValidateLessonActivity extends AppCompatActivity {
         ABSOLUTE_STORAGE_PATH = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString();
         final String CACHE_FOLDER = ValidateLessonActivity.this.getCacheDir().toString();
 
-        VolleyFetchLessonMultimedia.volleyFetchLessonMultimedia(new LessonActivity.VolleyCallback() {
+        VolleyFetchLessonMultimedia.volleyFetchLessonMultimedia(new VolleyJSONCallback() {
             @Override
             public void onSuccess(JSONObject result) {
                 try{
@@ -368,16 +370,6 @@ public class ValidateLessonActivity extends AppCompatActivity {
         return intent;
     }
 
-    public interface VolleyCallback{
-        void onSuccess(JSONObject result);
-        void onErrorResponse(VolleyError result);
-    }
-
-    public interface VolleyStringCallback{
-        void onSuccess(String result);
-        void onErrorResponse(VolleyError result);
-    }
-
     public void showPermissions(){
 
 
@@ -407,7 +399,7 @@ public class ValidateLessonActivity extends AppCompatActivity {
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }
-            VolleyDeleteLesson.volleyDeleteLesson(new LessonActivity.VolleyStringCallback() {
+            VolleyDeleteLesson.volleyDeleteLesson(new VolleyStringCallback() {
                 @Override
                 public void onSuccess(String result) {
                     Toast.makeText(ValidateLessonActivity.this, "Eliminada correctamente", Toast.LENGTH_LONG).show();

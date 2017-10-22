@@ -1,8 +1,7 @@
-package com.construapp.construapp.threading.api;
+package com.construapp.construapp.api;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -13,55 +12,52 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.construapp.construapp.LessonFormActivity;
+import com.construapp.construapp.listeners.VolleyJSONCallback;
 import com.construapp.construapp.models.Constants;
+
+import org.json.JSONArray;
 import org.json.JSONObject;
+
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by ESTEBANFML on 15-10-2017.
+ * Created by ESTEBANFML on 16-10-2017.
  */
 
-public class VolleyCreateLesson {
+public class VolleyPostS3 {
 
-    public static void volleyCreateLesson(final LessonFormActivity.VolleyCallback callback,
-                                          Context context, String lesson_name, String lesson_summary,
-                                          String lesson_motivation, String lesson_learning,
-                                          String project_id) {
+
+    public static void volleyPostS3(final VolleyJSONCallback callback,
+                                    Context context, String lesson_id, String[] lesson_key_files) {
 
         SharedPreferences sharedpreferences = context.getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
         String company_id = sharedpreferences.getString(Constants.SP_COMPANY, "");
-        String user_id = sharedpreferences.getString(Constants.SP_USER, "");
         final String userToken = sharedpreferences.getString(Constants.SP_TOKEN, "");
 
-        String url = Constants.BASE_URL + "/" + Constants.COMPANIES + "/" + company_id + "/" + Constants.LESSONS;
-
+        String url = Constants.BASE_URL + "/" + Constants.COMPANIES + "/" + company_id + "/" +
+                Constants.LESSONS + "/" + lesson_id + "/" + Constants.SAVE_KEY;
         final RequestQueue queue = Volley.newRequestQueue(context);
 
         JSONObject jsonObject = new JSONObject();
-        // TODO: 18-10-2017 refactor json body
-        final String requestBody =
-                "{\"lesson\":{\"name\":\"" + lesson_name + "\",\"summary\":\"" + lesson_summary + "\"," +
-                        "\"motivation\":\""+lesson_motivation + "\",\"learning\":\""+lesson_learning + "\"," +
-                        "\"user_id\":\""+user_id + "\",\"company_id\":\""+company_id + "\"," +
-                        "\"project_id\":\"" + project_id + "\"}}";
+        JSONArray routes_array = new JSONArray();
 
+        for(int i=0;i<lesson_key_files.length;i++)
+        {
+            routes_array.put(lesson_key_files[i]);
+        }
+        final String requestBody = "{\"array_file_path\":"+routes_array+"}";
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url,jsonObject,
                 new com.android.volley.Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject  response) {
-                        Log.i("RESPONSE", response.toString());
                         callback.onSuccess(response);
-                        Log.i("TOKEN",userToken);
 
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.i("RESPONSE", "Response is:NULL");
-                Log.i("TOKEN",userToken);
-                Log.i("JSON",requestBody);
                 callback.onErrorResponse(error);
             }
 
@@ -91,4 +87,5 @@ public class VolleyCreateLesson {
         };
         queue.add(jsonObjectRequest);
     }
+
 }

@@ -1,10 +1,13 @@
 package com.construapp.construapp;
 
 import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,37 +17,63 @@ import android.widget.ListView;
 import android.widget.Toast;
 import android.content.SharedPreferences;
 
+import com.android.volley.VolleyError;
+import com.construapp.construapp.api.VolleyGetLessons;
+import com.construapp.construapp.db.Connectivity;
+import com.construapp.construapp.dbTasks.DeleteLessonTable;
+import com.construapp.construapp.dbTasks.GetLessonsTask;
+import com.construapp.construapp.dbTasks.InsertLessonTask;
+import com.construapp.construapp.listeners.VolleyStringCallback;
+import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.Lesson;
+import com.construapp.construapp.threading.GetLessons;
+import com.google.gson.JsonArray;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class MyLessonsFragment extends Fragment {
 
     private ListView myLessonsList;
     private LessonsAdapter lessonsAdapter;
+    private List<Lesson> lessonList;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private SharedPreferences sharedPreferences;
+
+    private String user_id;
+    private String project_id;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        ArrayList<Lesson> lessonList = new ArrayList<>();
+        sharedPreferences = getActivity().getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
+        user_id = sharedPreferences.getString(Constants.SP_USER,"");
+        project_id = sharedPreferences.getString(Constants.SP_ACTUAL_PROJECT,"");
 
-        Lesson lesson_1 = new Lesson();
-        lesson_1.setName("Lección 1");
-        lesson_1.setDescription("Descripción 1");
-
-        Lesson lesson_2 = new Lesson();
-        lesson_2.setName("Lección 2");
-        lesson_2.setDescription("Descripción 2");
-
-        lessonList.add(lesson_2);
-        lessonList.add(lesson_1);
+        getMyLessons(project_id,user_id);
 
         lessonsAdapter = new LessonsAdapter(getActivity(), lessonList);
 
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_my_lessons, container, false);
     }
+
+    public void getMyLessons(String project_id, String user_id){
+        try {
+            lessonList = new GetLessonsTask(getActivity(),project_id,user_id).execute().get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+    };
+
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -60,6 +89,72 @@ public class MyLessonsFragment extends Fragment {
                 startActivity(LessonActivity.getIntent(getActivity(), lesson.getName(),
                         lesson.getDescription(),lesson.getId()));
             }
+        });
+
+        swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_my_lessons);
+        setSwipeRefreshLayout();
+    }
+
+    public void setSwipeRefreshLayout() {
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                boolean is_connected = Connectivity.isConnected(getContext());
+                user_id = sharedPreferences.getString(Constants.SP_USER, "");
+                project_id = sharedPreferences.getString(Constants.SP_ACTUAL_PROJECT, "");
+                if(is_connected) {
+                    VolleyGetLessons.volleyGetLessons(new VolleyStringCallback() {
+                        @Override
+                        public void onSuccess(String result) {
+                            Lesson lesson = new Lesson();
+                            JSONArray jsonLessons;
+                            try {
+                                jsonLessons = new JSONArray(result);
+                                for (int i = 0; i < jsonLessons.length(); i++) {
+                                    Log.i("JSON", jsonLessons.get(i).toString());
+                                    JSONObject object = (JSONObject) jsonLessons.get(i);
+                                    lesson.setName(object.get("name").toString());
+                                    lesson.setDescription(object.get("summary").toString());
+                                    lesson.setId(object.get("id").toString());
+                                    //lesson.setDescription(learning);
+                                    lesson.setMotivation(object.get("motivation").toString());
+                                    lesson.setLearning(object.get("learning").toString());
+                                    lesson.setValidation(object.get("validation").toString());
+                                    lesson.setUser_id(object.get("user_id").toString());
+                                    lesson.setProject_id(object.get("project_id").toString());
+                                    lesson.setCompany_id(object.get("company_id").toString());
+                                    try {
+                                        new InsertLessonTask(lesson, getContext()).execute().get();
+                                    } catch (ExecutionException e) {
+                                        e.printStackTrace();
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                                lessonList = new GetLessonsTask(getActivity(), project_id, user_id).execute().get();
+                                lessonsAdapter = new LessonsAdapter(getActivity(), lessonList);
+                                myLessonsList.setAdapter(lessonsAdapter);
+                            } catch (Exception e) {
+                            }
+                        }
+
+                        @Override
+                        public void onErrorResponse(VolleyError result) {
+
+                        }
+                    }, getContext());
+                } else {
+                    try {
+
+                        lessonList = new GetLessonsTask(getActivity(), project_id, user_id).execute().get();
+                        lessonsAdapter = new LessonsAdapter(getActivity(), lessonList);
+                        myLessonsList.setAdapter(lessonsAdapter);
+                    } catch (Exception e) {}
+
+                }
+                swipeRefreshLayout.setRefreshing(false);
+            }
+
         });
     }
 }

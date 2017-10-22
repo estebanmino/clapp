@@ -1,13 +1,10 @@
 package com.construapp.construapp;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,7 +20,9 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.android.volley.VolleyError;
-import com.construapp.construapp.models.Connectivity;
+import com.construapp.construapp.db.Connectivity;
+import com.construapp.construapp.listeners.VolleyJSONCallback;
+import com.construapp.construapp.listeners.VolleyStringCallback;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.multimedia.MultimediaAudioAdapter;
 import com.construapp.construapp.multimedia.MultimediaDocumentAdapter;
@@ -31,9 +30,10 @@ import com.construapp.construapp.multimedia.MultimediaPictureAdapter;
 import com.construapp.construapp.models.General;
 import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.models.MultimediaFile;
-import com.construapp.construapp.threading.DeleteLessonTask;
-import com.construapp.construapp.threading.api.VolleyDeleteLesson;
-import com.construapp.construapp.threading.api.VolleyFetchLessonMultimedia;
+import com.construapp.construapp.multimedia.MultimediaVideoAdapter;
+import com.construapp.construapp.dbTasks.DeleteLessonTask;
+import com.construapp.construapp.api.VolleyDeleteLesson;
+import com.construapp.construapp.api.VolleyFetchLessonMultimedia;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -61,9 +61,9 @@ public class LessonActivity extends AppCompatActivity {
     //AmazonS3
     private TransferUtility transferUtility;
 
-
     //MM ADAPTER
     MultimediaPictureAdapter multimediaPictureAdapter;
+    MultimediaVideoAdapter multimediaVideoAdapter;
     MultimediaAudioAdapter multimediaAudioAdapter;
     MultimediaDocumentAdapter multimediaDocumentAdapter;
 
@@ -109,6 +109,14 @@ public class LessonActivity extends AppCompatActivity {
         multimediaPictureAdapter = new MultimediaPictureAdapter(lesson.getMultimediaPicturesFiles(),LessonActivity.this);
         mPicturesRecyclerView.setAdapter(multimediaPictureAdapter);
 
+        //VIDEOS SCROLLING
+        LinearLayoutManager videosLayoutManager = new LinearLayoutManager(this);
+        videosLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        RecyclerView mVideosRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_videos);
+        mVideosRecyclerView.setLayoutManager(videosLayoutManager);
+        multimediaVideoAdapter = new MultimediaVideoAdapter(lesson.getMultimediaVideosFiles(),LessonActivity.this);
+        mVideosRecyclerView.setAdapter(multimediaVideoAdapter);
+
         //AUDIOS SCROLLING
         LinearLayoutManager audiosLayoutManager = new LinearLayoutManager(this);
         audiosLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -132,7 +140,7 @@ public class LessonActivity extends AppCompatActivity {
         ABSOLUTE_STORAGE_PATH = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString();
         final String CACHE_FOLDER = LessonActivity.this.getCacheDir().toString();
 
-        VolleyFetchLessonMultimedia.volleyFetchLessonMultimedia(new VolleyCallback() {
+        VolleyFetchLessonMultimedia.volleyFetchLessonMultimedia(new VolleyJSONCallback() {
             @Override
             public void onSuccess(JSONObject result) {
                 try{
@@ -148,6 +156,7 @@ public class LessonActivity extends AppCompatActivity {
                     ArrayList<String> picturePathsList  = new ArrayList<>();
                     ArrayList<String> audioPathsList  = new ArrayList<>();
                     ArrayList<String> documentPathsList  = new ArrayList<>();
+                    ArrayList<String> videosPathsList  = new ArrayList<>();
 
                     for (String fileKey: arrayList) {
                         if (fileKey.contains(Constants.S3_IMAGES_PATH)){
@@ -156,6 +165,8 @@ public class LessonActivity extends AppCompatActivity {
                             audioPathsList.add(fileKey);
                         } else if (fileKey.contains(Constants.S3_DOCS_PATH)) {
                             documentPathsList.add(fileKey);
+                        } else if (fileKey.contains(Constants.S3_VIDEOS_PATH)) {
+                            videosPathsList.add(fileKey);
                         }
                     }
 
@@ -163,14 +174,16 @@ public class LessonActivity extends AppCompatActivity {
                     for (String path: pictureArray){
                         lesson.getMultimediaPicturesFiles().add(new MultimediaFile(
                                 Constants.S3_LESSONS_PATH+"/"+lesson.getId()+"/"+
-                                        Constants.S3_IMAGES_PATH,CACHE_FOLDER+"/"+path.substring(path.lastIndexOf("/")+1),path.replace("\"", ""),transferUtility));
+                                        Constants.S3_IMAGES_PATH,CACHE_FOLDER+
+                                "/"+path.substring(path.lastIndexOf("/")+1,path.length()-1),path.replace("\"", ""),transferUtility));
                     }
                     multimediaPictureAdapter.notifyDataSetChanged();
 
                     for (String audioPath: audioPathsList) {
                         MultimediaFile audioMultimedia = new MultimediaFile(
                                 Constants.S3_LESSONS_PATH+"/"+lesson.getId()+"/"+
-                                    Constants.S3_AUDIOS_PATH,CACHE_FOLDER+"/"+audioPath.substring(audioPath.lastIndexOf("/")+1),audioPath.replace("\"", ""),transferUtility);
+                                    Constants.S3_AUDIOS_PATH,CACHE_FOLDER+
+                                "/"+audioPath.substring(audioPath.lastIndexOf("/")+1,audioPath.length()-1),audioPath.replace("\"", ""),transferUtility);
                         lesson.getMultimediaAudiosFiles().add(audioMultimedia);
                     }
                     multimediaAudioAdapter.notifyDataSetChanged();
@@ -178,11 +191,23 @@ public class LessonActivity extends AppCompatActivity {
                     for (String documentPath: documentPathsList) {
                         MultimediaFile documentMultimedia = new MultimediaFile(
                                 Constants.S3_LESSONS_PATH+"/"+lesson.getId()+"/"+
-                                    Constants.S3_DOCS_PATH,ABSOLUTE_STORAGE_PATH+"/"+PROJECT_FOLDER+"/"+documentPath.substring(documentPath.lastIndexOf("/")+1),
+                                    Constants.S3_DOCS_PATH,ABSOLUTE_STORAGE_PATH+
+                                "/"+PROJECT_FOLDER+"/"+documentPath.substring(documentPath.lastIndexOf("/")+1,documentPath.length()-1),
                                 documentPath.replace("\"", ""),transferUtility);
                         lesson.getMultimediaDocumentsFiles().add(documentMultimedia);
+
                     }
                     multimediaDocumentAdapter.notifyDataSetChanged();
+
+                    for (String videoPath: videosPathsList) {
+                        MultimediaFile documentMultimedia = new MultimediaFile(
+                                Constants.S3_LESSONS_PATH+"/"+lesson.getId()+"/"+
+                                        Constants.S3_VIDEOS_PATH,ABSOLUTE_STORAGE_PATH+"/"+PROJECT_FOLDER+"/"+
+                                videoPath.substring(videoPath.lastIndexOf("/")+1,videoPath.length()-1),
+                                videoPath.replace("\"", ""),transferUtility);
+                        lesson.getMultimediaVideosFiles().add(documentMultimedia);
+                    }
+                    multimediaVideoAdapter.notifyDataSetChanged();
                 }
                 catch (Exception e) {}
             }
@@ -256,16 +281,6 @@ public class LessonActivity extends AppCompatActivity {
         return intent;
     }
 
-    public interface VolleyCallback{
-        void onSuccess(JSONObject result);
-        void onErrorResponse(VolleyError result);
-    }
-
-    public interface VolleyStringCallback{
-        void onSuccess(String result);
-        void onErrorResponse(VolleyError result);
-    }
-
     public void showPermissions(){
 
 
@@ -287,17 +302,17 @@ public class LessonActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             Log.i("DELETE","Lesson deleted");
-            try {
-                //Delete the lesson from DB
-                new DeleteLessonTask(lesson,getApplicationContext()).execute().get();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            }
             VolleyDeleteLesson.volleyDeleteLesson(new VolleyStringCallback() {
                 @Override
                 public void onSuccess(String result) {
+                    try {
+                        //Delete the lesson from DB
+                        new DeleteLessonTask(lesson,getApplicationContext()).execute().get();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    }
                     Toast.makeText(LessonActivity.this, "Eliminada correctamente", Toast.LENGTH_LONG).show();
                     startActivity(MainActivity.getIntent(LessonActivity.this));
                 }

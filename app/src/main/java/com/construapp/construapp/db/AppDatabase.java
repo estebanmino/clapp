@@ -1,9 +1,10 @@
-package com.construapp.construapp.models;
+package com.construapp.construapp.db;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.RoomDatabase;
-import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 import android.arch.persistence.room.Room;
+
+import com.construapp.construapp.models.Lesson;
 
 /**
  * Created by jose on 10-10-17.

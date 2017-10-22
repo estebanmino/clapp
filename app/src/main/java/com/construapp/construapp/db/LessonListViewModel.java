@@ -1,11 +1,12 @@
-package com.construapp.construapp.models;
+package com.construapp.construapp.db;
 
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
-import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
-import android.content.Context;
-import java.util.ArrayList;
+
+import com.construapp.construapp.db.AppDatabase;
+import com.construapp.construapp.models.Lesson;
+
 import java.util.List;
 
 
@@ -48,6 +49,24 @@ public class LessonListViewModel extends AndroidViewModel{
         @Override
         protected Void doInBackground(final Lesson... params){
             db.lessonDAO().deleteLesson(params[0]);
+
+            return null;
+        }
+    }
+
+    private static class destroyLessonTable extends AsyncTask<Lesson,Void, Void>{
+
+        private AppDatabase db;
+
+        destroyLessonTable(AppDatabase appDatabase)
+        {
+            db = appDatabase;
+        }
+
+        @Override
+        protected Void doInBackground(final Lesson... params){
+            db.lessonDAO().nukeTable();
+
             return null;
         }
     }

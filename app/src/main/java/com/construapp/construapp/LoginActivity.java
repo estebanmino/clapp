@@ -13,11 +13,12 @@ import android.widget.Toast;
 import android.content.SharedPreferences;
 
 import com.android.volley.VolleyError;
+import com.construapp.construapp.listeners.VolleyJSONCallback;
+import com.construapp.construapp.listeners.VolleyStringCallback;
 import com.construapp.construapp.models.Constants;
-import com.construapp.construapp.threading.api.RetrieveFeedTask;
-import com.construapp.construapp.threading.api.VolleyGetUserProject;
-import com.construapp.construapp.threading.api.VolleyGetUserProjectPermission;
-import com.construapp.construapp.threading.api.VolleyLoginConnection;
+import com.construapp.construapp.api.VolleyGetUserProject;
+import com.construapp.construapp.api.VolleyGetUserProjectPermission;
+import com.construapp.construapp.api.VolleyLoginConnection;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -29,7 +30,6 @@ public class LoginActivity extends AppCompatActivity {
     private EditText editEmail;
     private EditText editPassword;
     private Button btnSignin;
-    static RetrieveFeedTask myAsyncTask;
 
     private String auth_token = "";
     private String user_id = "";
@@ -52,7 +52,7 @@ public class LoginActivity extends AppCompatActivity {
             btnSignin.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    VolleyLoginConnection.volleyLoginConnection(new VolleyCallback() {
+                    VolleyLoginConnection.volleyLoginConnection(new VolleyJSONCallback() {
                         @Override
                         public void onSuccess(JSONObject result) {
                             Toast.makeText(LoginActivity.this, "Bienvenido", Toast.LENGTH_LONG).show();
@@ -70,7 +70,7 @@ public class LoginActivity extends AppCompatActivity {
                             editor.putString(Constants.SP_COMPANY, company_id);
                             editor.apply();
 
-                            VolleyGetUserProject.volleyGetUserProject(new VolleyProjectsCallback() {
+                            VolleyGetUserProject.volleyGetUserProject(new VolleyStringCallback() {
                                 @Override
                                 public void onSuccess(String result) {
                                     JsonParser parser = new JsonParser();
@@ -82,7 +82,7 @@ public class LoginActivity extends AppCompatActivity {
                                         JsonElement jsonObject = obj.get(0);
                                         editor.putString(Constants.SP_ACTUAL_PROJECT, jsonObject.getAsJsonObject().get("id").toString());
                                         editor.apply();
-                                        VolleyGetUserProjectPermission.volleyGetUserProjectPermission(new VolleyProjectPermissionCallback() {
+                                        VolleyGetUserProjectPermission.volleyGetUserProjectPermission(new VolleyJSONCallback() {
                                             @Override
                                             public void onSuccess(JSONObject result) {
                                                 try {

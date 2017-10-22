@@ -1,4 +1,4 @@
-package com.construapp.construapp;
+package com.construapp.construapp.validations;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,10 +9,14 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.construapp.construapp.LessonsAdapter;
+import com.construapp.construapp.ValidateLessonActivity;
 import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.models.ValidateLesson;
 
 import java.util.ArrayList;
+
+import com.construapp.construapp.R;
 
 
 public class ValidateFragment extends Fragment {

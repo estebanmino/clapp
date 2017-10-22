@@ -19,19 +19,25 @@ import com.construapp.construapp.models.MultimediaFile;
 import com.construapp.construapp.threading.MultimediaDocumentDownloader;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * Created by ESTEBANFML on 07-10-2017.
+ * Created by ESTEBANFML on 20-10-2017.
  */
 
-public class MultimediaDocumentAdapter extends MultimediaAdapter {
+public class MultimediaVideoAdapter extends MultimediaAdapter {
 
     private TransferUtility transferUtility;
 
-    public MultimediaDocumentAdapter(ArrayList<MultimediaFile> mMultimediaFiles, Context context) {
+    public MultimediaVideoAdapter(ArrayList<MultimediaFile> mMultimediaFiles, Context context) {
         super(mMultimediaFiles, context);
     };
+
+    public void openFile(Context context, Uri uri, String url) throws IOException {
+        super.openFile(context, uri, url);
+    };
+
 
     @Override
     public void onBindViewHolder(final MultimediaAdapter.MultimediaViewHolder holder, int position) {
@@ -43,7 +49,6 @@ public class MultimediaDocumentAdapter extends MultimediaAdapter {
         if (super.getContext().getClass() == LessonActivity.class) {
 
             if (LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key()) == null) {
-
 
                 holder.btnDownload.setVisibility(View.VISIBLE);
                 holder.btnDownload.setOnClickListener(new View.OnClickListener() {
@@ -70,16 +75,13 @@ public class MultimediaDocumentAdapter extends MultimediaAdapter {
         else {
             holder.btnDownload.setVisibility(View.GONE);
         }
-        String path = multimediaFile.getmPath();
-        String filename = path.substring(path.lastIndexOf("/") + 1);
-        holder.textPath.setText(filename);
         holder.multimediaFile = multimediaFile;
     }
 
     @Override
-    public MultimediaDocumentAdapter.MultimediaViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view =  LayoutInflater.from(parent.getContext()).inflate(R.layout.multimedia_image_document_card, parent, false);
-        MultimediaDocumentAdapter.MultimediaViewHolder vh = new MultimediaDocumentAdapter.MultimediaViewHolder(view);
+    public MultimediaVideoAdapter.MultimediaViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view =  LayoutInflater.from(parent.getContext()).inflate(R.layout.multimedia_image_video_card, parent, false);
+        MultimediaVideoAdapter.MultimediaViewHolder vh = new MultimediaVideoAdapter.MultimediaViewHolder(view);
         return vh;
     }
 
@@ -103,12 +105,10 @@ public class MultimediaDocumentAdapter extends MultimediaAdapter {
                                             Uri.fromFile((File)LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key())).toString()),
                                     multimediaFile.getmPath());
                         } catch (Exception e) {}
-
                     } else {
                         try {
                             openFile(getContext(),
-                                    Uri.parse(
-                                            Uri.fromFile(new File(multimediaFile.getmPath())).toString()),
+                                    Uri.parse(Uri.fromFile(new File(multimediaFile.getmPath())).toString()),
                                     multimediaFile.getmPath());
                         } catch (Exception e) {}
                     }
