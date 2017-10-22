@@ -27,7 +27,6 @@ import java.util.ArrayList;
 
 public class MultimediaDocumentAdapter extends MultimediaAdapter {
 
-    private static String BUCKET_NAME = "construapp";
     private TransferUtility transferUtility;
 
     public MultimediaDocumentAdapter(ArrayList<MultimediaFile> mMultimediaFiles, Context context) {
@@ -98,27 +97,21 @@ public class MultimediaDocumentAdapter extends MultimediaAdapter {
                     intent.setAction(Intent.ACTION_VIEW);
                     //IF CACHE
                     if (multimediaFile.getFileS3Key() != null) {
-                        Log.i("SELECTING","IN SET ACTION"+multimediaFile.getmPath());
+                        try {
+                            openFile(getContext(),
+                                    Uri.parse(
+                                            Uri.fromFile((File)LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key())).toString()),
+                                    multimediaFile.getmPath());
+                        } catch (Exception e) {}
 
-                        intent.setDataAndType(Uri.parse(
-                                //Uri.fromFile((File)LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key())).toString()),
-                                Uri.fromFile(new File(multimediaFile.getmPath())).toString()),
-
-                                "application/pdf");
-                        Intent chooser3 = Intent.createChooser(intent, "Elige una aplicación");
-
-                        view.getContext().startActivity(chooser3);
                     } else {
-                        intent.setDataAndType(Uri.parse(
-                                Uri.fromFile(new File(multimediaFile.getmPath())).toString()
-                        ), "application/pdf");
-                        Log.i("SELECTING","nNOTIN SET ACTION");
-                        Intent chooser3 = Intent.createChooser(intent, "Elige una aplicación");
-
-                        view.getContext().startActivity(chooser3);
-
+                        try {
+                            openFile(getContext(),
+                                    Uri.parse(
+                                            Uri.fromFile(new File(multimediaFile.getmPath())).toString()),
+                                    multimediaFile.getmPath());
+                        } catch (Exception e) {}
                     }
-
                 }
             });
         }

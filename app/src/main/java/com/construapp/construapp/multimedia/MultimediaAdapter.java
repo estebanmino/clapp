@@ -1,6 +1,8 @@
 package com.construapp.construapp.multimedia;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +15,7 @@ import com.construapp.construapp.LessonActivity;
 import com.construapp.construapp.R;
 import com.construapp.construapp.models.MultimediaFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -96,6 +99,49 @@ public abstract class MultimediaAdapter  extends RecyclerView.Adapter<Multimedia
 
         @Override
         public void onClick(View view) {
+        }
+    }
+
+    public void openFile(Context context, Uri uri, String url) throws IOException {
+
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        String title = "Elige una aplicación";
+
+        // so Android knew what application to use to open the file
+        if (url.contains(".doc") || url.contains(".docx")) {
+            // Word document
+            intent.setDataAndType(uri, "application/msword");
+        } else if(url.contains(".pdf")) {
+            // PDF file
+            intent.setDataAndType(uri, "application/pdf");
+        } else if(url.contains(".ppt") || url.contains(".pptx")) {
+            // Powerpoint file
+            intent.setDataAndType(uri, "application/vnd.ms-powerpoint");
+        } else if(url.contains(".xls") || url.contains(".xlsx")) {
+            // Excel file
+            intent.setDataAndType(uri, "application/vnd.ms-excel");
+        } else if(url.contains(".wav") || url.contains(".mp3")) {
+            // WAV audio file
+            intent.setDataAndType(uri, "audio/x-wav");
+        } else if(url.contains(".gif")) {
+            // GIF file
+            intent.setDataAndType(uri, "image/gif");
+        } else if(url.contains(".jpg") || url.contains(".jpeg") || url.contains(".png")) {
+            // JPG file
+            intent.setDataAndType(uri, "image/jpeg");
+        } else if(url.contains(".txt")) {
+            // Text file
+            intent.setDataAndType(uri, "text/plain");
+        } else if(url.contains(".3gp") || url.contains(".mpg") || url.contains(".mpeg") || url.contains(".mpe") || url.contains(".mp4") || url.contains(".avi")) {
+            // Video files
+            intent.setDataAndType(uri, "video/*");
+        } else {
+            intent.setDataAndType(uri, "*/*");
+        }
+
+        Intent chooser = Intent.createChooser(intent, title);
+        if (chooser.resolveActivity(context.getPackageManager()) != null) {
+            context.startActivity(chooser);
         }
     }
 }

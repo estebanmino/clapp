@@ -19,6 +19,7 @@ import com.construapp.construapp.models.MultimediaFile;
 import com.construapp.construapp.threading.MultimediaDocumentDownloader;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -32,6 +33,11 @@ public class MultimediaVideoAdapter extends MultimediaAdapter {
     public MultimediaVideoAdapter(ArrayList<MultimediaFile> mMultimediaFiles, Context context) {
         super(mMultimediaFiles, context);
     };
+
+    public void openFile(Context context, Uri uri, String url) throws IOException {
+        super.openFile(context, uri, url);
+    };
+
 
     @Override
     public void onBindViewHolder(final MultimediaAdapter.MultimediaViewHolder holder, int position) {
@@ -93,26 +99,19 @@ public class MultimediaVideoAdapter extends MultimediaAdapter {
                     intent.setAction(Intent.ACTION_VIEW);
                     //IF CACHE
                     if (multimediaFile.getFileS3Key() != null) {
-                        Log.i("SELECTING","IN SET ACTION"+multimediaFile.getmPath());
-
-                        intent.setDataAndType(Uri.parse(
-                                //Uri.fromFile((File)LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key())).toString()),
-                                Uri.fromFile(new File(multimediaFile.getmPath())).toString()),
-
-                                "video/*");
-                        Intent chooser3 = Intent.createChooser(intent, "Elige una aplicación");
-
-                        view.getContext().startActivity(chooser3);
+                        try {
+                            openFile(getContext(),
+                                    Uri.parse(
+                                            Uri.fromFile((File)LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key())).toString()),
+                                    multimediaFile.getmPath());
+                        } catch (Exception e) {}
                     } else {
-                        intent.setDataAndType(Uri.parse(
-                                Uri.fromFile(new File(multimediaFile.getmPath())).toString()
-                        ), "video/*");
-                        Intent chooser3 = Intent.createChooser(intent, "Elige una aplicación");
-
-                        view.getContext().startActivity(chooser3);
-
+                        try {
+                            openFile(getContext(),
+                                    Uri.parse(Uri.fromFile(new File(multimediaFile.getmPath())).toString()),
+                                    multimediaFile.getmPath());
+                        } catch (Exception e) {}
                     }
-
                 }
             });
         }
