@@ -85,8 +85,6 @@ public class MainActivity extends AppCompatActivity {
             // Set the adapter for the list view
             sidebarAdapter = new SidebarAdapter(this, projects);
             mDrawerList.setAdapter(sidebarAdapter);
-            // Set the list's click listener
-            //mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
             setDrawerListOnClickListener();
         } catch (Exception e) {}
 
@@ -134,9 +132,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 String map = (String) sidebarAdapter.getItem(position);
+                Intent intent = getIntent();
+                finish();
+                startActivity(intent);
                 final SharedPreferences.Editor editor = sharedpreferences.edit();
                 editor.putString(Constants.SP_ACTUAL_PROJECT,map);
                 editor.apply();
+                mDrawerLayout.closeDrawers();
             }
         });
     }
