@@ -45,6 +45,12 @@ public interface LessonDAO {
     @Query("select * from Lesson where (project_id = :projectId) AND (user_id = :userId)")
     List<Lesson> getLessonByUserAndProjectId(String userId, String projectId);
 
+    @Query("select * from Lesson where (project_id = :projectId) AND (validator = :validatorValue)")
+    List<Lesson> getLessonByProjectIdAndValidator(String projectId,boolean validatorValue);
+
+    @Query("select * from Lesson where (validator = :validatorValue)")
+    List<Lesson> getLessonByValidator(boolean validatorValue);
+
     @Query("SELECT COUNT(*) FROM Lesson")
     int lessonCount();
 

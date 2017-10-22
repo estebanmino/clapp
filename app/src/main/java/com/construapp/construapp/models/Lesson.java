@@ -34,6 +34,24 @@ public class Lesson {
     private String user_id;
     private String project_id;
     private String company_id;
+    private boolean validator = false;
+    private boolean validator_sec = false;
+
+    public boolean isValidator_sec() {
+        return validator_sec;
+    }
+
+    public void setValidator_sec(boolean validator_sec) {
+        this.validator_sec = validator_sec;
+    }
+
+    public boolean isValidator() {
+        return validator;
+    }
+
+    public void setValidator(boolean validator) {
+        this.validator = validator;
+    }
 
     public String getProject_id() {
         return project_id;
