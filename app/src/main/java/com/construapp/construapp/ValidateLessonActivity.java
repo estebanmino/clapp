@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Environment;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -75,6 +76,8 @@ public class ValidateLessonActivity extends AppCompatActivity {
     TextView textDeleteLesson;
     TextView textLessonName;
     TextView textLessonDescription;
+    TextView textSaveValidatedLesson;
+    TextView textSendValidatedLessonComments;
     Switch validateNameSwitch;
     Switch validateDescriptionSwitch;
     Switch validateImagesSwitch;
@@ -85,6 +88,8 @@ public class ValidateLessonActivity extends AppCompatActivity {
     EditText validateImagesComment;
     EditText validateAudiosComment;
     EditText validateDocumentsComment;
+    FloatingActionButton buttonSaveValidatedLesson;
+    FloatingActionButton buttonSendValidatedLessonComments;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,6 +120,11 @@ public class ValidateLessonActivity extends AppCompatActivity {
         validateAudiosComment = (EditText) findViewById(R.id.editText_validate_audios_comment);
         validateDocumentsComment = (EditText) findViewById(R.id.editText_validate_documents_comment);
 
+        textSaveValidatedLesson = (TextView) findViewById(R.id.textView_save_validated_lesson);
+        textSendValidatedLessonComments = (TextView) findViewById(R.id.textView_send_validated_lesson_comments);
+        buttonSaveValidatedLesson = (FloatingActionButton) findViewById(R.id.floatingActionButton_save_validated_lesson);
+        buttonSendValidatedLessonComments = (FloatingActionButton) findViewById(R.id.floatingActionButton_send_validated_lesson_comments);
+
         setLesson();
 
         textLessonName.setText(lesson.getName());
@@ -129,6 +139,7 @@ public class ValidateLessonActivity extends AppCompatActivity {
                 else {
                     validateNameComment.setVisibility(View.GONE);
                 }
+                checkedComments();
             }
         });
 
@@ -141,6 +152,7 @@ public class ValidateLessonActivity extends AppCompatActivity {
                 else {
                     validateDescriptionComment.setVisibility(View.GONE);
                 }
+                checkedComments();
             }
         });
 
@@ -153,6 +165,7 @@ public class ValidateLessonActivity extends AppCompatActivity {
                 else {
                     validateImagesComment.setVisibility(View.GONE);
                 }
+                checkedComments();
             }
         });
 
@@ -165,6 +178,7 @@ public class ValidateLessonActivity extends AppCompatActivity {
                 else {
                     validateAudiosComment.setVisibility(View.GONE);
                 }
+                checkedComments();
             }
         });
 
@@ -177,6 +191,7 @@ public class ValidateLessonActivity extends AppCompatActivity {
                 else {
                     validateDocumentsComment.setVisibility(View.GONE);
                 }
+                checkedComments();
             }
         });
 
@@ -322,12 +337,18 @@ public class ValidateLessonActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public boolean checkedComments(){
+    public void checkedComments(){
         if (validateNameSwitch.isChecked() || validateDescriptionSwitch.isChecked() || validateImagesSwitch.isChecked() || validateAudiosSwitch.isChecked() || validateDocumentsSwitch.isChecked()){
-            return true;
+            textSaveValidatedLesson.setVisibility(View.GONE);
+            buttonSaveValidatedLesson.setVisibility(View.GONE);
+            textSendValidatedLessonComments.setVisibility(View.VISIBLE);
+            buttonSendValidatedLessonComments.setVisibility(View.VISIBLE);
         }
         else {
-            return false;
+            textSaveValidatedLesson.setVisibility(View.VISIBLE);
+            buttonSaveValidatedLesson.setVisibility(View.VISIBLE);
+            textSendValidatedLessonComments.setVisibility(View.GONE);
+            buttonSendValidatedLessonComments.setVisibility(View.GONE);
         }
     }
 

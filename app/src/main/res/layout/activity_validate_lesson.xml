@@ -37,8 +37,8 @@
         android:layout_marginBottom="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintVertical_bias="1.0">
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintVertical_bias="0.0">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
@@ -371,11 +371,6 @@
                 android:id="@+id/editText_validate_name_comment"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
                 android:background="@color/cardview_light_background"
                 android:ems="10"
                 android:hint="Ingresar comentario sobre el nombre"
@@ -389,11 +384,6 @@
                 android:id="@+id/editText_validate_description_comment"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="7dp"
                 android:background="@color/cardview_light_background"
                 android:ems="10"
                 android:hint="Ingresar comentario sobre la descripción"
@@ -407,11 +397,6 @@
                 android:id="@+id/editText_validate_images_comment"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
                 android:background="@color/cardview_light_background"
                 android:ems="10"
                 android:hint="Ingresar comentario sobre las imágenes"
@@ -425,11 +410,6 @@
                 android:id="@+id/editText_validate_audios_comment"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
                 android:background="@color/cardview_light_background"
                 android:ems="10"
                 android:hint="Ingresar comentario sobre los audios"
@@ -443,11 +423,6 @@
                 android:id="@+id/editText_validate_documents_comment"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
                 android:background="@color/cardview_light_background"
                 android:ems="10"
                 android:hint="Ingresar comentario sobre los documentos"
@@ -456,6 +431,33 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/recycler_horizontal_documents" />
+
+            <TextView
+                android:id="@+id/textView_save_validated_lesson"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:text="Guardar lección"
+                android:textColor="@color/colorPrimary"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="@+id/floatingActionButton_save_validated_lesson"
+                app:layout_constraintRight_toLeftOf="@+id/floatingActionButton_save_validated_lesson"
+                app:layout_constraintTop_toTopOf="@+id/floatingActionButton_save_validated_lesson" />
+
+            <TextView
+                android:id="@+id/textView_send_validated_lesson_comments"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:text="Enviar comentarios"
+                android:textColor="@color/colorPrimary"
+                android:textSize="18sp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@+id/floatingActionButton_send_validated_lesson_comments"
+                app:layout_constraintRight_toLeftOf="@+id/floatingActionButton_send_validated_lesson_comments"
+                app:layout_constraintTop_toTopOf="@+id/floatingActionButton_send_validated_lesson_comments" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recycler_horizontal_documents"
@@ -470,6 +472,31 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toLeftOf="@+id/switch_lesson_documents"
                 app:layout_constraintTop_toBottomOf="@+id/editText_validate_audios_comment" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/floatingActionButton_save_validated_lesson"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="8dp"
+                app:fabSize="normal"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editText_validate_documents_comment"
+                app:srcCompat="@android:drawable/ic_menu_save" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/floatingActionButton_send_validated_lesson_comments"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="8dp"
+                android:visibility="gone"
+                app:fabSize="normal"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editText_validate_documents_comment"
+                app:srcCompat="@android:drawable/ic_menu_send" />
 
         </android.support.constraint.ConstraintLayout>
     </android.support.v4.widget.NestedScrollView>
