@@ -47,18 +47,17 @@
             </intent-filter>
         </activity>
         <activity android:name=".LoginActivity" />
-
         <activity
             android:name=".LessonFormActivity"
             android:label="@string/title_activity_lesson_form"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <service
             android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
             android:enabled="true" />
 
-        <activity android:name=".ShowInfo"></activity>
-
+        <activity android:name=".ShowInfo" />
+        <activity android:name=".ValidateLessonActivity"></activity>
     </application>
 
 </manifest>
