@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
         int fabPermission = constants.xmlPermissionTagToInt(fab.getTag().toString());
 
         //Able FloatingActionButton or hide it according to the user permissions
-        if (userPermission >= fabPermission){
+        if (userPermission >= fabPermission && !sharedpreferences.getString(Constants.SP_ACTUAL_PROJECT,"").equals("null")){
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
