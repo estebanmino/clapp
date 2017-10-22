@@ -44,6 +44,8 @@ public interface Constants {
     public static final String S3_DOCS_PATH = "docs";
     public static final String S3_LESSONS_PATH = "lessons";
 
+    //MMEDIA
+    public static final String M_APP_DIRECTORY = "Clapp";
 
 
 
