@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.content.SharedPreferences;
@@ -20,6 +21,9 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.android.volley.VolleyError;
+import com.construapp.construapp.api.VolleyCreateLesson;
+import com.construapp.construapp.api.VolleyPatchLesson;
+import com.construapp.construapp.api.VolleyPostS3;
 import com.construapp.construapp.db.Connectivity;
 import com.construapp.construapp.listeners.VolleyJSONCallback;
 import com.construapp.construapp.listeners.VolleyStringCallback;
@@ -40,34 +44,22 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 
-public class LessonActivity extends AppCompatActivity {
+public class LessonActivity extends LessonBaseActivity {
 
     private static final String LESSON_NAME = "username";
     private static final String LESSON_DESCRIPTION = "description";
     private static final String LESSON_ID = "id";
     private static final String PROJECT_FOLDER = "ConstruApp";
 
-    private Lesson lesson = new Lesson();
     private int userPermission;
 
-    //CONSTANTS
-    private General constants;
-
-    //AmazonS3
-    private TransferUtility transferUtility;
-
     //MM ADAPTER
-    MultimediaPictureAdapter multimediaPictureAdapter;
-    MultimediaVideoAdapter multimediaVideoAdapter;
-    MultimediaAudioAdapter multimediaAudioAdapter;
-    MultimediaDocumentAdapter multimediaDocumentAdapter;
-
-    private static String ABSOLUTE_STORAGE_PATH;
 
     ImageView imageEditLesson;
     ImageView imageDeleteLesson;
@@ -76,8 +68,14 @@ public class LessonActivity extends AppCompatActivity {
     TextView textLessonName;
     TextView textLessonDescription;
 
-    private SharedPreferences sharedPreferences;
+    private EditText editName;
+    private EditText editDescription;
+    private TextView textNameEdit;
+    private TextView textDescriptionEdit;
+    private TextView textNewLessonName;
+    private TextView textNewLessonDescription;
 
+    private Boolean editing = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,11 +83,9 @@ public class LessonActivity extends AppCompatActivity {
         setContentView(R.layout.activity_lesson);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        SharedPreferences sharedpreferences = getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
         constants = new General();
-        userPermission = Integer.parseInt(sharedpreferences.getString(Constants.SP_USER_PERMISSION,""));
-
-        sharedPreferences = LessonActivity.this.getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
+        userPermission = Integer.parseInt(sharedPreferences.getString(Constants.SP_USER_PERMISSION,""));
 
         imageEditLesson = (ImageView) findViewById(R.id.image_edit_lesson);
         imageDeleteLesson = (ImageView) findViewById(R.id.image_delete_lesson);
@@ -97,6 +93,23 @@ public class LessonActivity extends AppCompatActivity {
         textDeleteLesson = (TextView) findViewById(R.id.text_delete_lesson);
         textLessonName = (TextView) findViewById(R.id.text_lesson_name);
         textLessonDescription = (TextView) findViewById(R.id.text_lesson_description);
+        textNewLessonName = findViewById(R.id.text_new_lesson_name);
+        textNewLessonDescription = findViewById(R.id.text_new_lesson_description);
+
+        fabCamera = findViewById(R.id.fab_camera);
+        fabGallery = findViewById(R.id.fab_gallery);
+        fabRecordAudio = findViewById(R.id.fab_record_audio);
+        fabSend = findViewById(R.id.fab_send);
+        fabFiles = findViewById(R.id.fab_files);
+        fabVideo = findViewById(R.id.fab_video);
+        textRecording = findViewById(R.id.text_recording);
+
+        constraintMultimediaBar = findViewById(R.id.constraint_multimedia_bar);
+
+        editName = findViewById(R.id.edit_name);
+        editDescription = findViewById(R.id.edit_description);
+        textNameEdit = findViewById(R.id.text_lesson_name_edit);
+        textDescriptionEdit = findViewById(R.id.text_lesson_description_edit);
 
         setLesson();
 
@@ -258,7 +271,46 @@ public class LessonActivity extends AppCompatActivity {
         imageEditLesson.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //edit
+                if (editing) {
+                    constraintMultimediaBar.setVisibility(View.VISIBLE);
+                    editDescription.setVisibility(View.VISIBLE);
+                    editName.setVisibility(View.VISIBLE);
+                    textNameEdit.setVisibility(View.VISIBLE);
+                    textDescriptionEdit.setVisibility(View.VISIBLE);
+                    textLessonName.setVisibility(View.GONE);
+                    textLessonDescription.setVisibility(View.GONE);
+                    textLessonName.setVisibility(View.GONE);
+                    textLessonDescription.setVisibility(View.GONE);
+                    textNewLessonName.setVisibility(View.GONE);
+                    textNewLessonDescription.setVisibility(View.GONE);
+
+                    editName.setText(getIntent().getStringExtra(LESSON_NAME));
+                    editDescription.setText(getIntent().getStringExtra(LESSON_DESCRIPTION));
+
+                    textEditLesson.setText("Cancelar");
+                    imageDeleteLesson.setVisibility(View.GONE);
+                    textDeleteLesson.setVisibility(View.GONE);
+                    setFabSendOnClickListener();
+                }
+                else {
+                    constraintMultimediaBar.setVisibility(View.GONE);
+                    editDescription.setVisibility(View.GONE);
+                    editName.setVisibility(View.GONE);
+                    textNameEdit.setVisibility(View.GONE);
+                    textDescriptionEdit.setVisibility(View.GONE);
+
+                    textLessonName.setVisibility(View.VISIBLE);
+                    textLessonDescription.setVisibility(View.VISIBLE);
+                    textLessonName.setVisibility(View.VISIBLE);
+                    textLessonDescription.setVisibility(View.VISIBLE);
+                    textNewLessonName.setVisibility(View.VISIBLE);
+                    textNewLessonDescription.setVisibility(View.VISIBLE);
+
+                    textEditLesson.setText("Editar");
+                    imageDeleteLesson.setVisibility(View.VISIBLE);
+                    textDeleteLesson.setVisibility(View.VISIBLE);
+                }
+                editing = !editing;
             }
         });
     }
@@ -271,6 +323,7 @@ public class LessonActivity extends AppCompatActivity {
     }
 
     public void setLesson() {
+        lesson = new Lesson();
         lesson.setName(getIntent().getStringExtra(LESSON_NAME));
         lesson.setDescription(getIntent().getStringExtra(LESSON_DESCRIPTION));
         lesson.setId(getIntent().getStringExtra(LESSON_ID));
@@ -291,9 +344,8 @@ public class LessonActivity extends AppCompatActivity {
 
         int editPermission = constants.xmlPermissionTagToInt(imageEditLesson.getTag().toString());
         int deletePermission = constants.xmlPermissionTagToInt((imageDeleteLesson.getTag().toString()));
+        sharedPreferences = getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
 
-        Log.i("PERMISSION",Integer.toString(editPermission));
-        Log.i("PERMISSION",Integer.toString(userPermission));
         if (editPermission > userPermission || sharedPreferences.getString(Constants.SP_ADMIN, "") != "1"){
             imageEditLesson.setVisibility(View.GONE);
             textEditLesson.setVisibility(View.GONE);
@@ -329,5 +381,35 @@ public class LessonActivity extends AppCompatActivity {
                 }
             }, LessonActivity.this, lesson.getId());
         }
+    }
+
+    public void setFabSendOnClickListener(){
+        fabSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+            //TODO fix params, working with sharedpreferences
+            sharedPreferences = getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
+            String lesson_name = editName.getText().toString();
+            String lesson_summary = editDescription.getText().toString();
+            String lesson_motivation = "Aprendizaje";
+            String lesson_learning = editDescription.getText().toString();
+            //TODO FIJAR PROYECTO CUANDO EXISTA
+            String project_id = sharedPreferences.getString(Constants.SP_ACTUAL_PROJECT,"");
+
+            VolleyPatchLesson.volleyPatchLesson(new VolleyJSONCallback() {
+                  @Override
+                  public void onSuccess(JSONObject result) {
+                      Toast.makeText(LessonActivity.this, "Leccion editada", Toast.LENGTH_LONG).show();
+                      startActivity(MainActivity.getIntent(LessonActivity.this));
+                  }
+
+                  @Override
+                  public void onErrorResponse(VolleyError result) {}
+                }, LessonActivity.this, lesson.getId(), lesson_name, lesson_summary,
+                lesson_motivation, lesson_learning
+                );
+
+            }
+        });
     }
 }

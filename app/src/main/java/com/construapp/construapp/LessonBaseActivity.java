@@ -14,6 +14,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -80,6 +81,7 @@ public class LessonBaseActivity extends AppCompatActivity {
     public EditText editLessonName;
     public EditText editLessonDescription;
     public TextView textRecording;
+    public ConstraintLayout constraintMultimediaBar;
 
     //LOCAL VARIABLES
     public String mPath;
@@ -105,10 +107,12 @@ public class LessonBaseActivity extends AppCompatActivity {
     public  General constants;
 
     //MM ADAPTER
-    MultimediaPictureAdapter multimediaPictureAdapter;
-    MultimediaVideoAdapter multimediaVideoAdapter;
-    MultimediaAudioAdapter multimediaAudioAdapter;
-    MultimediaDocumentAdapter multimediaDocumentAdapter;
+    public MultimediaPictureAdapter multimediaPictureAdapter;
+    public MultimediaVideoAdapter multimediaVideoAdapter;
+    public MultimediaAudioAdapter multimediaAudioAdapter;
+    public MultimediaDocumentAdapter multimediaDocumentAdapter;
+
+    public SharedPreferences sharedPreferences;
 
 
     //LESSON VIEW
@@ -118,89 +122,6 @@ public class LessonBaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-    }
-
-    public void setFabSendOnClickListener(){
-        fabSend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //TODO fix params, working with sharedpreferences
-                SharedPreferences sharedpreferences = getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
-                String lesson_name = editLessonName.getText().toString();
-                String lesson_summary = editLessonName.getText().toString();
-                String lesson_motivation = "Aprendizaje";
-                String lesson_learning = editLessonDescription.getText().toString();
-                //TODO FIJAR PROYECTO CUANDO EXISTA
-                String project_id = sharedpreferences.getString(Constants.SP_ACTUAL_PROJECT,"");
-
-                VolleyCreateLesson.volleyCreateLesson(new VolleyJSONCallback() {
-                                                          @Override
-                                                          public void onSuccess(JSONObject result) {
-                                                              try {
-                                                                  final String new_lesson_id = result.get("id").toString();
-                                                                  String path_input = "";
-                                                                  for (MultimediaFile multimediaFile : lesson.getMultimediaPicturesFiles()) {
-                                                                      multimediaFile.setExtension(Constants.S3_LESSONS_PATH+ "/"+ new_lesson_id +"/" +
-                                                                              multimediaFile.getExtension());
-                                                                      path_input += multimediaFile.getExtension() + "/" +
-                                                                              multimediaFile.getmPath().substring(multimediaFile.getmPath().lastIndexOf("/") + 1) + ";";
-                                                                  }
-                                                                  for (MultimediaFile multimediaFile : lesson.getMultimediaAudiosFiles()) {
-                                                                      multimediaFile.setExtension(Constants.S3_LESSONS_PATH+ "/"+ new_lesson_id +"/" +
-                                                                              multimediaFile.getExtension());
-                                                                      path_input += multimediaFile.getExtension() + "/"
-                                                                              + multimediaFile.getmPath().substring(multimediaFile.getmPath().lastIndexOf("/") + 1) + ";";
-                                                                  }
-                                                                  for (MultimediaFile multimediaFile : lesson.getMultimediaDocumentsFiles()) {
-                                                                      multimediaFile.setExtension(Constants.S3_LESSONS_PATH+ "/"+ new_lesson_id +"/" +
-                                                                              multimediaFile.getExtension());
-                                                                      path_input += multimediaFile.getExtension() + "/"
-                                                                              + multimediaFile.getmPath().substring(multimediaFile.getmPath().lastIndexOf("/") + 1) + ";";
-                                                                  }
-
-                                                                  for (MultimediaFile multimediaFile : lesson.getMultimediaVideosFiles()) {
-                                                                      multimediaFile.setExtension(Constants.S3_LESSONS_PATH+ "/"+ new_lesson_id +"/" +
-                                                                              multimediaFile.getExtension());
-                                                                      path_input += multimediaFile.getExtension() + "/"
-                                                                              + multimediaFile.getmPath().substring(multimediaFile.getmPath().lastIndexOf("/") + 1) + ";";
-                                                                  }
-
-                                                                  VolleyPostS3.volleyPostS3(new VolleyJSONCallback() {
-                                                                      @Override
-                                                                      public void onSuccess(JSONObject result) {
-                                                                          for (MultimediaFile multimediaFile: lesson.getMultimediaPicturesFiles()) {
-                                                                              multimediaFile.initUploadThread();
-                                                                          }
-                                                                          for (MultimediaFile multimediaFile: lesson.getMultimediaAudiosFiles()) {
-                                                                              multimediaFile.initUploadThread();
-                                                                          }
-                                                                          for (MultimediaFile multimediaFile: lesson.getMultimediaDocumentsFiles()) {
-                                                                              multimediaFile.initUploadThread();
-                                                                          }
-                                                                          for (MultimediaFile multimediaFile: lesson.getMultimediaVideosFiles()) {
-                                                                              multimediaFile.initUploadThread();
-                                                                          }
-                                                                          startActivity(MainActivity.getIntent(LessonBaseActivity.this));
-                                                                      }
-
-                                                                      @Override
-                                                                      public void onErrorResponse(VolleyError result) {
-                                                                      }
-                                                                  }, LessonBaseActivity.this, new_lesson_id, path_input.split(";"));
-                                                              } catch (Exception e) {
-                                                              }
-                                                          }
-
-                                                          @Override
-                                                          public void onErrorResponse(VolleyError result) {
-
-                                                          }
-                                                      }, LessonBaseActivity.this, lesson_name, lesson_summary,
-                        lesson_motivation, lesson_learning,
-                        project_id);
-                Toast.makeText(LessonBaseActivity.this, "Nueva lección creada", Toast.LENGTH_LONG).show();
-            }
-        });
     }
 
     public void setFabFilesOnClickListener(){
