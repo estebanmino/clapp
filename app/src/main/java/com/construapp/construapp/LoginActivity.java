@@ -26,6 +26,8 @@ import com.google.gson.JsonParser;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 public class LoginActivity extends AppCompatActivity {
 
     private EditText editEmail;
@@ -78,9 +80,18 @@ public class LoginActivity extends AppCompatActivity {
                             VolleyGetUserProject.volleyGetUserProject(new VolleyStringCallback() {
                                 @Override
                                 public void onSuccess(String result) {
+
                                     JsonParser parser = new JsonParser();
-                                    JsonArray obj = (JsonArray) parser.parse(result);
-                                    editor.putString(Constants.SP_PROJECTS, result);
+                                    ArrayList<String> arrayList = new ArrayList<>();
+                                    JsonArray jsonArray = parser.parse(result).getAsJsonArray();
+                                    for (int i = 0; i < jsonArray.size(); i++) {
+                                        JsonElement jsonObject = (JsonElement) jsonArray.get(i);
+                                        arrayList.add(jsonObject.getAsJsonObject().get("project").toString());
+                                    }
+                                    JsonArray obj = (JsonArray) parser.parse(arrayList.toString());
+                                    //Log.i("JSONARRAY",obj.toString());
+                                    //Log.i("JSONARRAY",Integer.toString(obj.size()));
+                                    editor.putString(Constants.SP_PROJECTS, obj.toString());
                                     if (obj.size() != 0) {
                                         editor.putBoolean(Constants.SP_HAS_PROJECTS, true);
                                         editor.apply();
