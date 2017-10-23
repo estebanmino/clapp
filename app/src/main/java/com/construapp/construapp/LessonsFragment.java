@@ -99,6 +99,7 @@ public class LessonsFragment extends Fragment {
                                 for (int i = 0; i < jsonLessons.length(); i++) {
                                     Log.i("JSON", jsonLessons.get(i).toString());
                                     JSONObject object = (JSONObject) jsonLessons.get(i);
+                                    //TODO: refactoring params con Constant 23-10
                                     lesson.setName(object.get("name").toString());
                                     lesson.setDescription(object.get("summary").toString());
                                     lesson.setId(object.get("id").toString());

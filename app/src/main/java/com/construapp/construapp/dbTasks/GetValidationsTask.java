@@ -32,12 +32,12 @@ public class GetValidationsTask extends AsyncTask <Void,Void,List<Lesson>>{
 
         if (!projectId.equals("null")) {
             Log.i("VALIDATION", "BYPROJECT");
-            list = appDatabase.lessonDAO().getLessonByProjectIdAndValidator(projectId,true);
+            list = appDatabase.lessonDAO().getLessonByProjectIdAndValidator(projectId,"true");
         }
 
         else {
             Log.i("VALIDATION", "BY VALIDATION");
-            appDatabase.lessonDAO().getLessonByValidator(true);
+            list = appDatabase.lessonDAO().getLessonByValidator("true");
         }
         return  list;
     }
