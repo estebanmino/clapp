@@ -44,6 +44,24 @@ public class Lesson {
     private String user_id;
     private String project_id;
     private String company_id;
+    private String validator;
+    private String validator_sec;
+
+    public String getValidator_sec() {
+        return validator_sec;
+    }
+
+    public void setValidator_sec(String validator_sec) {
+        this.validator_sec = validator_sec;
+    }
+
+    public String getValidator() {
+        return validator;
+    }
+
+    public void setValidator(String validator) {
+        this.validator = validator;
+    }
 
     public String getProject_id() {
         return project_id;

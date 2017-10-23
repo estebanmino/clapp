@@ -53,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
     public final static String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
     private LRUCache lruCache;
     private int userPermission;
-
     private String[] mProjectTitles;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
@@ -77,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
                 JSONObject project = (JSONObject) jsonArray.get(i);
                 projects.put(project.getString("name"),project.getString("id"));
                 mProjectTitles[i] = project.getString("name");
+
             }
             projects.put("Todos los proyectos","null");
             mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
