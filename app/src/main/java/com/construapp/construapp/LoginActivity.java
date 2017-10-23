@@ -101,6 +101,7 @@ public class LoginActivity extends AppCompatActivity {
                                                     editor.putString(Constants.SP_USER_PERMISSION_NAME,
                                                             result.get(Constants.SP_HAS_PERMISSION).toString());
                                                     editor.apply();
+                                                    //TODO revisar startActivity
                                                     startActivity(MainActivity.getIntent(LoginActivity.this));
                                                 } catch (Exception e) {
                                                 }

@@ -19,6 +19,7 @@ public class InsertLessonTask extends AsyncTask<Void,Void,Boolean> {
     {
         this.lesson=lesson;
         this.context=context;
+        //lesson.setValidator(true);
 
     }
     @Override
