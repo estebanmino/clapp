@@ -21,6 +21,7 @@ import com.construapp.construapp.LessonActivity;
 import com.construapp.construapp.R;
 import com.construapp.construapp.cache.LRUCache;
 import com.construapp.construapp.models.General;
+import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.models.MultimediaFile;
 import com.construapp.construapp.threading.MultimediaPictureDownloader;
 
@@ -38,8 +39,8 @@ public class MultimediaPictureAdapter extends MultimediaAdapter {
 
     private static String FILE_TYPE = "image/*";
 
-    public MultimediaPictureAdapter(ArrayList<MultimediaFile> mMultimediaFiles, Context context) {
-        super(mMultimediaFiles, context);
+    public MultimediaPictureAdapter(ArrayList<MultimediaFile> mMultimediaFiles, Context context, Lesson thisLesson) {
+        super(mMultimediaFiles, context,thisLesson);
     };
 
     @Override

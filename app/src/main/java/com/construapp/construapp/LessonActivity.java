@@ -135,7 +135,7 @@ public class LessonActivity extends LessonBaseActivity {
         picturesLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mPicturesRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_pictures);
         mPicturesRecyclerView.setLayoutManager(picturesLayoutManager);
-        multimediaPictureAdapter = new MultimediaPictureAdapter(lesson.getMultimediaPicturesFiles(),LessonActivity.this);
+        multimediaPictureAdapter = new MultimediaPictureAdapter(lesson.getMultimediaPicturesFiles(),LessonActivity.this,lesson);
         mPicturesRecyclerView.setAdapter(multimediaPictureAdapter);
 
         //VIDEOS SCROLLING
@@ -143,7 +143,7 @@ public class LessonActivity extends LessonBaseActivity {
         videosLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mVideosRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_videos);
         mVideosRecyclerView.setLayoutManager(videosLayoutManager);
-        multimediaVideoAdapter = new MultimediaVideoAdapter(lesson.getMultimediaVideosFiles(),LessonActivity.this);
+        multimediaVideoAdapter = new MultimediaVideoAdapter(lesson.getMultimediaVideosFiles(),LessonActivity.this,lesson);
         mVideosRecyclerView.setAdapter(multimediaVideoAdapter);
 
         //AUDIOS SCROLLING
@@ -151,7 +151,7 @@ public class LessonActivity extends LessonBaseActivity {
         audiosLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mAudiosRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_audios);
         mAudiosRecyclerView.setLayoutManager(audiosLayoutManager);
-        multimediaAudioAdapter = new MultimediaAudioAdapter(lesson.getMultimediaAudiosFiles(),LessonActivity.this);
+        multimediaAudioAdapter = new MultimediaAudioAdapter(lesson.getMultimediaAudiosFiles(),LessonActivity.this,lesson);
         mAudiosRecyclerView.setAdapter(multimediaAudioAdapter);
 
         //DOCUMENTS SCROLLING
@@ -159,7 +159,7 @@ public class LessonActivity extends LessonBaseActivity {
         documentsLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mDocumentsRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_documents);
         mDocumentsRecyclerView.setLayoutManager(documentsLayoutManager);
-        multimediaDocumentAdapter = new MultimediaDocumentAdapter(lesson.getMultimediaDocumentsFiles(),LessonActivity.this);
+        multimediaDocumentAdapter = new MultimediaDocumentAdapter(lesson.getMultimediaDocumentsFiles(),LessonActivity.this,lesson);
         mDocumentsRecyclerView.setAdapter(multimediaDocumentAdapter);
 
         // Create an S3 client
@@ -204,7 +204,7 @@ public class LessonActivity extends LessonBaseActivity {
                         lesson.getMultimediaPicturesFiles().add(new MultimediaFile(
                                 Constants.S3_LESSONS_PATH+"/"+lesson.getId()+"/"+
                                         Constants.S3_IMAGES_PATH,CACHE_FOLDER+
-                                "/"+path.substring(path.lastIndexOf("/")+1,path.length()-1),path.replace("\"", ""),transferUtility));
+                                "/"+path.substring(path.lastIndexOf("/")+1,path.length()-1),path.replace("\"", ""),transferUtility,notAdded));
                     }
                     multimediaPictureAdapter.notifyDataSetChanged();
 
@@ -212,7 +212,7 @@ public class LessonActivity extends LessonBaseActivity {
                         MultimediaFile audioMultimedia = new MultimediaFile(
                                 Constants.S3_LESSONS_PATH+"/"+lesson.getId()+"/"+
                                     Constants.S3_AUDIOS_PATH,CACHE_FOLDER+
-                                "/"+audioPath.substring(audioPath.lastIndexOf("/")+1,audioPath.length()-1),audioPath.replace("\"", ""),transferUtility);
+                                "/"+audioPath.substring(audioPath.lastIndexOf("/")+1,audioPath.length()-1),audioPath.replace("\"", ""),transferUtility,notAdded);
                         lesson.getMultimediaAudiosFiles().add(audioMultimedia);
                     }
                     multimediaAudioAdapter.notifyDataSetChanged();
@@ -222,7 +222,7 @@ public class LessonActivity extends LessonBaseActivity {
                                 Constants.S3_LESSONS_PATH+"/"+lesson.getId()+"/"+
                                     Constants.S3_DOCS_PATH,ABSOLUTE_STORAGE_PATH+
                                 "/"+PROJECT_FOLDER+"/"+documentPath.substring(documentPath.lastIndexOf("/")+1,documentPath.length()-1),
-                                documentPath.replace("\"", ""),transferUtility);
+                                documentPath.replace("\"", ""),transferUtility,notAdded);
                         lesson.getMultimediaDocumentsFiles().add(documentMultimedia);
 
                     }
@@ -233,7 +233,7 @@ public class LessonActivity extends LessonBaseActivity {
                                 Constants.S3_LESSONS_PATH+"/"+lesson.getId()+"/"+
                                         Constants.S3_VIDEOS_PATH,ABSOLUTE_STORAGE_PATH+"/"+PROJECT_FOLDER+"/"+
                                 videoPath.substring(videoPath.lastIndexOf("/")+1,videoPath.length()-1),
-                                videoPath.replace("\"", ""),transferUtility);
+                                videoPath.replace("\"", ""),transferUtility,notAdded);
                         lesson.getMultimediaVideosFiles().add(documentMultimedia);
                     }
                     multimediaVideoAdapter.notifyDataSetChanged();
@@ -338,15 +338,15 @@ public class LessonActivity extends LessonBaseActivity {
                     copyLesson(originalLesson, lesson); */
                 }
 
-                multimediaDocumentAdapter = new MultimediaDocumentAdapter(lesson.getMultimediaDocumentsFiles(),LessonActivity.this);
+                multimediaDocumentAdapter = new MultimediaDocumentAdapter(lesson.getMultimediaDocumentsFiles(),LessonActivity.this,lesson);
                 mDocumentsRecyclerView.setAdapter(multimediaDocumentAdapter);
                 multimediaAudioAdapter.notifyDataSetChanged();
-                multimediaPictureAdapter = new MultimediaPictureAdapter(lesson.getMultimediaPicturesFiles(),LessonActivity.this);
+                multimediaPictureAdapter = new MultimediaPictureAdapter(lesson.getMultimediaPicturesFiles(),LessonActivity.this,lesson);
                 mPicturesRecyclerView.setAdapter(multimediaPictureAdapter);
                 multimediaPictureAdapter.notifyDataSetChanged();
-                multimediaVideoAdapter = new MultimediaVideoAdapter(lesson.getMultimediaVideosFiles(),LessonActivity.this);
+                multimediaVideoAdapter = new MultimediaVideoAdapter(lesson.getMultimediaVideosFiles(),LessonActivity.this,lesson);
                 mVideosRecyclerView.setAdapter(multimediaVideoAdapter);
-                multimediaAudioAdapter = new MultimediaAudioAdapter(lesson.getMultimediaAudiosFiles(),LessonActivity.this);
+                multimediaAudioAdapter = new MultimediaAudioAdapter(lesson.getMultimediaAudiosFiles(),LessonActivity.this,lesson);
                 mAudiosRecyclerView.setAdapter(multimediaAudioAdapter);
             }
         });
@@ -364,6 +364,7 @@ public class LessonActivity extends LessonBaseActivity {
         lesson.setName(getIntent().getStringExtra(LESSON_NAME));
         lesson.setDescription(getIntent().getStringExtra(LESSON_DESCRIPTION));
         lesson.setId(getIntent().getStringExtra(LESSON_ID));
+        lesson.setCompany_id(sharedPreferences.getString(Constants.SP_COMPANY, ""));
         lesson.initMultimediaFiles();
         showPermissions();
     }
@@ -432,11 +433,37 @@ public class LessonActivity extends LessonBaseActivity {
             String lesson_learning = editDescription.getText().toString();
             //TODO FIJAR PROYECTO CUANDO EXISTA
             String project_id = sharedPreferences.getString(Constants.SP_ACTUAL_PROJECT,"");
-
+            ArrayList<String> array_added =  lesson.getAddedMultimediaKeysS3();
+            ArrayList<String> array_deleted =  lesson.getDeletedMultimediaFilesS3Keys();
             VolleyPatchLesson.volleyPatchLesson(new VolleyJSONCallback() {
                   @Override
                   public void onSuccess(JSONObject result) {
                       Toast.makeText(LessonActivity.this, "Leccion editada", Toast.LENGTH_LONG).show();
+                      String start = Constants.S3_LESSONS_PATH+"/"+lesson.getId()+"/";
+                      for (MultimediaFile multimediaFile: lesson.getMultimediaPicturesFiles()) {
+                          if (multimediaFile.getAdded() == 1) {
+                              multimediaFile.setExtension(start+Constants.S3_IMAGES_PATH);
+                              multimediaFile.initUploadThread();
+                          }
+                      }
+                      for (MultimediaFile multimediaFile: lesson.getMultimediaAudiosFiles()) {
+                          if (multimediaFile.getAdded() == 1) {
+                              multimediaFile.setExtension(start+Constants.S3_AUDIOS_PATH);
+                              multimediaFile.initUploadThread();
+                          }
+                      }
+                      for (MultimediaFile multimediaFile: lesson.getMultimediaDocumentsFiles()) {
+                          if (multimediaFile.getAdded() == 1) {
+                              multimediaFile.setExtension(start+Constants.S3_DOCS_PATH);
+                              multimediaFile.initUploadThread();
+                          }
+                      }
+                      for (MultimediaFile multimediaFile: lesson.getMultimediaVideosFiles()) {
+                          if (multimediaFile.getAdded() == 1) {
+                              multimediaFile.setExtension(start+Constants.S3_VIDEOS_PATH);
+                              multimediaFile.initUploadThread();
+                          }
+                      }
                       startActivity(MainActivity.getIntent(LessonActivity.this));
                   }
 
@@ -444,7 +471,7 @@ public class LessonActivity extends LessonBaseActivity {
                   public void onErrorResponse(VolleyError result) {}
                 }, LessonActivity.this,
                     lesson.getId(), lesson_name, lesson_summary,
-                lesson_motivation, lesson_learning
+                lesson_motivation, lesson_learning, array_added, array_deleted
                 );
 
             }

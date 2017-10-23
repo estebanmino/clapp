@@ -106,6 +106,10 @@ public class LessonBaseActivity extends AppCompatActivity {
 
     //LESSON VIEW
 
+    public int notAdded = 0;
+    public int added = 1;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -346,7 +350,7 @@ public class LessonBaseActivity extends AppCompatActivity {
                                 }
                             });
 
-                    lesson.getMultimediaPicturesFiles().add(new MultimediaFile(Constants.S3_IMAGES_PATH,mPath, null,transferUtility));
+                    lesson.getMultimediaPicturesFiles().add(new MultimediaFile(Constants.S3_IMAGES_PATH,mPath, null,transferUtility,added));
                     multimediaPictureAdapter.notifyDataSetChanged();
                     break;
 
@@ -366,7 +370,7 @@ public class LessonBaseActivity extends AppCompatActivity {
                     //imageAttachment.setImageDrawable(ContextCompat.getDrawable(ChatRoomActivity.this, R.drawable.ic_play_video));
                     //imageAttachment.setVisibility(View.VISIBLE);
 
-                    lesson.getMultimediaVideosFiles().add(new MultimediaFile(Constants.S3_VIDEOS_PATH,mPath, null,transferUtility));
+                    lesson.getMultimediaVideosFiles().add(new MultimediaFile(Constants.S3_VIDEOS_PATH,mPath, null,transferUtility,added));
                     multimediaVideoAdapter.notifyDataSetChanged();
 
                     break;
@@ -381,7 +385,7 @@ public class LessonBaseActivity extends AppCompatActivity {
                             mPath = RealPathUtil.getRealPathFromURI_API19(getApplicationContext(), data.getData());
                         }
 
-                        lesson.getMultimediaPicturesFiles().add(new MultimediaFile(Constants.S3_IMAGES_PATH,mPath, null,transferUtility));
+                        lesson.getMultimediaPicturesFiles().add(new MultimediaFile(Constants.S3_IMAGES_PATH,mPath, null,transferUtility,added));
                         multimediaPictureAdapter.notifyDataSetChanged();
 
 
@@ -397,7 +401,7 @@ public class LessonBaseActivity extends AppCompatActivity {
                         mPath = RealPathUtil.getRealPathFromURI_API19(getApplicationContext(), data.getData());
                     }
                     lesson.getMultimediaDocumentsFiles().add(new MultimediaFile(Constants.S3_DOCS_PATH,
-                            mPath,null, transferUtility));
+                            mPath,null, transferUtility,added));
                     multimediaDocumentAdapter.notifyDataSetChanged();
                     break;
 
@@ -556,7 +560,7 @@ public class LessonBaseActivity extends AppCompatActivity {
             Long tsLong = System.currentTimeMillis() / 1000;
             String ts = tsLong.toString();
             MultimediaFile audioMultimedia = new MultimediaFile(
-                    Constants.S3_AUDIOS_PATH, ABSOLUTE_STORAGE_PATH + ts.toString() + EXTENSION_AUDIO_FORMAT, null,transferUtility);
+                    Constants.S3_AUDIOS_PATH, ABSOLUTE_STORAGE_PATH + ts.toString() + EXTENSION_AUDIO_FORMAT, null,transferUtility,added);
             startRecording(audioMultimedia);
             lesson.getMultimediaAudiosFiles().add(audioMultimedia);
         } else {

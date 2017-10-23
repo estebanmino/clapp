@@ -13,6 +13,7 @@ import com.construapp.construapp.LessonActivity;
 import com.construapp.construapp.R;
 import com.construapp.construapp.cache.LRUCache;
 import com.construapp.construapp.models.General;
+import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.models.MultimediaFile;
 import com.construapp.construapp.threading.MultimediaAudioDownloader;
 
@@ -28,8 +29,8 @@ public class MultimediaAudioAdapter extends MultimediaAdapter {
 
     private TransferUtility transferUtility;
 
-    public MultimediaAudioAdapter(ArrayList<MultimediaFile> mMultimediaFiles, Context context) {
-        super(mMultimediaFiles, context);
+    public MultimediaAudioAdapter(ArrayList<MultimediaFile> mMultimediaFiles, Context context,Lesson thisLesson) {
+        super(mMultimediaFiles, context,thisLesson);
     };
 
     @Override
@@ -38,7 +39,7 @@ public class MultimediaAudioAdapter extends MultimediaAdapter {
         MultimediaFile multimediaFile = super.getmMultimediaFiles().get(position);
         multimediaFile.setArrayPosition(position);
 
-        if (super.getContext().getClass() == LessonActivity.class || !((LessonActivity)super.getContext()).getEditing()) {
+        if (super.getContext().getClass() == LessonActivity.class && !((LessonActivity)super.getContext()).getEditing()) {
 
             if (multimediaFile.getFileS3Key() != null && LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key()) == null) {
 
@@ -54,9 +55,7 @@ public class MultimediaAudioAdapter extends MultimediaAdapter {
                 holder.progressBar.setVisibility(View.VISIBLE);
 
                 downloadAudioMultimedia.download();
-            } /*else {
-                File file = (File) LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key());
-            }*/
+            }
         }
     }
 

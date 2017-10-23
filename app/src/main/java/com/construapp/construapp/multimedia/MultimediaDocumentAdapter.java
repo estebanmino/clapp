@@ -15,6 +15,7 @@ import com.construapp.construapp.LessonActivity;
 import com.construapp.construapp.R;
 import com.construapp.construapp.cache.LRUCache;
 import com.construapp.construapp.models.General;
+import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.models.MultimediaFile;
 import com.construapp.construapp.threading.MultimediaDocumentDownloader;
 
@@ -29,8 +30,8 @@ public class MultimediaDocumentAdapter extends MultimediaAdapter {
 
     private TransferUtility transferUtility;
 
-    public MultimediaDocumentAdapter(ArrayList<MultimediaFile> mMultimediaFiles, Context context) {
-        super(mMultimediaFiles, context);
+    public MultimediaDocumentAdapter(ArrayList<MultimediaFile> mMultimediaFiles, Context context, Lesson thisLesson) {
+        super(mMultimediaFiles, context, thisLesson);
     };
 
     @Override
