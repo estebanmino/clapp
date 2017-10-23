@@ -11,8 +11,6 @@
     tools:layout_editor_absoluteX="0dp"
     tools:layout_editor_absoluteY="0dp">
 
-
-
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="0dp"
@@ -46,6 +44,40 @@
             android:fillViewport="false"
             tools:layout_editor_absoluteX="8dp"
             tools:layout_editor_absoluteY="8dp">
+
+            <TextView
+                android:id="@+id/textView10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="8dp"
+                android:text="Fotos"
+                android:textColor="@color/colorPrimaryDark"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_new_attachments" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_horizontal_pictures"
+                android:layout_width="0dp"
+                android:layout_height="120dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginStart="16dp"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:scrollbars="none"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/switch_lesson_images"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/textView10">
+
+            </android.support.v7.widget.RecyclerView>
+
 
             <TextView
                 android:id="@+id/text_lesson_description"
@@ -142,42 +174,6 @@
                 app:layout_constraintTop_toBottomOf="@+id/editText_validate_description_comment" />
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycler_horizontal_pictures"
-                android:layout_width="0dp"
-                android:layout_height="120dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginStart="16dp"
-                android:clipChildren="false"
-                android:clipToPadding="false"
-                android:scrollbars="none"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/text_new_attachments"
-                android:layout_marginTop="8dp"
-                app:layout_constraintRight_toLeftOf="@+id/switch_lesson_images">
-
-            </android.support.v7.widget.RecyclerView>
-
-            <ImageView
-                android:id="@+id/image_attachment_image"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
-                android:adjustViewBounds="true"
-                android:background="@color/colorAccent"
-                app:layout_constraintBottom_toBottomOf="@+id/recycler_horizontal_pictures"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintLeft_toLeftOf="@+id/recycler_horizontal_pictures"
-                app:layout_constraintRight_toRightOf="@+id/recycler_horizontal_pictures"
-                app:layout_constraintTop_toTopOf="@+id/recycler_horizontal_pictures"
-                app:layout_constraintVertical_bias="0.0"
-                app:srcCompat="@drawable/ic_gallery_dark" />
-
-            <android.support.v7.widget.RecyclerView
                 android:id="@+id/recycler_horizontal_audios"
                 android:layout_width="0dp"
                 android:layout_height="120dp"
@@ -189,87 +185,62 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toLeftOf="@+id/switch_lesson_audios"
                 android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/text_audios" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_horizontal_videos"
+                android:layout_width="0dp"
+                android:layout_height="120dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/text_videos"
+                app:layout_constraintRight_toLeftOf="@+id/switch_lesson_video"
+                android:layout_marginRight="16dp" />
+
+            <TextView
+                android:id="@+id/text_documents"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="8dp"
+                android:text="Documentos"
+                android:textColor="@color/colorPrimaryDark"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editText_validate_audios_comment" />
+
+            <TextView
+                android:id="@+id/text_videos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="8dp"
+                android:text="Videos"
+                android:textColor="@color/colorPrimaryDark"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/editText_validate_images_comment" />
 
-            <ImageView
-                android:id="@+id/image_attachment_audio"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
-                android:background="@color/colorAccent"
-                app:layout_constraintBottom_toBottomOf="@+id/recycler_horizontal_audios"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintLeft_toLeftOf="@+id/recycler_horizontal_audios"
-                app:layout_constraintRight_toRightOf="@+id/recycler_horizontal_audios"
-                app:layout_constraintTop_toTopOf="@+id/recycler_horizontal_audios"
-                app:layout_constraintVertical_bias="0.0"
-                app:srcCompat="@drawable/ic_mic_dark" />
-
-            <ImageView
-                android:id="@+id/image_attachment_document"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
-                android:background="@color/colorAccent"
-                android:scrollbars="vertical"
-                app:layout_constraintBottom_toBottomOf="@+id/recycler_horizontal_documents"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintLeft_toLeftOf="@+id/recycler_horizontal_documents"
-                app:layout_constraintRight_toRightOf="@+id/recycler_horizontal_documents"
-                app:layout_constraintTop_toTopOf="@+id/recycler_horizontal_documents"
-                app:layout_constraintVertical_bias="0.0"
-                app:srcCompat="@drawable/ic_task_dark" />
-
-            <ImageView
-                android:id="@+id/image_edit_lesson"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@android:drawable/ic_menu_edit"
-                app:layout_constraintTop_toBottomOf="@+id/text_edit_lesson"
-                android:layout_marginLeft="8dp"
-                android:tag="@integer/admin_permission"
-                app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginStart="8dp" />
-
             <TextView
-                android:id="@+id/text_edit_lesson"
+                android:id="@+id/text_audios"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Editar"
-                android:layout_marginLeft="8dp"
-                android:tag="@integer/admin_permission"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginTop="8dp"
-                android:layout_marginStart="8dp" />
-
-            <TextView
-                android:id="@+id/text_delete_lesson"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Eliminar"
-                app:layout_constraintTop_toTopOf="parent"
-                android:tag="@integer/admin_permission"
-                android:layout_marginTop="8dp"
+                android:layout_marginLeft="16dp"
                 android:layout_marginRight="8dp"
+                android:text="Audios"
+                android:textColor="@color/colorPrimaryDark"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                android:layout_marginEnd="8dp" />
-
-            <ImageView
-                android:id="@+id/image_delete_lesson"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                app:srcCompat="@android:drawable/ic_delete"
-                android:tag="@integer/admin_permission"
-                app:layout_constraintTop_toBottomOf="@+id/text_delete_lesson"
-                android:layout_marginRight="8dp"
-                app:layout_constraintRight_toRightOf="@+id/text_delete_lesson"
-                android:layout_marginEnd="8dp" />
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/editText_validate_videos_comment" />
 
             <Switch
                 android:id="@+id/switch_lesson_name"
@@ -279,7 +250,21 @@
                 android:textColor="@color/colorPrimary"
                 app:layout_constraintRight_toLeftOf="@+id/textView_switch_comment_lesson_name"
                 app:layout_constraintTop_toTopOf="@+id/textView_switch_comment_lesson_name"
-                app:layout_constraintBottom_toBottomOf="@+id/textView_switch_comment_lesson_name" />
+                app:layout_constraintBottom_toBottomOf="@+id/textView_switch_comment_lesson_name"
+                android:layout_marginRight="0dp" />
+
+            <Switch
+                android:id="@+id/switch_lesson_video"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="OK"
+                android:textColor="@color/colorPrimary"
+                app:layout_constraintRight_toLeftOf="@+id/textView_switch_comment_lesson_video"
+                android:layout_marginRight="0dp"
+                app:layout_constraintBottom_toBottomOf="@+id/textView_switch_comment_lesson_video"
+                android:layout_marginBottom="0dp"
+                app:layout_constraintTop_toTopOf="@+id/textView_switch_comment_lesson_video"
+                android:layout_marginTop="0dp" />
 
             <Switch
                 android:id="@+id/switch_lesson_description"
@@ -341,6 +326,16 @@
                 app:layout_constraintTop_toTopOf="@+id/recycler_horizontal_pictures" />
 
             <TextView
+                android:id="@+id/textView_switch_comment_lesson_video"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Comentar"
+                android:textColor="@color/colorPrimary"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/recycler_horizontal_videos"
+                android:layout_marginTop="0dp" />
+
+            <TextView
                 android:id="@+id/textView_switch_comment_lesson_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -378,7 +373,9 @@
                 android:visibility="gone"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/text_lesson_name" />
+                app:layout_constraintTop_toBottomOf="@+id/text_lesson_name"
+                android:layout_marginTop="8dp"
+                app:layout_constraintHorizontal_bias="0.0" />
 
             <EditText
                 android:id="@+id/editText_validate_description_comment"
@@ -391,7 +388,9 @@
                 android:visibility="gone"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/text_lesson_description" />
+                app:layout_constraintTop_toBottomOf="@+id/text_lesson_description"
+                android:layout_marginTop="8dp"
+                app:layout_constraintHorizontal_bias="0.0" />
 
             <EditText
                 android:id="@+id/editText_validate_images_comment"
@@ -404,7 +403,24 @@
                 android:visibility="gone"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/recycler_horizontal_pictures" />
+                app:layout_constraintTop_toBottomOf="@+id/recycler_horizontal_pictures"
+                android:layout_marginTop="8dp"
+                app:layout_constraintHorizontal_bias="0.0" />
+
+            <EditText
+                android:id="@+id/editText_validate_videos_comment"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@color/cardview_light_background"
+                android:ems="10"
+                android:hint="Ingresar comentario sobre los videos"
+                android:inputType="textMultiLine"
+                android:visibility="gone"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/recycler_horizontal_videos" />
 
             <EditText
                 android:id="@+id/editText_validate_audios_comment"
@@ -417,7 +433,9 @@
                 android:visibility="gone"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/recycler_horizontal_audios" />
+                app:layout_constraintTop_toBottomOf="@+id/recycler_horizontal_audios"
+                android:layout_marginTop="8dp"
+                app:layout_constraintHorizontal_bias="0.0" />
 
             <EditText
                 android:id="@+id/editText_validate_documents_comment"
@@ -430,7 +448,9 @@
                 android:visibility="gone"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/recycler_horizontal_documents" />
+                app:layout_constraintTop_toBottomOf="@+id/recycler_horizontal_documents"
+                android:layout_marginTop="8dp"
+                app:layout_constraintHorizontal_bias="0.0" />
 
             <TextView
                 android:id="@+id/textView_save_validated_lesson"
@@ -467,11 +487,11 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
-                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toLeftOf="@+id/switch_lesson_documents"
-                app:layout_constraintTop_toBottomOf="@+id/editText_validate_audios_comment" />
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/text_documents" />
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/floatingActionButton_save_validated_lesson"
@@ -480,6 +500,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginTop="8dp"
+                app:backgroundTint="@color/colorPrimary"
                 app:fabSize="normal"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/editText_validate_documents_comment"
@@ -493,10 +514,36 @@
                 android:layout_marginRight="8dp"
                 android:layout_marginTop="8dp"
                 android:visibility="gone"
+                app:backgroundTint="@color/colorPrimary"
                 app:fabSize="normal"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/editText_validate_documents_comment"
                 app:srcCompat="@android:drawable/ic_menu_send" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/floatingActionButton_reject_lesson"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                app:fabSize="mini"
+                app:rippleColor="@color/colorPrimary"
+                app:srcCompat="@android:drawable/ic_delete"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/editText_validate_documents_comment"
+                android:layout_marginLeft="16dp"
+                app:layout_constraintLeft_toLeftOf="parent" />
+
+            <TextView
+                android:id="@+id/textView_rechazar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Rechazar"
+                android:layout_marginTop="0dp"
+                app:layout_constraintTop_toBottomOf="@+id/floatingActionButton_reject_lesson"
+                android:layout_marginLeft="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/floatingActionButton_reject_lesson"
+                android:layout_marginRight="0dp"
+                app:layout_constraintRight_toRightOf="@+id/floatingActionButton_reject_lesson" />
 
         </android.support.constraint.ConstraintLayout>
     </android.support.v4.widget.NestedScrollView>
