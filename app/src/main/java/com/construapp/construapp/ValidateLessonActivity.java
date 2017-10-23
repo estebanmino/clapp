@@ -5,28 +5,22 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.android.volley.VolleyError;
-import com.construapp.construapp.db.Connectivity;
 import com.construapp.construapp.listeners.VolleyJSONCallback;
-import com.construapp.construapp.listeners.VolleyStringCallback;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.General;
 import com.construapp.construapp.models.Lesson;
@@ -34,8 +28,6 @@ import com.construapp.construapp.models.MultimediaFile;
 import com.construapp.construapp.multimedia.MultimediaAudioAdapter;
 import com.construapp.construapp.multimedia.MultimediaDocumentAdapter;
 import com.construapp.construapp.multimedia.MultimediaPictureAdapter;
-import com.construapp.construapp.dbTasks.DeleteLessonTask;
-import com.construapp.construapp.api.VolleyDeleteLesson;
 import com.construapp.construapp.api.VolleyFetchLessonMultimedia;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -45,7 +37,6 @@ import com.google.gson.JsonParser;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 public class ValidateLessonActivity extends AppCompatActivity {
 
@@ -56,7 +47,6 @@ public class ValidateLessonActivity extends AppCompatActivity {
     private static final String PROJECT_FOLDER = "ConstruApp";
 
     private Lesson lesson = new Lesson();
-    private int userPermission;
 
     //CONSTANTS
     private General constants;
@@ -72,10 +62,6 @@ public class ValidateLessonActivity extends AppCompatActivity {
 
     private static String ABSOLUTE_STORAGE_PATH;
 
-    ImageView imageEditLesson;
-    ImageView imageDeleteLesson;
-    TextView textEditLesson;
-    TextView textDeleteLesson;
     TextView textLessonName;
     TextView textLessonDescription;
     TextView textSaveValidatedLesson;
@@ -103,12 +89,7 @@ public class ValidateLessonActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         SharedPreferences sharedpreferences = getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
         constants = new General();
-        userPermission = Integer.parseInt(sharedpreferences.getString(Constants.SP_USER_PERMISSION,""));
 
-        imageEditLesson = (ImageView) findViewById(R.id.image_edit_lesson);
-        imageDeleteLesson = (ImageView) findViewById(R.id.image_delete_lesson);
-        textEditLesson = (TextView) findViewById(R.id.text_edit_lesson);
-        textDeleteLesson = (TextView) findViewById(R.id.text_delete_lesson);
         textLessonName = (TextView) findViewById(R.id.text_lesson_name);
         textLessonDescription = (TextView) findViewById(R.id.text_lesson_description);
 
@@ -308,52 +289,6 @@ public class ValidateLessonActivity extends AppCompatActivity {
 
             }
         }, ValidateLessonActivity.this, lesson.getId());
-
-        setImageDeleteLessonListener();
-        setImageEditLessonListener();
-    }
-
-    public void setImageDeleteLessonListener() {
-        imageDeleteLesson.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //delete
-
-                //TODO implementar cola eliminacion
-                if(Connectivity.isConnected(getApplicationContext())) {
-                    Snackbar mySnackbar = Snackbar.make(findViewById(R.id.lesson_form_layout),
-                            "Confirme la eliminacion de lección", Snackbar.LENGTH_LONG);
-                    mySnackbar.setAction("Confirmar", new ValidateLessonActivity.DeleteListener());
-                    mySnackbar.show();
-                }
-                //if not connected
-                else
-                {
-                    Snackbar mySnackbar = Snackbar.make(findViewById(R.id.lesson_form_layout),
-                            "No se puede eliminar una lección estando sin conexión.", Snackbar.LENGTH_LONG);
-                    mySnackbar.setAction("Confirmar",null);
-                    mySnackbar.show();
-                    //Toast.makeText(getApplicationContext(),"No se puede eliminar una lección estando sin conexión.",Toast.LENGTH_LONG);
-                    //startActivity(MainActivity.getIntent(LessonActivity.this));
-                }
-            }
-        });
-    }
-
-    public void setImageEditLessonListener() {
-        imageEditLesson.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //edit
-            }
-        });
-    }
-
-    public void showInfo(View view) {
-        Intent intent = new Intent(this, ShowInfo.class);
-        TextView projectName = (TextView) findViewById(R.id.text_lesson_name);
-        String message = projectName.getText().toString();
-        startActivity(intent);
     }
 
     public void checkedComments(){
@@ -376,7 +311,6 @@ public class ValidateLessonActivity extends AppCompatActivity {
         lesson.setDescription(getIntent().getStringExtra(LESSON_DESCRIPTION));
         lesson.setId(getIntent().getStringExtra(LESSON_ID));
         lesson.initMultimediaFiles();
-        showPermissions();
     }
 
     public static Intent getIntent(Context context, String name, String description, String id) {
@@ -386,49 +320,4 @@ public class ValidateLessonActivity extends AppCompatActivity {
         intent.putExtra(LESSON_ID,id);
         return intent;
     }
-
-    public void showPermissions(){
-
-
-        int editPermission = constants.xmlPermissionTagToInt(imageEditLesson.getTag().toString());
-        int deletePermission = constants.xmlPermissionTagToInt((imageDeleteLesson.getTag().toString()));
-
-
-        if (editPermission > userPermission){
-            imageEditLesson.setVisibility(View.GONE);
-            textEditLesson.setVisibility(View.GONE);
-        }
-        if (deletePermission > userPermission){
-            imageDeleteLesson.setVisibility(View.GONE);
-            textDeleteLesson.setVisibility(View.GONE);
-        }
-    }
-
-    public class DeleteListener implements View.OnClickListener {
-        @Override
-        public void onClick(View view) {
-            Log.i("DELETE","Lesson deleted");
-            try {
-                //Delete the lesson from DB
-                new DeleteLessonTask(lesson,getApplicationContext()).execute().get();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            }
-            VolleyDeleteLesson.volleyDeleteLesson(new VolleyStringCallback() {
-                @Override
-                public void onSuccess(String result) {
-                    Toast.makeText(ValidateLessonActivity.this, "Eliminada correctamente", Toast.LENGTH_LONG).show();
-                    startActivity(MainActivity.getIntent(ValidateLessonActivity.this));
-                }
-
-                @Override
-                public void onErrorResponse(VolleyError result) {
-                    Toast.makeText(ValidateLessonActivity.this, "Ocurrio un error, por favor reintentar", Toast.LENGTH_LONG).show();
-                }
-            }, ValidateLessonActivity.this, lesson.getId());
-        }
-    }
-
 }
