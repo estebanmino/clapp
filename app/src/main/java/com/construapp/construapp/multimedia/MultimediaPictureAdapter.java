@@ -9,6 +9,7 @@ import android.media.ExifInterface;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,12 +48,16 @@ public class MultimediaPictureAdapter extends MultimediaAdapter {
         MultimediaFile multimediaFile = super.getmMultimediaFiles().get(position);
         multimediaFile.setArrayPosition(position);
 
-        if (super.getContext().getClass() != LessonActivity.class) {
+        Log.i("EDITING", Boolean.toString(((LessonActivity)super.getContext()).getEditing()));
+        if (super.getContext().getClass() != LessonActivity.class ||
+                !((LessonActivity)super.getContext()).getEditing()) {
             Bitmap bitmap = BitmapFactory.decodeFile(multimediaFile.getmPath());
-            Bitmap bmRotated = rotateBitmap(bitmap, multimediaFile);
-            holder.imageThumbnail.setImageBitmap(ThumbnailUtils.extractThumbnail(bmRotated, 80, 80));
+            if (bitmap != null) {
+                Bitmap bmRotated = rotateBitmap(bitmap, multimediaFile);
+                holder.imageThumbnail.setImageBitmap(ThumbnailUtils.extractThumbnail(bmRotated, 80, 80));
+            }
         }
-        else {
+        else if (multimediaFile.getFileS3Key()!=null){
             if(LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key()) == null) {
                 General constants = new General();
                 AmazonS3 s3 = new AmazonS3Client(constants.getCredentialsProvider(getContext()));
@@ -69,8 +74,10 @@ public class MultimediaPictureAdapter extends MultimediaAdapter {
             }
             else {
                 Bitmap bitmap =  (Bitmap)LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key());
-                Bitmap bmRotated = rotateBitmap(bitmap, multimediaFile);
-                holder.imageThumbnail.setImageBitmap(ThumbnailUtils.extractThumbnail(bmRotated, 80, 80));
+                if (bitmap != null) {
+                    Bitmap bmRotated = rotateBitmap(bitmap, multimediaFile);
+                    holder.imageThumbnail.setImageBitmap(ThumbnailUtils.extractThumbnail(bmRotated, 80, 80));
+                }
             }
         }
     }
@@ -114,6 +121,7 @@ public class MultimediaPictureAdapter extends MultimediaAdapter {
     }
 
     public static Bitmap rotateBitmap(Bitmap bitmap, MultimediaFile multimediaFile) {
+
         ExifInterface exif = null;
         try {
             exif = new ExifInterface(multimediaFile.getmPath());
@@ -156,7 +164,7 @@ public class MultimediaPictureAdapter extends MultimediaAdapter {
         }
         try {
             Bitmap bmRotated = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-            bitmap.recycle();
+            //bitmap.recycle();
             return bmRotated;
         }
         catch (OutOfMemoryError e) {

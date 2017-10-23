@@ -77,6 +77,11 @@ public class LessonActivity extends LessonBaseActivity {
 
     private Boolean editing = true;
 
+    private RecyclerView mPicturesRecyclerView;
+    private RecyclerView mVideosRecyclerView;
+    private RecyclerView mDocumentsRecyclerView;
+    private RecyclerView mAudiosRecyclerView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +91,10 @@ public class LessonActivity extends LessonBaseActivity {
         sharedPreferences = getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
         constants = new General();
         userPermission = Integer.parseInt(sharedPreferences.getString(Constants.SP_USER_PERMISSION,""));
+
+        // Record to the external cache directory for visibility
+        ABSOLUTE_STORAGE_PATH = getExternalCacheDir().getAbsolutePath();
+        mRecordFileName = ABSOLUTE_STORAGE_PATH + "/audiorecordtest.3gp";
 
         imageEditLesson = (ImageView) findViewById(R.id.image_edit_lesson);
         imageDeleteLesson = (ImageView) findViewById(R.id.image_delete_lesson);
@@ -112,6 +121,11 @@ public class LessonActivity extends LessonBaseActivity {
         textDescriptionEdit = findViewById(R.id.text_lesson_description_edit);
 
         setLesson();
+        originalLesson = new Lesson();
+        copyLesson(lesson, originalLesson);
+
+
+        mStartRecording = true;
 
         textLessonName.setText(lesson.getName());
         textLessonDescription.setText(lesson.getDescription());
@@ -122,7 +136,7 @@ public class LessonActivity extends LessonBaseActivity {
         //PICTURES SCROLLING
         LinearLayoutManager picturesLayoutManager = new LinearLayoutManager(this);
         picturesLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        RecyclerView mPicturesRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_pictures);
+        mPicturesRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_pictures);
         mPicturesRecyclerView.setLayoutManager(picturesLayoutManager);
         multimediaPictureAdapter = new MultimediaPictureAdapter(lesson.getMultimediaPicturesFiles(),LessonActivity.this);
         mPicturesRecyclerView.setAdapter(multimediaPictureAdapter);
@@ -130,7 +144,7 @@ public class LessonActivity extends LessonBaseActivity {
         //VIDEOS SCROLLING
         LinearLayoutManager videosLayoutManager = new LinearLayoutManager(this);
         videosLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        RecyclerView mVideosRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_videos);
+        mVideosRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_videos);
         mVideosRecyclerView.setLayoutManager(videosLayoutManager);
         multimediaVideoAdapter = new MultimediaVideoAdapter(lesson.getMultimediaVideosFiles(),LessonActivity.this);
         mVideosRecyclerView.setAdapter(multimediaVideoAdapter);
@@ -138,7 +152,7 @@ public class LessonActivity extends LessonBaseActivity {
         //AUDIOS SCROLLING
         LinearLayoutManager audiosLayoutManager = new LinearLayoutManager(this);
         audiosLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        RecyclerView mAudiosRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_audios);
+        mAudiosRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_audios);
         mAudiosRecyclerView.setLayoutManager(audiosLayoutManager);
         multimediaAudioAdapter = new MultimediaAudioAdapter(lesson.getMultimediaAudiosFiles(),LessonActivity.this);
         mAudiosRecyclerView.setAdapter(multimediaAudioAdapter);
@@ -146,7 +160,7 @@ public class LessonActivity extends LessonBaseActivity {
         //DOCUMENTS SCROLLING
         LinearLayoutManager documentsLayoutManager = new LinearLayoutManager(this);
         documentsLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        RecyclerView mDocumentsRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_documents);
+        mDocumentsRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_documents);
         mDocumentsRecyclerView.setLayoutManager(documentsLayoutManager);
         multimediaDocumentAdapter = new MultimediaDocumentAdapter(lesson.getMultimediaDocumentsFiles(),LessonActivity.this);
         mDocumentsRecyclerView.setAdapter(multimediaDocumentAdapter);
@@ -238,6 +252,14 @@ public class LessonActivity extends LessonBaseActivity {
 
         setImageDeleteLessonListener();
         setImageEditLessonListener();
+
+        //SET BUTTONS LISTENER
+        setFabCameraOnClickListener();
+        setFabGalleryOnClickListener();
+        setFabSendOnClickListener();
+        setFabRecordAudioOnClickListener();
+        setFabFilesOnClickListener();
+        setFabVideoOnClickListener();
     }
 
     public void setImageDeleteLessonListener() {
@@ -290,7 +312,7 @@ public class LessonActivity extends LessonBaseActivity {
                     textEditLesson.setText("Cancelar");
                     imageDeleteLesson.setVisibility(View.GONE);
                     textDeleteLesson.setVisibility(View.GONE);
-                    setFabSendOnClickListener();
+
                 }
                 else {
                     constraintMultimediaBar.setVisibility(View.GONE);
@@ -309,7 +331,20 @@ public class LessonActivity extends LessonBaseActivity {
                     textEditLesson.setText("Editar");
                     imageDeleteLesson.setVisibility(View.VISIBLE);
                     textDeleteLesson.setVisibility(View.VISIBLE);
+                    lesson = new Lesson();
+                    copyLesson(originalLesson, lesson);
                 }
+
+                multimediaDocumentAdapter = new MultimediaDocumentAdapter(lesson.getMultimediaDocumentsFiles(),LessonActivity.this);
+                mDocumentsRecyclerView.setAdapter(multimediaDocumentAdapter);
+                multimediaAudioAdapter.notifyDataSetChanged();
+                multimediaPictureAdapter = new MultimediaPictureAdapter(lesson.getMultimediaPicturesFiles(),LessonActivity.this);
+                mPicturesRecyclerView.setAdapter(multimediaPictureAdapter);
+                multimediaPictureAdapter.notifyDataSetChanged();
+                multimediaVideoAdapter = new MultimediaVideoAdapter(lesson.getMultimediaVideosFiles(),LessonActivity.this);
+                mVideosRecyclerView.setAdapter(multimediaVideoAdapter);
+                multimediaAudioAdapter = new MultimediaAudioAdapter(lesson.getMultimediaAudiosFiles(),LessonActivity.this);
+                mAudiosRecyclerView.setAdapter(multimediaAudioAdapter);
                 editing = !editing;
             }
         });
@@ -405,11 +440,29 @@ public class LessonActivity extends LessonBaseActivity {
 
                   @Override
                   public void onErrorResponse(VolleyError result) {}
-                }, LessonActivity.this, lesson.getId(), lesson_name, lesson_summary,
+                }, LessonActivity.this,
+                    lesson.getId(), lesson_name, lesson_summary,
                 lesson_motivation, lesson_learning
                 );
 
             }
         });
+    }
+
+    public Boolean getEditing(){
+        return editing;
+    }
+
+    public void copyLesson(Lesson fromLesson, Lesson toLesson) {
+        toLesson.setName(fromLesson.getName());
+        toLesson.setId(fromLesson.getId());
+        toLesson.setDescription(fromLesson.getDescription());
+        toLesson.setCompany_id(fromLesson.getCompany_id());
+        toLesson.setLearning(fromLesson.getLearning());
+        toLesson.setMotivation(fromLesson.getMotivation());
+        toLesson.setMultimediaAudioFiles(fromLesson.getMultimediaAudiosFiles());
+        toLesson.setMultimediaDocumentsFiles(fromLesson.getMultimediaDocumentsFiles());
+        toLesson.setMultimediaPictureFiles(fromLesson.getMultimediaPicturesFiles());
+        toLesson.setMultimediaVideosFiles(fromLesson.getMultimediaVideosFiles());
     }
 }

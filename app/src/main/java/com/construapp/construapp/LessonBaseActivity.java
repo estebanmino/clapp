@@ -20,9 +20,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -30,11 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
-import com.android.volley.VolleyError;
 import com.construapp.construapp.lessonForm.RealPathUtil;
-import com.construapp.construapp.listeners.VolleyJSONCallback;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.General;
 import com.construapp.construapp.models.Lesson;
@@ -43,10 +36,6 @@ import com.construapp.construapp.multimedia.MultimediaAudioAdapter;
 import com.construapp.construapp.multimedia.MultimediaDocumentAdapter;
 import com.construapp.construapp.multimedia.MultimediaPictureAdapter;
 import com.construapp.construapp.multimedia.MultimediaVideoAdapter;
-import com.construapp.construapp.api.VolleyCreateLesson;
-import com.construapp.construapp.api.VolleyPostS3;
-
-import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -102,6 +91,7 @@ public class LessonBaseActivity extends AppCompatActivity {
 
     //NEW LESSON FOR FORM
     public Lesson lesson;
+    public Lesson originalLesson;
 
     //CONSTANTS
     public  General constants;

@@ -26,7 +26,6 @@ import java.util.ArrayList;
 
 public class MultimediaAudioAdapter extends MultimediaAdapter {
 
-    private static String BUCKET_NAME = "construapp";
     private TransferUtility transferUtility;
 
     public MultimediaAudioAdapter(ArrayList<MultimediaFile> mMultimediaFiles, Context context) {
@@ -39,7 +38,7 @@ public class MultimediaAudioAdapter extends MultimediaAdapter {
         MultimediaFile multimediaFile = super.getmMultimediaFiles().get(position);
         multimediaFile.setArrayPosition(position);
 
-        if (super.getContext().getClass() == LessonActivity.class) {
+        if (super.getContext().getClass() == LessonActivity.class && ((LessonActivity)super.getContext()).getEditing()) {
 
             if (LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key()) == null) {
 

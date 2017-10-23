@@ -40,7 +40,7 @@ public class MultimediaDocumentAdapter extends MultimediaAdapter {
         multimediaFile.setArrayPosition(position);
 
 
-        if (super.getContext().getClass() == LessonActivity.class) {
+        if (super.getContext().getClass() == LessonActivity.class && ((LessonActivity)super.getContext()).getEditing()) {
 
             if (LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key()) == null) {
 

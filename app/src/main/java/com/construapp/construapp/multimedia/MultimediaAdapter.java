@@ -53,9 +53,7 @@ public abstract class MultimediaAdapter  extends RecyclerView.Adapter<Multimedia
         MultimediaFile multimediaFile = mMultimediaFiles.get(position);
         multimediaFile.setArrayPosition(position);
 
-        if (context.getClass() == LessonActivity.class) {
-            holder.imageButtonDelete.setVisibility(View.GONE);
-        }
+
         holder.multimediaFile = multimediaFile;
 
     }
@@ -87,6 +85,10 @@ public abstract class MultimediaAdapter  extends RecyclerView.Adapter<Multimedia
             imageButtonDelete = view.findViewById(R.id.image_button_delete);
             progressBar = view.findViewById(R.id.progress_bar);
             btnDownload = view.findViewById(R.id.btn_download);
+
+            if (getContext().getClass() == LessonActivity.class && ((LessonActivity)context).getEditing()) {
+                imageButtonDelete.setVisibility(View.GONE);
+            }
 
             imageButtonDelete.setOnClickListener(new View.OnClickListener() {
                 @Override

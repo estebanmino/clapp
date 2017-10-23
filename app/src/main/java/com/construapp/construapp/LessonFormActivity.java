@@ -52,6 +52,8 @@ import java.io.IOException;
 
 public class LessonFormActivity extends LessonBaseActivity {
 
+    private Boolean editing = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,7 +91,6 @@ public class LessonFormActivity extends LessonBaseActivity {
 
         // Record to the external cache directory for visibility
         ABSOLUTE_STORAGE_PATH = getExternalCacheDir().getAbsolutePath();
-        mRecordFileName = ABSOLUTE_STORAGE_PATH + "/audiorecordtest.3gp";
 
         // Create an S3 client
         AmazonS3 s3 = new AmazonS3Client(constants.getCredentialsProvider(LessonFormActivity.this));

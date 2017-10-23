@@ -93,6 +93,8 @@ public class ValidateLessonActivity extends AppCompatActivity {
     FloatingActionButton buttonSaveValidatedLesson;
     FloatingActionButton buttonSendValidatedLessonComments;
 
+    private Boolean editing = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
