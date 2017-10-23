@@ -83,11 +83,13 @@ public class ValidateLessonActivity extends AppCompatActivity {
     Switch validateNameSwitch;
     Switch validateDescriptionSwitch;
     Switch validateImagesSwitch;
+    Switch validateVideosSwitch;
     Switch validateAudiosSwitch;
     Switch validateDocumentsSwitch;
     EditText validateNameComment;
     EditText validateDescriptionComment;
     EditText validateImagesComment;
+    EditText validateVideosComment;
     EditText validateAudiosComment;
     EditText validateDocumentsComment;
     FloatingActionButton buttonSaveValidatedLesson;
@@ -113,12 +115,14 @@ public class ValidateLessonActivity extends AppCompatActivity {
         validateNameSwitch = (Switch) findViewById(R.id.switch_lesson_name);
         validateDescriptionSwitch = (Switch) findViewById(R.id.switch_lesson_description);
         validateImagesSwitch = (Switch) findViewById(R.id.switch_lesson_images);
+        validateVideosSwitch = (Switch) findViewById(R.id.switch_lesson_video);
         validateAudiosSwitch = (Switch) findViewById(R.id.switch_lesson_audios);
         validateDocumentsSwitch = (Switch) findViewById(R.id.switch_lesson_documents);
 
         validateNameComment = (EditText) findViewById(R.id.editText_validate_name_comment);
         validateDescriptionComment = (EditText) findViewById(R.id.editText_validate_description_comment);
         validateImagesComment = (EditText) findViewById(R.id.editText_validate_images_comment);
+        validateVideosComment = (EditText) findViewById(R.id.editText_validate_videos_comment);
         validateAudiosComment = (EditText) findViewById(R.id.editText_validate_audios_comment);
         validateDocumentsComment = (EditText) findViewById(R.id.editText_validate_documents_comment);
 
@@ -166,6 +170,19 @@ public class ValidateLessonActivity extends AppCompatActivity {
                 }
                 else {
                     validateImagesComment.setVisibility(View.GONE);
+                }
+                checkedComments();
+            }
+        });
+
+        validateVideosSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (isChecked){
+                    validateVideosComment.setVisibility(View.VISIBLE);
+                }
+                else {
+                    validateVideosComment.setVisibility(View.GONE);
                 }
                 checkedComments();
             }
@@ -340,7 +357,7 @@ public class ValidateLessonActivity extends AppCompatActivity {
     }
 
     public void checkedComments(){
-        if (validateNameSwitch.isChecked() || validateDescriptionSwitch.isChecked() || validateImagesSwitch.isChecked() || validateAudiosSwitch.isChecked() || validateDocumentsSwitch.isChecked()){
+        if (validateNameSwitch.isChecked() || validateDescriptionSwitch.isChecked() || validateImagesSwitch.isChecked() || validateVideosSwitch.isChecked() || validateAudiosSwitch.isChecked() || validateDocumentsSwitch.isChecked()){
             textSaveValidatedLesson.setVisibility(View.GONE);
             buttonSaveValidatedLesson.setVisibility(View.GONE);
             textSendValidatedLessonComments.setVisibility(View.VISIBLE);
