@@ -86,7 +86,7 @@ public abstract class MultimediaAdapter  extends RecyclerView.Adapter<Multimedia
             progressBar = view.findViewById(R.id.progress_bar);
             btnDownload = view.findViewById(R.id.btn_download);
 
-            if (getContext().getClass() == LessonActivity.class && ((LessonActivity)context).getEditing()) {
+            if (getContext().getClass() == LessonActivity.class && !((LessonActivity)context).getEditing()) {
                 imageButtonDelete.setVisibility(View.GONE);
             }
 

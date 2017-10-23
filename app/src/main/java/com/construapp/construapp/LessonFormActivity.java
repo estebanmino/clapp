@@ -147,7 +147,7 @@ public class LessonFormActivity extends LessonBaseActivity {
                 //TODO fix params, working with sharedpreferences
                 sharedPreferences = getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
                 String lesson_name = editLessonName.getText().toString();
-                String lesson_summary = editLessonName.getText().toString();
+                String lesson_summary = editLessonDescription.getText().toString();
                 String lesson_motivation = "Aprendizaje";
                 String lesson_learning = editLessonDescription.getText().toString();
                 //TODO FIJAR PROYECTO CUANDO EXISTA

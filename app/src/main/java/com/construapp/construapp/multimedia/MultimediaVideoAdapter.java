@@ -46,9 +46,9 @@ public class MultimediaVideoAdapter extends MultimediaAdapter {
         multimediaFile.setArrayPosition(position);
 
 
-        if (super.getContext().getClass() == LessonActivity.class && ((LessonActivity)super.getContext()).getEditing()) {
+        if (super.getContext().getClass() == LessonActivity.class && !((LessonActivity)super.getContext()).getEditing()) {
 
-            if (LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key()) == null) {
+            if (multimediaFile.getFileS3Key()  != null && LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key()) == null) {
 
                 holder.btnDownload.setVisibility(View.VISIBLE);
                 holder.btnDownload.setOnClickListener(new View.OnClickListener() {
@@ -68,9 +68,9 @@ public class MultimediaVideoAdapter extends MultimediaAdapter {
                         downloadDocumentMultimedia.download();
                     }
                 });
-            } else {
+            } /*else {
                 File file = (File) LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key());
-            }
+            }*/
         }
         else {
             holder.btnDownload.setVisibility(View.GONE);

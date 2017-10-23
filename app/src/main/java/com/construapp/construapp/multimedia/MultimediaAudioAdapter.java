@@ -38,9 +38,9 @@ public class MultimediaAudioAdapter extends MultimediaAdapter {
         MultimediaFile multimediaFile = super.getmMultimediaFiles().get(position);
         multimediaFile.setArrayPosition(position);
 
-        if (super.getContext().getClass() == LessonActivity.class && ((LessonActivity)super.getContext()).getEditing()) {
+        if (super.getContext().getClass() == LessonActivity.class || !((LessonActivity)super.getContext()).getEditing()) {
 
-            if (LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key()) == null) {
+            if (multimediaFile.getFileS3Key() != null && LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key()) == null) {
 
                 General constants = new General();
                 AmazonS3 s3 = new AmazonS3Client(constants.getCredentialsProvider(getContext()));
@@ -54,9 +54,9 @@ public class MultimediaAudioAdapter extends MultimediaAdapter {
                 holder.progressBar.setVisibility(View.VISIBLE);
 
                 downloadAudioMultimedia.download();
-            } else {
+            } /*else {
                 File file = (File) LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key());
-            }
+            }*/
         }
     }
 

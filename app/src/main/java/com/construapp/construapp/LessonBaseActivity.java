@@ -82,7 +82,7 @@ public class LessonBaseActivity extends AppCompatActivity {
     public static String mRecordFileName = null;
     public MediaRecorder mRecorder = null;
     public MediaPlayer mPlayer = null;
-    public boolean mStartRecording;
+    public boolean mStartRecording = true;
     public boolean mStartPlaying = true;
     public boolean isRecording =  false;
 
@@ -91,7 +91,6 @@ public class LessonBaseActivity extends AppCompatActivity {
 
     //NEW LESSON FOR FORM
     public Lesson lesson;
-    public Lesson originalLesson;
 
     //CONSTANTS
     public  General constants;
@@ -134,7 +133,7 @@ public class LessonBaseActivity extends AppCompatActivity {
                 if (ContextCompat.checkSelfPermission(LessonBaseActivity.this,
                         Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
                     onRecord(mStartRecording);
-                    if (mStartRecording == true) {
+                    if (mStartRecording) {
                         textRecording.setVisibility(View.VISIBLE);
                         fabRecordAudio.setSize(FloatingActionButton.SIZE_NORMAL);
                         fabFiles.setVisibility(View.GONE);

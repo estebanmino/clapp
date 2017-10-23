@@ -48,9 +48,10 @@ public class MultimediaPictureAdapter extends MultimediaAdapter {
         MultimediaFile multimediaFile = super.getmMultimediaFiles().get(position);
         multimediaFile.setArrayPosition(position);
 
-        Log.i("EDITING", Boolean.toString(((LessonActivity)super.getContext()).getEditing()));
-        if (super.getContext().getClass() != LessonActivity.class ||
-                !((LessonActivity)super.getContext()).getEditing()) {
+        //Log.i("EDITING", Boolean.toString(((LessonActivity)super.getContext()).getEditing()));
+
+        if (super.getContext().getClass() != LessonActivity.class || ((LessonActivity)super.getContext()).getEditing()) {
+
             Bitmap bitmap = BitmapFactory.decodeFile(multimediaFile.getmPath());
             if (bitmap != null) {
                 Bitmap bmRotated = rotateBitmap(bitmap, multimediaFile);

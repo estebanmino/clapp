@@ -75,7 +75,7 @@ public class LessonActivity extends LessonBaseActivity {
     private TextView textNewLessonName;
     private TextView textNewLessonDescription;
 
-    private Boolean editing = true;
+    private Boolean editing = false;
 
     private RecyclerView mPicturesRecyclerView;
     private RecyclerView mVideosRecyclerView;
@@ -121,9 +121,6 @@ public class LessonActivity extends LessonBaseActivity {
         textDescriptionEdit = findViewById(R.id.text_lesson_description_edit);
 
         setLesson();
-        originalLesson = new Lesson();
-        copyLesson(lesson, originalLesson);
-
 
         mStartRecording = true;
 
@@ -293,6 +290,7 @@ public class LessonActivity extends LessonBaseActivity {
         imageEditLesson.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                editing = !editing;
                 if (editing) {
                     constraintMultimediaBar.setVisibility(View.VISIBLE);
                     editDescription.setVisibility(View.VISIBLE);
@@ -315,6 +313,11 @@ public class LessonActivity extends LessonBaseActivity {
 
                 }
                 else {
+                    finish();
+                    overridePendingTransition( 0, 0);
+                    startActivity(getIntent());
+                    overridePendingTransition( 0, 0);
+                    /*
                     constraintMultimediaBar.setVisibility(View.GONE);
                     editDescription.setVisibility(View.GONE);
                     editName.setVisibility(View.GONE);
@@ -332,7 +335,7 @@ public class LessonActivity extends LessonBaseActivity {
                     imageDeleteLesson.setVisibility(View.VISIBLE);
                     textDeleteLesson.setVisibility(View.VISIBLE);
                     lesson = new Lesson();
-                    copyLesson(originalLesson, lesson);
+                    copyLesson(originalLesson, lesson); */
                 }
 
                 multimediaDocumentAdapter = new MultimediaDocumentAdapter(lesson.getMultimediaDocumentsFiles(),LessonActivity.this);
@@ -345,7 +348,6 @@ public class LessonActivity extends LessonBaseActivity {
                 mVideosRecyclerView.setAdapter(multimediaVideoAdapter);
                 multimediaAudioAdapter = new MultimediaAudioAdapter(lesson.getMultimediaAudiosFiles(),LessonActivity.this);
                 mAudiosRecyclerView.setAdapter(multimediaAudioAdapter);
-                editing = !editing;
             }
         });
     }
@@ -453,16 +455,4 @@ public class LessonActivity extends LessonBaseActivity {
         return editing;
     }
 
-    public void copyLesson(Lesson fromLesson, Lesson toLesson) {
-        toLesson.setName(fromLesson.getName());
-        toLesson.setId(fromLesson.getId());
-        toLesson.setDescription(fromLesson.getDescription());
-        toLesson.setCompany_id(fromLesson.getCompany_id());
-        toLesson.setLearning(fromLesson.getLearning());
-        toLesson.setMotivation(fromLesson.getMotivation());
-        toLesson.setMultimediaAudioFiles(fromLesson.getMultimediaAudiosFiles());
-        toLesson.setMultimediaDocumentsFiles(fromLesson.getMultimediaDocumentsFiles());
-        toLesson.setMultimediaPictureFiles(fromLesson.getMultimediaPicturesFiles());
-        toLesson.setMultimediaVideosFiles(fromLesson.getMultimediaVideosFiles());
-    }
 }
