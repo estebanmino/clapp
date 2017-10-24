@@ -2,7 +2,6 @@ package com.construapp.construapp.validations;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,17 +14,14 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.android.volley.VolleyError;
-import com.construapp.construapp.LessonActivity;
 import com.construapp.construapp.LessonsAdapter;
 import com.construapp.construapp.R;
-import com.construapp.construapp.ValidateLessonActivity;
+import com.construapp.construapp.LessonValidationActivity;
 import com.construapp.construapp.api.VolleyGetLessons;
 import com.construapp.construapp.api.VolleyGetValidationPermission;
 import com.construapp.construapp.db.Connectivity;
-import com.construapp.construapp.dbTasks.GetLessonsTask;
 import com.construapp.construapp.dbTasks.GetValidationsTask;
 import com.construapp.construapp.dbTasks.InsertLessonTask;
-import com.construapp.construapp.listeners.VolleyJSONCallback;
 import com.construapp.construapp.listeners.VolleyStringCallback;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.Lesson;
@@ -89,7 +85,7 @@ public class ValidateFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Lesson lesson = (Lesson) lessonsAdapter.getItem(position);
-                startActivity(ValidateLessonActivity.getIntent(getActivity(), lesson.getName(),
+                startActivity(LessonValidationActivity.getIntent(getActivity(), lesson.getName(),
                         lesson.getDescription(),lesson.getId()));
             }
         });

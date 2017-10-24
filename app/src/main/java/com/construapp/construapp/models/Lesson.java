@@ -3,7 +3,9 @@ package com.construapp.construapp.models;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.util.Log;
 
+import java.security.Key;
 import java.util.ArrayList;
 
 /**
@@ -18,14 +20,22 @@ public class Lesson {
 
     @Ignore
     private ArrayList<MultimediaFile> multimediaAudioFiles;
+
     @Ignore
     private ArrayList<MultimediaFile> multimediaDocumentsFiles;
+
     @Ignore
     private ArrayList<MultimediaFile> multimediaVideosFiles;
+
+    @Ignore
+    private ArrayList<String> deletedMultimediaFilesS3Keys;
+
     @PrimaryKey
     private String id;
+
     private String name;
     //TODO hay que hacer refactoring. Se usa summary y no description
+
     //private String summary;
     private String description;
     private String motivation;
@@ -151,6 +161,7 @@ public class Lesson {
         this.multimediaAudioFiles = new ArrayList<>();
         this.multimediaDocumentsFiles = new ArrayList<>();
         this.multimediaVideosFiles = new ArrayList<>();
+        this.deletedMultimediaFilesS3Keys = new ArrayList<>();
     }
 
     public void setName(String name) {
@@ -167,6 +178,46 @@ public class Lesson {
 
     public String getDescription() {
         return description;
+    }
+
+    public ArrayList<String> getDeletedMultimediaFilesS3Keys() {
+        return deletedMultimediaFilesS3Keys;
+    }
+
+    public void setDeletedMultimediaFilesS3Keys(ArrayList<String> deletedMultimediaFilesS3Keys) {
+        this.deletedMultimediaFilesS3Keys = deletedMultimediaFilesS3Keys;
+    }
+
+    public ArrayList<String> getAddedMultimediaKeysS3(){
+        ArrayList<String> addedKeys = new ArrayList<>();
+        String start = Constants.S3_LESSONS_PATH+"/"+id+"/";
+        String key = "";
+
+        for (MultimediaFile mmVideo: multimediaVideosFiles) {
+            if (mmVideo.getAdded() == 1) {
+                key = Constants.S3_VIDEOS_PATH+"/"+mmVideo.getmPath().substring(mmVideo.getmPath().lastIndexOf("/")+1);
+                addedKeys.add(start+key);
+            }
+        }
+        for (MultimediaFile mmVideo: multimediaDocumentsFiles) {
+            if (mmVideo.getAdded() == 1) {
+                key = Constants.S3_DOCS_PATH+"/"+mmVideo.getmPath().substring(mmVideo.getmPath().lastIndexOf("/")+1);
+                addedKeys.add(start+key);
+            }
+        }
+        for (MultimediaFile mmVideo: multimediaAudioFiles) {
+            if (mmVideo.getAdded() == 1) {
+                key = Constants.S3_AUDIOS_PATH+"/"+mmVideo.getmPath().substring(mmVideo.getmPath().lastIndexOf("/")+1);
+                addedKeys.add(start+key);
+            }
+        }
+        for (MultimediaFile mmVideo: multimediaPictureFiles) {
+            if (mmVideo.getAdded() == 1) {
+                key = Constants.S3_IMAGES_PATH+"/"+mmVideo.getmPath().substring(mmVideo.getmPath().lastIndexOf("/")+1);
+                addedKeys.add(start+key);
+            }
+        }
+        return addedKeys;
     }
 
 }

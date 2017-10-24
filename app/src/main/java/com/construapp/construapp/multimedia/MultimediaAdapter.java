@@ -12,7 +12,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.construapp.construapp.LessonActivity;
+import com.construapp.construapp.LessonValidationActivity;
 import com.construapp.construapp.R;
+import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.models.MultimediaFile;
 
 import java.io.IOException;
@@ -26,6 +28,7 @@ public abstract class MultimediaAdapter  extends RecyclerView.Adapter<Multimedia
 
     private ArrayList<MultimediaFile> mMultimediaFiles;
     private Context context;
+    private Lesson thisLesson;
 
     public Context getContext() {
         return context;
@@ -43,9 +46,10 @@ public abstract class MultimediaAdapter  extends RecyclerView.Adapter<Multimedia
         this.mMultimediaFiles = mMultimediaFiles;
     }
 
-    public MultimediaAdapter(ArrayList<MultimediaFile> mMultimediaFiles, Context context) {
+    public MultimediaAdapter(ArrayList<MultimediaFile> mMultimediaFiles, Context context,Lesson thisLesson) {
         this.mMultimediaFiles = mMultimediaFiles;
         this.context = context;
+        this.thisLesson = thisLesson;
     }
 
     @Override
@@ -53,9 +57,7 @@ public abstract class MultimediaAdapter  extends RecyclerView.Adapter<Multimedia
         MultimediaFile multimediaFile = mMultimediaFiles.get(position);
         multimediaFile.setArrayPosition(position);
 
-        if (context.getClass() == LessonActivity.class) {
-            holder.imageButtonDelete.setVisibility(View.GONE);
-        }
+
         holder.multimediaFile = multimediaFile;
 
     }
@@ -88,13 +90,20 @@ public abstract class MultimediaAdapter  extends RecyclerView.Adapter<Multimedia
             progressBar = view.findViewById(R.id.progress_bar);
             btnDownload = view.findViewById(R.id.btn_download);
 
-            imageButtonDelete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    MultimediaAdapter.this.mMultimediaFiles.remove(multimediaFile.getArrayPosition());
-                    MultimediaAdapter.this.notifyDataSetChanged();
-                }
-            });
+            if ((getContext().getClass() == LessonActivity.class && !((LessonActivity)context).getEditing()) ||
+                    getContext().getClass() == LessonValidationActivity.class) {
+                imageButtonDelete.setVisibility(View.GONE);
+            }
+            else {
+                imageButtonDelete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        thisLesson.getDeletedMultimediaFilesS3Keys().add(multimediaFile.getFileS3Key());
+                        MultimediaAdapter.this.mMultimediaFiles.remove(multimediaFile.getArrayPosition());
+                        MultimediaAdapter.this.notifyDataSetChanged();
+                    }
+                });
+            }
         }
 
         @Override

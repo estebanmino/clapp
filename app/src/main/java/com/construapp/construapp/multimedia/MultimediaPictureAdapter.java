@@ -9,6 +9,7 @@ import android.media.ExifInterface;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import com.construapp.construapp.LessonActivity;
 import com.construapp.construapp.R;
 import com.construapp.construapp.cache.LRUCache;
 import com.construapp.construapp.models.General;
+import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.models.MultimediaFile;
 import com.construapp.construapp.threading.MultimediaPictureDownloader;
 
@@ -37,8 +39,8 @@ public class MultimediaPictureAdapter extends MultimediaAdapter {
 
     private static String FILE_TYPE = "image/*";
 
-    public MultimediaPictureAdapter(ArrayList<MultimediaFile> mMultimediaFiles, Context context) {
-        super(mMultimediaFiles, context);
+    public MultimediaPictureAdapter(ArrayList<MultimediaFile> mMultimediaFiles, Context context, Lesson thisLesson) {
+        super(mMultimediaFiles, context,thisLesson);
     };
 
     @Override
@@ -47,31 +49,27 @@ public class MultimediaPictureAdapter extends MultimediaAdapter {
         MultimediaFile multimediaFile = super.getmMultimediaFiles().get(position);
         multimediaFile.setArrayPosition(position);
 
-        if (super.getContext().getClass() != LessonActivity.class) {
+        if (multimediaFile.getFileS3Key() != null && LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key()) != null) {
+            Bitmap bitmap =  (Bitmap)LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key());
+            holder.imageThumbnail.setImageBitmap(ThumbnailUtils.extractThumbnail(bitmap, 80, 80));
+        }
+        else if (multimediaFile.getmPath() != null && new File(multimediaFile.getmPath()).exists()) {
             Bitmap bitmap = BitmapFactory.decodeFile(multimediaFile.getmPath());
             Bitmap bmRotated = rotateBitmap(bitmap, multimediaFile);
             holder.imageThumbnail.setImageBitmap(ThumbnailUtils.extractThumbnail(bmRotated, 80, 80));
         }
         else {
-            if(LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key()) == null) {
-                General constants = new General();
-                AmazonS3 s3 = new AmazonS3Client(constants.getCredentialsProvider(getContext()));
-                transferUtility = new TransferUtility(s3, getContext());
-                MultimediaPictureDownloader downloadPictureMultimedia = new MultimediaPictureDownloader(
-                        new File(multimediaFile.getmPath()),
-                        transferUtility,
-                        multimediaFile.getFileS3Key(),
-                        holder,
-                        multimediaFile);
-                holder.progressBar.setVisibility(View.VISIBLE);
-
-                downloadPictureMultimedia.download();
-            }
-            else {
-                Bitmap bitmap =  (Bitmap)LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key());
-                Bitmap bmRotated = rotateBitmap(bitmap, multimediaFile);
-                holder.imageThumbnail.setImageBitmap(ThumbnailUtils.extractThumbnail(bmRotated, 80, 80));
-            }
+            General constants = new General();
+            AmazonS3 s3 = new AmazonS3Client(constants.getCredentialsProvider(getContext()));
+            transferUtility = new TransferUtility(s3, getContext());
+            MultimediaPictureDownloader downloadPictureMultimedia = new MultimediaPictureDownloader(
+                    new File(multimediaFile.getmPath()),
+                    transferUtility,
+                    multimediaFile.getFileS3Key(),
+                    holder,
+                    multimediaFile);
+            holder.progressBar.setVisibility(View.VISIBLE);
+            downloadPictureMultimedia.download();
         }
     }
 
@@ -94,7 +92,7 @@ public class MultimediaPictureAdapter extends MultimediaAdapter {
                     Intent intent = new Intent();
                     intent.setAction(Intent.ACTION_VIEW);
                     //IF CACHE
-                    if (multimediaFile.getFileS3Key() != null) {
+                    if (multimediaFile.getFileS3Key() != null && LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key()) != null) {
                         String path = MediaStore.Images.Media.insertImage(getContext().getContentResolver(),
                                 (Bitmap) LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key()), "Title", null);
                         intent.setDataAndType(Uri.parse(path), FILE_TYPE);
@@ -114,56 +112,57 @@ public class MultimediaPictureAdapter extends MultimediaAdapter {
     }
 
     public static Bitmap rotateBitmap(Bitmap bitmap, MultimediaFile multimediaFile) {
+
         ExifInterface exif = null;
         try {
             exif = new ExifInterface(multimediaFile.getmPath());
+
+            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                    ExifInterface.ORIENTATION_UNDEFINED);
+
+            Matrix matrix = new Matrix();
+            switch (orientation) {
+                case ExifInterface.ORIENTATION_NORMAL:
+                    return bitmap;
+                case ExifInterface.ORIENTATION_FLIP_HORIZONTAL:
+                    matrix.setScale(-1, 1);
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    matrix.setRotate(180);
+                    break;
+                case ExifInterface.ORIENTATION_FLIP_VERTICAL:
+                    matrix.setRotate(180);
+                    matrix.postScale(-1, 1);
+                    break;
+                case ExifInterface.ORIENTATION_TRANSPOSE:
+                    matrix.setRotate(90);
+                    matrix.postScale(-1, 1);
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    matrix.setRotate(90);
+                    break;
+                case ExifInterface.ORIENTATION_TRANSVERSE:
+                    matrix.setRotate(-90);
+                    matrix.postScale(-1, 1);
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    matrix.setRotate(-90);
+                    break;
+                default:
+                    return bitmap;
+            }
+            try {
+                Bitmap bmRotated = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+                //bitmap.recycle();
+                return bmRotated;
+            } catch (OutOfMemoryError e) {
+                e.printStackTrace();
+                return null;
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
-        int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,
-                ExifInterface.ORIENTATION_UNDEFINED);
-
-        Matrix matrix = new Matrix();
-        switch (orientation) {
-            case ExifInterface.ORIENTATION_NORMAL:
-                return bitmap;
-            case ExifInterface.ORIENTATION_FLIP_HORIZONTAL:
-                matrix.setScale(-1, 1);
-                break;
-            case ExifInterface.ORIENTATION_ROTATE_180:
-                matrix.setRotate(180);
-                break;
-            case ExifInterface.ORIENTATION_FLIP_VERTICAL:
-                matrix.setRotate(180);
-                matrix.postScale(-1, 1);
-                break;
-            case ExifInterface.ORIENTATION_TRANSPOSE:
-                matrix.setRotate(90);
-                matrix.postScale(-1, 1);
-                break;
-            case ExifInterface.ORIENTATION_ROTATE_90:
-                matrix.setRotate(90);
-                break;
-            case ExifInterface.ORIENTATION_TRANSVERSE:
-                matrix.setRotate(-90);
-                matrix.postScale(-1, 1);
-                break;
-            case ExifInterface.ORIENTATION_ROTATE_270:
-                matrix.setRotate(-90);
-                break;
-            default:
-                return bitmap;
-        }
-        try {
-            Bitmap bmRotated = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-            bitmap.recycle();
-            return bmRotated;
-        }
-        catch (OutOfMemoryError e) {
-            e.printStackTrace();
-            return null;
-        }
+        return bitmap;
     }
-
-
 }

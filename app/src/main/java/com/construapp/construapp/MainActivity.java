@@ -39,6 +39,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -163,8 +165,12 @@ public class MainActivity extends AppCompatActivity {
             editor.clear();
             editor.apply();
             try {
+
+            } catch (Exception e) {}
+            try {
                 //DESTROY LESSON TABLE
                 new DeleteLessonTable(getApplicationContext()).execute().get();
+                deleteDir(this.getCacheDir());
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {
@@ -175,6 +181,19 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public static boolean deleteDir(File dir) {
+        if (dir != null && dir.isDirectory()) {
+            String[] children = dir.list();
+            for (int i = 0; i < children.length; i++) {
+                boolean success = deleteDir(new File(dir, children[i]));
+                if (!success) {
+                    return false;
+                }
+            }
+        }
+        return dir.delete();
     }
 
     /**
@@ -201,6 +220,14 @@ public class MainActivity extends AppCompatActivity {
                         return new ValidateFragment();
                 }
             }
+            else if (userPermission == 1) {
+                switch (position) {
+                    case 0:
+                        return new LessonsFragment();
+                    case 1:
+                        return new MicroblogFragment();
+                }
+            }
             else {
                 switch (position) {
                     case 0:
@@ -220,6 +247,9 @@ public class MainActivity extends AppCompatActivity {
             if (userPermission >= 3){
                 return 4;
             }
+            else if (userPermission == 1) {
+                return 2;
+            }
             else {
                 return 3;
             }
@@ -237,6 +267,14 @@ public class MainActivity extends AppCompatActivity {
                         return "Blog";
                     case 3:
                         return "Validar lecciones";
+                }
+            }
+            else if (userPermission == 1) {
+                switch (position) {
+                    case 0:
+                        return "Lecciones";
+                    case 1:
+                        return "Blog";
                 }
             }
             else {

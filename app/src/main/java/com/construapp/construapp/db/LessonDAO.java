@@ -26,7 +26,7 @@ import com.google.gson.reflect.TypeToken;
 @Dao
 public interface LessonDAO {
 
-    @Query("select * from Lesson")
+    @Query("select * from Lesson where validation = 1")
     public List<Lesson> getAllLessons();
 
     //no usamos livedata porque la db se sincroniza segun el fetch
@@ -35,20 +35,20 @@ public interface LessonDAO {
     @Query("select * from Lesson where id = :id")
     Lesson getLessonById(String id);
 
-    @Query("select * from Lesson where user_id = :id")
+    @Query("select * from Lesson where user_id = :id AND (validation = 0 OR validation = -1)")
     List<Lesson> getLessonByUserId(String id);
 
 
-    @Query("select * from Lesson where project_id = :id")
+    @Query("select * from Lesson where project_id = :id AND validation = 1")
     List<Lesson> getLessonByProjectId(String id);
 
-    @Query("select * from Lesson where (project_id = :projectId) AND (user_id = :userId)")
+    @Query("select * from Lesson where (project_id = :projectId) AND (user_id = :userId) AND (validation = 0 OR validation = -1)")
     List<Lesson> getLessonByUserAndProjectId(String userId, String projectId);
 
-    @Query("select * from Lesson where (project_id = :projectId) AND(validation = 2) AND (validator = :validatorValue)")
+    @Query("select * from Lesson where (project_id = :projectId) AND(validation = 0) AND (validator = :validatorValue)")
     List<Lesson> getLessonByProjectIdAndValidator(String projectId,String validatorValue);
 
-    @Query("select * from Lesson where (validation = 2) AND (validator = :validatorValue)")
+    @Query("select * from Lesson where (validation = 0) AND (validator = :validatorValue)")
     List<Lesson> getLessonByValidator(String validatorValue);
 
     @Query("SELECT COUNT(*) FROM Lesson")
