@@ -292,6 +292,8 @@ public class LessonActivity extends LessonBaseActivity {
             public void onClick(View view) {
                 editing = !editing;
                 if (editing) {
+                    editName.setText(getIntent().getStringExtra(LESSON_NAME));
+                    editDescription.setText(getIntent().getStringExtra(LESSON_DESCRIPTION));
                     constraintMultimediaBar.setVisibility(View.VISIBLE);
                     editDescription.setVisibility(View.VISIBLE);
                     editName.setVisibility(View.VISIBLE);
@@ -303,9 +305,6 @@ public class LessonActivity extends LessonBaseActivity {
                     textLessonDescription.setVisibility(View.GONE);
                     textNewLessonName.setVisibility(View.GONE);
                     textNewLessonDescription.setVisibility(View.GONE);
-
-                    editName.setText(getIntent().getStringExtra(LESSON_NAME));
-                    editDescription.setText(getIntent().getStringExtra(LESSON_DESCRIPTION));
 
                     textEditLesson.setText("Cancelar");
                     imageDeleteLesson.setVisibility(View.GONE);
@@ -384,13 +383,13 @@ public class LessonActivity extends LessonBaseActivity {
         int deletePermission = constants.xmlPermissionTagToInt((imageDeleteLesson.getTag().toString()));
         sharedPreferences = getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
 
-        if (editPermission > userPermission || sharedPreferences.getString(Constants.SP_ADMIN, "") != "1"){
-            imageEditLesson.setVisibility(View.GONE);
-            textEditLesson.setVisibility(View.GONE);
+        if (editPermission <= userPermission || sharedPreferences.getString(Constants.SP_ADMIN, "").equals("1")){
+            imageEditLesson.setVisibility(View.VISIBLE);
+            textEditLesson.setVisibility(View.VISIBLE);
         }
-        if (deletePermission > userPermission || sharedPreferences.getString(Constants.SP_ADMIN, "") != "1"){
-            imageDeleteLesson.setVisibility(View.GONE);
-            textDeleteLesson.setVisibility(View.GONE);
+        if (deletePermission <= userPermission || sharedPreferences.getString(Constants.SP_ADMIN, "").equals("1")){
+            imageDeleteLesson.setVisibility(View.VISIBLE);
+            textDeleteLesson.setVisibility(View.VISIBLE);
         }
     }
 

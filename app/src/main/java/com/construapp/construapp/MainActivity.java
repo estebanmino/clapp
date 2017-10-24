@@ -201,6 +201,14 @@ public class MainActivity extends AppCompatActivity {
                         return new ValidateFragment();
                 }
             }
+            else if (userPermission == 1) {
+                switch (position) {
+                    case 0:
+                        return new LessonsFragment();
+                    case 1:
+                        return new MicroblogFragment();
+                }
+            }
             else {
                 switch (position) {
                     case 0:
@@ -220,6 +228,9 @@ public class MainActivity extends AppCompatActivity {
             if (userPermission >= 3){
                 return 4;
             }
+            else if (userPermission == 1) {
+                return 2;
+            }
             else {
                 return 3;
             }
@@ -237,6 +248,14 @@ public class MainActivity extends AppCompatActivity {
                         return "Blog";
                     case 3:
                         return "Validar lecciones";
+                }
+            }
+            else if (userPermission == 1) {
+                switch (position) {
+                    case 0:
+                        return "Lecciones";
+                    case 1:
+                        return "Blog";
                 }
             }
             else {
