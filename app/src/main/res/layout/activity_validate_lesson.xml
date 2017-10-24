@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true"
-    tools:context="com.construapp.construapp.ValidateLessonActivity"
+    tools:context="com.construapp.construapp.LessonValidationActivity"
     tools:layout_editor_absoluteX="0dp"
     tools:layout_editor_absoluteY="0dp">
 
@@ -375,7 +375,9 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/text_lesson_name"
                 android:layout_marginTop="8dp"
-                app:layout_constraintHorizontal_bias="0.0" />
+                app:layout_constraintHorizontal_bias="0.0"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp" />
 
             <EditText
                 android:id="@+id/editText_validate_description_comment"
@@ -390,7 +392,8 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/text_lesson_description"
                 android:layout_marginTop="8dp"
-                app:layout_constraintHorizontal_bias="0.0" />
+                app:layout_constraintHorizontal_bias="0.0"
+                android:layout_marginLeft="8dp" />
 
             <EditText
                 android:id="@+id/editText_validate_images_comment"
@@ -405,7 +408,9 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/recycler_horizontal_pictures"
                 android:layout_marginTop="8dp"
-                app:layout_constraintHorizontal_bias="0.0" />
+                app:layout_constraintHorizontal_bias="0.0"
+                android:layout_marginRight="8dp"
+                android:layout_marginLeft="8dp" />
 
             <EditText
                 android:id="@+id/editText_validate_videos_comment"
@@ -420,7 +425,9 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/recycler_horizontal_videos" />
+                app:layout_constraintTop_toBottomOf="@+id/recycler_horizontal_videos"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp" />
 
             <EditText
                 android:id="@+id/editText_validate_audios_comment"
@@ -435,7 +442,9 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/recycler_horizontal_audios"
                 android:layout_marginTop="8dp"
-                app:layout_constraintHorizontal_bias="0.0" />
+                app:layout_constraintHorizontal_bias="0.0"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp" />
 
             <EditText
                 android:id="@+id/editText_validate_documents_comment"
@@ -450,7 +459,9 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/recycler_horizontal_documents"
                 android:layout_marginTop="8dp"
-                app:layout_constraintHorizontal_bias="0.0" />
+                app:layout_constraintHorizontal_bias="0.0"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp" />
 
             <TextView
                 android:id="@+id/textView_save_validated_lesson"

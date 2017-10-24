@@ -1,7 +1,11 @@
 package com.construapp.construapp.multimedia;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
+import android.media.ThumbnailUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +20,7 @@ import com.construapp.construapp.models.General;
 import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.models.MultimediaFile;
 import com.construapp.construapp.threading.MultimediaAudioDownloader;
+import com.construapp.construapp.threading.MultimediaPictureDownloader;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,23 +44,23 @@ public class MultimediaAudioAdapter extends MultimediaAdapter {
         MultimediaFile multimediaFile = super.getmMultimediaFiles().get(position);
         multimediaFile.setArrayPosition(position);
 
-        if (super.getContext().getClass() == LessonActivity.class && !((LessonActivity)super.getContext()).getEditing()) {
+        if (multimediaFile.getFileS3Key() != null && LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key()) != null) {
+        }
+        else if (multimediaFile.getmPath() != null && new File(multimediaFile.getmPath()).exists()) {
+        }
+        else {
+            General constants = new General();
+            AmazonS3 s3 = new AmazonS3Client(constants.getCredentialsProvider(getContext()));
+            transferUtility = new TransferUtility(s3, getContext());
+            MultimediaAudioDownloader downloadAudioMultimedia = new MultimediaAudioDownloader(
+                    new File(multimediaFile.getmPath()),
+                    transferUtility,
+                    multimediaFile.getFileS3Key(),
+                    holder,
+                    multimediaFile);
+            holder.progressBar.setVisibility(View.VISIBLE);
 
-            if (multimediaFile.getFileS3Key() != null && LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key()) == null) {
-
-                General constants = new General();
-                AmazonS3 s3 = new AmazonS3Client(constants.getCredentialsProvider(getContext()));
-                transferUtility = new TransferUtility(s3, getContext());
-                MultimediaAudioDownloader downloadAudioMultimedia = new MultimediaAudioDownloader(
-                        new File(multimediaFile.getmPath()),
-                        transferUtility,
-                        multimediaFile.getFileS3Key(),
-                        holder,
-                        multimediaFile);
-                holder.progressBar.setVisibility(View.VISIBLE);
-
-                downloadAudioMultimedia.download();
-            }
+            downloadAudioMultimedia.download();
         }
     }
 

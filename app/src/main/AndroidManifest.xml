@@ -57,7 +57,7 @@
             android:enabled="true" />
 
         <activity android:name=".ShowInfo" />
-        <activity android:name=".ValidateLessonActivity"></activity>
+        <activity android:name=".LessonValidationActivity"></activity>
     </application>
 
 </manifest>

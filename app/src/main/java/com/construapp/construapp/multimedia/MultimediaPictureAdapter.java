@@ -49,38 +49,27 @@ public class MultimediaPictureAdapter extends MultimediaAdapter {
         MultimediaFile multimediaFile = super.getmMultimediaFiles().get(position);
         multimediaFile.setArrayPosition(position);
 
-        //Log.i("EDITING", Boolean.toString(((LessonActivity)super.getContext()).getEditing()));
-
-        if (super.getContext().getClass() != LessonActivity.class || ((LessonActivity)super.getContext()).getEditing()) {
-
-            Bitmap bitmap = BitmapFactory.decodeFile(multimediaFile.getmPath());
-            if (bitmap != null) {
-                Bitmap bmRotated = rotateBitmap(bitmap, multimediaFile);
-                holder.imageThumbnail.setImageBitmap(ThumbnailUtils.extractThumbnail(bmRotated, 80, 80));
-            }
+        if (multimediaFile.getFileS3Key() != null && LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key()) != null) {
+            Bitmap bitmap =  (Bitmap)LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key());
+            holder.imageThumbnail.setImageBitmap(ThumbnailUtils.extractThumbnail(bitmap, 80, 80));
         }
-        else if (multimediaFile.getFileS3Key()!=null){
-            if(LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key()) == null) {
-                General constants = new General();
-                AmazonS3 s3 = new AmazonS3Client(constants.getCredentialsProvider(getContext()));
-                transferUtility = new TransferUtility(s3, getContext());
-                MultimediaPictureDownloader downloadPictureMultimedia = new MultimediaPictureDownloader(
-                        new File(multimediaFile.getmPath()),
-                        transferUtility,
-                        multimediaFile.getFileS3Key(),
-                        holder,
-                        multimediaFile);
-                holder.progressBar.setVisibility(View.VISIBLE);
-
-                downloadPictureMultimedia.download();
-            }
-            else {
-                Bitmap bitmap =  (Bitmap)LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key());
-                if (bitmap != null) {
-                    Bitmap bmRotated = rotateBitmap(bitmap, multimediaFile);
-                    holder.imageThumbnail.setImageBitmap(ThumbnailUtils.extractThumbnail(bmRotated, 80, 80));
-                }
-            }
+        else if (multimediaFile.getmPath() != null && new File(multimediaFile.getmPath()).exists()) {
+            Bitmap bitmap = BitmapFactory.decodeFile(multimediaFile.getmPath());
+            Bitmap bmRotated = rotateBitmap(bitmap, multimediaFile);
+            holder.imageThumbnail.setImageBitmap(ThumbnailUtils.extractThumbnail(bmRotated, 80, 80));
+        }
+        else {
+            General constants = new General();
+            AmazonS3 s3 = new AmazonS3Client(constants.getCredentialsProvider(getContext()));
+            transferUtility = new TransferUtility(s3, getContext());
+            MultimediaPictureDownloader downloadPictureMultimedia = new MultimediaPictureDownloader(
+                    new File(multimediaFile.getmPath()),
+                    transferUtility,
+                    multimediaFile.getFileS3Key(),
+                    holder,
+                    multimediaFile);
+            holder.progressBar.setVisibility(View.VISIBLE);
+            downloadPictureMultimedia.download();
         }
     }
 
@@ -103,7 +92,7 @@ public class MultimediaPictureAdapter extends MultimediaAdapter {
                     Intent intent = new Intent();
                     intent.setAction(Intent.ACTION_VIEW);
                     //IF CACHE
-                    if (multimediaFile.getFileS3Key() != null) {
+                    if (multimediaFile.getFileS3Key() != null && LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key()) != null) {
                         String path = MediaStore.Images.Media.insertImage(getContext().getContentResolver(),
                                 (Bitmap) LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key()), "Title", null);
                         intent.setDataAndType(Uri.parse(path), FILE_TYPE);
@@ -127,53 +116,53 @@ public class MultimediaPictureAdapter extends MultimediaAdapter {
         ExifInterface exif = null;
         try {
             exif = new ExifInterface(multimediaFile.getmPath());
+
+            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                    ExifInterface.ORIENTATION_UNDEFINED);
+
+            Matrix matrix = new Matrix();
+            switch (orientation) {
+                case ExifInterface.ORIENTATION_NORMAL:
+                    return bitmap;
+                case ExifInterface.ORIENTATION_FLIP_HORIZONTAL:
+                    matrix.setScale(-1, 1);
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    matrix.setRotate(180);
+                    break;
+                case ExifInterface.ORIENTATION_FLIP_VERTICAL:
+                    matrix.setRotate(180);
+                    matrix.postScale(-1, 1);
+                    break;
+                case ExifInterface.ORIENTATION_TRANSPOSE:
+                    matrix.setRotate(90);
+                    matrix.postScale(-1, 1);
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    matrix.setRotate(90);
+                    break;
+                case ExifInterface.ORIENTATION_TRANSVERSE:
+                    matrix.setRotate(-90);
+                    matrix.postScale(-1, 1);
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    matrix.setRotate(-90);
+                    break;
+                default:
+                    return bitmap;
+            }
+            try {
+                Bitmap bmRotated = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+                //bitmap.recycle();
+                return bmRotated;
+            } catch (OutOfMemoryError e) {
+                e.printStackTrace();
+                return null;
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
-        int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,
-                ExifInterface.ORIENTATION_UNDEFINED);
-
-        Matrix matrix = new Matrix();
-        switch (orientation) {
-            case ExifInterface.ORIENTATION_NORMAL:
-                return bitmap;
-            case ExifInterface.ORIENTATION_FLIP_HORIZONTAL:
-                matrix.setScale(-1, 1);
-                break;
-            case ExifInterface.ORIENTATION_ROTATE_180:
-                matrix.setRotate(180);
-                break;
-            case ExifInterface.ORIENTATION_FLIP_VERTICAL:
-                matrix.setRotate(180);
-                matrix.postScale(-1, 1);
-                break;
-            case ExifInterface.ORIENTATION_TRANSPOSE:
-                matrix.setRotate(90);
-                matrix.postScale(-1, 1);
-                break;
-            case ExifInterface.ORIENTATION_ROTATE_90:
-                matrix.setRotate(90);
-                break;
-            case ExifInterface.ORIENTATION_TRANSVERSE:
-                matrix.setRotate(-90);
-                matrix.postScale(-1, 1);
-                break;
-            case ExifInterface.ORIENTATION_ROTATE_270:
-                matrix.setRotate(-90);
-                break;
-            default:
-                return bitmap;
-        }
-        try {
-            Bitmap bmRotated = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-            //bitmap.recycle();
-            return bmRotated;
-        }
-        catch (OutOfMemoryError e) {
-            e.printStackTrace();
-            return null;
-        }
+        return bitmap;
     }
-
-
 }

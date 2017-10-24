@@ -17,6 +17,7 @@ import com.construapp.construapp.cache.LRUCache;
 import com.construapp.construapp.models.General;
 import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.models.MultimediaFile;
+import com.construapp.construapp.threading.MultimediaAudioDownloader;
 import com.construapp.construapp.threading.MultimediaDocumentDownloader;
 
 import java.io.File;
@@ -40,36 +41,29 @@ public class MultimediaDocumentAdapter extends MultimediaAdapter {
         final MultimediaFile multimediaFile = super.getmMultimediaFiles().get(position);
         multimediaFile.setArrayPosition(position);
 
-
-        if (super.getContext().getClass() == LessonActivity.class && !((LessonActivity)super.getContext()).getEditing()) {
-
-            if (multimediaFile.getFileS3Key() != null && LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key()) == null) {
-
-
-                holder.btnDownload.setVisibility(View.VISIBLE);
-                holder.btnDownload.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        holder.progressBar.setVisibility(View.VISIBLE);
-                        holder.btnDownload.setVisibility(View.GONE);
-                        General constants = new General();
-                        AmazonS3 s3 = new AmazonS3Client(constants.getCredentialsProvider(getContext()));
-                        transferUtility = new TransferUtility(s3, getContext());
-                        MultimediaDocumentDownloader downloadDocumentMultimedia = new MultimediaDocumentDownloader(
-                                new File(multimediaFile.getmPath()),
-                                transferUtility,
-                                multimediaFile.getFileS3Key(),
-                                holder,
-                                multimediaFile);
-                        downloadDocumentMultimedia.download();
-                    }
-                });
-            } /*else {
-                File file = (File) LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key());
-            }*/
+        if (multimediaFile.getmPath() != null && new File(multimediaFile.getmPath()).exists()) {
+            holder.btnDownload.setVisibility(View.GONE);
         }
         else {
-            holder.btnDownload.setVisibility(View.GONE);
+            holder.btnDownload.setVisibility(View.VISIBLE);
+            holder.btnDownload.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    holder.progressBar.setVisibility(View.VISIBLE);
+                    holder.btnDownload.setVisibility(View.GONE);
+                    General constants = new General();
+                    AmazonS3 s3 = new AmazonS3Client(constants.getCredentialsProvider(getContext()));
+                    transferUtility = new TransferUtility(s3, getContext());
+                    MultimediaDocumentDownloader downloadDocumentMultimedia = new MultimediaDocumentDownloader(
+                            new File(multimediaFile.getmPath()),
+                            transferUtility,
+                            multimediaFile.getFileS3Key(),
+                            holder,
+                            multimediaFile);
+                    downloadDocumentMultimedia.download();
+                    holder.btnDownload.setVisibility(View.GONE);
+                }
+            });
         }
         String path = multimediaFile.getmPath();
         String filename = path.substring(path.lastIndexOf("/") + 1);
@@ -97,22 +91,13 @@ public class MultimediaDocumentAdapter extends MultimediaAdapter {
                     Intent intent = new Intent();
                     intent.setAction(Intent.ACTION_VIEW);
                     //IF CACHE
-                    if (multimediaFile.getFileS3Key() != null) {
-                        try {
-                            openFile(getContext(),
-                                    Uri.parse(
-                                            Uri.fromFile((File)LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key())).toString()),
-                                    multimediaFile.getmPath());
-                        } catch (Exception e) {}
 
-                    } else {
-                        try {
-                            openFile(getContext(),
-                                    Uri.parse(
-                                            Uri.fromFile(new File(multimediaFile.getmPath())).toString()),
-                                    multimediaFile.getmPath());
-                        } catch (Exception e) {}
-                    }
+                    try {
+                        openFile(getContext(),
+                                Uri.parse(
+                                        Uri.fromFile(new File(multimediaFile.getmPath())).toString()),
+                                multimediaFile.getmPath());
+                    } catch (Exception e) {}
                 }
             });
         }

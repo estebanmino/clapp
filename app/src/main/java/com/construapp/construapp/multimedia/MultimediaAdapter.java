@@ -12,6 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.construapp.construapp.LessonActivity;
+import com.construapp.construapp.LessonValidationActivity;
 import com.construapp.construapp.R;
 import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.models.MultimediaFile;
@@ -89,18 +90,20 @@ public abstract class MultimediaAdapter  extends RecyclerView.Adapter<Multimedia
             progressBar = view.findViewById(R.id.progress_bar);
             btnDownload = view.findViewById(R.id.btn_download);
 
-            if (getContext().getClass() == LessonActivity.class && !((LessonActivity)context).getEditing()) {
+            if ((getContext().getClass() == LessonActivity.class && !((LessonActivity)context).getEditing()) ||
+                    getContext().getClass() == LessonValidationActivity.class) {
                 imageButtonDelete.setVisibility(View.GONE);
             }
-
-            imageButtonDelete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    thisLesson.getDeletedMultimediaFilesS3Keys().add(multimediaFile.getFileS3Key());
-                    MultimediaAdapter.this.mMultimediaFiles.remove(multimediaFile.getArrayPosition());
-                    MultimediaAdapter.this.notifyDataSetChanged();
-                }
-            });
+            else {
+                imageButtonDelete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        thisLesson.getDeletedMultimediaFilesS3Keys().add(multimediaFile.getFileS3Key());
+                        MultimediaAdapter.this.mMultimediaFiles.remove(multimediaFile.getArrayPosition());
+                        MultimediaAdapter.this.notifyDataSetChanged();
+                    }
+                });
+            }
         }
 
         @Override
