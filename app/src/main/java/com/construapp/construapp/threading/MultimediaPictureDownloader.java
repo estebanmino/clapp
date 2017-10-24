@@ -57,9 +57,11 @@ public class MultimediaPictureDownloader {
                 public void onStateChanged(int id, TransferState state) {
                     if (state == COMPLETED) {
                         Bitmap bitmap = BitmapFactory.decodeFile(multimediaFile.getmPath());
-                        Bitmap rotatedBitmap = rotateBitmap(bitmap,multimediaFile);
-                        holder.imageThumbnail.setImageBitmap(ThumbnailUtils.extractThumbnail(rotatedBitmap, 80, 80));
-                        LRUCache.getInstance().getLru().put(fileKey,rotatedBitmap);
+                        if (bitmap!=null) {
+                            Bitmap rotatedBitmap = rotateBitmap(bitmap, multimediaFile);
+                            holder.imageThumbnail.setImageBitmap(ThumbnailUtils.extractThumbnail(rotatedBitmap, 80, 80));
+                            LRUCache.getInstance().getLru().put(fileKey, rotatedBitmap);
+                        }
                         holder.progressBar.setVisibility(View.GONE);
                     }
                 }

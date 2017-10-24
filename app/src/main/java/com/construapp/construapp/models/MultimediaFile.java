@@ -1,5 +1,7 @@
 package com.construapp.construapp.models;
 
+import android.util.Log;
+
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.construapp.construapp.threading.UploadMultimediaAsyncTask;
 
@@ -18,6 +20,12 @@ public class MultimediaFile {
     private String fileKey;
     private String fileS3Key;
     private TransferUtility transferUtility;
+
+    public int getAdded() {
+        return added;
+    }
+
+    private int added;
 
     public void setExtension(String extension) {
         this.extension = extension;
@@ -55,11 +63,12 @@ public class MultimediaFile {
     }
 
 
-    public MultimediaFile(String extension, String mPath, String fileS3Key, TransferUtility transferUtility){
+    public MultimediaFile(String extension, String mPath, String fileS3Key, TransferUtility transferUtility,int added){
         this.extension = extension;
         this.mPath = mPath;
         this.transferUtility = transferUtility;
         this.fileS3Key = fileS3Key;
+        this.added = added;
     }
 
     public String getFileS3Key() {
@@ -90,6 +99,11 @@ public class MultimediaFile {
 
         }
     }
+
+    public String getFileName() {
+        return  mPath.substring(mPath.lastIndexOf("/")+1);
+    }
+
 
 
 }

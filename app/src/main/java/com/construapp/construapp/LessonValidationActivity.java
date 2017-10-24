@@ -29,6 +29,7 @@ import com.construapp.construapp.multimedia.MultimediaAudioAdapter;
 import com.construapp.construapp.multimedia.MultimediaDocumentAdapter;
 import com.construapp.construapp.multimedia.MultimediaPictureAdapter;
 import com.construapp.construapp.api.VolleyFetchLessonMultimedia;
+import com.construapp.construapp.multimedia.MultimediaVideoAdapter;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -38,34 +39,16 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class ValidateLessonActivity extends AppCompatActivity {
-
+public class LessonValidationActivity extends LessonBaseActivity {
 
     private static final String LESSON_NAME = "username";
     private static final String LESSON_DESCRIPTION = "description";
     private static final String LESSON_ID = "id";
     private static final String PROJECT_FOLDER = "ConstruApp";
 
-    private Lesson lesson = new Lesson();
-
-    //CONSTANTS
-    private General constants;
-
-    //AmazonS3
-    private TransferUtility transferUtility;
-
-
-    //MM ADAPTER
-    MultimediaPictureAdapter multimediaPictureAdapter;
-    MultimediaAudioAdapter multimediaAudioAdapter;
-    MultimediaDocumentAdapter multimediaDocumentAdapter;
-
-    private static String ABSOLUTE_STORAGE_PATH;
-
-    TextView textLessonName;
-    TextView textLessonDescription;
     TextView textSaveValidatedLesson;
     TextView textSendValidatedLessonComments;
+
     Switch validateNameSwitch;
     Switch validateDescriptionSwitch;
     Switch validateImagesSwitch;
@@ -81,6 +64,8 @@ public class ValidateLessonActivity extends AppCompatActivity {
     FloatingActionButton buttonSaveValidatedLesson;
     FloatingActionButton buttonSendValidatedLessonComments;
 
+    private Boolean editing = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,8 +75,55 @@ public class ValidateLessonActivity extends AppCompatActivity {
         SharedPreferences sharedpreferences = getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
         constants = new General();
 
-        textLessonName = (TextView) findViewById(R.id.text_lesson_name);
-        textLessonDescription = (TextView) findViewById(R.id.text_lesson_description);
+        // Create an S3 client
+        AmazonS3 s3 = new AmazonS3Client(constants.getCredentialsProvider(LessonValidationActivity.this));
+        transferUtility = new TransferUtility(s3, LessonValidationActivity.this);
+
+        ABSOLUTE_STORAGE_PATH = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString();
+        final String CACHE_FOLDER = LessonValidationActivity.this.getCacheDir().toString();
+
+        lessonName = (TextView) findViewById(R.id.text_lesson_name);
+        lessonDescription = (TextView) findViewById(R.id.text_lesson_description);
+
+        setLesson();
+
+        lessonName.setText(lesson.getName());
+        lessonDescription.setText(lesson.getDescription());
+        ////HORIZONTAL IMAGES SCROLLING
+
+        //GENRAL LAYOUT SCROLL
+        //PICTURES SCROLLING
+        LinearLayoutManager picturesLayoutManager = new LinearLayoutManager(this);
+        picturesLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        RecyclerView mPicturesRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_pictures);
+        mPicturesRecyclerView.setLayoutManager(picturesLayoutManager);
+        multimediaPictureAdapter = new MultimediaPictureAdapter(lesson.getMultimediaPicturesFiles(),LessonValidationActivity.this,lesson);
+        mPicturesRecyclerView.setAdapter(multimediaPictureAdapter);
+
+        //AUDIOS SCROLLING
+        LinearLayoutManager audiosLayoutManager = new LinearLayoutManager(this);
+        audiosLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        RecyclerView mAudiosRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_audios);
+        mAudiosRecyclerView.setLayoutManager(audiosLayoutManager);
+        multimediaAudioAdapter = new MultimediaAudioAdapter(lesson.getMultimediaAudiosFiles(),LessonValidationActivity.this,lesson);
+        mAudiosRecyclerView.setAdapter(multimediaAudioAdapter);
+
+        //VIDEOS SCROLLING
+        LinearLayoutManager videosLayoutManager = new LinearLayoutManager(this);
+        videosLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        RecyclerView mVideosRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_videos);
+        mVideosRecyclerView.setLayoutManager(videosLayoutManager);
+        multimediaVideoAdapter = new MultimediaVideoAdapter(lesson.getMultimediaVideosFiles(),LessonValidationActivity.this,lesson);
+        mVideosRecyclerView.setAdapter(multimediaVideoAdapter);
+
+        //DOCUMENTS SCROLLING
+        LinearLayoutManager documentsLayoutManager = new LinearLayoutManager(this);
+        documentsLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        RecyclerView mDocumentsRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_documents);
+        mDocumentsRecyclerView.setLayoutManager(documentsLayoutManager);
+        multimediaDocumentAdapter = new MultimediaDocumentAdapter(lesson.getMultimediaDocumentsFiles(),LessonValidationActivity.this,lesson);
+        mDocumentsRecyclerView.setAdapter(multimediaDocumentAdapter);
+
 
         validateNameSwitch = (Switch) findViewById(R.id.switch_lesson_name);
         validateDescriptionSwitch = (Switch) findViewById(R.id.switch_lesson_description);
@@ -112,10 +144,7 @@ public class ValidateLessonActivity extends AppCompatActivity {
         buttonSaveValidatedLesson = (FloatingActionButton) findViewById(R.id.floatingActionButton_save_validated_lesson);
         buttonSendValidatedLessonComments = (FloatingActionButton) findViewById(R.id.floatingActionButton_send_validated_lesson_comments);
 
-        setLesson();
 
-        textLessonName.setText(lesson.getName());
-        textLessonDescription.setText(lesson.getDescription());
 
         validateNameSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -195,39 +224,7 @@ public class ValidateLessonActivity extends AppCompatActivity {
             }
         });
 
-        ////HORIZONTAL IMAGES SCROLLING
 
-        //GENRAL LAYOUT SCROLL
-        //PICTURES SCROLLING
-        LinearLayoutManager picturesLayoutManager = new LinearLayoutManager(this);
-        picturesLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        RecyclerView mPicturesRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_pictures);
-        mPicturesRecyclerView.setLayoutManager(picturesLayoutManager);
-        multimediaPictureAdapter = new MultimediaPictureAdapter(lesson.getMultimediaPicturesFiles(),ValidateLessonActivity.this);
-        mPicturesRecyclerView.setAdapter(multimediaPictureAdapter);
-
-        //AUDIOS SCROLLING
-        LinearLayoutManager audiosLayoutManager = new LinearLayoutManager(this);
-        audiosLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        RecyclerView mAudiosRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_audios);
-        mAudiosRecyclerView.setLayoutManager(audiosLayoutManager);
-        multimediaAudioAdapter = new MultimediaAudioAdapter(lesson.getMultimediaAudiosFiles(),ValidateLessonActivity.this);
-        mAudiosRecyclerView.setAdapter(multimediaAudioAdapter);
-
-        //DOCUMENTS SCROLLING
-        LinearLayoutManager documentsLayoutManager = new LinearLayoutManager(this);
-        documentsLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        RecyclerView mDocumentsRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_documents);
-        mDocumentsRecyclerView.setLayoutManager(documentsLayoutManager);
-        multimediaDocumentAdapter = new MultimediaDocumentAdapter(lesson.getMultimediaDocumentsFiles(),ValidateLessonActivity.this);
-        mDocumentsRecyclerView.setAdapter(multimediaDocumentAdapter);
-
-        // Create an S3 client
-        AmazonS3 s3 = new AmazonS3Client(constants.getCredentialsProvider(ValidateLessonActivity.this));
-        transferUtility = new TransferUtility(s3, ValidateLessonActivity.this);
-
-        ABSOLUTE_STORAGE_PATH = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString();
-        final String CACHE_FOLDER = ValidateLessonActivity.this.getCacheDir().toString();
 
         VolleyFetchLessonMultimedia.volleyFetchLessonMultimedia(new VolleyJSONCallback() {
             @Override
@@ -245,6 +242,8 @@ public class ValidateLessonActivity extends AppCompatActivity {
                     ArrayList<String> picturePathsList  = new ArrayList<>();
                     ArrayList<String> audioPathsList  = new ArrayList<>();
                     ArrayList<String> documentPathsList  = new ArrayList<>();
+                    ArrayList<String> videosPathsList  = new ArrayList<>();
+
 
                     for (String fileKey: arrayList) {
                         if (fileKey.contains(Constants.S3_IMAGES_PATH)){
@@ -253,6 +252,8 @@ public class ValidateLessonActivity extends AppCompatActivity {
                             audioPathsList.add(fileKey);
                         } else if (fileKey.contains(Constants.S3_DOCS_PATH)) {
                             documentPathsList.add(fileKey);
+                        } else if (fileKey.contains(Constants.S3_VIDEOS_PATH)) {
+                            videosPathsList.add(fileKey);
                         }
                     }
 
@@ -260,14 +261,25 @@ public class ValidateLessonActivity extends AppCompatActivity {
                     for (String path: pictureArray){
                         lesson.getMultimediaPicturesFiles().add(new MultimediaFile(
                                 Constants.S3_LESSONS_PATH+"/"+lesson.getId()+"/"+
-                                        Constants.S3_IMAGES_PATH,CACHE_FOLDER+"/"+path.substring(path.lastIndexOf("/")+1),path.replace("\"", ""),transferUtility));
+                                        Constants.S3_IMAGES_PATH,CACHE_FOLDER+"/"+path.substring(path.lastIndexOf("/")+1,path.length()-1),
+                                path.replace("\"", ""),transferUtility,0));
                     }
                     multimediaPictureAdapter.notifyDataSetChanged();
+
+                    for (String videoPath: videosPathsList) {
+                        MultimediaFile documentMultimedia = new MultimediaFile(
+                                Constants.S3_LESSONS_PATH+"/"+lesson.getId()+"/"+
+                                        Constants.S3_VIDEOS_PATH,ABSOLUTE_STORAGE_PATH+"/"+PROJECT_FOLDER+"/"+
+                                videoPath.substring(videoPath.lastIndexOf("/")+1,videoPath.length()-1),
+                                videoPath.replace("\"", ""),transferUtility,notAdded);
+                        lesson.getMultimediaVideosFiles().add(documentMultimedia);
+                    }
 
                     for (String audioPath: audioPathsList) {
                         MultimediaFile audioMultimedia = new MultimediaFile(
                                 Constants.S3_LESSONS_PATH+"/"+lesson.getId()+"/"+
-                                        Constants.S3_AUDIOS_PATH,CACHE_FOLDER+"/"+audioPath.substring(audioPath.lastIndexOf("/")+1),audioPath.replace("\"", ""),transferUtility);
+                                        Constants.S3_AUDIOS_PATH,CACHE_FOLDER+"/"+audioPath.substring(audioPath.lastIndexOf("/")+1,audioPath.length()-1),
+                                audioPath.replace("\"", ""),transferUtility,0);
                         lesson.getMultimediaAudiosFiles().add(audioMultimedia);
                     }
                     multimediaAudioAdapter.notifyDataSetChanged();
@@ -275,8 +287,9 @@ public class ValidateLessonActivity extends AppCompatActivity {
                     for (String documentPath: documentPathsList) {
                         MultimediaFile documentMultimedia = new MultimediaFile(
                                 Constants.S3_LESSONS_PATH+"/"+lesson.getId()+"/"+
-                                        Constants.S3_DOCS_PATH,ABSOLUTE_STORAGE_PATH+"/"+PROJECT_FOLDER+"/"+documentPath.substring(documentPath.lastIndexOf("/")+1),
-                                documentPath.replace("\"", ""),transferUtility);
+                                        Constants.S3_DOCS_PATH,ABSOLUTE_STORAGE_PATH+"/"+
+                                PROJECT_FOLDER+"/"+documentPath.substring(documentPath.lastIndexOf("/")+1,documentPath.length()-1),
+                                documentPath.replace("\"", ""),transferUtility,0);
                         lesson.getMultimediaDocumentsFiles().add(documentMultimedia);
                     }
                     multimediaDocumentAdapter.notifyDataSetChanged();
@@ -288,7 +301,7 @@ public class ValidateLessonActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError result) {
 
             }
-        }, ValidateLessonActivity.this, lesson.getId());
+        }, LessonValidationActivity.this, lesson.getId());
     }
 
     public void checkedComments(){
@@ -307,14 +320,16 @@ public class ValidateLessonActivity extends AppCompatActivity {
     }
 
     public void setLesson() {
+        lesson = new Lesson();
         lesson.setName(getIntent().getStringExtra(LESSON_NAME));
         lesson.setDescription(getIntent().getStringExtra(LESSON_DESCRIPTION));
         lesson.setId(getIntent().getStringExtra(LESSON_ID));
+        //lesson.setCompany_id(sharedPreferences.getString(Constants.SP_COMPANY, ""));
         lesson.initMultimediaFiles();
     }
 
     public static Intent getIntent(Context context, String name, String description, String id) {
-        Intent intent = new Intent(context,ValidateLessonActivity.class);
+        Intent intent = new Intent(context,LessonValidationActivity.class);
         intent.putExtra(LESSON_NAME,name);
         intent.putExtra(LESSON_DESCRIPTION,description);
         intent.putExtra(LESSON_ID,id);
