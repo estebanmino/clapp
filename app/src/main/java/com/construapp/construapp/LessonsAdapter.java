@@ -25,6 +25,7 @@ public class LessonsAdapter extends BaseAdapter {
 
     private TextView lessonName;
     private TextView lessonDescription;
+    private TextView lessonStatus;
 
     public LessonsAdapter(Context context, List<Lesson> LessonModelList) {
         this.context = context;
@@ -66,12 +67,22 @@ public class LessonsAdapter extends BaseAdapter {
         lessonName = convertView.findViewById(R.id.lesson_name);
         lessonName = convertView.findViewById(R.id.lesson_name);
         lessonDescription = convertView.findViewById(R.id.lesson_description);
+        lessonStatus = convertView.findViewById(R.id.lesson_status);
 
         final String elementName = LessonModelList.get(position).getName();
         final String elementDescription = LessonModelList.get(position).getDescription();
 
         lessonName.setText(elementName);
         lessonDescription.setText(elementDescription);
+
+        if(LessonModelList.get(position).getValidation().equals("-1"))
+        {
+            lessonStatus.setText("Rechazada");
+        }
+        else if (LessonModelList.get(position).getValidation().equals("0"))
+        {
+            lessonStatus.setText("En Espera");
+        }
 
         return convertView;
     }
