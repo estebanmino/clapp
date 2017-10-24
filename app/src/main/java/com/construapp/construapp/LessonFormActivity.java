@@ -32,6 +32,7 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.android.volley.VolleyError;
+import com.construapp.construapp.api.VolleyPatchLesson;
 import com.construapp.construapp.lessonForm.RealPathUtil;
 import com.construapp.construapp.listeners.VolleyJSONCallback;
 import com.construapp.construapp.models.Constants;
@@ -49,6 +50,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class LessonFormActivity extends LessonBaseActivity {
 
@@ -218,6 +220,21 @@ public class LessonFormActivity extends LessonBaseActivity {
                 }, LessonFormActivity.this, lesson_name, lesson_summary,
                     lesson_motivation, lesson_learning,
                     project_id);
+                //TODO ESTEBAN al modificar el patch, hay que agregar el validation=0
+                VolleyPatchLesson.volleyPatchLesson(new VolleyJSONCallback() {
+                                                        @Override
+                                                        public void onSuccess(JSONObject result) {
+                                                            Toast.makeText(LessonFormActivity.this, "Leccion editada", Toast.LENGTH_LONG).show();
+
+                                                        }
+
+                                                        @Override
+                                                        public void onErrorResponse(VolleyError result) {}
+                                                    }, LessonFormActivity.this,
+                        lesson.getId(), lesson_name, lesson_summary,
+                        lesson_motivation, lesson_learning,new ArrayList<String>(),new ArrayList<String>()
+                );
+
                 Toast.makeText(LessonFormActivity.this, "Nueva lección creada", Toast.LENGTH_LONG).show();
             }
         });

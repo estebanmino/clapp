@@ -246,66 +246,88 @@
                 android:id="@+id/switch_lesson_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="0dp"
+                android:switchMinWidth="@dimen/activity_horizontal_margin"
                 android:text="OK"
                 android:textColor="@color/colorPrimary"
-                app:layout_constraintRight_toLeftOf="@+id/textView_switch_comment_lesson_name"
-                app:layout_constraintTop_toTopOf="@+id/textView_switch_comment_lesson_name"
+                android:textOff=" "
+                android:textOn=" "
                 app:layout_constraintBottom_toBottomOf="@+id/textView_switch_comment_lesson_name"
-                android:layout_marginRight="0dp" />
+                app:layout_constraintRight_toLeftOf="@+id/textView_switch_comment_lesson_name"
+                app:layout_constraintTop_toTopOf="@+id/textView_switch_comment_lesson_name" />
 
             <Switch
                 android:id="@+id/switch_lesson_video"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="0dp"
+                android:layout_marginRight="0dp"
+                android:layout_marginTop="0dp"
+                android:switchMinWidth="@dimen/activity_horizontal_margin"
                 android:text="OK"
                 android:textColor="@color/colorPrimary"
-                app:layout_constraintRight_toLeftOf="@+id/textView_switch_comment_lesson_video"
-                android:layout_marginRight="0dp"
+                android:textOff=" "
+                android:textOn=" "
                 app:layout_constraintBottom_toBottomOf="@+id/textView_switch_comment_lesson_video"
-                android:layout_marginBottom="0dp"
+                app:layout_constraintRight_toLeftOf="@+id/textView_switch_comment_lesson_video"
                 app:layout_constraintTop_toTopOf="@+id/textView_switch_comment_lesson_video"
-                android:layout_marginTop="0dp" />
+                android:visibility="invisible"/>
 
             <Switch
                 android:id="@+id/switch_lesson_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:switchMinWidth="@dimen/activity_horizontal_margin"
                 android:text="OK"
                 android:textColor="@color/colorPrimary"
+                android:textOff=" "
+                android:textOn=" "
+                app:layout_constraintBottom_toBottomOf="@+id/textView_switch_comment_lesson_description"
                 app:layout_constraintRight_toLeftOf="@+id/textView_switch_comment_lesson_description"
-                app:layout_constraintTop_toTopOf="@+id/textView_switch_comment_lesson_description"
-                app:layout_constraintBottom_toBottomOf="@+id/textView_switch_comment_lesson_description" />
+                app:layout_constraintTop_toTopOf="@+id/textView_switch_comment_lesson_description" />
 
             <Switch
                 android:id="@+id/switch_lesson_audios"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:switchMinWidth="@dimen/activity_horizontal_margin"
                 android:text="OK"
                 android:textColor="@color/colorPrimary"
-                app:layout_constraintTop_toTopOf="@+id/textView_switch_comment_lesson_audios"
+                android:textOff=" "
+                android:textOn=" "
                 app:layout_constraintBottom_toBottomOf="@+id/textView_switch_comment_lesson_audios"
-                app:layout_constraintRight_toLeftOf="@+id/textView_switch_comment_lesson_audios" />
+                app:layout_constraintRight_toLeftOf="@+id/textView_switch_comment_lesson_audios"
+                app:layout_constraintTop_toTopOf="@+id/textView_switch_comment_lesson_audios"
+                android:visibility="invisible"/>
 
             <Switch
                 android:id="@+id/switch_lesson_documents"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:switchMinWidth="@dimen/activity_horizontal_margin"
                 android:text="OK"
                 android:textColor="@color/colorPrimary"
+                android:textOff=" "
+                android:textOn=" "
+                app:layout_constraintBottom_toBottomOf="@+id/textView_switch_comment_lesson_documents"
                 app:layout_constraintRight_toLeftOf="@+id/textView_switch_comment_lesson_documents"
                 app:layout_constraintTop_toTopOf="@+id/textView_switch_comment_lesson_documents"
-                app:layout_constraintBottom_toBottomOf="@+id/textView_switch_comment_lesson_documents" />
+                android:visibility="invisible"/>
 
             <Switch
                 android:id="@+id/switch_lesson_images"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:switchMinWidth="@dimen/activity_horizontal_margin"
                 android:text="OK"
                 android:textColor="@color/colorPrimary"
+                android:textOff=" "
+                android:textOn=" "
+                app:layout_constraintBottom_toBottomOf="@+id/textView_switch_comment_lesson_images"
                 app:layout_constraintRight_toLeftOf="@+id/textView_switch_comment_lesson_images"
                 app:layout_constraintTop_toTopOf="@+id/textView_switch_comment_lesson_images"
-                app:layout_constraintBottom_toBottomOf="@+id/textView_switch_comment_lesson_images"
-                app:layout_constraintVertical_bias="0.6" />
+                app:layout_constraintVertical_bias="0.6"
+                android:visibility="invisible"/>
 
             <TextView
                 android:id="@+id/textView_switch_comment_lesson_name"
@@ -323,7 +345,8 @@
                 android:text="Comentar"
                 android:textColor="@color/colorPrimary"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/recycler_horizontal_pictures" />
+                app:layout_constraintTop_toTopOf="@+id/recycler_horizontal_pictures"
+                android:visibility="invisible"/>
 
             <TextView
                 android:id="@+id/textView_switch_comment_lesson_video"
@@ -333,7 +356,8 @@
                 android:textColor="@color/colorPrimary"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/recycler_horizontal_videos"
-                android:layout_marginTop="0dp" />
+                android:layout_marginTop="0dp"
+                android:visibility="invisible"/>
 
             <TextView
                 android:id="@+id/textView_switch_comment_lesson_description"
@@ -351,7 +375,8 @@
                 android:text="Comentar"
                 android:textColor="@color/colorPrimary"
                 app:layout_constraintTop_toTopOf="@+id/recycler_horizontal_audios"
-                app:layout_constraintRight_toRightOf="parent" />
+                app:layout_constraintRight_toRightOf="parent"
+                android:visibility="invisible"/>
 
             <TextView
                 android:id="@+id/textView_switch_comment_lesson_documents"
@@ -360,7 +385,8 @@
                 android:text="Comentar"
                 android:textColor="@color/colorPrimary"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/recycler_horizontal_documents" />
+                app:layout_constraintTop_toTopOf="@+id/recycler_horizontal_documents"
+                android:visibility="invisible"/>
 
             <EditText
                 android:id="@+id/editText_validate_name_comment"
@@ -463,32 +489,6 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp" />
 
-            <TextView
-                android:id="@+id/textView_save_validated_lesson"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
-                android:text="Guardar lección"
-                android:textColor="@color/colorPrimary"
-                android:textSize="18sp"
-                app:layout_constraintBottom_toBottomOf="@+id/floatingActionButton_save_validated_lesson"
-                app:layout_constraintRight_toLeftOf="@+id/floatingActionButton_save_validated_lesson"
-                app:layout_constraintTop_toTopOf="@+id/floatingActionButton_save_validated_lesson" />
-
-            <TextView
-                android:id="@+id/textView_send_validated_lesson_comments"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
-                android:text="Enviar comentarios"
-                android:textColor="@color/colorPrimary"
-                android:textSize="18sp"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="@+id/floatingActionButton_send_validated_lesson_comments"
-                app:layout_constraintRight_toLeftOf="@+id/floatingActionButton_send_validated_lesson_comments"
-                app:layout_constraintTop_toTopOf="@+id/floatingActionButton_send_validated_lesson_comments" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recycler_horizontal_documents"
@@ -509,52 +509,92 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginTop="8dp"
-                app:backgroundTint="@color/colorPrimary"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="18dp"
+                app:backgroundTint="@color/colorAccent3"
                 app:fabSize="normal"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/editText_validate_documents_comment"
-                app:srcCompat="@android:drawable/ic_menu_save" />
+                app:srcCompat="@drawable/ic_check_dark" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/floatingActionButton_reject_lesson"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="18dp"
+                android:clickable="true"
+                app:backgroundTint="@android:color/holo_red_light"
+                app:fabSize="normal"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editText_validate_documents_comment"
+                app:rippleColor="@color/colorPrimary"
+                app:srcCompat="@drawable/ic_cancel_dark" />
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/floatingActionButton_send_validated_lesson_comments"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="18dp"
                 android:visibility="gone"
-                app:backgroundTint="@color/colorPrimary"
+                app:backgroundTint="@color/colorSecondary"
                 app:fabSize="normal"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/editText_validate_documents_comment"
                 app:srcCompat="@android:drawable/ic_menu_send" />
 
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/floatingActionButton_reject_lesson"
+            <TextView
+                android:id="@+id/textView_save_validated_lesson"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:clickable="true"
-                app:fabSize="mini"
-                app:rippleColor="@color/colorPrimary"
-                app:srcCompat="@android:drawable/ic_delete"
-                android:layout_marginTop="8dp"
-                app:layout_constraintTop_toBottomOf="@+id/editText_validate_documents_comment"
-                android:layout_marginLeft="16dp"
-                app:layout_constraintLeft_toLeftOf="parent" />
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="7dp"
+                android:layout_marginTop="-4dp"
+                android:text="Validar"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintLeft_toLeftOf="@+id/floatingActionButton_save_validated_lesson"
+                app:layout_constraintRight_toRightOf="@+id/floatingActionButton_save_validated_lesson"
+                app:layout_constraintTop_toBottomOf="@+id/floatingActionButton_save_validated_lesson" /> />
+
+
 
             <TextView
                 android:id="@+id/textView_rechazar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Rechazar"
-                android:layout_marginTop="0dp"
-                app:layout_constraintTop_toBottomOf="@+id/floatingActionButton_reject_lesson"
+                android:text="Cancelar"
+                android:layout_marginTop="-4dp"
                 android:layout_marginLeft="0dp"
+                android:layout_marginRight="3dp"
+                android:textSize="14sp"
+                android:textColor="@color/colorPrimary"
                 app:layout_constraintLeft_toLeftOf="@+id/floatingActionButton_reject_lesson"
-                android:layout_marginRight="0dp"
-                app:layout_constraintRight_toRightOf="@+id/floatingActionButton_reject_lesson" />
+                app:layout_constraintRight_toRightOf="@+id/floatingActionButton_reject_lesson"
+                app:layout_constraintTop_toBottomOf="@+id/floatingActionButton_reject_lesson"/>
+
+
+
+
+            <TextView
+                android:id="@+id/textView_send_validated_lesson_comments"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="50dp"
+                android:layout_marginTop="-4dp"
+                android:text="Enviar comentarios"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp"
+                android:visibility="gone"
+                app:layout_constraintLeft_toLeftOf="@+id/floatingActionButton_send_validated_lesson_comments"
+                app:layout_constraintRight_toRightOf="@+id/floatingActionButton_send_validated_lesson_comments"
+                app:layout_constraintTop_toBottomOf="@+id/floatingActionButton_send_validated_lesson_comments" />
+
 
         </android.support.constraint.ConstraintLayout>
     </android.support.v4.widget.NestedScrollView>

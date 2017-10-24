@@ -32,6 +32,7 @@ import java.util.Map;
 
 public class VolleyPatchLesson {
 
+    //TODO ESTEBAN agregar campos correspondientes a la leccion, y son son vacios no mandar en el json
     public static void volleyPatchLesson(final VolleyJSONCallback callback,
                                          Context context, String lesson_id, String lesson_name,
                                          String lesson_summary, String lesson_motivation,
@@ -67,7 +68,7 @@ public class VolleyPatchLesson {
                             "\"array_delete_path\":" + deleted_array
                             + "}";
 
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PATCH, url, jsonObject,
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PUT, url, jsonObject,
                     new com.android.volley.Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {

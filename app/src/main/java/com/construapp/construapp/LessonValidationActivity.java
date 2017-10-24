@@ -61,6 +61,10 @@ public class LessonValidationActivity extends LessonBaseActivity {
     EditText validateVideosComment;
     EditText validateAudiosComment;
     EditText validateDocumentsComment;
+    TextView switch_validateImageStringText;
+    TextView switch_validateVideoStringText;
+    TextView switch_validateDocumentStringText;
+    TextView switch_validateAudioStringText;
     FloatingActionButton buttonSaveValidatedLesson;
     FloatingActionButton buttonSendValidatedLessonComments;
 
@@ -138,6 +142,11 @@ public class LessonValidationActivity extends LessonBaseActivity {
         validateVideosComment = (EditText) findViewById(R.id.editText_validate_videos_comment);
         validateAudiosComment = (EditText) findViewById(R.id.editText_validate_audios_comment);
         validateDocumentsComment = (EditText) findViewById(R.id.editText_validate_documents_comment);
+
+        switch_validateAudioStringText = (TextView) findViewById(R.id.textView_switch_comment_lesson_audios);
+        switch_validateVideoStringText = (TextView) findViewById(R.id.textView_switch_comment_lesson_video);
+        switch_validateDocumentStringText = (TextView) findViewById(R.id.textView_switch_comment_lesson_documents);
+        switch_validateImageStringText = (TextView) findViewById(R.id.textView_switch_comment_lesson_images);
 
         textSaveValidatedLesson = (TextView) findViewById(R.id.textView_save_validated_lesson);
         textSendValidatedLessonComments = (TextView) findViewById(R.id.textView_send_validated_lesson_comments);
@@ -245,15 +254,24 @@ public class LessonValidationActivity extends LessonBaseActivity {
                     ArrayList<String> videosPathsList  = new ArrayList<>();
 
 
+
                     for (String fileKey: arrayList) {
                         if (fileKey.contains(Constants.S3_IMAGES_PATH)){
                             picturePathsList.add(fileKey);
+                            validateImagesSwitch.setVisibility(View.VISIBLE);
+                            switch_validateImageStringText.setVisibility(View.VISIBLE);
                         } else if (fileKey.contains(Constants.S3_AUDIOS_PATH)) {
                             audioPathsList.add(fileKey);
+                            validateAudiosSwitch.setVisibility(View.VISIBLE);
+                            switch_validateAudioStringText.setVisibility(View.VISIBLE);
                         } else if (fileKey.contains(Constants.S3_DOCS_PATH)) {
                             documentPathsList.add(fileKey);
+                            validateDocumentsSwitch.setVisibility(View.VISIBLE);
+                            switch_validateDocumentStringText.setVisibility(View.VISIBLE);
                         } else if (fileKey.contains(Constants.S3_VIDEOS_PATH)) {
                             videosPathsList.add(fileKey);
+                            validateVideosSwitch.setVisibility(View.VISIBLE);
+                            switch_validateVideoStringText.setVisibility(View.VISIBLE);
                         }
                     }
 
