@@ -16,6 +16,17 @@ public interface Constants {
     public static final String PROJECTS = "projects";
     public static final String SESSIONS = "sessions";
     public static final String SAVE_KEY = "save_key";
+    public static final String ALL_PROJECTS_KEY = "null";
+    public static final String ALL_PROJECTS_NAME = "Todos los proyectos";
+
+    public static final String API_VALIDATE = "validate";
+    public static final String API_SEND = "send";
+    public static final String API_REJECT = "reject";
+
+    public static final String R_REJECTED = "-1";
+    public static final String R_WAITING = "0";
+    public static final String R_VALIDATED = "1";
+    public static final String R_SAVED = "2";
 
 
     // Shared preferences
@@ -28,6 +39,7 @@ public interface Constants {
     public static final String SP_HAS_PERMISSION = "has_permission";
     public static final String SP_PROJECTS = "projects";
     public static final String SP_ACTUAL_PROJECT = "actual_project";
+    public static final String SP_ACTUAL_PROJECT_NAME = "actual_project_name";
     public static final String SP_USER_PERMISSION_NAME = "name_permission";
     public static final String SP_USER_PERMISSION = "user_permission";
 

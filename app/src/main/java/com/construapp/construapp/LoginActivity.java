@@ -104,6 +104,8 @@ public class LoginActivity extends AppCompatActivity {
                                                 try {
                                                     editor.putString(Constants.SP_USER_PERMISSION_NAME,
                                                             result.get(Constants.SP_HAS_PERMISSION).toString());
+                                                    editor.putString(Constants.SP_ACTUAL_PROJECT,"null");
+                                                    editor.putString(Constants.SP_ACTUAL_PROJECT_NAME,"Todos los proyectos");
                                                     editor.apply();
                                                     //TODO revisar startActivity
                                                     startActivity(MainActivity.getIntent(LoginActivity.this));
@@ -172,21 +174,4 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = new Intent(context,LoginActivity.class);
         return intent;
     }
-
-    public interface VolleyCallback{
-        void onSuccess(JSONObject result);
-        void onErrorResponse(VolleyError result);
-    }
-
-
-    public interface VolleyProjectsCallback{
-        void onSuccess(String result);
-        void onErrorResponse(VolleyError result);
-    }
-
-    public interface VolleyProjectPermissionCallback{
-        void onSuccess(JSONObject result);
-        void onErrorResponse(VolleyError result);
-    }
-
 }

@@ -1,28 +1,10 @@
 package com.construapp.construapp;
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.media.MediaPlayer;
-import android.media.MediaRecorder;
-import android.media.MediaScannerConnection;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -32,8 +14,7 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.android.volley.VolleyError;
-import com.construapp.construapp.api.VolleyPatchLesson;
-import com.construapp.construapp.lessonForm.RealPathUtil;
+import com.construapp.construapp.api.VolleyPutLesson;
 import com.construapp.construapp.listeners.VolleyJSONCallback;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.General;
@@ -48,8 +29,6 @@ import com.construapp.construapp.api.VolleyPostS3;
 
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class LessonFormActivity extends LessonBaseActivity {
@@ -78,7 +57,14 @@ public class LessonFormActivity extends LessonBaseActivity {
         fabSend = findViewById(R.id.fab_send);
         fabFiles = findViewById(R.id.fab_files);
         fabVideo = findViewById(R.id.fab_video);
+        fabSave = findViewById(R.id.fab_save);
         textRecording = findViewById(R.id.text_recording);
+
+        constraintActionBar = findViewById(R.id.constraint_action_bar);
+        constraintMultimediaBar = findViewById(R.id.constraint_multimedia_bar);
+        imageAttach = findViewById(R.id.image_attach);
+        setImageAttachListener();
+
 
         //INIT NEW LESSON
         lesson = new Lesson();
@@ -105,6 +91,7 @@ public class LessonFormActivity extends LessonBaseActivity {
         setFabRecordAudioOnClickListener();
         setFabFilesOnClickListener();
         setFabVideoOnClickListener();
+        setFabSaveOnClickListener();
 
         ////HORIZONTAL IMAGES SCROLLING
 
@@ -146,15 +133,21 @@ public class LessonFormActivity extends LessonBaseActivity {
         fabSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO fix params, working with sharedpreferences
+
+            }
+        });
+    }
+
+    public void setFabSaveOnClickListener(){
+        fabSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 sharedPreferences = getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
                 String lesson_name = editLessonName.getText().toString();
                 String lesson_summary = editLessonDescription.getText().toString();
                 String lesson_motivation = "Aprendizaje";
                 String lesson_learning = editLessonDescription.getText().toString();
-                //TODO FIJAR PROYECTO CUANDO EXISTA
                 String project_id = sharedPreferences.getString(Constants.SP_ACTUAL_PROJECT,"");
-
                 VolleyCreateLesson.volleyCreateLesson(new VolleyJSONCallback() {
                     @Override
                     public void onSuccess(JSONObject result) {
@@ -190,6 +183,8 @@ public class LessonFormActivity extends LessonBaseActivity {
                           VolleyPostS3.volleyPostS3(new VolleyJSONCallback() {
                               @Override
                               public void onSuccess(JSONObject result) {
+                                  Toast.makeText(LessonFormActivity.this, "Nueva lección creada", Toast.LENGTH_LONG).show();
+
                                   for (MultimediaFile multimediaFile: lesson.getMultimediaPicturesFiles()) {
                                       multimediaFile.initUploadThread();
                                   }
@@ -220,22 +215,6 @@ public class LessonFormActivity extends LessonBaseActivity {
                 }, LessonFormActivity.this, lesson_name, lesson_summary,
                     lesson_motivation, lesson_learning,
                     project_id);
-                //TODO ESTEBAN al modificar el patch, hay que agregar el validation=0
-                VolleyPatchLesson.volleyPatchLesson(new VolleyJSONCallback() {
-                                                        @Override
-                                                        public void onSuccess(JSONObject result) {
-                                                            Toast.makeText(LessonFormActivity.this, "Leccion editada", Toast.LENGTH_LONG).show();
-
-                                                        }
-
-                                                        @Override
-                                                        public void onErrorResponse(VolleyError result) {}
-                                                    }, LessonFormActivity.this,
-                        lesson.getId(), lesson_name, lesson_summary,
-                        lesson_motivation, lesson_learning,new ArrayList<String>(),new ArrayList<String>()
-                );
-
-                Toast.makeText(LessonFormActivity.this, "Nueva lección creada", Toast.LENGTH_LONG).show();
             }
         });
     }

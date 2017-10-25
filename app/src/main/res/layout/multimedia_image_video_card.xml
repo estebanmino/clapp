@@ -62,22 +62,24 @@
             app:layout_constraintTop_toTopOf="@+id/progress_bar"
             app:srcCompat="@drawable/ic_video_clip" />
 
-        <ImageButton
+        <android.support.design.widget.FloatingActionButton
             android:id="@+id/image_button_delete"
-            style="@style/Widget.AppCompat.ImageButton"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="-36dp"
-            android:layout_marginTop="-36dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="0dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginTop="0dp"
+            android:clickable="true"
+            app:backgroundTint="@android:color/holo_red_light"
+            app:fabSize="mini"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0"
-            app:srcCompat="@android:drawable/ic_delete" />
+            app:srcCompat="@drawable/ic_cancel_dark" />
     </android.support.constraint.ConstraintLayout>
 
 

@@ -30,13 +30,14 @@ import java.util.Map;
  * Created by ESTEBANFML on 22-10-2017.
  */
 
-public class VolleyPatchLesson {
+public class VolleyPutLesson {
 
     //TODO ESTEBAN agregar campos correspondientes a la leccion, y son son vacios no mandar en el json
-    public static void volleyPatchLesson(final VolleyJSONCallback callback,
-                                         Context context, String lesson_id, String lesson_name,
-                                         String lesson_summary, String lesson_motivation,
-                                         String lesson_learning, ArrayList<String> array_added, ArrayList<String> array_deleted) {
+    public static void volleyPutLesson(final VolleyJSONCallback callback,
+                                       Context context, String lesson_id, String lesson_name,
+                                       String lesson_summary, String lesson_motivation,
+                                       String lesson_learning, ArrayList<String> array_added, ArrayList<String> array_deleted,
+                                       String validation) {
 
         SharedPreferences sharedpreferences = context.getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
         final String userToken = sharedpreferences.getString(Constants.SP_TOKEN, "");
@@ -63,7 +64,8 @@ public class VolleyPatchLesson {
 
             final String requestBody =
                     "{\"lesson\":{\"name\":\"" + lesson_name + "\",\"summary\":\"" + lesson_summary + "\"," +
-                            "\"motivation\":\"" + lesson_motivation + "\",\"learning\":\"" + lesson_learning + "\"}," +
+                            "\"motivation\":\"" + lesson_motivation + "\",\"learning\":\"" + lesson_learning + "\"," +
+                            "\"validation\":\"" + validation + "\"}," +
                             "\"array_add_path\":" + added_array + "," +
                             "\"array_delete_path\":" + deleted_array
                             + "}";
