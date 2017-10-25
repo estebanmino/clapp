@@ -44,7 +44,7 @@ public class VolleyPutValidateLesson {
 
         JSONObject jsonObject = new JSONObject();
 
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PUT, url, jsonObject,
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PATCH, url, jsonObject,
             new com.android.volley.Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {

@@ -51,7 +51,7 @@ public class LessonsFragment extends Fragment {
         String project_id = sharedPreferences.getString(Constants.SP_ACTUAL_PROJECT,"");
 
         try {
-            lessonList = new GetLessonsTask(getActivity(),project_id,user_id).execute().get();
+            lessonList = new GetLessonsTask(getActivity(),project_id,user_id,Constants.R_VALIDATED).execute().get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -118,7 +118,7 @@ public class LessonsFragment extends Fragment {
                                         e.printStackTrace();
                                     }
                                 }
-                                lessonList = new GetLessonsTask(getActivity(), project_id, user_id).execute().get();
+                                lessonList = new GetLessonsTask(getActivity(), project_id, user_id, Constants.R_WAITING).execute().get();
                                 lessonsAdapter = new LessonsAdapter(getActivity(), lessonList);
                                 lessonsList.setAdapter(lessonsAdapter);
                             } catch (Exception e) {
@@ -133,7 +133,7 @@ public class LessonsFragment extends Fragment {
                 } else {
                     try {
 
-                        lessonList = new GetLessonsTask(getActivity(), project_id, user_id).execute().get();
+                        lessonList = new GetLessonsTask(getActivity(), project_id, user_id, Constants.R_WAITING).execute().get();
                         lessonsAdapter = new LessonsAdapter(getActivity(), lessonList);
                         lessonsList.setAdapter(lessonsAdapter);
                     } catch (Exception e) {}

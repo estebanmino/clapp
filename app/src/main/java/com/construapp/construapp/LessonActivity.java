@@ -20,7 +20,9 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.android.volley.VolleyError;
 import com.construapp.construapp.api.VolleyPutLesson;
+import com.construapp.construapp.db.AppDatabase;
 import com.construapp.construapp.db.Connectivity;
+import com.construapp.construapp.dbTasks.GetLessonTask;
 import com.construapp.construapp.listeners.VolleyJSONCallback;
 import com.construapp.construapp.listeners.VolleyStringCallback;
 import com.construapp.construapp.models.Constants;
@@ -372,13 +374,17 @@ public class LessonActivity extends LessonBaseActivity {
     }
 
     public void setLesson() {
-        lesson = new Lesson();
-        lesson.setName(getIntent().getStringExtra(LESSON_NAME));
-        lesson.setDescription(getIntent().getStringExtra(LESSON_DESCRIPTION));
-        lesson.setId(getIntent().getStringExtra(LESSON_ID));
-        lesson.setCompany_id(sharedPreferences.getString(Constants.SP_COMPANY, ""));
-        lesson.initMultimediaFiles();
-        showPermissions();
+        try {
+            lesson = new GetLessonTask(LessonActivity.this, getIntent().getStringExtra(LESSON_ID)).execute().get();
+/*        lesson.setName(getIntent().getStringExtra(LESSON_NAME));
+            lesson.setDescription(getIntent().getStringExtra(LESSON_DESCRIPTION));
+            lesson.setId(getIntent().getStringExtra(LESSON_ID));
+            lesson.setCompany_id(sharedPreferences.getString(Constants.SP_COMPANY, ""));*/
+            lesson.initMultimediaFiles();
+            showPermissions();
+        } catch (Exception e) {
+            lesson = new Lesson();
+        }
     }
 
     public static Intent getIntent(Context context, String name, String description, String id) {
@@ -437,14 +443,12 @@ public class LessonActivity extends LessonBaseActivity {
         fabSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            //TODO fix params, working with sharedpreferences
-            sharedPreferences = getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
             String lesson_name = editName.getText().toString();
             String lesson_summary = editDescription.getText().toString();
             String lesson_motivation = "Aprendizaje";
             String lesson_learning = editDescription.getText().toString();
-            //TODO FIJAR PROYECTO CUANDO EXISTA
-            String project_id = sharedPreferences.getString(Constants.SP_ACTUAL_PROJECT,"");
+            String project_id = lesson.getProject_id();
+            String validation = "0";
             ArrayList<String> array_added =  lesson.getAddedMultimediaKeysS3();
             ArrayList<String> array_deleted =  lesson.getDeletedMultimediaFilesS3Keys();
             VolleyPutLesson.volleyPutLesson(new VolleyJSONCallback() {
@@ -480,10 +484,12 @@ public class LessonActivity extends LessonBaseActivity {
                   }
 
                   @Override
-                  public void onErrorResponse(VolleyError result) {}
+                  public void onErrorResponse(VolleyError result) {
+                      Toast.makeText(LessonActivity.this, "No se puede editar la leccióon en este momento", Toast.LENGTH_LONG).show();
+                  }
                 }, LessonActivity.this,
                     lesson.getId(), lesson_name, lesson_summary,
-                lesson_motivation, lesson_learning, array_added, array_deleted
+                lesson_motivation, lesson_learning, array_added, array_deleted, validation
                 );
 
             }

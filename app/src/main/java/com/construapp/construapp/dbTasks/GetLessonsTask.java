@@ -18,13 +18,15 @@ public class GetLessonsTask extends AsyncTask<Void,Void,List<Lesson>>{
     private Context context;
     private String projectId;
     private String userId;
+    private String validation;
     private List<Lesson> list;
 
-    public GetLessonsTask(Context context, String projectId, String userId)
+    public GetLessonsTask(Context context, String projectId, String userId, String validation)
     {
         this.context=context;
         this.projectId=projectId;
         this.userId=userId;
+        this.validation = validation;
     }
     @Override
     protected List<Lesson> doInBackground(Void... params) {
@@ -45,7 +47,7 @@ public class GetLessonsTask extends AsyncTask<Void,Void,List<Lesson>>{
         }
         else {
             Log.i("JSON", "byuserprojectid");
-            list = AppDatabase.getDatabase(context.getApplicationContext()).lessonDAO().getLessonByUserAndProjectId(userId,projectId);
+            list = AppDatabase.getDatabase(context.getApplicationContext()).lessonDAO().getLessonByUserProjectIdAndValidation(userId,projectId,validation);
         }
         return  list;
     }

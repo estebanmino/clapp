@@ -169,6 +169,8 @@ public class LessonFormActivity extends LessonBaseActivity {
                           VolleyPostS3.volleyPostS3(new VolleyJSONCallback() {
                               @Override
                               public void onSuccess(JSONObject result) {
+                                  Toast.makeText(LessonFormActivity.this, "Nueva lección creada", Toast.LENGTH_LONG).show();
+
                                   for (MultimediaFile multimediaFile: lesson.getMultimediaPicturesFiles()) {
                                       multimediaFile.initUploadThread();
                                   }
@@ -199,22 +201,6 @@ public class LessonFormActivity extends LessonBaseActivity {
                 }, LessonFormActivity.this, lesson_name, lesson_summary,
                     lesson_motivation, lesson_learning,
                     project_id);
-                //TODO ESTEBAN al modificar el patch, hay que agregar el validation=0
-                VolleyPutLesson.volleyPutLesson(new VolleyJSONCallback() {
-                                                        @Override
-                                                        public void onSuccess(JSONObject result) {
-                                                            Toast.makeText(LessonFormActivity.this, "Leccion editada", Toast.LENGTH_LONG).show();
-
-                                                        }
-
-                                                        @Override
-                                                        public void onErrorResponse(VolleyError result) {}
-                                                    }, LessonFormActivity.this,
-                        lesson.getId(), lesson_name, lesson_summary,
-                        lesson_motivation, lesson_learning,new ArrayList<String>(),new ArrayList<String>()
-                );
-
-                Toast.makeText(LessonFormActivity.this, "Nueva lección creada", Toast.LENGTH_LONG).show();
             }
         });
     }

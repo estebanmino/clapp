@@ -23,6 +23,11 @@ public interface Constants {
     public static final String API_SEND = "send";
     public static final String API_REJECT = "reject";
 
+    public static final String R_REJECTED = "-1";
+    public static final String R_WAITING = "0";
+    public static final String R_VALIDATED = "1";
+    public static final String R_SAVED = "2";
+
 
     // Shared preferences
     public static final String SP_CONSTRUAPP = "ConstruApp";

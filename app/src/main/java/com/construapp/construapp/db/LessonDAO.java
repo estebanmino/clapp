@@ -42,8 +42,8 @@ public interface LessonDAO {
     @Query("select * from Lesson where project_id = :id AND validation = 1")
     List<Lesson> getLessonByProjectId(String id);
 
-    @Query("select * from Lesson where (project_id = :projectId) AND (user_id = :userId) AND (validation = 0 OR validation = -1)")
-    List<Lesson> getLessonByUserAndProjectId(String userId, String projectId);
+    @Query("select * from Lesson where (project_id = :projectId) AND (user_id = :userId) AND (validation = :validation)")
+    List<Lesson> getLessonByUserProjectIdAndValidation(String userId, String projectId,String validation);
 
     @Query("select * from Lesson where (project_id = :projectId) AND(validation = 0) AND (validator = :validatorValue)")
     List<Lesson> getLessonByProjectIdAndValidator(String projectId,String validatorValue);
