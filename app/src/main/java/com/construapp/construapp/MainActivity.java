@@ -1,5 +1,6 @@
 package com.construapp.construapp;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.NavigationView;
@@ -74,6 +75,7 @@ public class MainActivity extends AppCompatActivity
 
     TextView mUserName;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,6 +105,7 @@ public class MainActivity extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
 
 
         constants = new General();
@@ -149,6 +152,20 @@ public class MainActivity extends AppCompatActivity
                 menu.add(0, i+1, Menu.NONE, project.getString("name"));
             }
         } catch (Exception e) {}
+
+        //back toolbar
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_menu_ham));
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+                drawer.openDrawer(GravityCompat.START);
+            }
+        });
+    }
+
+    @Override
+    public void onBackPressed() {
 
     }
 
@@ -292,10 +309,6 @@ public class MainActivity extends AppCompatActivity
             }
             return null;
         }
-    }
-
-    public void onBackPressed()
-    {
     }
 
     public static Intent getIntent(Context context) {
