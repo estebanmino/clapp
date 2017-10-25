@@ -57,7 +57,14 @@ public class LessonFormActivity extends LessonBaseActivity {
         fabSend = findViewById(R.id.fab_send);
         fabFiles = findViewById(R.id.fab_files);
         fabVideo = findViewById(R.id.fab_video);
+        fabSave = findViewById(R.id.fab_save);
         textRecording = findViewById(R.id.text_recording);
+
+        constraintActionBar = findViewById(R.id.constraint_action_bar);
+        constraintMultimediaBar = findViewById(R.id.constraint_multimedia_bar);
+        imageAttach = findViewById(R.id.image_attach);
+        setImageAttachListener();
+
 
         //INIT NEW LESSON
         lesson = new Lesson();
@@ -84,6 +91,7 @@ public class LessonFormActivity extends LessonBaseActivity {
         setFabRecordAudioOnClickListener();
         setFabFilesOnClickListener();
         setFabVideoOnClickListener();
+        setFabSaveOnClickListener();
 
         ////HORIZONTAL IMAGES SCROLLING
 
@@ -125,15 +133,21 @@ public class LessonFormActivity extends LessonBaseActivity {
         fabSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO fix params, working with sharedpreferences
+
+            }
+        });
+    }
+
+    public void setFabSaveOnClickListener(){
+        fabSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 sharedPreferences = getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
                 String lesson_name = editLessonName.getText().toString();
                 String lesson_summary = editLessonDescription.getText().toString();
                 String lesson_motivation = "Aprendizaje";
                 String lesson_learning = editLessonDescription.getText().toString();
-                //TODO FIJAR PROYECTO CUANDO EXISTA
                 String project_id = sharedPreferences.getString(Constants.SP_ACTUAL_PROJECT,"");
-
                 VolleyCreateLesson.volleyCreateLesson(new VolleyJSONCallback() {
                     @Override
                     public void onSuccess(JSONObject result) {

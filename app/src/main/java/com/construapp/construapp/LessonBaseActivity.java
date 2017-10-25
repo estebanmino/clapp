@@ -23,6 +23,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -68,10 +69,14 @@ public class LessonBaseActivity extends AppCompatActivity {
     public FloatingActionButton fabFiles;
     public FloatingActionButton fabSend;
     public FloatingActionButton fabVideo;
+    public FloatingActionButton fabSave;
     public EditText editLessonName;
     public EditText editLessonDescription;
     public TextView textRecording;
     public ConstraintLayout constraintMultimediaBar;
+    public ConstraintLayout constraintActionBar;
+
+    public ImageView imageAttach;
 
     //LOCAL VARIABLES
     public String mPath;
@@ -109,6 +114,7 @@ public class LessonBaseActivity extends AppCompatActivity {
 
     public int notAdded = 0;
     public int added = 1;
+    private Boolean multimediaIsOpen = false;
 
 
 
@@ -116,6 +122,21 @@ public class LessonBaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+    }
+
+
+    public void setImageAttachListener() {
+        imageAttach.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!multimediaIsOpen) {
+                    constraintMultimediaBar.setVisibility(View.VISIBLE);
+                } else {
+                    constraintMultimediaBar.setVisibility(View.GONE);
+                }
+                multimediaIsOpen = !multimediaIsOpen;
+            }
+        });
     }
 
     public void setFabFilesOnClickListener(){
@@ -145,7 +166,9 @@ public class LessonBaseActivity extends AppCompatActivity {
                         fabGallery.setVisibility(View.GONE);
                         fabCamera.setVisibility(View.GONE);
                         fabSend.setVisibility(View.GONE);
+                        fabSave.setVisibility(View.GONE);
                         fabVideo.setVisibility(View.GONE);
+                        imageAttach.setVisibility(View.GONE);
                     }
                     else{
                         fabRecordAudio.setSize(FloatingActionButton.SIZE_MINI);
@@ -154,7 +177,9 @@ public class LessonBaseActivity extends AppCompatActivity {
                         fabGallery.setVisibility(View.VISIBLE);
                         fabCamera.setVisibility(View.VISIBLE);
                         fabSend.setVisibility(View.VISIBLE);
+                        fabSave.setVisibility(View.VISIBLE);
                         fabVideo.setVisibility(View.VISIBLE);
+                        imageAttach.setVisibility(View.VISIBLE);
                     }
                     mStartRecording = !mStartRecording;
 
