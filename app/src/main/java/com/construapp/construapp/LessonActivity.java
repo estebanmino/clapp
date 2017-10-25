@@ -59,6 +59,7 @@ public class LessonActivity extends LessonBaseActivity {
 
     //MM ADAPTER
 
+
     ImageView imageEditLesson;
     ImageView imageDeleteLesson;
     TextView textEditLesson;

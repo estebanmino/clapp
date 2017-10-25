@@ -52,7 +52,7 @@ public class MyLessonsFragment extends Fragment {
         user_id = sharedPreferences.getString(Constants.SP_USER,"");
         project_id = sharedPreferences.getString(Constants.SP_ACTUAL_PROJECT,"");
 
-        getMyLessons(project_id,user_id);
+        getMyLessons(project_id,user_id, Constants.R_SAVED);
 
         lessonsAdapter = new LessonsAdapter(getActivity(), lessonList);
 
@@ -60,9 +60,9 @@ public class MyLessonsFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_my_lessons, container, false);
     }
 
-    public void getMyLessons(String project_id, String user_id){
+    public void getMyLessons(String project_id, String user_id, String validation){
         try {
-            lessonList = new GetLessonsTask(getActivity(),project_id,user_id,Constants.R_SAVED).execute().get();
+            lessonList = new GetLessonsTask(getActivity(),project_id,user_id,validation).execute().get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -79,8 +79,7 @@ public class MyLessonsFragment extends Fragment {
 
         btnLessonsRejected  = view.findViewById(R.id.btn_lessons_rejected);
         btnLessonsSaved  = view.findViewById(R.id.btn_lessons_saved);
-        btnLessonsRejected.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-
+        btnLessonsSaved.setBackgroundColor(getResources().getColor(R.color.colorAccent));
         lessonsValidationState = Constants.R_REJECTED;
 
         btnLessonsRejected.setOnClickListener(new View.OnClickListener() {
@@ -171,7 +170,11 @@ public class MyLessonsFragment extends Fragment {
 
                 @Override
                 public void onErrorResponse(VolleyError result) {
-
+                    try {
+                        lessonList = new GetLessonsTask(getActivity(), project_id, user_id, lessonsValidationState).execute().get();
+                        lessonsAdapter = new LessonsAdapter(getActivity(), lessonList);
+                        myLessonsList.setAdapter(lessonsAdapter);
+                    }catch (Exception e) {}
                 }
             }, getContext());
         } else {
