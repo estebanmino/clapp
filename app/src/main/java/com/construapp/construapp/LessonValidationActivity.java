@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,11 +14,14 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.android.volley.VolleyError;
+import com.construapp.construapp.api.VolleyPutRejectLesson;
+import com.construapp.construapp.api.VolleyPutValidateLesson;
 import com.construapp.construapp.listeners.VolleyJSONCallback;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.General;
@@ -44,7 +46,7 @@ public class LessonValidationActivity extends LessonBaseActivity {
     private static final String LESSON_NAME = "username";
     private static final String LESSON_DESCRIPTION = "description";
     private static final String LESSON_ID = "id";
-    private static final String PROJECT_FOLDER = "ConstruApp";
+    private static final String PROJECT_FOLDER = Constants.M_APP_DIRECTORY;
 
     TextView textSaveValidatedLesson;
     TextView textSendValidatedLessonComments;
@@ -55,18 +57,24 @@ public class LessonValidationActivity extends LessonBaseActivity {
     Switch validateVideosSwitch;
     Switch validateAudiosSwitch;
     Switch validateDocumentsSwitch;
-    EditText validateNameComment;
-    EditText validateDescriptionComment;
-    EditText validateImagesComment;
-    EditText validateVideosComment;
-    EditText validateAudiosComment;
-    EditText validateDocumentsComment;
+    EditText editCommentName;
+    EditText editCommentDescription;
+    EditText editCommentImages;
+    EditText editCommentVideos;
+    EditText editCommentAudios;
+    EditText editCommentDocuments;
     TextView switch_validateImageStringText;
     TextView switch_validateVideoStringText;
     TextView switch_validateDocumentStringText;
     TextView switch_validateAudioStringText;
-    FloatingActionButton buttonSaveValidatedLesson;
-    FloatingActionButton buttonSendValidatedLessonComments;
+    FloatingActionButton fabValidateLesson;
+    FloatingActionButton fabCommentLeson;
+    FloatingActionButton fabRejectLesson;
+
+    private TextView textImages;
+    private TextView textVideos;
+    private TextView textAudios;
+    private TextView textDocuments;
 
     private Boolean editing = true;
 
@@ -99,7 +107,7 @@ public class LessonValidationActivity extends LessonBaseActivity {
         //PICTURES SCROLLING
         LinearLayoutManager picturesLayoutManager = new LinearLayoutManager(this);
         picturesLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        RecyclerView mPicturesRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_pictures);
+        final RecyclerView mPicturesRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_pictures);
         mPicturesRecyclerView.setLayoutManager(picturesLayoutManager);
         multimediaPictureAdapter = new MultimediaPictureAdapter(lesson.getMultimediaPicturesFiles(),LessonValidationActivity.this,lesson);
         mPicturesRecyclerView.setAdapter(multimediaPictureAdapter);
@@ -107,7 +115,7 @@ public class LessonValidationActivity extends LessonBaseActivity {
         //AUDIOS SCROLLING
         LinearLayoutManager audiosLayoutManager = new LinearLayoutManager(this);
         audiosLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        RecyclerView mAudiosRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_audios);
+        final RecyclerView mAudiosRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_audios);
         mAudiosRecyclerView.setLayoutManager(audiosLayoutManager);
         multimediaAudioAdapter = new MultimediaAudioAdapter(lesson.getMultimediaAudiosFiles(),LessonValidationActivity.this,lesson);
         mAudiosRecyclerView.setAdapter(multimediaAudioAdapter);
@@ -115,7 +123,7 @@ public class LessonValidationActivity extends LessonBaseActivity {
         //VIDEOS SCROLLING
         LinearLayoutManager videosLayoutManager = new LinearLayoutManager(this);
         videosLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        RecyclerView mVideosRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_videos);
+        final RecyclerView mVideosRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_videos);
         mVideosRecyclerView.setLayoutManager(videosLayoutManager);
         multimediaVideoAdapter = new MultimediaVideoAdapter(lesson.getMultimediaVideosFiles(),LessonValidationActivity.this,lesson);
         mVideosRecyclerView.setAdapter(multimediaVideoAdapter);
@@ -123,7 +131,7 @@ public class LessonValidationActivity extends LessonBaseActivity {
         //DOCUMENTS SCROLLING
         LinearLayoutManager documentsLayoutManager = new LinearLayoutManager(this);
         documentsLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        RecyclerView mDocumentsRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_documents);
+        final RecyclerView mDocumentsRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_documents);
         mDocumentsRecyclerView.setLayoutManager(documentsLayoutManager);
         multimediaDocumentAdapter = new MultimediaDocumentAdapter(lesson.getMultimediaDocumentsFiles(),LessonValidationActivity.this,lesson);
         mDocumentsRecyclerView.setAdapter(multimediaDocumentAdapter);
@@ -136,12 +144,12 @@ public class LessonValidationActivity extends LessonBaseActivity {
         validateAudiosSwitch = (Switch) findViewById(R.id.switch_lesson_audios);
         validateDocumentsSwitch = (Switch) findViewById(R.id.switch_lesson_documents);
 
-        validateNameComment = (EditText) findViewById(R.id.editText_validate_name_comment);
-        validateDescriptionComment = (EditText) findViewById(R.id.editText_validate_description_comment);
-        validateImagesComment = (EditText) findViewById(R.id.editText_validate_images_comment);
-        validateVideosComment = (EditText) findViewById(R.id.editText_validate_videos_comment);
-        validateAudiosComment = (EditText) findViewById(R.id.editText_validate_audios_comment);
-        validateDocumentsComment = (EditText) findViewById(R.id.editText_validate_documents_comment);
+        editCommentName = (EditText) findViewById(R.id.edit_comment_name);
+        editCommentDescription = (EditText) findViewById(R.id.edit_comment_description);
+        editCommentImages = (EditText) findViewById(R.id.edit_comment_images);
+        editCommentVideos = (EditText) findViewById(R.id.edit_comment_videos);
+        editCommentAudios = (EditText) findViewById(R.id.edit_comment_audios);
+        editCommentDocuments = (EditText) findViewById(R.id.edit_comment_documents);
 
         switch_validateAudioStringText = (TextView) findViewById(R.id.textView_switch_comment_lesson_audios);
         switch_validateVideoStringText = (TextView) findViewById(R.id.textView_switch_comment_lesson_video);
@@ -150,19 +158,23 @@ public class LessonValidationActivity extends LessonBaseActivity {
 
         textSaveValidatedLesson = (TextView) findViewById(R.id.textView_save_validated_lesson);
         textSendValidatedLessonComments = (TextView) findViewById(R.id.textView_send_validated_lesson_comments);
-        buttonSaveValidatedLesson = (FloatingActionButton) findViewById(R.id.floatingActionButton_save_validated_lesson);
-        buttonSendValidatedLessonComments = (FloatingActionButton) findViewById(R.id.floatingActionButton_send_validated_lesson_comments);
+        fabValidateLesson = (FloatingActionButton) findViewById(R.id.fab_validate_lesson);
+        fabCommentLeson = (FloatingActionButton) findViewById(R.id.fab_comment_lesson);
+        fabRejectLesson = (FloatingActionButton) findViewById(R.id.fab_reject_lesson);
 
-
+        textImages = (TextView) findViewById(R.id.text_images);
+        textVideos = (TextView) findViewById(R.id.text_videos);
+        textAudios = (TextView) findViewById(R.id.text_audios);
+        textDocuments = (TextView) findViewById(R.id.text_documents);
 
         validateNameSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked){
-                    validateNameComment.setVisibility(View.VISIBLE);
+                    editCommentName.setVisibility(View.VISIBLE);
                 }
                 else {
-                    validateNameComment.setVisibility(View.GONE);
+                    editCommentName.setVisibility(View.GONE);
                 }
                 checkedComments();
             }
@@ -172,10 +184,10 @@ public class LessonValidationActivity extends LessonBaseActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked){
-                    validateDescriptionComment.setVisibility(View.VISIBLE);
+                    editCommentDescription.setVisibility(View.VISIBLE);
                 }
                 else {
-                    validateDescriptionComment.setVisibility(View.GONE);
+                    editCommentDescription.setVisibility(View.GONE);
                 }
                 checkedComments();
             }
@@ -185,10 +197,10 @@ public class LessonValidationActivity extends LessonBaseActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked){
-                    validateImagesComment.setVisibility(View.VISIBLE);
+                    editCommentImages.setVisibility(View.VISIBLE);
                 }
                 else {
-                    validateImagesComment.setVisibility(View.GONE);
+                    editCommentImages.setVisibility(View.GONE);
                 }
                 checkedComments();
             }
@@ -198,10 +210,10 @@ public class LessonValidationActivity extends LessonBaseActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked){
-                    validateVideosComment.setVisibility(View.VISIBLE);
+                    editCommentVideos.setVisibility(View.VISIBLE);
                 }
                 else {
-                    validateVideosComment.setVisibility(View.GONE);
+                    editCommentVideos.setVisibility(View.GONE);
                 }
                 checkedComments();
             }
@@ -211,10 +223,10 @@ public class LessonValidationActivity extends LessonBaseActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked){
-                    validateAudiosComment.setVisibility(View.VISIBLE);
+                    editCommentAudios.setVisibility(View.VISIBLE);
                 }
                 else {
-                    validateAudiosComment.setVisibility(View.GONE);
+                    editCommentAudios.setVisibility(View.GONE);
                 }
                 checkedComments();
             }
@@ -224,16 +236,14 @@ public class LessonValidationActivity extends LessonBaseActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked){
-                    validateDocumentsComment.setVisibility(View.VISIBLE);
+                    editCommentDocuments.setVisibility(View.VISIBLE);
                 }
                 else {
-                    validateDocumentsComment.setVisibility(View.GONE);
+                    editCommentDocuments.setVisibility(View.GONE);
                 }
                 checkedComments();
             }
         });
-
-
 
         VolleyFetchLessonMultimedia.volleyFetchLessonMultimedia(new VolleyJSONCallback() {
             @Override
@@ -260,18 +270,26 @@ public class LessonValidationActivity extends LessonBaseActivity {
                             picturePathsList.add(fileKey);
                             validateImagesSwitch.setVisibility(View.VISIBLE);
                             switch_validateImageStringText.setVisibility(View.VISIBLE);
+                            mPicturesRecyclerView.setVisibility(View.VISIBLE);
+                            textImages.setVisibility(View.VISIBLE);
                         } else if (fileKey.contains(Constants.S3_AUDIOS_PATH)) {
                             audioPathsList.add(fileKey);
                             validateAudiosSwitch.setVisibility(View.VISIBLE);
                             switch_validateAudioStringText.setVisibility(View.VISIBLE);
+                            textAudios.setVisibility(View.VISIBLE);
+                            mAudiosRecyclerView.setVisibility(View.VISIBLE);
                         } else if (fileKey.contains(Constants.S3_DOCS_PATH)) {
                             documentPathsList.add(fileKey);
                             validateDocumentsSwitch.setVisibility(View.VISIBLE);
                             switch_validateDocumentStringText.setVisibility(View.VISIBLE);
+                            textDocuments.setVisibility(View.VISIBLE);
+                            mDocumentsRecyclerView.setVisibility(View.VISIBLE);
                         } else if (fileKey.contains(Constants.S3_VIDEOS_PATH)) {
                             videosPathsList.add(fileKey);
                             validateVideosSwitch.setVisibility(View.VISIBLE);
+                            textVideos.setVisibility(View.VISIBLE);
                             switch_validateVideoStringText.setVisibility(View.VISIBLE);
+                            mVideosRecyclerView.setVisibility(View.VISIBLE);
                         }
                     }
 
@@ -292,6 +310,7 @@ public class LessonValidationActivity extends LessonBaseActivity {
                                 videoPath.replace("\"", ""),transferUtility,notAdded);
                         lesson.getMultimediaVideosFiles().add(documentMultimedia);
                     }
+                    multimediaVideoAdapter.notifyDataSetChanged();
 
                     for (String audioPath: audioPathsList) {
                         MultimediaFile audioMultimedia = new MultimediaFile(
@@ -320,20 +339,94 @@ public class LessonValidationActivity extends LessonBaseActivity {
 
             }
         }, LessonValidationActivity.this, lesson.getId());
+
+        setFabValidateLessonListener();
+        setFabRejectLessonListener();
+        setFabCommentLessonListener();
+
     }
+
+    public void setFabValidateLessonListener() {
+        fabValidateLesson.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //
+                VolleyPutValidateLesson.volleyPutValidateLesson(new VolleyJSONCallback() {
+                    @Override
+                    public void onSuccess(JSONObject result) {
+                        Toast.makeText(getApplicationContext(),"Validación realizada con éxito",Toast.LENGTH_LONG);
+                        MainActivity.getIntent(LessonValidationActivity.this);
+                    }
+
+                    @Override
+                    public void onErrorResponse(VolleyError result) {
+                        Toast.makeText(getApplicationContext(),"No se pudo realizar la validación solicitada",Toast.LENGTH_LONG);
+                    }
+                }, LessonValidationActivity.this, lesson.getId());
+            }
+        });
+    };
+    public void setFabRejectLessonListener() {
+        fabRejectLesson.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String comment = "COMENTARIOS POR SEGMENTO: \n";
+                if (editCommentName.getText() != null) {
+                    comment = comment + "NOMBRE: " + editCommentName.getText() + "\n";
+                }
+                if (editCommentDescription.getText() != null) {
+                    comment = comment + "DESCRIPCIÓN: " + editCommentDescription.getText() + "\n";
+                }
+                if (editCommentImages.getText() != null) {
+                    comment = comment + "IMÁGENES: " + editCommentImages.getText() + "\n";
+                }
+                if (editCommentVideos.getText() != null) {
+                    comment = comment + "VIDEOS: " + editCommentVideos.getText() + "\n";
+                }
+                if (editCommentAudios.getText() != null) {
+                    comment = comment + "AUDIOS: " + editCommentAudios.getText() + "\n";
+                }
+                if (editCommentDocuments.getText() != null) {
+                    comment = comment + "DOCUMENTOS: " + editCommentDocuments.getText() + "\n";
+                }
+
+                VolleyPutRejectLesson.volleyPutRejectLesson(new VolleyJSONCallback() {
+                    @Override
+                    public void onSuccess(JSONObject result) {
+
+                    }
+
+                    @Override
+                    public void onErrorResponse(VolleyError result) {
+
+                    }
+                }, LessonValidationActivity.this, lesson.getId(), comment);
+            }
+        });
+    };
+    public void setFabCommentLessonListener() {
+        fabCommentLeson.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //
+            }
+        });
+    };
+
+
 
     public void checkedComments(){
         if (validateNameSwitch.isChecked() || validateDescriptionSwitch.isChecked() || validateImagesSwitch.isChecked() || validateVideosSwitch.isChecked() || validateAudiosSwitch.isChecked() || validateDocumentsSwitch.isChecked()){
             textSaveValidatedLesson.setVisibility(View.GONE);
-            buttonSaveValidatedLesson.setVisibility(View.GONE);
+            fabValidateLesson.setVisibility(View.GONE);
             textSendValidatedLessonComments.setVisibility(View.VISIBLE);
-            buttonSendValidatedLessonComments.setVisibility(View.VISIBLE);
+            fabCommentLeson.setVisibility(View.VISIBLE);
         }
         else {
             textSaveValidatedLesson.setVisibility(View.VISIBLE);
-            buttonSaveValidatedLesson.setVisibility(View.VISIBLE);
+            fabValidateLesson.setVisibility(View.VISIBLE);
             textSendValidatedLessonComments.setVisibility(View.GONE);
-            buttonSendValidatedLessonComments.setVisibility(View.GONE);
+            fabCommentLeson.setVisibility(View.GONE);
         }
     }
 

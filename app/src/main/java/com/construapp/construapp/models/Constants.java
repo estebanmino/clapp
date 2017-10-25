@@ -19,6 +19,10 @@ public interface Constants {
     public static final String ALL_PROJECTS_KEY = "null";
     public static final String ALL_PROJECTS_NAME = "Todos los proyectos";
 
+    public static final String API_VALIDATE = "validate";
+    public static final String API_SEND = "send";
+    public static final String API_REJECT = "reject";
+
 
     // Shared preferences
     public static final String SP_CONSTRUAPP = "ConstruApp";

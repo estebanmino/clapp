@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -14,16 +13,13 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.content.SharedPreferences;
 import android.widget.Toast;
 
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.android.volley.VolleyError;
-import com.construapp.construapp.api.VolleyCreateLesson;
-import com.construapp.construapp.api.VolleyPatchLesson;
-import com.construapp.construapp.api.VolleyPostS3;
+import com.construapp.construapp.api.VolleyPutLesson;
 import com.construapp.construapp.db.Connectivity;
 import com.construapp.construapp.listeners.VolleyJSONCallback;
 import com.construapp.construapp.listeners.VolleyStringCallback;
@@ -44,7 +40,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
@@ -75,6 +70,11 @@ public class LessonActivity extends LessonBaseActivity {
     private TextView textNewLessonName;
     private TextView textNewLessonDescription;
 
+    private TextView textImages;
+    private TextView textVideos;
+    private TextView textAudios;
+    private TextView textDocuments;
+
     private Boolean editing = false;
 
     private RecyclerView mPicturesRecyclerView;
@@ -104,6 +104,11 @@ public class LessonActivity extends LessonBaseActivity {
         textLessonDescription = (TextView) findViewById(R.id.text_lesson_description);
         textNewLessonName = findViewById(R.id.text_new_lesson_name);
         textNewLessonDescription = findViewById(R.id.text_new_lesson_description);
+
+        textImages = (TextView) findViewById(R.id.text_images);
+        textVideos = (TextView) findViewById(R.id.text_videos);
+        textAudios = (TextView) findViewById(R.id.text_audios);
+        textDocuments = (TextView) findViewById(R.id.text_documents);
 
         fabCamera = findViewById(R.id.fab_camera);
         fabGallery = findViewById(R.id.fab_gallery);
@@ -190,12 +195,20 @@ public class LessonActivity extends LessonBaseActivity {
                     for (String fileKey: arrayList) {
                         if (fileKey.contains(Constants.S3_IMAGES_PATH)){
                             picturePathsList.add(fileKey);
+                            textImages.setVisibility(View.VISIBLE);
+                            mPicturesRecyclerView.setVisibility(View.VISIBLE);
                         } else if (fileKey.contains(Constants.S3_AUDIOS_PATH)) {
                             audioPathsList.add(fileKey);
+                            textAudios.setVisibility(View.VISIBLE);
+                            mAudiosRecyclerView.setVisibility(View.VISIBLE);
                         } else if (fileKey.contains(Constants.S3_DOCS_PATH)) {
                             documentPathsList.add(fileKey);
+                            textDocuments.setVisibility(View.VISIBLE);
+                            mDocumentsRecyclerView.setVisibility(View.VISIBLE);
                         } else if (fileKey.contains(Constants.S3_VIDEOS_PATH)) {
                             videosPathsList.add(fileKey);
+                            textVideos.setVisibility(View.VISIBLE);
+                            mVideosRecyclerView.setVisibility(View.VISIBLE);
                         }
                     }
 
@@ -434,7 +447,7 @@ public class LessonActivity extends LessonBaseActivity {
             String project_id = sharedPreferences.getString(Constants.SP_ACTUAL_PROJECT,"");
             ArrayList<String> array_added =  lesson.getAddedMultimediaKeysS3();
             ArrayList<String> array_deleted =  lesson.getDeletedMultimediaFilesS3Keys();
-            VolleyPatchLesson.volleyPatchLesson(new VolleyJSONCallback() {
+            VolleyPutLesson.volleyPutLesson(new VolleyJSONCallback() {
                   @Override
                   public void onSuccess(JSONObject result) {
                       Toast.makeText(LessonActivity.this, "Leccion editada", Toast.LENGTH_LONG).show();

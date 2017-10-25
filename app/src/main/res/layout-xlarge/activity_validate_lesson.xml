@@ -112,7 +112,7 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editText_validate_name_comment" />
+                app:layout_constraintTop_toBottomOf="@+id/edit_comment_name" />
 
             <TextView
                 android:id="@+id/text_lesson_name"
@@ -368,7 +368,7 @@
                 tools:layout_editor_absoluteY="562dp" />
 
             <EditText
-                android:id="@+id/editText_validate_name_comment"
+                android:id="@+id/edit_comment_name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:ems="10"

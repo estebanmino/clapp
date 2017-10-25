@@ -18,6 +18,7 @@
     <string name="login_activity_password">Ingrese su contraseña</string>
     <string name="login_activity_signin">Ingresar</string>
     <string name="title_activity_lesson_form">Nueva Lección</string>
+    <string name="title_activity_validate_lesson_form">Validar Lección</string>
 
     <!-- PERMISSIONS -->
     <integer name="read_permission">1</integer>
