@@ -43,9 +43,20 @@ public class Lesson {
     private String validation;
     private String user_id;
     private String project_id;
+    private String reject_comment;
     private String company_id;
     private String validator;
     private String validator_sec;
+
+
+    public String getReject_comment() {
+        return reject_comment;
+    }
+
+    public void setReject_comment(String reject_comment) {
+        this.reject_comment = reject_comment;
+    }
+
 
     public String getValidator_sec() {
         return validator_sec;
