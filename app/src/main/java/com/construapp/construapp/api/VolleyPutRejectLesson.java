@@ -43,13 +43,9 @@ public class VolleyPutRejectLesson {
 
         final JSONObject jsonObject1 = new JSONObject();
         try {
-            jsonObject.put("reject_comment", comment);
+            jsonObject1.put("reject_comment", comment);
         } catch (Exception e) {}
 
-        final String requestBody =
-                "{\"reject_comment\":\""+ comment + "\"}";
-
-        Log.i("REQUEST",jsonObject1.toString());
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PATCH, url, jsonObject,
                 new com.android.volley.Response.Listener<JSONObject>() {
                     @Override
@@ -83,7 +79,7 @@ public class VolleyPutRejectLesson {
                 try {
                     return jsonObject1 == null ? null : jsonObject1.toString().getBytes("utf-8");
                 } catch (UnsupportedEncodingException uee) {
-                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", jsonObject1.toString(), "utf-8");
                     return null;
                 }
             }

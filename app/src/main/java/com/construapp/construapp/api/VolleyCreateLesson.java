@@ -29,7 +29,7 @@ public class VolleyCreateLesson {
     public static void volleyCreateLesson(final VolleyJSONCallback callback,
                                           Context context, String lesson_name, String lesson_summary,
                                           String lesson_motivation, String lesson_learning,
-                                          String project_id) {
+                                          String project_id, String validation) {
 
         SharedPreferences sharedpreferences = context.getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
         String company_id = sharedpreferences.getString(Constants.SP_COMPANY, "");
@@ -44,7 +44,9 @@ public class VolleyCreateLesson {
         // TODO: 18-10-2017 refactor json body
         final String requestBody =
                 "{\"lesson\":{\"name\":\"" + lesson_name + "\",\"summary\":\"" + lesson_summary + "\"," +
-                        "\"motivation\":\""+lesson_motivation + "\",\"learning\":\""+lesson_learning + "\"," +
+                        "\"motivation\":\""+lesson_motivation + "\"," +
+                        "\"learning\":\""+lesson_learning + "\"," +
+                        "\"validation\":\""+validation + "\"," +
                         "\"user_id\":\""+user_id + "\",\"company_id\":\""+company_id + "\"," +
                         "\"project_id\":\"" + project_id + "\"}}";
 

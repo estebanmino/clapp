@@ -85,6 +85,9 @@ public class LessonActivity extends LessonBaseActivity {
     private RecyclerView mDocumentsRecyclerView;
     private RecyclerView mAudiosRecyclerView;
 
+    private TextView textComment;
+    private TextView textCommentComments;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -122,6 +125,9 @@ public class LessonActivity extends LessonBaseActivity {
         fabSave = findViewById(R.id.fab_save);
         textRecording = findViewById(R.id.text_recording);
 
+        textComment = findViewById(R.id.text_comment);
+        textCommentComments = findViewById(R.id.text_comment_comments);
+
         constraintMultimediaBar = findViewById(R.id.constraint_multimedia_bar);
 
         editName = findViewById(R.id.edit_name);
@@ -138,6 +144,14 @@ public class LessonActivity extends LessonBaseActivity {
 
         if (!lesson.getValidation().equals("1")){
             fabSend.setImageDrawable(ContextCompat.getDrawable(LessonActivity.this, R.drawable.ic_send_dark));
+        }
+
+
+        if (lesson.getReject_comment() == null) {
+            textComment.setVisibility(View.GONE);
+            textCommentComments.setVisibility(View.GONE);
+        }  else {
+            textCommentComments.setText(lesson.getReject_comment());
         }
 
         mStartRecording = true;
@@ -421,7 +435,11 @@ public class LessonActivity extends LessonBaseActivity {
         int deletePermission = constants.xmlPermissionTagToInt((imageDeleteLesson.getTag().toString()));
         sharedPreferences = getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
 
-        if (editPermission <= userPermission || sharedPreferences.getString(Constants.SP_ADMIN, "").equals("1")){
+        if (editPermission <= userPermission || sharedPreferences.getString(Constants.SP_ADMIN, "").equals("1")
+                || (sharedPreferences.getString(Constants.SP_USER,"").equals(lesson.getUser_id()) &&
+                                lesson.getValidation().equals("0"))
+                )
+        {
             imageEditLesson.setVisibility(View.VISIBLE);
             textEditLesson.setVisibility(View.VISIBLE);
         }

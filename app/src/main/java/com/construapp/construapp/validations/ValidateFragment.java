@@ -107,7 +107,7 @@ public class ValidateFragment extends Fragment {
                         public void onSuccess(String result){
                             JSONArray jsonLessons;
                             try {
-
+                                Log.i("RESULT",result.toString());
                                 jsonLessons = new JSONArray(result);
 
                                 validationProjectsArray = new ArrayList<String>();
@@ -117,6 +117,7 @@ public class ValidateFragment extends Fragment {
                                     String permission = object.get("permission_id").toString();
                                     if(permission.equals("4"))
                                     {
+                                        Log.i("RESULT", object.get("project").toString());
                                         JSONObject project_object = (JSONObject) object.get("project");
                                         validationProjectsArray.add(project_object.get("id").toString());
                                     }
