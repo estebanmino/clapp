@@ -230,11 +230,11 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="0dp"
         app:layout_constraintBottom_toTopOf="@+id/constraint_multimedia_bar"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        app:layout_constraintVertical_bias="0.507">
+        app:layout_constraintVertical_bias="1.0">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
@@ -287,21 +287,6 @@
                 app:layout_constraintTop_toBottomOf="@+id/text_images">
 
             </android.support.v7.widget.RecyclerView>
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycler_horizontal_documents"
-                android:layout_width="0dp"
-                android:layout_height="120dp"
-                android:layout_marginBottom="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginTop="8dp"
-                android:visibility="visible"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/text_documents" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recycler_horizontal_audios"
@@ -554,6 +539,19 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/text_videos" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_horizontal_documents"
+                android:layout_width="0dp"
+                android:layout_height="120dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="28dp"
+                android:visibility="visible"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_documents" />
 
         </android.support.constraint.ConstraintLayout>
     </android.support.v4.widget.NestedScrollView>

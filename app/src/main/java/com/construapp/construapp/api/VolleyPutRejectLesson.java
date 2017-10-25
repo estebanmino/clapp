@@ -35,16 +35,22 @@ public class VolleyPutRejectLesson {
         final String companyId = sharedpreferences.getString(Constants.SP_COMPANY, "");
 
         final String url = Constants.BASE_URL + "/" + Constants.COMPANIES + "/" + companyId + "/"
-                + Constants.LESSONS + "/" + lesson_id + Constants.API_REJECT;
+                + Constants.LESSONS + "/" + lesson_id + "/" + Constants.API_REJECT;
 
         final RequestQueue queue = Volley.newRequestQueue(context);
 
         JSONObject jsonObject = new JSONObject();
 
-        final String requestBody =
-                "{\"reject_comment\":"+ comment + "\"}";
+        final JSONObject jsonObject1 = new JSONObject();
+        try {
+            jsonObject.put("reject_comment", comment);
+        } catch (Exception e) {}
 
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PUT, url, jsonObject,
+        final String requestBody =
+                "{\"reject_comment\":\""+ comment + "\"}";
+
+        Log.i("REQUEST",jsonObject1.toString());
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PATCH, url, jsonObject,
                 new com.android.volley.Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -75,7 +81,7 @@ public class VolleyPutRejectLesson {
             @Override
             public byte[] getBody() {
                 try {
-                    return requestBody == null ? null : requestBody.getBytes("utf-8");
+                    return jsonObject1 == null ? null : jsonObject1.toString().getBytes("utf-8");
                 } catch (UnsupportedEncodingException uee) {
                     VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
                     return null;

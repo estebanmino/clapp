@@ -69,7 +69,7 @@ public class LessonValidationActivity extends LessonBaseActivity {
     TextView switch_validateAudioStringText;
     FloatingActionButton fabValidateLesson;
     FloatingActionButton fabCommentLeson;
-    FloatingActionButton fabRejectLesson;
+    FloatingActionButton fabCancel;
 
     private TextView textImages;
     private TextView textVideos;
@@ -160,7 +160,7 @@ public class LessonValidationActivity extends LessonBaseActivity {
         textSendValidatedLessonComments = (TextView) findViewById(R.id.textView_send_validated_lesson_comments);
         fabValidateLesson = (FloatingActionButton) findViewById(R.id.fab_validate_lesson);
         fabCommentLeson = (FloatingActionButton) findViewById(R.id.fab_comment_lesson);
-        fabRejectLesson = (FloatingActionButton) findViewById(R.id.fab_reject_lesson);
+        fabCancel = (FloatingActionButton) findViewById(R.id.fab_reject_lesson);
 
         textImages = (TextView) findViewById(R.id.text_images);
         textVideos = (TextView) findViewById(R.id.text_videos);
@@ -341,7 +341,7 @@ public class LessonValidationActivity extends LessonBaseActivity {
         }, LessonValidationActivity.this, lesson.getId());
 
         setFabValidateLessonListener();
-        setFabRejectLessonListener();
+        setFabCancelLessonListener();
         setFabCommentLessonListener();
 
     }
@@ -366,46 +366,47 @@ public class LessonValidationActivity extends LessonBaseActivity {
             }
         });
     };
-    public void setFabRejectLessonListener() {
-        fabRejectLesson.setOnClickListener(new View.OnClickListener() {
+    public void setFabCommentLessonListener() {
+        fabCommentLeson.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String comment = "COMENTARIOS POR SEGMENTO: \n";
-                if (editCommentName.getText() != null) {
+                if (!editCommentName.getText().toString().isEmpty()) {
                     comment = comment + "NOMBRE: " + editCommentName.getText() + "\n";
                 }
-                if (editCommentDescription.getText() != null) {
+                if (!editCommentDescription.getText().toString().isEmpty()) {
                     comment = comment + "DESCRIPCIÓN: " + editCommentDescription.getText() + "\n";
                 }
-                if (editCommentImages.getText() != null) {
+                if (!editCommentImages.getText().toString().isEmpty()) {
                     comment = comment + "IMÁGENES: " + editCommentImages.getText() + "\n";
                 }
-                if (editCommentVideos.getText() != null) {
+                if (!editCommentVideos.getText().toString().isEmpty()) {
                     comment = comment + "VIDEOS: " + editCommentVideos.getText() + "\n";
                 }
-                if (editCommentAudios.getText() != null) {
+                if (!editCommentAudios.getText().toString().isEmpty()) {
                     comment = comment + "AUDIOS: " + editCommentAudios.getText() + "\n";
                 }
-                if (editCommentDocuments.getText() != null) {
+                if (!editCommentDocuments.getText().toString().isEmpty()) {
                     comment = comment + "DOCUMENTOS: " + editCommentDocuments.getText() + "\n";
                 }
 
                 VolleyPutRejectLesson.volleyPutRejectLesson(new VolleyJSONCallback() {
                     @Override
                     public void onSuccess(JSONObject result) {
-
+                        Toast.makeText(LessonValidationActivity.this, "Se han enviado los comentarios", Toast.LENGTH_LONG).show();
+                        startActivity(MainActivity.getIntent(LessonValidationActivity.this));
                     }
 
                     @Override
                     public void onErrorResponse(VolleyError result) {
-
+                        Toast.makeText(LessonValidationActivity.this, "No se han podido enviar los comentarios", Toast.LENGTH_LONG).show();
                     }
                 }, LessonValidationActivity.this, lesson.getId(), comment);
             }
         });
     };
-    public void setFabCommentLessonListener() {
-        fabCommentLeson.setOnClickListener(new View.OnClickListener() {
+    public void setFabCancelLessonListener() {
+        fabCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //
