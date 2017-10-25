@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ConstruApp</string>
+    <string name="app_name">Clapp</string>
     <string name="action_settings">Configuración</string>
     <string name="action_logout">Cerrar Sesión</string>
     <string name="section_format">Hello World from section: %1$d</string>

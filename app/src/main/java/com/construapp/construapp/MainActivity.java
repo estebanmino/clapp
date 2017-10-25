@@ -2,9 +2,12 @@ package com.construapp.construapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -36,6 +39,7 @@ import com.construapp.construapp.validations.ValidateFragment;
 import android.content.SharedPreferences;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -45,7 +49,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener{
 
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
@@ -59,8 +64,15 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
 
+    private NavigationView navigationView;
+
     private SidebarAdapter sidebarAdapter;
     private SharedPreferences sharedpreferences;
+
+    JSONArray jsonArray;
+    Map<String, String> projects;
+
+    TextView mUserName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,34 +82,28 @@ public class MainActivity extends AppCompatActivity {
         sharedpreferences = getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
 
         try {
-            JSONArray jsonArray = new JSONArray(sharedpreferences.getString(Constants.SP_PROJECTS, ""));
+            jsonArray = new JSONArray(sharedpreferences.getString(Constants.SP_PROJECTS, ""));
             mProjectTitles = new String[(jsonArray.length())];
 
-            Map<String, String> projects = new HashMap<String, String>();
+            projects = new HashMap<String, String>();
             for (int i=0; i < jsonArray.length(); i++) {
                 JSONObject project = (JSONObject) jsonArray.get(i);
                 projects.put(project.getString("name"),project.getString("id"));
                 mProjectTitles[i] = project.getString("name");
 
             }
-            projects.put("Todos los proyectos","null");
-            mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-            mDrawerList = (ListView) findViewById(R.id.left_drawer);
-
-            // Set the adapter for the list view
-            sidebarAdapter = new SidebarAdapter(this, projects);
-            mDrawerList.setAdapter(sidebarAdapter);
-            setDrawerListOnClickListener();
+            projects.put(Constants.ALL_PROJECTS_NAME,Constants.ALL_PROJECTS_KEY);
         } catch (Exception e) {}
 
         try {
             new GetLessons(MainActivity.this).execute().get();
         } catch (Exception e) {}
 
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        sharedpreferences = getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
 
         constants = new General();
 
@@ -123,43 +129,34 @@ public class MainActivity extends AppCompatActivity {
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
+
+
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(mViewPager);
-    }
-
-
-
-    public void setDrawerListOnClickListener(){
-        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                String map = (String) sidebarAdapter.getItem(position);
-                Intent intent = getIntent();
-                finish();
-                startActivity(intent);
-                final SharedPreferences.Editor editor = sharedpreferences.edit();
-                editor.putString(Constants.SP_ACTUAL_PROJECT,map);
-                editor.apply();
-                mDrawerLayout.closeDrawers();
-            }
-        });
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
+        if (userPermission == 1) {
+            tabLayout.setVisibility(View.GONE);
         }
-        else if (id == R.id.action_logout)
-        {
+        tabLayout.setupWithViewPager(mViewPager);
+
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        mUserName = (TextView) navigationView.getHeaderView(0).findViewById(R.id.main_username);
+        mUserName.setText(sharedpreferences.getString(Constants.SP_ACTUAL_PROJECT_NAME, ""));
+
+        Menu menu = navigationView.getMenu();
+        try {
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject project = (JSONObject) jsonArray.get(i);
+                menu.add(0, i+1, Menu.NONE, project.getString("name"));
+            }
+        } catch (Exception e) {}
+
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+
+        if (item.getItemId()  == R.id.logout){
             SharedPreferences mySPrefs = getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = mySPrefs.edit();
             editor.clear();
@@ -168,7 +165,6 @@ public class MainActivity extends AppCompatActivity {
 
             } catch (Exception e) {}
             try {
-                //DESTROY LESSON TABLE
                 new DeleteLessonTable(getApplicationContext()).execute().get();
                 deleteDir(this.getCacheDir());
             } catch (InterruptedException e) {
@@ -178,8 +174,30 @@ public class MainActivity extends AppCompatActivity {
             }
             Toast.makeText(this,"Se ha  cerrado su sesión",Toast.LENGTH_LONG).show();
             startActivity(LoginActivity.getIntent(MainActivity.this));
+        } else if (item.getItemId() == R.id.to_all_projects) {
+            String map = item.getTitle().toString();
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
+            final SharedPreferences.Editor editor = sharedpreferences.edit();
+            editor.putString(Constants.SP_ACTUAL_PROJECT,Constants.ALL_PROJECTS_KEY);
+            editor.putString(Constants.SP_ACTUAL_PROJECT_NAME,Constants.ALL_PROJECTS_NAME);
+            editor.apply();
+        } else  if (item.getItemId() == R.id.to_blog) {
+            //
         }
-
+        else {
+            String map = item.getTitle().toString();
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
+            final SharedPreferences.Editor editor = sharedpreferences.edit();
+            editor.putString(Constants.SP_ACTUAL_PROJECT, Integer.toString(item.getItemId()));
+            editor.putString(Constants.SP_ACTUAL_PROJECT_NAME, map);
+            editor.apply();
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -215,18 +233,11 @@ public class MainActivity extends AppCompatActivity {
                     case 1:
                         return new MyLessonsFragment();
                     case 2:
-                        return new MicroblogFragment();
-                    case 3:
                         return new ValidateFragment();
                 }
             }
             else if (userPermission == 1) {
-                switch (position) {
-                    case 0:
-                        return new LessonsFragment();
-                    case 1:
-                        return new MicroblogFragment();
-                }
+                return new LessonsFragment();
             }
             else {
                 switch (position) {
@@ -234,8 +245,6 @@ public class MainActivity extends AppCompatActivity {
                         return new LessonsFragment();
                     case 1:
                         return new MyLessonsFragment();
-                    case 2:
-                        return new MicroblogFragment();
                 }
             }
             return null;
@@ -245,13 +254,13 @@ public class MainActivity extends AppCompatActivity {
         public int getCount() {
             // Show 3 total pages.
             if (userPermission >= 3){
-                return 4;
+                return 3;
             }
             else if (userPermission == 1) {
-                return 2;
+                return 1;
             }
             else {
-                return 3;
+                return 2;
             }
         }
 
@@ -264,17 +273,13 @@ public class MainActivity extends AppCompatActivity {
                     case 1:
                         return "Mis lecciones";
                     case 2:
-                        return "Blog";
-                    case 3:
                         return "Validar lecciones";
                 }
             }
             else if (userPermission == 1) {
                 switch (position) {
                     case 0:
-                        return "Lecciones";
-                    case 1:
-                        return "Blog";
+                        return null;
                 }
             }
             else {
@@ -283,8 +288,6 @@ public class MainActivity extends AppCompatActivity {
                         return "Lecciones";
                     case 1:
                         return "Mis lecciones";
-                    case 2:
-                        return "Blog";
                 }
             }
             return null;

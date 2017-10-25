@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <group android:id="@+id/blog_menu">
+        <item android:title="Blog">
+            <menu>
+                <item
+                    android:id="@+id/to_blog"
+                    android:title="Microblog" />
+            </menu>
+        </item>
+
+    </group>
+
+    <group android:id="@+id/users">
+
+        <item android:title="Usuario">
+            <menu>
+                <item
+                    android:id="@+id/logout"
+                    android:title="Cerrar Sesion" />
+            </menu>
+        </item>
+    </group>
+
+    <group android:id="@+id/projects_menu">
+        <item android:title="Proyectos">
+            <menu>
+                <item
+                    android:id="@+id/to_all_projects"
+                    android:title="Todos los Proyectos" />
+            </menu>
+        </item>
+
+    </group>
+
+
+</menu>
