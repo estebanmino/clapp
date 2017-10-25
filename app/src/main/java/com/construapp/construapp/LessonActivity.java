@@ -136,7 +136,7 @@ public class LessonActivity extends LessonBaseActivity {
 
         setLesson();
 
-        if (lesson.getValidation().equals("1")){
+        if (!lesson.getValidation().equals("1")){
             fabSend.setImageDrawable(ContextCompat.getDrawable(LessonActivity.this, R.drawable.ic_send_dark));
         }
 
@@ -281,7 +281,12 @@ public class LessonActivity extends LessonBaseActivity {
         //SET BUTTONS LISTENER
         setFabCameraOnClickListener();
         setFabGalleryOnClickListener();
-        //setFabSendOnClickListener();
+        Log.i("VALIDATION", lesson.getValidation());
+        if (!lesson.getValidation().equals("1")) {
+            setFabSendOnClickListener();
+        } else {
+            fabSend.setVisibility(View.GONE);
+        }
         setFabSaveOnClickListener();
         setFabRecordAudioOnClickListener();
         setFabFilesOnClickListener();
@@ -455,6 +460,63 @@ public class LessonActivity extends LessonBaseActivity {
 
     public void setFabSaveOnClickListener(){
         fabSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String lesson_name = editName.getText().toString();
+                String lesson_summary = editDescription.getText().toString();
+                String lesson_motivation = "Aprendizaje";
+                String lesson_learning = editDescription.getText().toString();
+                String project_id = lesson.getProject_id();
+                String validation = lesson.getValidation();
+                ArrayList<String> array_added =  lesson.getAddedMultimediaKeysS3();
+                ArrayList<String> array_deleted =  lesson.getDeletedMultimediaFilesS3Keys();
+                VolleyPutLesson.volleyPutLesson(new VolleyJSONCallback() {
+                                                    @Override
+                                                    public void onSuccess(JSONObject result) {
+                                                        Toast.makeText(LessonActivity.this, "Leccion editada", Toast.LENGTH_LONG).show();
+                                                        String start = Constants.S3_LESSONS_PATH+"/"+lesson.getId()+"/";
+                                                        for (MultimediaFile multimediaFile: lesson.getMultimediaPicturesFiles()) {
+                                                            if (multimediaFile.getAdded() == 1) {
+                                                                multimediaFile.setExtension(start+Constants.S3_IMAGES_PATH);
+                                                                multimediaFile.initUploadThread();
+                                                            }
+                                                        }
+                                                        for (MultimediaFile multimediaFile: lesson.getMultimediaAudiosFiles()) {
+                                                            if (multimediaFile.getAdded() == 1) {
+                                                                multimediaFile.setExtension(start+Constants.S3_AUDIOS_PATH);
+                                                                multimediaFile.initUploadThread();
+                                                            }
+                                                        }
+                                                        for (MultimediaFile multimediaFile: lesson.getMultimediaDocumentsFiles()) {
+                                                            if (multimediaFile.getAdded() == 1) {
+                                                                multimediaFile.setExtension(start+Constants.S3_DOCS_PATH);
+                                                                multimediaFile.initUploadThread();
+                                                            }
+                                                        }
+                                                        for (MultimediaFile multimediaFile: lesson.getMultimediaVideosFiles()) {
+                                                            if (multimediaFile.getAdded() == 1) {
+                                                                multimediaFile.setExtension(start+Constants.S3_VIDEOS_PATH);
+                                                                multimediaFile.initUploadThread();
+                                                            }
+                                                        }
+                                                        startActivity(MainActivity.getIntent(LessonActivity.this));
+                                                    }
+
+                                                    @Override
+                                                    public void onErrorResponse(VolleyError result) {
+                                                        Toast.makeText(LessonActivity.this, "No se puede editar la lección en este momento", Toast.LENGTH_LONG).show();
+                                                    }
+                                                }, LessonActivity.this,
+                        lesson.getId(), lesson_name, lesson_summary,
+                        lesson_motivation, lesson_learning, array_added, array_deleted, validation
+                );
+
+            }
+        });
+    }
+
+    public void setFabSendOnClickListener() {
+        fabSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String lesson_name = editName.getText().toString();
