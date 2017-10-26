@@ -133,78 +133,7 @@ public class LessonFormActivity extends LessonBaseActivity {
         fabSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sharedPreferences = getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
-                String lesson_name = editLessonName.getText().toString();
-                String lesson_summary = editLessonDescription.getText().toString();
-                String lesson_motivation = "Aprendizaje";
-                String lesson_learning = editLessonDescription.getText().toString();
-                String project_id = sharedPreferences.getString(Constants.SP_ACTUAL_PROJECT, "");
-                VolleyCreateLesson.volleyCreateLesson(new VolleyJSONCallback() {
-                @Override
-                public void onSuccess(JSONObject result) {
-                    try {
-                        final String new_lesson_id = result.get("id").toString();
-                        String path_input = "";
-                        for (MultimediaFile multimediaFile : lesson.getMultimediaPicturesFiles()) {
-                          multimediaFile.setExtension(Constants.S3_LESSONS_PATH + "/" + new_lesson_id + "/" +
-                                  multimediaFile.getExtension());
-                          path_input += multimediaFile.getExtension() + "/" +
-                                  multimediaFile.getmPath().substring(multimediaFile.getmPath().lastIndexOf("/") + 1) + ";";
-                        }
-                        for (MultimediaFile multimediaFile : lesson.getMultimediaAudiosFiles()) {
-                          multimediaFile.setExtension(Constants.S3_LESSONS_PATH + "/" + new_lesson_id + "/" +
-                                  multimediaFile.getExtension());
-                          path_input += multimediaFile.getExtension() + "/"
-                                  + multimediaFile.getmPath().substring(multimediaFile.getmPath().lastIndexOf("/") + 1) + ";";
-                        }
-                        for (MultimediaFile multimediaFile : lesson.getMultimediaDocumentsFiles()) {
-                          multimediaFile.setExtension(Constants.S3_LESSONS_PATH + "/" + new_lesson_id + "/" +
-                                  multimediaFile.getExtension());
-                          path_input += multimediaFile.getExtension() + "/"
-                                  + multimediaFile.getmPath().substring(multimediaFile.getmPath().lastIndexOf("/") + 1) + ";";
-                        }
-
-                        for (MultimediaFile multimediaFile : lesson.getMultimediaVideosFiles()) {
-                          multimediaFile.setExtension(Constants.S3_LESSONS_PATH + "/" + new_lesson_id + "/" +
-                                  multimediaFile.getExtension());
-                          path_input += multimediaFile.getExtension() + "/"
-                                  + multimediaFile.getmPath().substring(multimediaFile.getmPath().lastIndexOf("/") + 1) + ";";
-                        }
-
-                        VolleyPostS3.volleyPostS3(new VolleyJSONCallback() {
-                          @Override
-                          public void onSuccess(JSONObject result) {
-                              Toast.makeText(LessonFormActivity.this, "Nueva lección creada", Toast.LENGTH_LONG).show();
-
-                              for (MultimediaFile multimediaFile : lesson.getMultimediaPicturesFiles()) {
-                                  multimediaFile.initUploadThread();
-                              }
-                              for (MultimediaFile multimediaFile : lesson.getMultimediaAudiosFiles()) {
-                                  multimediaFile.initUploadThread();
-                              }
-                              for (MultimediaFile multimediaFile : lesson.getMultimediaDocumentsFiles()) {
-                                  multimediaFile.initUploadThread();
-                              }
-                              for (MultimediaFile multimediaFile : lesson.getMultimediaVideosFiles()) {
-                                  multimediaFile.initUploadThread();
-                              }
-                              startActivity(MainActivity.getIntent(LessonFormActivity.this));
-                          }
-
-                          @Override
-                          public void onErrorResponse(VolleyError result) {
-                          }
-                        }, LessonFormActivity.this, new_lesson_id, path_input.split(";"));
-                    } catch (Exception e) {
-                        Toast.makeText(LessonFormActivity.this, "No se pudo crear lección", Toast.LENGTH_LONG).show();
-                    }
-                }
-                @Override
-                public void onErrorResponse(VolleyError result) {
-                    Toast.makeText(LessonFormActivity.this, "No se pudo crear lección", Toast.LENGTH_LONG).show();
-                }
-                }, LessonFormActivity.this, lesson_name, lesson_summary,
-                        lesson_motivation, lesson_learning,project_id, Constants.R_WAITING);
+                createLesson(Constants.R_WAITING);
             }
         });
     }
@@ -213,15 +142,23 @@ public class LessonFormActivity extends LessonBaseActivity {
         fabSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sharedPreferences = getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
-                String lesson_name = editLessonName.getText().toString();
-                String lesson_summary = editLessonDescription.getText().toString();
-                String lesson_motivation = "Aprendizaje";
-                String lesson_learning = editLessonDescription.getText().toString();
-                String project_id = sharedPreferences.getString(Constants.SP_ACTUAL_PROJECT, "");
-                VolleyCreateLesson.volleyCreateLesson(new VolleyJSONCallback() {
-                  @Override
-                  public void onSuccess(JSONObject result) {
+                createLesson(Constants.R_SAVED);
+            }
+        });
+    }
+
+    public void createLesson(String validateState) {
+        sharedPreferences = getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
+        String lesson_name = editLessonName.getText().toString();
+        String lesson_summary = editLessonDescription.getText().toString();
+        String lesson_motivation = null;
+        String lesson_learning = null;
+        String project_id = sharedPreferences.getString(Constants.SP_ACTUAL_PROJECT, "");
+        VolleyCreateLesson.volleyCreateLesson(new VolleyJSONCallback() {
+              @Override
+              public void onSuccess(JSONObject result) {
+                  if(!lesson.isEmptyMultimedia()) {
+
                       try {
                           final String new_lesson_id = result.get("id").toString();
                           String path_input = "";
@@ -278,15 +215,17 @@ public class LessonFormActivity extends LessonBaseActivity {
                       } catch (Exception e) {
                           Toast.makeText(LessonFormActivity.this, "No se pudo crear lección", Toast.LENGTH_LONG).show();
                       }
+                  } else {
+                      Toast.makeText(LessonFormActivity.this, "Nueva lección creada", Toast.LENGTH_LONG).show();
+                      startActivity(MainActivity.getIntent(LessonFormActivity.this));
                   }
-
-                  @Override
-                  public void onErrorResponse(VolleyError result) {
-                      Toast.makeText(LessonFormActivity.this, "No se pudo crear lección", Toast.LENGTH_LONG).show();
-                  }
-              }, LessonFormActivity.this, lesson_name, lesson_summary,
-            lesson_motivation, lesson_learning,project_id, Constants.R_SAVED);
-            }
-        });
+              }
+              @Override
+              public void onErrorResponse(VolleyError result) {
+                  Toast.makeText(LessonFormActivity.this, "No se pudo crear lección", Toast.LENGTH_LONG).show();
+              }
+          }, LessonFormActivity.this, lesson_name, lesson_summary,
+        lesson_motivation, lesson_learning,project_id, validateState);
     }
+
 }

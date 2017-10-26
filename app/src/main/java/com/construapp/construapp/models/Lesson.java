@@ -231,4 +231,9 @@ public class Lesson {
         return addedKeys;
     }
 
+    public Boolean isEmptyMultimedia() {
+        return multimediaAudioFiles.size() == 0 && multimediaPictureFiles.size() == 0
+                && multimediaDocumentsFiles.size() == 0 && multimediaVideosFiles.size() == 0;
+    }
+
 }
