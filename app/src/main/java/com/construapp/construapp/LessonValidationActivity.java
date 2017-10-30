@@ -82,7 +82,7 @@ public class LessonValidationActivity extends LessonBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_validate_lesson);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         SharedPreferences sharedpreferences = getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
         constants = new General();
@@ -94,8 +94,8 @@ public class LessonValidationActivity extends LessonBaseActivity {
         ABSOLUTE_STORAGE_PATH = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString();
         final String CACHE_FOLDER = LessonValidationActivity.this.getCacheDir().toString();
 
-        lessonName = (TextView) findViewById(R.id.text_lesson_name);
-        lessonDescription = (TextView) findViewById(R.id.text_lesson_description);
+        lessonName = findViewById(R.id.text_lesson_name);
+        lessonDescription = findViewById(R.id.text_lesson_description);
 
         setLesson();
 
@@ -107,7 +107,7 @@ public class LessonValidationActivity extends LessonBaseActivity {
         //PICTURES SCROLLING
         LinearLayoutManager picturesLayoutManager = new LinearLayoutManager(this);
         picturesLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        final RecyclerView mPicturesRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_pictures);
+        final RecyclerView mPicturesRecyclerView = findViewById(R.id.recycler_horizontal_pictures);
         mPicturesRecyclerView.setLayoutManager(picturesLayoutManager);
         multimediaPictureAdapter = new MultimediaPictureAdapter(lesson.getMultimediaPicturesFiles(),LessonValidationActivity.this,lesson);
         mPicturesRecyclerView.setAdapter(multimediaPictureAdapter);
@@ -115,7 +115,7 @@ public class LessonValidationActivity extends LessonBaseActivity {
         //AUDIOS SCROLLING
         LinearLayoutManager audiosLayoutManager = new LinearLayoutManager(this);
         audiosLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        final RecyclerView mAudiosRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_audios);
+        final RecyclerView mAudiosRecyclerView = findViewById(R.id.recycler_horizontal_audios);
         mAudiosRecyclerView.setLayoutManager(audiosLayoutManager);
         multimediaAudioAdapter = new MultimediaAudioAdapter(lesson.getMultimediaAudiosFiles(),LessonValidationActivity.this,lesson);
         mAudiosRecyclerView.setAdapter(multimediaAudioAdapter);
@@ -123,7 +123,7 @@ public class LessonValidationActivity extends LessonBaseActivity {
         //VIDEOS SCROLLING
         LinearLayoutManager videosLayoutManager = new LinearLayoutManager(this);
         videosLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        final RecyclerView mVideosRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_videos);
+        final RecyclerView mVideosRecyclerView = findViewById(R.id.recycler_horizontal_videos);
         mVideosRecyclerView.setLayoutManager(videosLayoutManager);
         multimediaVideoAdapter = new MultimediaVideoAdapter(lesson.getMultimediaVideosFiles(),LessonValidationActivity.this,lesson);
         mVideosRecyclerView.setAdapter(multimediaVideoAdapter);
@@ -131,41 +131,41 @@ public class LessonValidationActivity extends LessonBaseActivity {
         //DOCUMENTS SCROLLING
         LinearLayoutManager documentsLayoutManager = new LinearLayoutManager(this);
         documentsLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        final RecyclerView mDocumentsRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_documents);
+        final RecyclerView mDocumentsRecyclerView = findViewById(R.id.recycler_horizontal_documents);
         mDocumentsRecyclerView.setLayoutManager(documentsLayoutManager);
         multimediaDocumentAdapter = new MultimediaDocumentAdapter(lesson.getMultimediaDocumentsFiles(),LessonValidationActivity.this,lesson);
         mDocumentsRecyclerView.setAdapter(multimediaDocumentAdapter);
 
 
-        validateNameSwitch = (Switch) findViewById(R.id.switch_lesson_name);
-        validateDescriptionSwitch = (Switch) findViewById(R.id.switch_lesson_description);
-        validateImagesSwitch = (Switch) findViewById(R.id.switch_lesson_images);
-        validateVideosSwitch = (Switch) findViewById(R.id.switch_lesson_video);
-        validateAudiosSwitch = (Switch) findViewById(R.id.switch_lesson_audios);
-        validateDocumentsSwitch = (Switch) findViewById(R.id.switch_lesson_documents);
+        validateNameSwitch = findViewById(R.id.switch_lesson_name);
+        validateDescriptionSwitch = findViewById(R.id.switch_lesson_description);
+        validateImagesSwitch = findViewById(R.id.switch_lesson_images);
+        validateVideosSwitch = findViewById(R.id.switch_lesson_video);
+        validateAudiosSwitch = findViewById(R.id.switch_lesson_audios);
+        validateDocumentsSwitch = findViewById(R.id.switch_lesson_documents);
 
-        editCommentName = (EditText) findViewById(R.id.edit_comment_name);
-        editCommentDescription = (EditText) findViewById(R.id.edit_comment_description);
-        editCommentImages = (EditText) findViewById(R.id.edit_comment_images);
-        editCommentVideos = (EditText) findViewById(R.id.edit_comment_videos);
-        editCommentAudios = (EditText) findViewById(R.id.edit_comment_audios);
-        editCommentDocuments = (EditText) findViewById(R.id.edit_comment_documents);
+        editCommentName = findViewById(R.id.edit_comment_name);
+        editCommentDescription = findViewById(R.id.edit_comment_description);
+        editCommentImages = findViewById(R.id.edit_comment_images);
+        editCommentVideos = findViewById(R.id.edit_comment_videos);
+        editCommentAudios = findViewById(R.id.edit_comment_audios);
+        editCommentDocuments = findViewById(R.id.edit_comment_documents);
 
-        switch_validateAudioStringText = (TextView) findViewById(R.id.textView_switch_comment_lesson_audios);
-        switch_validateVideoStringText = (TextView) findViewById(R.id.textView_switch_comment_lesson_video);
-        switch_validateDocumentStringText = (TextView) findViewById(R.id.textView_switch_comment_lesson_documents);
-        switch_validateImageStringText = (TextView) findViewById(R.id.textView_switch_comment_lesson_images);
+        switch_validateAudioStringText = findViewById(R.id.textView_switch_comment_lesson_audios);
+        switch_validateVideoStringText = findViewById(R.id.textView_switch_comment_lesson_video);
+        switch_validateDocumentStringText = findViewById(R.id.textView_switch_comment_lesson_documents);
+        switch_validateImageStringText = findViewById(R.id.textView_switch_comment_lesson_images);
 
-        textSaveValidatedLesson = (TextView) findViewById(R.id.textView_save_validated_lesson);
-        textSendValidatedLessonComments = (TextView) findViewById(R.id.textView_send_validated_lesson_comments);
-        fabValidateLesson = (FloatingActionButton) findViewById(R.id.fab_validate_lesson);
-        fabCommentLeson = (FloatingActionButton) findViewById(R.id.fab_comment_lesson);
-        fabCancel = (FloatingActionButton) findViewById(R.id.fab_reject_lesson);
+        textSaveValidatedLesson = findViewById(R.id.textView_save_validated_lesson);
+        textSendValidatedLessonComments = findViewById(R.id.textView_send_validated_lesson_comments);
+        fabValidateLesson = findViewById(R.id.fab_validate_lesson);
+        fabCommentLeson = findViewById(R.id.fab_comment_lesson);
+        fabCancel = findViewById(R.id.fab_reject_lesson);
 
-        textImages = (TextView) findViewById(R.id.text_images);
-        textVideos = (TextView) findViewById(R.id.text_videos);
-        textAudios = (TextView) findViewById(R.id.text_audios);
-        textDocuments = (TextView) findViewById(R.id.text_documents);
+        textImages = findViewById(R.id.text_images);
+        textVideos = findViewById(R.id.text_videos);
+        textAudios = findViewById(R.id.text_audios);
+        textDocuments = findViewById(R.id.text_documents);
 
         validateNameSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -254,7 +254,7 @@ public class LessonValidationActivity extends LessonBaseActivity {
                     ArrayList<String> arrayList = new ArrayList<>();
                     JsonArray jsonArray = (JsonArray) json.get("filekeys");
                     for (int i = 0; i < jsonArray.size(); i++) {
-                        JsonElement jsonObject = (JsonElement) jsonArray.get(i);
+                        JsonElement jsonObject = jsonArray.get(i);
                         arrayList.add(jsonObject.getAsJsonObject().get("path").toString());
                     }
 
@@ -365,7 +365,8 @@ public class LessonValidationActivity extends LessonBaseActivity {
                 }, LessonValidationActivity.this, lesson.getId());
             }
         });
-    };
+    }
+
     public void setFabCommentLessonListener() {
         fabCommentLeson.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -404,7 +405,8 @@ public class LessonValidationActivity extends LessonBaseActivity {
                 }, LessonValidationActivity.this, lesson.getId(), comment);
             }
         });
-    };
+    }
+
     public void setFabCancelLessonListener() {
         fabCancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -412,8 +414,7 @@ public class LessonValidationActivity extends LessonBaseActivity {
                 //
             }
         });
-    };
-
+    }
 
 
     public void checkedComments(){

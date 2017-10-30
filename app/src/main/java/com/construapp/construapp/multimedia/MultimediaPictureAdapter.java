@@ -41,7 +41,7 @@ public class MultimediaPictureAdapter extends MultimediaAdapter {
 
     public MultimediaPictureAdapter(ArrayList<MultimediaFile> mMultimediaFiles, Context context, Lesson thisLesson) {
         super(mMultimediaFiles, context,thisLesson);
-    };
+    }
 
     @Override
     public void onBindViewHolder(MultimediaAdapter.MultimediaViewHolder holder, int position) {

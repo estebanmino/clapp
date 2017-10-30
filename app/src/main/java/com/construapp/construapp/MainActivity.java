@@ -103,14 +103,14 @@ public class MainActivity extends AppCompatActivity
 
 
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
 
 
         constants = new General();
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         lruCache = LRUCache.getInstance();
         constants.setUserPermission(MainActivity.this);
         userPermission = Integer.parseInt(sharedpreferences.getString(Constants.SP_USER_PERMISSION,""));
@@ -129,20 +129,20 @@ public class MainActivity extends AppCompatActivity
             fab.setVisibility(View.GONE);
         }
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-        mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager = findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
 
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        TabLayout tabLayout = findViewById(R.id.tabs);
         if (userPermission == 1) {
             tabLayout.setVisibility(View.GONE);
         }
         tabLayout.setupWithViewPager(mViewPager);
 
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        mUserName = (TextView) navigationView.getHeaderView(0).findViewById(R.id.main_username);
+        mUserName = navigationView.getHeaderView(0).findViewById(R.id.main_username);
         mUserName.setText(sharedpreferences.getString(Constants.SP_ACTUAL_PROJECT_NAME, ""));
 
         Menu menu = navigationView.getMenu();
@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+                DrawerLayout drawer = findViewById(R.id.drawer_layout);
                 drawer.openDrawer(GravityCompat.START);
             }
         });
@@ -212,7 +212,7 @@ public class MainActivity extends AppCompatActivity
             editor.putString(Constants.SP_ACTUAL_PROJECT, Integer.toString(item.getItemId()));
             editor.putString(Constants.SP_ACTUAL_PROJECT_NAME, map);
             editor.apply();
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            DrawerLayout drawer = findViewById(R.id.drawer_layout);
             drawer.closeDrawer(GravityCompat.START);
         }
         return super.onOptionsItemSelected(item);

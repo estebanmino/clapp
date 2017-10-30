@@ -71,7 +71,7 @@ public class ValidateFragment extends Fragment {
             Log.i("VALIDATION","EXECUTION EX");
             e.printStackTrace();
         }
-    };
+    }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -120,7 +120,7 @@ public class ValidateFragment extends Fragment {
                         validationProjectsArray = new ArrayList<String>();
                         for (int i=0;i<jsonLessons.length();i++)
                         {
-                            JSONObject object = (JSONObject) jsonLessons.getJSONObject(i);
+                            JSONObject object = jsonLessons.getJSONObject(i);
                             String permission = object.get("permission_id").toString();
                             if(permission.equals("4"))
                             {

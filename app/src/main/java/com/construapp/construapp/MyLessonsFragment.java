@@ -68,7 +68,7 @@ public class MyLessonsFragment extends Fragment {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-    };
+    }
 
 
     @Override
