@@ -60,6 +60,7 @@ public class LoginActivity extends AppCompatActivity {
                         public void onSuccess(JSONObject result) {
                             Toast.makeText(LoginActivity.this, "Bienvenido", Toast.LENGTH_LONG).show();
                             try {
+                                Log.i("USER",result.toString());
                                 admin = result.getString("admin");
                                 user_id = result.getString("id");
                                 company = result.getJSONObject("company");

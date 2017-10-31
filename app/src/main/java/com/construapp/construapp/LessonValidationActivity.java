@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -78,6 +79,11 @@ public class LessonValidationActivity extends LessonBaseActivity {
 
     private Boolean editing = true;
 
+    private RecyclerView mPicturesRecyclerView;
+    private RecyclerView mVideosRecyclerView;
+    private RecyclerView mDocumentsRecyclerView;
+    private RecyclerView mAudiosRecyclerView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,7 +112,7 @@ public class LessonValidationActivity extends LessonBaseActivity {
         //PICTURES SCROLLING
         LinearLayoutManager picturesLayoutManager = new LinearLayoutManager(this);
         picturesLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        final RecyclerView mPicturesRecyclerView = findViewById(R.id.recycler_horizontal_pictures);
+        mPicturesRecyclerView = findViewById(R.id.recycler_horizontal_pictures);
         mPicturesRecyclerView.setLayoutManager(picturesLayoutManager);
         multimediaPictureAdapter = new MultimediaPictureAdapter(lesson.getMultimediaPicturesFiles(),LessonValidationActivity.this,lesson);
         mPicturesRecyclerView.setAdapter(multimediaPictureAdapter);
@@ -114,7 +120,7 @@ public class LessonValidationActivity extends LessonBaseActivity {
         //AUDIOS SCROLLING
         LinearLayoutManager audiosLayoutManager = new LinearLayoutManager(this);
         audiosLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        final RecyclerView mAudiosRecyclerView = findViewById(R.id.recycler_horizontal_audios);
+        mAudiosRecyclerView = findViewById(R.id.recycler_horizontal_audios);
         mAudiosRecyclerView.setLayoutManager(audiosLayoutManager);
         multimediaAudioAdapter = new MultimediaAudioAdapter(lesson.getMultimediaAudiosFiles(),LessonValidationActivity.this,lesson);
         mAudiosRecyclerView.setAdapter(multimediaAudioAdapter);
@@ -122,7 +128,7 @@ public class LessonValidationActivity extends LessonBaseActivity {
         //VIDEOS SCROLLING
         LinearLayoutManager videosLayoutManager = new LinearLayoutManager(this);
         videosLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        final RecyclerView mVideosRecyclerView = findViewById(R.id.recycler_horizontal_videos);
+        mVideosRecyclerView = findViewById(R.id.recycler_horizontal_videos);
         mVideosRecyclerView.setLayoutManager(videosLayoutManager);
         multimediaVideoAdapter = new MultimediaVideoAdapter(lesson.getMultimediaVideosFiles(),LessonValidationActivity.this,lesson);
         mVideosRecyclerView.setAdapter(multimediaVideoAdapter);
@@ -130,7 +136,7 @@ public class LessonValidationActivity extends LessonBaseActivity {
         //DOCUMENTS SCROLLING
         LinearLayoutManager documentsLayoutManager = new LinearLayoutManager(this);
         documentsLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        final RecyclerView mDocumentsRecyclerView = findViewById(R.id.recycler_horizontal_documents);
+        mDocumentsRecyclerView = findViewById(R.id.recycler_horizontal_documents);
         mDocumentsRecyclerView.setLayoutManager(documentsLayoutManager);
         multimediaDocumentAdapter = new MultimediaDocumentAdapter(lesson.getMultimediaDocumentsFiles(),LessonValidationActivity.this,lesson);
         mDocumentsRecyclerView.setAdapter(multimediaDocumentAdapter);
