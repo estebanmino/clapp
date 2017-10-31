@@ -84,8 +84,13 @@ public class LoginActivity extends AppCompatActivity {
                                     JsonArray jsonArray = parser.parse(result).getAsJsonArray();
                                     for (int i = 0; i < jsonArray.size(); i++) {
                                         JsonElement jsonObject = jsonArray.get(i);
+                                        sessionManager.setProjectPermission(
+                                                jsonObject.getAsJsonObject().get("project").getAsJsonObject().get("id").toString(),
+                                                jsonObject.getAsJsonObject().get("permission_id").toString()
+                                        );
                                         arrayList.add(jsonObject.getAsJsonObject().get("project").toString());
                                     }
+
                                     JsonArray obj = (JsonArray) parser.parse(arrayList.toString());
                                     sessionManager.setProjects(obj);
                                     if (sessionManager.hasProjects()) {
@@ -93,23 +98,6 @@ public class LoginActivity extends AppCompatActivity {
                                         sessionManager.setCurrentProject(
                                                 jsonObject.getAsJsonObject().get("id").toString(),
                                                 jsonObject.getAsJsonObject().get("name").toString());
-                                        VolleyGetUserProjectPermission.volleyGetUserProjectPermission(new VolleyJSONCallback() {
-                                            @Override
-                                            public void onSuccess(JSONObject result) {
-                                                try {
-                                                    sessionManager.setPermissionName(result.get(Constants.SP_HAS_PERMISSION).toString());
-                                                    sessionManager.setCurrentProject(
-                                                            "null",
-                                                            "Todos los proyectos");
-                                                    startActivity(MainActivity.getIntent(LoginActivity.this));
-                                                } catch (Exception e) {}
-                                            }
-
-                                            @Override
-                                            public void onErrorResponse(VolleyError result) {
-
-                                            }
-                                        }, LoginActivity.this, user_id, jsonObject.getAsJsonObject().get("id").toString());
                                     }
                                 }
 

@@ -38,6 +38,10 @@ public class SessionManager {
         return sharedPreferences.contains(Constants.SP_TOKEN);
     }
 
+    public String getToken() {
+        return sharedPreferences.getString(Constants.SP_TOKEN,"");
+    }
+
     public void setProjects(JsonArray projects) {
         if (projects.size() != 0) {
             projectsArray = projects;
@@ -50,13 +54,18 @@ public class SessionManager {
         editor.apply();
     }
 
+    public String getProjects() {
+        return sharedPreferences.getString(Constants.SP_PROJECTS, "");
+    }
+
     public Boolean hasProjects() {
         return sharedPreferences.getBoolean(Constants.SP_HAS_PROJECTS, false);
     }
 
-    public void setCurrentProject(String currentProject, String currentProjectName) {
-        editor.putString(Constants.SP_ACTUAL_PROJECT, currentProject);
+    public void setCurrentProject(String currentProjectId, String currentProjectName) {
+        editor.putString(Constants.SP_ACTUAL_PROJECT, currentProjectId);
         editor.putString(Constants.SP_ACTUAL_PROJECT_NAME, currentProjectName);
+        editor.putString(Constants.SP_USER_PERMISSION, getProjectPermission(currentProjectId));
         editor.apply();
     }
 
@@ -64,4 +73,31 @@ public class SessionManager {
         editor.putString(Constants.SP_USER_PERMISSION_NAME, permissionName);
         editor.apply();
     }
+
+    public String getActualUserPermission() {
+        return sharedPreferences.getString(Constants.SP_USER_PERMISSION, "");
+    }
+
+    public String getActualProjectId() {
+        return sharedPreferences.getString(Constants.SP_ACTUAL_PROJECT, "");
+    }
+
+    public String getActualProjectName() {
+        return sharedPreferences.getString(Constants.SP_ACTUAL_PROJECT_NAME, "");
+    }
+
+    public void setProjectPermission(String projectId, String projectPermission) {
+        editor.putString(Constants.SP_PERMISSION_PROJECT+projectId,  projectPermission);
+        editor.apply();
+    }
+
+    public String getProjectPermission(String projectId) {
+        return sharedPreferences.getString(Constants.SP_PERMISSION_PROJECT+projectId, "");
+    }
+
+    public void eraseSharedPreferences() {
+        editor.clear();
+        editor.apply();
+    }
+
 }
