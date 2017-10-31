@@ -25,6 +25,7 @@ import com.construapp.construapp.dbTasks.InsertLessonTask;
 import com.construapp.construapp.listeners.VolleyStringCallback;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.Lesson;
+import com.construapp.construapp.models.SessionManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -41,7 +42,7 @@ public class ValidateFragment extends Fragment {
     private LessonsAdapter lessonsAdapter;
     private List<Lesson> lessonList;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private SharedPreferences sharedPreferences;
+    private SessionManager sessionManager;
 
     private String user_id;
     private String project_id;
@@ -52,9 +53,9 @@ public class ValidateFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        sharedPreferences = getActivity().getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
-        user_id = sharedPreferences.getString(Constants.SP_USER,"");
-        project_id = sharedPreferences.getString(Constants.SP_ACTUAL_PROJECT,"");
+        sessionManager = new SessionManager(getActivity());
+        user_id = sessionManager.getUserId();
+        project_id = sessionManager.getActualProjectId();
 
         getValidations(project_id);
         lessonsAdapter = new LessonsAdapter(getActivity(),lessonList);
@@ -71,7 +72,7 @@ public class ValidateFragment extends Fragment {
             Log.i("VALIDATION","EXECUTION EX");
             e.printStackTrace();
         }
-    };
+    }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -108,8 +109,8 @@ public class ValidateFragment extends Fragment {
 
     public void getLessonsToValidate() {
         boolean is_connected = Connectivity.isConnected(getContext());
-        user_id = sharedPreferences.getString(Constants.SP_USER, "");
-        project_id = sharedPreferences.getString(Constants.SP_ACTUAL_PROJECT, "");
+        user_id = sessionManager.getUserId();
+        project_id = sessionManager.getActualProjectId();
         if(is_connected) {
             VolleyGetValidationPermission.volleyGetValidationPermission(new VolleyStringCallback(){
                 @Override
@@ -120,7 +121,7 @@ public class ValidateFragment extends Fragment {
                         validationProjectsArray = new ArrayList<String>();
                         for (int i=0;i<jsonLessons.length();i++)
                         {
-                            JSONObject object = (JSONObject) jsonLessons.getJSONObject(i);
+                            JSONObject object = jsonLessons.getJSONObject(i);
                             String permission = object.get("permission_id").toString();
                             if(permission.equals("4"))
                             {

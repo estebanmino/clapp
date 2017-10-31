@@ -33,11 +33,11 @@ public class MultimediaVideoAdapter extends MultimediaAdapter {
 
     public MultimediaVideoAdapter(ArrayList<MultimediaFile> mMultimediaFiles, Context context, Lesson thisLesson) {
         super(mMultimediaFiles, context,thisLesson);
-    };
+    }
 
     public void openFile(Context context, Uri uri, String url) throws IOException {
         super.openFile(context, uri, url);
-    };
+    }
 
 
     @Override

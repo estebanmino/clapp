@@ -7,59 +7,69 @@ package com.construapp.construapp.models;
 public interface Constants {
 
     // General
-    public static final String BASE_URL = "http://construapp-api.ing.puc.cl";
-    public static final String COMPANIES = "companies";
-    public static final String LESSONS = "lessons";
-    public static final String USERS = "users";
-    public static final String GET_PROJECTS = "get_projects";
-    public static final String GET_PERMISSION = "get_permission";
-    public static final String PROJECTS = "projects";
-    public static final String SESSIONS = "sessions";
-    public static final String SAVE_KEY = "save_key";
-    public static final String ALL_PROJECTS_KEY = "null";
-    public static final String ALL_PROJECTS_NAME = "Todos los proyectos";
+    String BASE_URL = "http://construapp-api.ing.puc.cl";
+    String COMPANIES = "companies";
+    String LESSONS = "lessons";
+    String USERS = "users";
+    String GET_PROJECTS = "get_projects";
+    String GET_PERMISSION = "get_permission";
+    String PROJECTS = "projects";
+    String SESSIONS = "sessions";
+    String SAVE_KEY = "save_key";
+    String ALL_PROJECTS_KEY = "null";
+    String ALL_PROJECTS_NAME = "Todos los proyectos";
 
-    public static final String API_VALIDATE = "validate";
-    public static final String API_SEND = "send";
-    public static final String API_REJECT = "reject";
+    String API_VALIDATE = "validate";
+    String API_SEND = "send";
+    String API_REJECT = "reject";
 
-    public static final String R_REJECTED = "-1";
-    public static final String R_WAITING = "0";
-    public static final String R_VALIDATED = "1";
-    public static final String R_SAVED = "2";
+    String R_REJECTED = "-1";
+    String R_WAITING = "0";
+    String R_VALIDATED = "1";
+    String R_SAVED = "2";
 
 
     // Shared preferences
-    public static final String SP_CONSTRUAPP = "ConstruApp";
-    public static final String SP_COMPANY = "company_id";
-    public static final String SP_USER = "user_id";
-    public static final String SP_ADMIN = "admin";
-    public static final String SP_TOKEN = "token";
-    public static final String SP_HAS_PROJECTS = "has_projects";
-    public static final String SP_HAS_PERMISSION = "has_permission";
-    public static final String SP_PROJECTS = "projects";
-    public static final String SP_ACTUAL_PROJECT = "actual_project";
-    public static final String SP_ACTUAL_PROJECT_NAME = "actual_project_name";
-    public static final String SP_USER_PERMISSION_NAME = "name_permission";
-    public static final String SP_USER_PERMISSION = "user_permission";
+    String SP_CONSTRUAPP = "ConstruApp";
+    String SP_COMPANY = "company_id";
+    String SP_USER = "user_id";
+    String SP_ADMIN = "admin";
+    String SP_TOKEN = "token";
+    String SP_HAS_PROJECTS = "has_projects";
+    String SP_HAS_PERMISSION = "has_permission";
+    String SP_PROJECTS = "projects";
+    String SP_ACTUAL_PROJECT = "actual_project";
+    String SP_ACTUAL_PROJECT_NAME = "actual_project_name";
+    String SP_USER_PERMISSION_NAME = "name_permission";
+    String SP_USER_PERMISSION = "user_permission";
+    String SP_PERMISSION_PROJECT = "permission_project_";
 
     //Queries
-    public static final String Q_AUTHORIZATION = "Authorization";
-    public static final String Q_CONTENTTYPE = "Content-Type";
-    public static final String Q_CONTENTTYPE_JSON = "application/json";
-    public static final String Q_CONTENTTYPE_JSON_UTF8 = "application/json; charset=utf-8";
+    String Q_AUTHORIZATION = "Authorization";
+    String Q_CONTENTTYPE = "Content-Type";
+    String Q_CONTENTTYPE_JSON = "application/json";
+    String Q_CONTENTTYPE_JSON_UTF8 = "application/json; charset=utf-8";
 
     //S3
-    public static final String S3_BUCKET = "construapp";
-    public static final String S3_IMAGES_PATH = "images";
-    public static final String S3_VIDEOS_PATH = "videos";
-    public static final String S3_AUDIOS_PATH = "audios";
-    public static final String S3_DOCS_PATH = "docs";
-    public static final String S3_LESSONS_PATH = "lessons";
+    String S3_BUCKET = "construapp";
+    String S3_IMAGES_PATH = "images";
+    String S3_VIDEOS_PATH = "videos";
+    String S3_AUDIOS_PATH = "audios";
+    String S3_DOCS_PATH = "docs";
+    String S3_LESSONS_PATH = "lessons";
 
     //MMEDIA
-    public static final String M_APP_DIRECTORY = "Clapp";
+    String M_APP_DIRECTORY = "Clapp";
 
+    //SESSION
+    String S_ADMIN_ADMIN = "1";
+    String S_ADMIN_NOTADMIN = "0";
+    String S_ADMIN_SUPERADMIN = "2";
 
+    //PERMISSION
+    String P_READ = "1";
+    String P_CREATE = "2";
+    String P_VALIDATE = "3";
+    String P_ADMIN = "4";
 
 }

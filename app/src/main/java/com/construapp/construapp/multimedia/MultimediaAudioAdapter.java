@@ -36,7 +36,7 @@ public class MultimediaAudioAdapter extends MultimediaAdapter {
 
     public MultimediaAudioAdapter(ArrayList<MultimediaFile> mMultimediaFiles, Context context,Lesson thisLesson) {
         super(mMultimediaFiles, context,thisLesson);
-    };
+    }
 
     @Override
     public void onBindViewHolder(MultimediaAdapter.MultimediaViewHolder holder, int position) {

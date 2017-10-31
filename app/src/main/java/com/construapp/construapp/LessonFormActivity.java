@@ -20,6 +20,7 @@ import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.General;
 import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.models.MultimediaFile;
+import com.construapp.construapp.models.SessionManager;
 import com.construapp.construapp.multimedia.MultimediaAudioAdapter;
 import com.construapp.construapp.multimedia.MultimediaDocumentAdapter;
 import com.construapp.construapp.multimedia.MultimediaPictureAdapter;
@@ -39,15 +40,17 @@ public class LessonFormActivity extends LessonBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lesson_form);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        //FIND XML ELEMENTS
-        lessonName = (TextView) findViewById(R.id.text_new_lesson_name);
-        lessonDescription = (TextView) findViewById(R.id.text_new_lesson_description);
+        sessionManager = new SessionManager(LessonFormActivity.this);
 
-        editLessonName = (EditText) findViewById(R.id.text_lesson_name);
-        editLessonDescription = (EditText) findViewById(R.id.text_lesson_description);
+        //FIND XML ELEMENTS
+        lessonName = findViewById(R.id.text_new_lesson_name);
+        lessonDescription = findViewById(R.id.text_new_lesson_description);
+
+        editLessonName = findViewById(R.id.text_lesson_name);
+        editLessonDescription = findViewById(R.id.text_lesson_description);
 
         mLayout = findViewById(R.id.lesson_form_layout);
 
@@ -99,7 +102,7 @@ public class LessonFormActivity extends LessonBaseActivity {
         //PICTURES SCROLLING
         LinearLayoutManager picturesLayoutManager = new LinearLayoutManager(this);
         picturesLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        RecyclerView mPicturesRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_pictures);
+        RecyclerView mPicturesRecyclerView = findViewById(R.id.recycler_horizontal_pictures);
         mPicturesRecyclerView.setLayoutManager(picturesLayoutManager);
         multimediaPictureAdapter = new MultimediaPictureAdapter(lesson.getMultimediaPicturesFiles(), LessonFormActivity.this, lesson);
         mPicturesRecyclerView.setAdapter(multimediaPictureAdapter);
@@ -107,7 +110,7 @@ public class LessonFormActivity extends LessonBaseActivity {
         //VIDEOS SCROLLING
         LinearLayoutManager videosLayoutManager = new LinearLayoutManager(this);
         videosLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        RecyclerView mVideosRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_videos);
+        RecyclerView mVideosRecyclerView = findViewById(R.id.recycler_horizontal_videos);
         mVideosRecyclerView.setLayoutManager(videosLayoutManager);
         multimediaVideoAdapter = new MultimediaVideoAdapter(lesson.getMultimediaVideosFiles(), LessonFormActivity.this, lesson);
         mVideosRecyclerView.setAdapter(multimediaVideoAdapter);
@@ -115,7 +118,7 @@ public class LessonFormActivity extends LessonBaseActivity {
         //AUDIOS SCROLLING
         LinearLayoutManager audiosLayoutManager = new LinearLayoutManager(this);
         audiosLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        RecyclerView mAudiosRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_audios);
+        RecyclerView mAudiosRecyclerView = findViewById(R.id.recycler_horizontal_audios);
         mAudiosRecyclerView.setLayoutManager(audiosLayoutManager);
         multimediaAudioAdapter = new MultimediaAudioAdapter(lesson.getMultimediaAudiosFiles(), LessonFormActivity.this, lesson);
         mAudiosRecyclerView.setAdapter(multimediaAudioAdapter);
@@ -123,7 +126,7 @@ public class LessonFormActivity extends LessonBaseActivity {
         //DOCUMENTS SCROLLING
         LinearLayoutManager documentsLayoutManager = new LinearLayoutManager(this);
         documentsLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        RecyclerView mDocumentsRecyclerView = (RecyclerView) findViewById(R.id.recycler_horizontal_documents);
+        RecyclerView mDocumentsRecyclerView = findViewById(R.id.recycler_horizontal_documents);
         mDocumentsRecyclerView.setLayoutManager(documentsLayoutManager);
         multimediaDocumentAdapter = new MultimediaDocumentAdapter(lesson.getMultimediaDocumentsFiles(), LessonFormActivity.this, lesson);
         mDocumentsRecyclerView.setAdapter(multimediaDocumentAdapter);
@@ -148,12 +151,12 @@ public class LessonFormActivity extends LessonBaseActivity {
     }
 
     public void createLesson(String validateState) {
-        sharedPreferences = getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
         String lesson_name = editLessonName.getText().toString();
         String lesson_summary = editLessonDescription.getText().toString();
         String lesson_motivation = null;
         String lesson_learning = null;
-        String project_id = sharedPreferences.getString(Constants.SP_ACTUAL_PROJECT, "");
+        String project_id = sessionManager.getActualProjectId();
+
         VolleyCreateLesson.volleyCreateLesson(new VolleyJSONCallback() {
               @Override
               public void onSuccess(JSONObject result) {
