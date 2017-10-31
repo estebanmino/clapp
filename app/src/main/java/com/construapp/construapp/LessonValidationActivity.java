@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -48,28 +49,28 @@ public class LessonValidationActivity extends LessonBaseActivity {
     private static final String LESSON_ID = "id";
     private static final String PROJECT_FOLDER = Constants.M_APP_DIRECTORY;
 
-    TextView textSaveValidatedLesson;
-    TextView textSendValidatedLessonComments;
+    private TextView textSaveValidatedLesson;
+    private TextView textSendValidatedLessonComments;
 
-    Switch validateNameSwitch;
-    Switch validateDescriptionSwitch;
-    Switch validateImagesSwitch;
-    Switch validateVideosSwitch;
-    Switch validateAudiosSwitch;
-    Switch validateDocumentsSwitch;
-    EditText editCommentName;
-    EditText editCommentDescription;
-    EditText editCommentImages;
-    EditText editCommentVideos;
-    EditText editCommentAudios;
-    EditText editCommentDocuments;
-    TextView switch_validateImageStringText;
-    TextView switch_validateVideoStringText;
-    TextView switch_validateDocumentStringText;
-    TextView switch_validateAudioStringText;
-    FloatingActionButton fabValidateLesson;
-    FloatingActionButton fabCommentLeson;
-    FloatingActionButton fabCancel;
+    private Switch validateNameSwitch;
+    private Switch validateDescriptionSwitch;
+    private Switch validateImagesSwitch;
+    private Switch validateVideosSwitch;
+    private Switch validateAudiosSwitch;
+    private Switch validateDocumentsSwitch;
+    private EditText editCommentName;
+    private EditText editCommentDescription;
+    private EditText editCommentImages;
+    private EditText editCommentVideos;
+    private EditText editCommentAudios;
+    private EditText editCommentDocuments;
+    private TextView switch_validateImageStringText;
+    private TextView switch_validateVideoStringText;
+    private TextView switch_validateDocumentStringText;
+    private TextView switch_validateAudioStringText;
+    private FloatingActionButton fabValidateLesson;
+    private FloatingActionButton fabCommentLeson;
+    private FloatingActionButton fabCancel;
 
     private TextView textImages;
     private TextView textVideos;
@@ -77,6 +78,11 @@ public class LessonValidationActivity extends LessonBaseActivity {
     private TextView textDocuments;
 
     private Boolean editing = true;
+
+    private RecyclerView mPicturesRecyclerView;
+    private RecyclerView mVideosRecyclerView;
+    private RecyclerView mDocumentsRecyclerView;
+    private RecyclerView mAudiosRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,7 +112,7 @@ public class LessonValidationActivity extends LessonBaseActivity {
         //PICTURES SCROLLING
         LinearLayoutManager picturesLayoutManager = new LinearLayoutManager(this);
         picturesLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        final RecyclerView mPicturesRecyclerView = findViewById(R.id.recycler_horizontal_pictures);
+        mPicturesRecyclerView = findViewById(R.id.recycler_horizontal_pictures);
         mPicturesRecyclerView.setLayoutManager(picturesLayoutManager);
         multimediaPictureAdapter = new MultimediaPictureAdapter(lesson.getMultimediaPicturesFiles(),LessonValidationActivity.this,lesson);
         mPicturesRecyclerView.setAdapter(multimediaPictureAdapter);
@@ -114,7 +120,7 @@ public class LessonValidationActivity extends LessonBaseActivity {
         //AUDIOS SCROLLING
         LinearLayoutManager audiosLayoutManager = new LinearLayoutManager(this);
         audiosLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        final RecyclerView mAudiosRecyclerView = findViewById(R.id.recycler_horizontal_audios);
+        mAudiosRecyclerView = findViewById(R.id.recycler_horizontal_audios);
         mAudiosRecyclerView.setLayoutManager(audiosLayoutManager);
         multimediaAudioAdapter = new MultimediaAudioAdapter(lesson.getMultimediaAudiosFiles(),LessonValidationActivity.this,lesson);
         mAudiosRecyclerView.setAdapter(multimediaAudioAdapter);
@@ -122,7 +128,7 @@ public class LessonValidationActivity extends LessonBaseActivity {
         //VIDEOS SCROLLING
         LinearLayoutManager videosLayoutManager = new LinearLayoutManager(this);
         videosLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        final RecyclerView mVideosRecyclerView = findViewById(R.id.recycler_horizontal_videos);
+        mVideosRecyclerView = findViewById(R.id.recycler_horizontal_videos);
         mVideosRecyclerView.setLayoutManager(videosLayoutManager);
         multimediaVideoAdapter = new MultimediaVideoAdapter(lesson.getMultimediaVideosFiles(),LessonValidationActivity.this,lesson);
         mVideosRecyclerView.setAdapter(multimediaVideoAdapter);
@@ -130,7 +136,7 @@ public class LessonValidationActivity extends LessonBaseActivity {
         //DOCUMENTS SCROLLING
         LinearLayoutManager documentsLayoutManager = new LinearLayoutManager(this);
         documentsLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        final RecyclerView mDocumentsRecyclerView = findViewById(R.id.recycler_horizontal_documents);
+        mDocumentsRecyclerView = findViewById(R.id.recycler_horizontal_documents);
         mDocumentsRecyclerView.setLayoutManager(documentsLayoutManager);
         multimediaDocumentAdapter = new MultimediaDocumentAdapter(lesson.getMultimediaDocumentsFiles(),LessonValidationActivity.this,lesson);
         mDocumentsRecyclerView.setAdapter(multimediaDocumentAdapter);
