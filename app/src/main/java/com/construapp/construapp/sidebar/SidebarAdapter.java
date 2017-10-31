@@ -71,6 +71,7 @@ public class SidebarAdapter extends BaseAdapter {
 
         projectName.setText(key);
 
+
         return convertView;
     }
 

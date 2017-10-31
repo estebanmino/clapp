@@ -35,7 +35,6 @@ public class General {
         String permissionString = Integer.toString(permissionInt);
         editor.putString("user_permission", permissionString);
         editor.apply();
-
     }
 
     public int xmlPermissionTagToInt(String tag){

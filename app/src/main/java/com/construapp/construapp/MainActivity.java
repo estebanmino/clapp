@@ -31,6 +31,7 @@ import com.construapp.construapp.db.Connectivity;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.General;
 import com.construapp.construapp.models.Lesson;
+import com.construapp.construapp.models.Project;
 import com.construapp.construapp.sidebar.SidebarAdapter;
 import com.construapp.construapp.dbTasks.DeleteLessonTable;
 import com.construapp.construapp.dbTasks.InsertLessonTask;
@@ -66,7 +67,6 @@ public class MainActivity extends AppCompatActivity
     private ListView mDrawerList;
 
     private NavigationView navigationView;
-
     private SidebarAdapter sidebarAdapter;
     private SharedPreferences sharedpreferences;
 
@@ -106,8 +106,6 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
-
         constants = new General();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -118,6 +116,7 @@ public class MainActivity extends AppCompatActivity
 
         //Able FloatingActionButton or hide it according to the user permissions
         if (userPermission >= fabPermission && !sharedpreferences.getString(Constants.SP_ACTUAL_PROJECT,"").equals("null")){
+            getSupportActionBar().setTitle("Proyecto " + sharedpreferences.getString(Constants.SP_ACTUAL_PROJECT_NAME,""));
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -126,6 +125,7 @@ public class MainActivity extends AppCompatActivity
             });
         }
         else {
+            getSupportActionBar().setTitle(Constants.ALL_PROJECTS_NAME);
             fab.setVisibility(View.GONE);
         }
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
