@@ -22,6 +22,7 @@ import com.construapp.construapp.dbTasks.InsertLessonTask;
 import com.construapp.construapp.listeners.VolleyStringCallback;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.Lesson;
+import com.construapp.construapp.models.SessionManager;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -35,7 +36,6 @@ public class MyLessonsFragment extends Fragment {
     private LessonsAdapter lessonsAdapter;
     private List<Lesson> lessonList;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private SharedPreferences sharedPreferences;
 
     private String user_id;
     private String project_id;
@@ -44,13 +44,14 @@ public class MyLessonsFragment extends Fragment {
     private Button btnLessonsRejected;
     private String lessonsValidationState;
 
+    private SessionManager sessionManager;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        sharedPreferences = getActivity().getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
-        user_id = sharedPreferences.getString(Constants.SP_USER,"");
-        project_id = sharedPreferences.getString(Constants.SP_ACTUAL_PROJECT,"");
+        sessionManager = new SessionManager(getActivity());
+        user_id = sessionManager.getUserId();
+        project_id = sessionManager.getActualProjectId();
 
         getMyLessons(project_id,user_id, Constants.R_SAVED);
 
@@ -129,8 +130,8 @@ public class MyLessonsFragment extends Fragment {
 
     public void refreshData(){
         boolean is_connected = Connectivity.isConnected(getContext());
-        user_id = sharedPreferences.getString(Constants.SP_USER, "");
-        project_id = sharedPreferences.getString(Constants.SP_ACTUAL_PROJECT, "");
+        user_id = sessionManager.getUserId();
+        project_id = sessionManager.getActualProjectId();
         if(is_connected) {
             VolleyGetLessons.volleyGetLessons(new VolleyStringCallback() {
                 @Override
@@ -140,7 +141,6 @@ public class MyLessonsFragment extends Fragment {
                     try {
                         jsonLessons = new JSONArray(result);
                         for (int i = 0; i < jsonLessons.length(); i++) {
-                            Log.i("JSON", jsonLessons.get(i).toString());
                             JSONObject object = (JSONObject) jsonLessons.get(i);
                             //TODO refactoring de params 24-10
                             lesson.setName(object.get("name").toString());

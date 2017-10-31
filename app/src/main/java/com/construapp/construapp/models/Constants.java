@@ -61,6 +61,15 @@ public interface Constants {
     //MMEDIA
     String M_APP_DIRECTORY = "Clapp";
 
+    //SESSION
+    String S_ADMIN_ADMIN = "1";
+    String S_ADMIN_NOTADMIN = "0";
+    String S_ADMIN_SUPERADMIN = "2";
 
+    //PERMISSION
+    String P_READ = "1";
+    String P_CREATE = "2";
+    String P_VALIDATE = "3";
+    String P_ADMIN = "4";
 
 }

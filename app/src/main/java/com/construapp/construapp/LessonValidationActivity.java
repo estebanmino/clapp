@@ -84,7 +84,6 @@ public class LessonValidationActivity extends LessonBaseActivity {
         setContentView(R.layout.activity_validate_lesson);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        SharedPreferences sharedpreferences = getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
         constants = new General();
 
         // Create an S3 client
@@ -437,7 +436,6 @@ public class LessonValidationActivity extends LessonBaseActivity {
         lesson.setName(getIntent().getStringExtra(LESSON_NAME));
         lesson.setDescription(getIntent().getStringExtra(LESSON_DESCRIPTION));
         lesson.setId(getIntent().getStringExtra(LESSON_ID));
-        //lesson.setCompany_id(sharedPreferences.getString(Constants.SP_COMPANY, ""));
         lesson.initMultimediaFiles();
     }
 

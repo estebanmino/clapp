@@ -42,6 +42,14 @@ public class SessionManager {
         return sharedPreferences.getString(Constants.SP_TOKEN,"");
     }
 
+    public String getUserAdmin() {
+        return sharedPreferences.getString(Constants.SP_ADMIN,"");
+    }
+
+    public String getUserId() {
+        return sharedPreferences.getString(Constants.SP_USER,"");
+    }
+
     public void setProjects(JsonArray projects) {
         if (projects.size() != 0) {
             projectsArray = projects;
@@ -92,6 +100,13 @@ public class SessionManager {
     }
 
     public String getProjectPermission(String projectId) {
+        if (projectId.equals("null")) {
+            if (sharedPreferences.getString(Constants.SP_ADMIN, "").equals(Constants.S_ADMIN_ADMIN)) {
+                return Constants.P_ADMIN;
+            } else {
+                return Constants.P_READ;
+            }
+        }
         return sharedPreferences.getString(Constants.SP_PERMISSION_PROJECT+projectId, "");
     }
 

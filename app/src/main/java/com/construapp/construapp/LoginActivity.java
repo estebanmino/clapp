@@ -99,15 +99,14 @@ public class LoginActivity extends AppCompatActivity {
                                                 jsonObject.getAsJsonObject().get("id").toString(),
                                                 jsonObject.getAsJsonObject().get("name").toString());
                                     }
+                                    startActivity(MainActivity.getIntent(LoginActivity.this));
                                 }
 
                                 @Override
                                 public void onErrorResponse(VolleyError result) {
-
+                                    Toast.makeText(LoginActivity.this, "No se pudo ingresar a su cuenta", Toast.LENGTH_SHORT).show();
                                 }
                             }, LoginActivity.this, user_id);
-
-                            startActivity(MainActivity.getIntent(LoginActivity.this));
                         }
 
                         @Override

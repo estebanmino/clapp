@@ -20,6 +20,7 @@ import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.General;
 import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.models.MultimediaFile;
+import com.construapp.construapp.models.SessionManager;
 import com.construapp.construapp.multimedia.MultimediaAudioAdapter;
 import com.construapp.construapp.multimedia.MultimediaDocumentAdapter;
 import com.construapp.construapp.multimedia.MultimediaPictureAdapter;
@@ -41,6 +42,8 @@ public class LessonFormActivity extends LessonBaseActivity {
         setContentView(R.layout.activity_lesson_form);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        sessionManager = new SessionManager(LessonFormActivity.this);
 
         //FIND XML ELEMENTS
         lessonName = findViewById(R.id.text_new_lesson_name);
@@ -148,12 +151,12 @@ public class LessonFormActivity extends LessonBaseActivity {
     }
 
     public void createLesson(String validateState) {
-        sharedPreferences = getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
         String lesson_name = editLessonName.getText().toString();
         String lesson_summary = editLessonDescription.getText().toString();
         String lesson_motivation = null;
         String lesson_learning = null;
-        String project_id = sharedPreferences.getString(Constants.SP_ACTUAL_PROJECT, "");
+        String project_id = sessionManager.getActualProjectId();
+
         VolleyCreateLesson.volleyCreateLesson(new VolleyJSONCallback() {
               @Override
               public void onSuccess(JSONObject result) {
