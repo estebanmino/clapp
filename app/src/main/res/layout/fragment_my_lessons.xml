@@ -31,7 +31,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_weight="1"
                 android:background="@color/colorPrimary"
-                android:text="GUARDADAS"
+                android:text="BORRADORES"
                 android:textColor="@color/cardview_light_background"
                 android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"
