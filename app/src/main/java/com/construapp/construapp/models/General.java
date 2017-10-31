@@ -29,9 +29,9 @@ public class General {
     }
 
     public void setUserPermission(Context context){
-        SharedPreferences sharedpreferences = context.getSharedPreferences("ConstruApp", Context.MODE_PRIVATE);
+        SharedPreferences sharedpreferences = context.getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
-        int permissionInt = userPermissionsToInt(sharedpreferences.getString("name_permission",""));
+        int permissionInt = userPermissionsToInt(sharedpreferences.getString(Constants.SP_USER_PERMISSION,""));
         String permissionString = Integer.toString(permissionInt);
         editor.putString("user_permission", permissionString);
         editor.apply();
@@ -43,12 +43,12 @@ public class General {
     }
 
     private int userPermissionsToInt(String permission){
-        Log.i("PERMISSION",permission);
+        Log.i("PROJECTPERMISSION",permission);
         switch (permission){
-            case "admin": return 4;
-            case "validate": return 3;
-            case "create": return 2;
-            case "read": return 1;
+            case "4": return 4;
+            case "3": return 3;
+            case "2": return 2;
+            case "1": return 1;
             default: return 0;
         }
     }

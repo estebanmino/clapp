@@ -40,12 +40,13 @@ public class VolleyGetLessons {
         final RequestQueue queue = Volley.newRequestQueue(context);
 
         StringRequest jsonObjectRequest = new StringRequest(Request.Method.GET, url,
-                new com.android.volley.Response.Listener<String>() {
-                        @Override
-                    public void onResponse(String  response) {
-                        callback.onSuccess(response);
-                    }
-                }, new Response.ErrorListener() {
+            new com.android.volley.Response.Listener<String>() {
+                @Override
+                public void onResponse(String  response) {
+                    callback.onSuccess(response);
+                }
+                },
+            new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.i("RESPONSEPER", error.toString());
@@ -53,7 +54,7 @@ public class VolleyGetLessons {
                 Log.i("TOKEN",userToken);
                 callback.onErrorResponse(error);
             }
-        }) {
+            }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String,String> params = new HashMap<String, String>();

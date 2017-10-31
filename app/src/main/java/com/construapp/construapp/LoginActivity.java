@@ -20,6 +20,7 @@ import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.api.VolleyGetUserProject;
 import com.construapp.construapp.api.VolleyGetUserProjectPermission;
 import com.construapp.construapp.api.VolleyLoginConnection;
+import com.construapp.construapp.models.SessionManager;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -34,23 +35,24 @@ public class LoginActivity extends AppCompatActivity {
     private EditText editPassword;
     private Button btnSignin;
 
-    private String auth_token = "";
     private String user_id = "";
-    private String company_id = "";
     private String admin = "";
     private JSONObject company;
+
+    private SessionManager sessionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        editEmail = (EditText) findViewById(R.id.edit_email);
-        editPassword = (EditText) findViewById(R.id.edit_password);
-        btnSignin = (Button) findViewById(R.id.btn_sigin);
+        sessionManager = new SessionManager(LoginActivity.this);
 
-        final SharedPreferences sharedPreferences =getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
-        if (sharedPreferences.contains(Constants.SP_TOKEN)) {
+        editEmail = findViewById(R.id.edit_email);
+        editPassword = findViewById(R.id.edit_password);
+        btnSignin = findViewById(R.id.btn_sigin);
+
+        if (sessionManager.isLoggedIn()) {
             startActivity(MainActivity.getIntent(LoginActivity.this));
         } else {
             btnSignin.setOnClickListener(new View.OnClickListener() {
@@ -60,22 +62,18 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(JSONObject result) {
                             Toast.makeText(LoginActivity.this, "Bienvenido", Toast.LENGTH_LONG).show();
-                            final SharedPreferences.Editor editor = sharedPreferences.edit();
                             try {
-                                auth_token = result.getString("auth_token");
                                 admin = result.getString("admin");
                                 user_id = result.getString("id");
                                 company = result.getJSONObject("company");
-                                company_id = company.getString("id");
-                            } catch (Exception e) {
-                            }
+                                sessionManager.saveLogInData(
+                                        result.getString("auth_token"),
+                                        result.getString("admin"),
+                                        result.getString("id"),
+                                        company.getString("id"));
+                            } catch (Exception e) {}
 
-                            editor.putString(Constants.SP_TOKEN, auth_token);
-                            editor.putString(Constants.SP_USER, user_id);
-                            editor.putString(Constants.SP_COMPANY, company_id);
-                            editor.putString(Constants.SP_ADMIN, admin);
                             Log.i("PERMISSION",admin);
-                            editor.apply();
 
                             VolleyGetUserProject.volleyGetUserProject(new VolleyStringCallback() {
                                 @Override
@@ -85,52 +83,30 @@ public class LoginActivity extends AppCompatActivity {
                                     ArrayList<String> arrayList = new ArrayList<>();
                                     JsonArray jsonArray = parser.parse(result).getAsJsonArray();
                                     for (int i = 0; i < jsonArray.size(); i++) {
-                                        JsonElement jsonObject = (JsonElement) jsonArray.get(i);
+                                        JsonElement jsonObject = jsonArray.get(i);
+                                        sessionManager.setProjectPermission(
+                                                jsonObject.getAsJsonObject().get("project").getAsJsonObject().get("id").toString(),
+                                                jsonObject.getAsJsonObject().get("permission_id").toString()
+                                        );
                                         arrayList.add(jsonObject.getAsJsonObject().get("project").toString());
                                     }
+
                                     JsonArray obj = (JsonArray) parser.parse(arrayList.toString());
-                                    //Log.i("JSONARRAY",obj.toString());
-                                    //Log.i("JSONARRAY",Integer.toString(obj.size()));
-                                    editor.putString(Constants.SP_PROJECTS, obj.toString());
-                                    if (obj.size() != 0) {
-                                        editor.putBoolean(Constants.SP_HAS_PROJECTS, true);
-                                        editor.apply();
+                                    sessionManager.setProjects(obj);
+                                    if (sessionManager.hasProjects()) {
                                         JsonElement jsonObject = obj.get(0);
-                                        editor.putString(Constants.SP_ACTUAL_PROJECT, jsonObject.getAsJsonObject().get("id").toString());
-                                        editor.apply();
-                                        VolleyGetUserProjectPermission.volleyGetUserProjectPermission(new VolleyJSONCallback() {
-                                            @Override
-                                            public void onSuccess(JSONObject result) {
-                                                try {
-                                                    editor.putString(Constants.SP_USER_PERMISSION_NAME,
-                                                            result.get(Constants.SP_HAS_PERMISSION).toString());
-                                                    editor.putString(Constants.SP_ACTUAL_PROJECT,"null");
-                                                    editor.putString(Constants.SP_ACTUAL_PROJECT_NAME,"Todos los proyectos");
-                                                    editor.apply();
-                                                    //TODO revisar startActivity
-                                                    startActivity(MainActivity.getIntent(LoginActivity.this));
-                                                } catch (Exception e) {
-                                                }
-                                            }
-
-                                            @Override
-                                            public void onErrorResponse(VolleyError result) {
-
-                                            }
-                                        }, LoginActivity.this, user_id, jsonObject.getAsJsonObject().get("id").toString());
-                                    } else {
-                                        editor.putBoolean(Constants.SP_HAS_PROJECTS, false);
-                                        editor.apply();
+                                        sessionManager.setCurrentProject(
+                                                jsonObject.getAsJsonObject().get("id").toString(),
+                                                jsonObject.getAsJsonObject().get("name").toString());
                                     }
+                                    startActivity(MainActivity.getIntent(LoginActivity.this));
                                 }
 
                                 @Override
                                 public void onErrorResponse(VolleyError result) {
-
+                                    Toast.makeText(LoginActivity.this, "No se pudo ingresar a su cuenta", Toast.LENGTH_SHORT).show();
                                 }
                             }, LoginActivity.this, user_id);
-
-                            startActivity(MainActivity.getIntent(LoginActivity.this));
                         }
 
                         @Override

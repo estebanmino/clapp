@@ -21,7 +21,7 @@ public class ShowInfo extends AppCompatActivity {
         textView.setTextColor(Color.parseColor("#08088A"));
         textView.setText(message);
 
-        ViewGroup layout = (ViewGroup) findViewById(R.id.activity_show_info);
+        ViewGroup layout = findViewById(R.id.activity_show_info);
         layout.addView(textView);
     }
 }

@@ -27,7 +27,7 @@ import com.google.gson.reflect.TypeToken;
 public interface LessonDAO {
 
     @Query("select * from Lesson where validation = 1")
-    public List<Lesson> getAllLessons();
+    List<Lesson> getAllLessons();
 
     //no usamos livedata porque la db se sincroniza segun el fetch
     //LiveData<List<Lesson>> getAllLessons();
@@ -61,7 +61,7 @@ public interface LessonDAO {
     void deleteLesson(Lesson Lesson);
 
     @Query("DELETE FROM Lesson")
-    public void nukeTable();
+    void nukeTable();
 }
 
 

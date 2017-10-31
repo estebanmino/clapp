@@ -1,6 +1,5 @@
 package com.construapp.construapp;
 
-import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.NavigationView;
@@ -8,7 +7,6 @@ import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -22,23 +20,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.android.volley.VolleyError;
-import com.construapp.construapp.api.VolleyGetLessons;
 import com.construapp.construapp.cache.LRUCache;
-import com.construapp.construapp.listeners.VolleyStringCallback;
-import com.construapp.construapp.microblog.MicroblogFragment;
-import com.construapp.construapp.db.Connectivity;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.General;
-import com.construapp.construapp.models.Lesson;
+import com.construapp.construapp.models.SessionManager;
 import com.construapp.construapp.sidebar.SidebarAdapter;
 import com.construapp.construapp.dbTasks.DeleteLessonTable;
-import com.construapp.construapp.dbTasks.InsertLessonTask;
 import com.construapp.construapp.threading.GetLessons;
 import com.construapp.construapp.validations.ValidateFragment;
 
 import android.content.SharedPreferences;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -56,7 +47,7 @@ public class MainActivity extends AppCompatActivity
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
     //CONSTANTS
-    private General constants;
+    private General general;
     private ViewPager mViewPager;
     public final static String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
     private LRUCache lruCache;
@@ -67,8 +58,7 @@ public class MainActivity extends AppCompatActivity
 
     private NavigationView navigationView;
 
-    private SidebarAdapter sidebarAdapter;
-    private SharedPreferences sharedpreferences;
+    private SessionManager sessionManager;
 
     JSONArray jsonArray;
     Map<String, String> projects;
@@ -81,10 +71,10 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        sharedpreferences = getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
+        sessionManager = new SessionManager(MainActivity.this);
 
         try {
-            jsonArray = new JSONArray(sharedpreferences.getString(Constants.SP_PROJECTS, ""));
+            jsonArray = new JSONArray(sessionManager.getProjects());
             mProjectTitles = new String[(jsonArray.length())];
 
             projects = new HashMap<String, String>();
@@ -103,21 +93,20 @@ public class MainActivity extends AppCompatActivity
 
 
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        general = new General();
 
-
-        constants = new General();
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         lruCache = LRUCache.getInstance();
-        constants.setUserPermission(MainActivity.this);
-        userPermission = Integer.parseInt(sharedpreferences.getString(Constants.SP_USER_PERMISSION,""));
-        int fabPermission = constants.xmlPermissionTagToInt(fab.getTag().toString());
+        general.setUserPermission(MainActivity.this);
+        userPermission = Integer.parseInt(sessionManager.getActualUserPermission());
+        Log.i("PROJECTPERMISSION",sessionManager.getActualUserPermission());
+        int fabPermission = general.xmlPermissionTagToInt(fab.getTag().toString());
 
         //Able FloatingActionButton or hide it according to the user permissions
-        if (userPermission >= fabPermission && !sharedpreferences.getString(Constants.SP_ACTUAL_PROJECT,"").equals("null")){
+        if (userPermission >= fabPermission && !sessionManager.getActualProjectId().equals("null")){
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -129,21 +118,21 @@ public class MainActivity extends AppCompatActivity
             fab.setVisibility(View.GONE);
         }
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-        mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager = findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
 
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        TabLayout tabLayout = findViewById(R.id.tabs);
         if (userPermission == 1) {
             tabLayout.setVisibility(View.GONE);
         }
         tabLayout.setupWithViewPager(mViewPager);
 
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        mUserName = (TextView) navigationView.getHeaderView(0).findViewById(R.id.main_username);
-        mUserName.setText(sharedpreferences.getString(Constants.SP_ACTUAL_PROJECT_NAME, ""));
+        mUserName = navigationView.getHeaderView(0).findViewById(R.id.main_username);
+        mUserName.setText(sessionManager.getActualProjectName());
 
         Menu menu = navigationView.getMenu();
         try {
@@ -158,7 +147,7 @@ public class MainActivity extends AppCompatActivity
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+                DrawerLayout drawer = findViewById(R.id.drawer_layout);
                 drawer.openDrawer(GravityCompat.START);
             }
         });
@@ -174,10 +163,7 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
 
         if (item.getItemId()  == R.id.logout){
-            SharedPreferences mySPrefs = getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = mySPrefs.edit();
-            editor.clear();
-            editor.apply();
+            sessionManager.eraseSharedPreferences();
             try {
 
             } catch (Exception e) {}
@@ -192,14 +178,10 @@ public class MainActivity extends AppCompatActivity
             Toast.makeText(this,"Se ha  cerrado su sesión",Toast.LENGTH_LONG).show();
             startActivity(LoginActivity.getIntent(MainActivity.this));
         } else if (item.getItemId() == R.id.to_all_projects) {
-            String map = item.getTitle().toString();
             Intent intent = getIntent();
             finish();
             startActivity(intent);
-            final SharedPreferences.Editor editor = sharedpreferences.edit();
-            editor.putString(Constants.SP_ACTUAL_PROJECT,Constants.ALL_PROJECTS_KEY);
-            editor.putString(Constants.SP_ACTUAL_PROJECT_NAME,Constants.ALL_PROJECTS_NAME);
-            editor.apply();
+            sessionManager.setCurrentProject(Constants.ALL_PROJECTS_KEY,Constants.ALL_PROJECTS_NAME);
         } else  if (item.getItemId() == R.id.to_blog) {
             //
         }
@@ -208,11 +190,8 @@ public class MainActivity extends AppCompatActivity
             Intent intent = getIntent();
             finish();
             startActivity(intent);
-            final SharedPreferences.Editor editor = sharedpreferences.edit();
-            editor.putString(Constants.SP_ACTUAL_PROJECT, Integer.toString(item.getItemId()));
-            editor.putString(Constants.SP_ACTUAL_PROJECT_NAME, map);
-            editor.apply();
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            sessionManager.setCurrentProject(Integer.toString(item.getItemId()),map);
+            DrawerLayout drawer = findViewById(R.id.drawer_layout);
             drawer.closeDrawer(GravityCompat.START);
         }
         return super.onOptionsItemSelected(item);

@@ -34,6 +34,7 @@ import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.General;
 import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.models.MultimediaFile;
+import com.construapp.construapp.models.SessionManager;
 import com.construapp.construapp.multimedia.MultimediaAudioAdapter;
 import com.construapp.construapp.multimedia.MultimediaDocumentAdapter;
 import com.construapp.construapp.multimedia.MultimediaPictureAdapter;
@@ -108,8 +109,7 @@ public class LessonBaseActivity extends AppCompatActivity {
     public MultimediaAudioAdapter multimediaAudioAdapter;
     public MultimediaDocumentAdapter multimediaDocumentAdapter;
 
-    public SharedPreferences sharedPreferences;
-
+    public SessionManager sessionManager;
 
     //LESSON VIEW
 
