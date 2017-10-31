@@ -58,7 +58,7 @@
 
         <activity android:name=".ShowInfo" />
         <activity
-            android:name=".LessonValidationActivity"
+            android:name=".validations.LessonValidationActivity"
             android:label="@string/title_activity_validate_lesson_form"/>
     </application>
 

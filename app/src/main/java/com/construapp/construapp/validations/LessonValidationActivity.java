@@ -1,8 +1,7 @@
-package com.construapp.construapp;
+package com.construapp.construapp.validations;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.os.Bundle;
@@ -11,8 +10,10 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,6 +22,9 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.android.volley.VolleyError;
+import com.construapp.construapp.LessonBaseActivity;
+import com.construapp.construapp.MainActivity;
+import com.construapp.construapp.R;
 import com.construapp.construapp.api.VolleyPutRejectLesson;
 import com.construapp.construapp.api.VolleyPutValidateLesson;
 import com.construapp.construapp.listeners.VolleyJSONCallback;
@@ -69,7 +73,7 @@ public class LessonValidationActivity extends LessonBaseActivity {
     private TextView switch_validateDocumentStringText;
     private TextView switch_validateAudioStringText;
     private FloatingActionButton fabValidateLesson;
-    private FloatingActionButton fabCommentLeson;
+    private FloatingActionButton fabCommentLesson;
     private FloatingActionButton fabCancel;
 
     private TextView textImages;
@@ -77,12 +81,16 @@ public class LessonValidationActivity extends LessonBaseActivity {
     private TextView textAudios;
     private TextView textDocuments;
 
-    private Boolean editing = true;
-
     private RecyclerView mPicturesRecyclerView;
     private RecyclerView mVideosRecyclerView;
     private RecyclerView mDocumentsRecyclerView;
     private RecyclerView mAudiosRecyclerView;
+
+    private Button btnAssignValidator;
+
+    private ListView listAssignValidator;
+    private ArrayList<String> validatorsList;
+    private ValidatorsAdapter validatorsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +98,14 @@ public class LessonValidationActivity extends LessonBaseActivity {
         setContentView(R.layout.activity_validate_lesson);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        btnAssignValidator = findViewById(R.id.btn_assign_validator);
+        listAssignValidator = findViewById(R.id.list_assign_validator);
+
+        validatorsList = new ArrayList<>();
+        validatorsAdapter= new ValidatorsAdapter(this, validatorsList);
+        listAssignValidator.setAdapter(validatorsAdapter);
+
+        setBtnAssignValidator();
         constants = new General();
 
         // Create an S3 client
@@ -164,7 +180,7 @@ public class LessonValidationActivity extends LessonBaseActivity {
         textSaveValidatedLesson = findViewById(R.id.textView_save_validated_lesson);
         textSendValidatedLessonComments = findViewById(R.id.textView_send_validated_lesson_comments);
         fabValidateLesson = findViewById(R.id.fab_validate_lesson);
-        fabCommentLeson = findViewById(R.id.fab_comment_lesson);
+        fabCommentLesson = findViewById(R.id.fab_comment_lesson);
         fabCancel = findViewById(R.id.fab_reject_lesson);
 
         textImages = findViewById(R.id.text_images);
@@ -373,7 +389,7 @@ public class LessonValidationActivity extends LessonBaseActivity {
     }
 
     public void setFabCommentLessonListener() {
-        fabCommentLeson.setOnClickListener(new View.OnClickListener() {
+        fabCommentLesson.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String comment = "COMENTARIOS POR SEGMENTO: \n";
@@ -416,24 +432,25 @@ public class LessonValidationActivity extends LessonBaseActivity {
         fabCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //
+                finish();
             }
         });
     }
 
-
     public void checkedComments(){
-        if (validateNameSwitch.isChecked() || validateDescriptionSwitch.isChecked() || validateImagesSwitch.isChecked() || validateVideosSwitch.isChecked() || validateAudiosSwitch.isChecked() || validateDocumentsSwitch.isChecked()){
+        if (validateNameSwitch.isChecked() || validateDescriptionSwitch.isChecked() ||
+                validateImagesSwitch.isChecked() || validateVideosSwitch.isChecked() ||
+                validateAudiosSwitch.isChecked() || validateDocumentsSwitch.isChecked()){
             textSaveValidatedLesson.setVisibility(View.GONE);
             fabValidateLesson.setVisibility(View.GONE);
             textSendValidatedLessonComments.setVisibility(View.VISIBLE);
-            fabCommentLeson.setVisibility(View.VISIBLE);
+            fabCommentLesson.setVisibility(View.VISIBLE);
         }
         else {
             textSaveValidatedLesson.setVisibility(View.VISIBLE);
             fabValidateLesson.setVisibility(View.VISIBLE);
             textSendValidatedLessonComments.setVisibility(View.GONE);
-            fabCommentLeson.setVisibility(View.GONE);
+            fabCommentLesson.setVisibility(View.GONE);
         }
     }
 
@@ -443,6 +460,32 @@ public class LessonValidationActivity extends LessonBaseActivity {
         lesson.setDescription(getIntent().getStringExtra(LESSON_DESCRIPTION));
         lesson.setId(getIntent().getStringExtra(LESSON_ID));
         lesson.initMultimediaFiles();
+    }
+
+    public void setBtnAssignValidator() {
+        btnAssignValidator.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i("ASSIGNVALIDATOR","clicked");
+                validatorsList.clear();
+                validatorsList.add("Mumbai");
+                validatorsList.add("Delhi");
+                validatorsList.add("Bangalore");
+                validatorsList.add("Chennai");
+                validatorsList.add("Pune");
+
+                validatorsAdapter.notifyDataSetChanged();
+                listAssignValidator.setVisibility(View.VISIBLE);
+
+                fabCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        listAssignValidator.setVisibility(View.GONE);
+                        setFabCancelLessonListener();
+                    }
+                });
+            }
+        });
     }
 
     public static Intent getIntent(Context context, String name, String description, String id) {

@@ -1,7 +1,5 @@
 package com.construapp.construapp.validations;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,14 +14,12 @@ import android.widget.ListView;
 import com.android.volley.VolleyError;
 import com.construapp.construapp.LessonsAdapter;
 import com.construapp.construapp.R;
-import com.construapp.construapp.LessonValidationActivity;
 import com.construapp.construapp.api.VolleyGetLessons;
 import com.construapp.construapp.api.VolleyGetValidationPermission;
 import com.construapp.construapp.db.Connectivity;
 import com.construapp.construapp.dbTasks.GetValidationsTask;
 import com.construapp.construapp.dbTasks.InsertLessonTask;
 import com.construapp.construapp.listeners.VolleyStringCallback;
-import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.models.SessionManager;
 
