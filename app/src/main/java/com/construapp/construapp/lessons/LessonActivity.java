@@ -123,8 +123,7 @@ public class LessonActivity extends LessonBaseActivity {
         setLesson();
 
         Bundle bundle = new Bundle();
-        bundle.putString(Constants.B_LESSON_NAME, lesson.getName());
-        bundle.putString(Constants.B_LESSON_DESCRIPTION, lesson.getDescription());
+        bundle.putStringArrayList(Constants.B_LESSON_ARRAY_LIST, lesson.getFormAttributes());
         FragmentManager  fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         LessonViewFragment lessonViewFragment = new LessonViewFragment();
@@ -325,15 +324,13 @@ public class LessonActivity extends LessonBaseActivity {
                     btnDelete.setVisibility(View.GONE);
 
                     Bundle bundle = new Bundle();
-                    bundle.putString(Constants.B_LESSON_NAME, lesson.getName());
-                    bundle.putString(Constants.B_LESSON_DESCRIPTION, lesson.getDescription());
+                    bundle.putStringArrayList(Constants.B_LESSON_ARRAY_LIST, lesson.getFormAttributes());
                     FragmentManager fragmentManager = getFragmentManager();
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                     LessonEditFragment lessonEditFragment = new LessonEditFragment();
                     lessonEditFragment.setArguments(bundle);
                     fragmentTransaction.replace(R.id.constraint_fragment_container,lessonEditFragment);
                     fragmentTransaction.commit();
-
                 }
                 else {
                     finish();
@@ -387,7 +384,7 @@ public class LessonActivity extends LessonBaseActivity {
         int deletePermission = constants.xmlPermissionTagToInt((btnEdit.getTag().toString()));
 
         if (editPermission <= userPermission || sessionManager.getUserAdmin().equals(Constants.S_ADMIN_ADMIN)
-                || (sessionManager.getUserId().equals(lesson.getUser_id()) &&
+                || (sessionManager.getUserId().equals(lesson.getUserId()) &&
                 !lesson.getValidation().equals(Constants.R_VALIDATED)
                 ))
         {
@@ -431,12 +428,15 @@ public class LessonActivity extends LessonBaseActivity {
             public void onClick(View view) {
                 Fragment fragment = getFragmentManager().findFragmentById(R.id.constraint_fragment_container);
                 EditText editLessonName = fragment.getView().findViewById(R.id.edit_lesson_name);
-                EditText editLessonDescription = fragment.getView().findViewById(R.id.edit_lesson_description);
+                EditText editLessonSummary = fragment.getView().findViewById(R.id.edit_lesson_summary);
+                EditText editLessonMotivation = fragment.getView().findViewById(R.id.edit_lesson_motivation);
+                EditText editLessonLearning = fragment.getView().findViewById(R.id.edit_lesson_learning);
+
                 String lesson_name = editLessonName.getText().toString();
-                String lesson_summary = editLessonDescription.getText().toString();
-                String lesson_motivation = "Aprendizaje";
-                String lesson_learning = editLessonDescription.getText().toString();
-                String project_id = lesson.getProject_id();
+                String lesson_summary = editLessonSummary.getText().toString();
+                String lesson_motivation = editLessonMotivation.getText().toString();
+                String lesson_learning = editLessonLearning.getText().toString();
+                String project_id = lesson.getProjectId();
                 String validation = lesson.getValidation();
                 ArrayList<String> array_added =  lesson.getAddedMultimediaKeysS3();
                 ArrayList<String> array_deleted =  lesson.getDeletedMultimediaFilesS3Keys();
@@ -492,13 +492,16 @@ public class LessonActivity extends LessonBaseActivity {
             public void onClick(View view) {
                 Fragment fragment = getFragmentManager().findFragmentById(R.id.constraint_fragment_container);
                 EditText editLessonName = fragment.getView().findViewById(R.id.edit_lesson_name);
-                EditText editLessonDescription = fragment.getView().findViewById(R.id.edit_lesson_description);
+                EditText editLessonSummary = fragment.getView().findViewById(R.id.edit_lesson_summary);
+                EditText editLessonMotivation = fragment.getView().findViewById(R.id.edit_lesson_motivation);
+                EditText editLessonLearning = fragment.getView().findViewById(R.id.edit_lesson_learning);
+
                 String lesson_name = editLessonName.getText().toString();
-                String lesson_summary = editLessonDescription.getText().toString();
-                String lesson_motivation = "Aprendizaje";
-                String lesson_learning = editLessonDescription.getText().toString();
-                String project_id = lesson.getProject_id();
-                String validation = "0";
+                String lesson_summary = editLessonSummary.getText().toString();
+                String lesson_motivation = editLessonMotivation.getText().toString();
+                String lesson_learning = editLessonLearning.getText().toString();
+                String project_id = lesson.getProjectId();
+                String validation = lesson.getValidation();
                 ArrayList<String> array_added =  lesson.getAddedMultimediaKeysS3();
                 ArrayList<String> array_deleted =  lesson.getDeletedMultimediaFilesS3Keys();
                 VolleyPutLesson.volleyPutLesson(new VolleyJSONCallback() {

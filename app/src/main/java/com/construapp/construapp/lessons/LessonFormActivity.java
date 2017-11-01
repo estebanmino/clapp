@@ -46,7 +46,7 @@ public class LessonFormActivity extends LessonBaseActivity {
         lessonDescription = findViewById(R.id.text_new_lesson_description);
 
         editLessonName = findViewById(R.id.text_lesson_name);
-        editLessonDescription = findViewById(R.id.text_lesson_description);
+        editLessonDescription = findViewById(R.id.text_lesson_summary);
 
         mLayout = findViewById(R.id.lesson_form_layout);
 

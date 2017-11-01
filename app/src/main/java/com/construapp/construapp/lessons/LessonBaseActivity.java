@@ -438,7 +438,7 @@ public class LessonBaseActivity extends AppCompatActivity {
 
     public void setLesson() {
         //lesson.setName("Nueva leccion");
-        //lesson.setDescription("Agregar form con datos");
+        //lesson.setSummary("Agregar form con datos");
         lesson.initMultimediaFiles();
     }
 

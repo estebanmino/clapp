@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.construapp.construapp.R;
 import com.construapp.construapp.models.Lesson;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -71,7 +70,7 @@ public class LessonsAdapter extends BaseAdapter {
         lessonStatus = convertView.findViewById(R.id.lesson_status);
 
         final String elementName = LessonModelList.get(position).getName();
-        final String elementDescription = LessonModelList.get(position).getDescription();
+        final String elementDescription = LessonModelList.get(position).getSummary();
 
         lessonName.setText(elementName);
         lessonDescription.setText(elementDescription);

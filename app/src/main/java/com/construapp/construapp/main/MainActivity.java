@@ -28,7 +28,6 @@ import com.construapp.construapp.models.General;
 import com.construapp.construapp.models.SessionManager;
 import com.construapp.construapp.dbTasks.DeleteLessonTable;
 import com.construapp.construapp.threading.GetLessons;
-import com.construapp.construapp.lessons.LessonValidateFragment;
 
 import android.widget.TextView;
 import android.widget.Toast;

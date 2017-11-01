@@ -1,4 +1,4 @@
-package com.construapp.construapp.lessons;
+package com.construapp.construapp.main;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,7 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.android.volley.VolleyError;
-import com.construapp.construapp.main.LessonsAdapter;
+import com.construapp.construapp.lessons.LessonValidationActivity;
 import com.construapp.construapp.R;
 import com.construapp.construapp.api.VolleyGetLessons;
 import com.construapp.construapp.api.VolleyGetValidationPermission;
@@ -83,7 +83,7 @@ public class LessonValidateFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Lesson lesson = (Lesson) lessonsAdapter.getItem(position);
                 startActivity(LessonValidationActivity.getIntent(getActivity(), lesson.getName(),
-                        lesson.getDescription(),lesson.getId()));
+                        lesson.getSummary(),lesson.getId()));
             }
         });
         getLessonsToValidate();
@@ -108,32 +108,7 @@ public class LessonValidateFragment extends Fragment {
         user_id = sessionManager.getUserId();
         project_id = sessionManager.getActualProjectId();
         if(is_connected) {
-            VolleyGetValidationPermission.volleyGetValidationPermission(new VolleyStringCallback(){
-                @Override
-                public void onSuccess(String result){
-                    JSONArray jsonLessons;
-                    try {
-                        jsonLessons = new JSONArray(result);
-                        validationProjectsArray = new ArrayList<String>();
-                        for (int i=0;i<jsonLessons.length();i++)
-                        {
-                            JSONObject object = jsonLessons.getJSONObject(i);
-                            String permission = object.get("permission_id").toString();
-                            if(permission.equals("4"))
-                            {
-                                JSONObject project_object = (JSONObject) object.get("project");
-                                validationProjectsArray.add(project_object.get("id").toString());
-                            }
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-                @Override
-                public void onErrorResponse(VolleyError result) {
-                    Log.i("PARSE_ERROR","OVERERRORRESPONSE");
-                }
-            },getContext());
+
             VolleyGetLessons.volleyGetLessons(new VolleyStringCallback() {
                 @Override
                 public void onSuccess(String result) {
@@ -144,26 +119,16 @@ public class LessonValidateFragment extends Fragment {
                         for (int i = 0; i < jsonLessons.length(); i++) {
                             //Log.i("JSON", jsonLessons.get(i).toString());
                             JSONObject object = (JSONObject) jsonLessons.get(i);
-                            //TODO: REFACTORING params 23-10
                             lesson.setName(object.get("name").toString());
-                            lesson.setDescription(object.get("summary").toString());
+                            lesson.setSummary(object.get("summary").toString());
                             lesson.setId(object.get("id").toString());
-                            //lesson.setDescription(learning);
                             lesson.setMotivation(object.get("motivation").toString());
                             lesson.setLearning(object.get("learning").toString());
                             lesson.setValidation(object.get("validation").toString());
-                            lesson.setUser_id(object.get("user_id").toString());
-                            lesson.setProject_id(object.get("project_id").toString());
-                            lesson.setCompany_id(object.get("company_id").toString());
-                            lesson.setValidator("false");
-                            for(int j=0;j<validationProjectsArray.size();j++)
-                            {
-                                if(lesson.getProject_id().equals(validationProjectsArray.get(j)))
-                                {
-                                    lesson.setValidator("true");
-                                }
-                                else {}
-                            }
+                            lesson.setUserId(object.get("user_id").toString());
+                            lesson.setProjectId(object.get("project_id").toString());
+                            lesson.setCompanyId(object.get("company_id").toString());
+                            lesson.setValidator("true");
                             try {
                                 new InsertLessonTask(lesson, getContext()).execute().get();
                             } catch (ExecutionException e) {
@@ -171,7 +136,6 @@ public class LessonValidateFragment extends Fragment {
                             }
                         }
                         lessonList = new GetValidationsTask(getActivity(), project_id).execute().get();
-
                         lessonsAdapter = new LessonsAdapter(getActivity(), lessonList);
                         validateLessonsList.setAdapter(lessonsAdapter);
                     } catch (Exception e) {}

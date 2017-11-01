@@ -3,9 +3,7 @@ package com.construapp.construapp.models;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
-import android.util.Log;
 
-import java.security.Key;
 import java.util.ArrayList;
 
 /**
@@ -34,36 +32,33 @@ public class Lesson {
     private String id;
 
     private String name;
-    //TODO hay que hacer refactoring. Se usa summary y no description
-
-    //private String summary;
-    private String description;
+    private String summary;
     private String motivation;
     private String learning;
     private String validation;
-    private String user_id;
-    private String project_id;
-    private String reject_comment;
-    private String company_id;
+    private String userId;
+    private String projectId;
+    private String rejectComment;
+    private String companyId;
     private String validator;
-    private String validator_sec;
+    private String validatorSec;
 
 
-    public String getReject_comment() {
-        return reject_comment;
+    public String getRejectComment() {
+        return rejectComment;
     }
 
-    public void setReject_comment(String reject_comment) {
-        this.reject_comment = reject_comment;
+    public void setRejectComment(String rejectComment) {
+        this.rejectComment = rejectComment;
     }
 
 
-    public String getValidator_sec() {
-        return validator_sec;
+    public String getValidatorSec() {
+        return validatorSec;
     }
 
-    public void setValidator_sec(String validator_sec) {
-        this.validator_sec = validator_sec;
+    public void setValidatorSec(String validatorSec) {
+        this.validatorSec = validatorSec;
     }
 
     public String getValidator() {
@@ -74,12 +69,12 @@ public class Lesson {
         this.validator = validator;
     }
 
-    public String getProject_id() {
-        return project_id;
+    public String getProjectId() {
+        return projectId;
     }
 
-    public void setProject_id(String project_id) {
-        this.project_id = project_id;
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
     }
 
     public String getValidation() {
@@ -107,20 +102,20 @@ public class Lesson {
     }
 
 
-    public String getUser_id() {
-        return user_id;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setUser_id(String user_id) {
-        this.user_id = user_id;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
-    public String getCompany_id() {
-        return company_id;
+    public String getCompanyId() {
+        return companyId;
     }
 
-    public void setCompany_id(String company_id) {
-        this.company_id = company_id;
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
     }
 
     public String getId() {
@@ -179,16 +174,16 @@ public class Lesson {
         this.name = name;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getDescription() {
-        return description;
+    public String getSummary() {
+        return summary;
     }
 
     public ArrayList<String> getDeletedMultimediaFilesS3Keys() {
@@ -236,4 +231,12 @@ public class Lesson {
                 && multimediaDocumentsFiles.size() == 0 && multimediaVideosFiles.size() == 0;
     }
 
+    public ArrayList<String> getFormAttributes() {
+        ArrayList<String> arrayList = new ArrayList<>();
+        arrayList.add(name);
+        arrayList.add(summary);
+        arrayList.add(learning);
+        arrayList.add(motivation);
+        return arrayList;
+    }
 }

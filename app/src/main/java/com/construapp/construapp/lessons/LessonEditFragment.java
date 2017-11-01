@@ -12,21 +12,29 @@ import android.widget.EditText;
 import com.construapp.construapp.R;
 import com.construapp.construapp.models.Constants;
 
+import java.util.ArrayList;
+
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class LessonEditFragment extends Fragment {
 
-    String lessonName;
-    String lessonDescription;
+    private String lessonName;
+    private String lessonSummary;
+    private String lessonMotivation;
+    private String lessonLearning;
+    private ArrayList<String> arrayList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        lessonName = getArguments().getString(Constants.B_LESSON_NAME);
-        lessonDescription = getArguments().getString(Constants.B_LESSON_DESCRIPTION);
-        // Inflate the layout for this fragment
+        arrayList = getArguments().getStringArrayList(Constants.B_LESSON_ARRAY_LIST);
+
+        lessonName = arrayList.get(0);
+        lessonSummary = arrayList.get(1);
+        lessonLearning = arrayList.get(2);
+        lessonMotivation = arrayList.get(3);
         return inflater.inflate(R.layout.fragment_lesson_edit, container, false);
     }
 
@@ -35,10 +43,13 @@ public class LessonEditFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         EditText editLessonName = view.findViewById(R.id.edit_lesson_name);
-        EditText editLessonDescription = view.findViewById(R.id.edit_lesson_description);
+        EditText editLessonSummary = view.findViewById(R.id.edit_lesson_summary);
+        EditText editLessonMotivation = view.findViewById(R.id.edit_lesson_motivation);
+        EditText editLessonLearning = view.findViewById(R.id.edit_lesson_learning);
 
         editLessonName.setText(lessonName);
-        editLessonDescription.setText(lessonDescription);
-
+        editLessonSummary.setText(lessonSummary);
+        editLessonMotivation.setText(lessonMotivation);
+        editLessonLearning.setText(lessonLearning);
     }
 }

@@ -111,7 +111,7 @@ public class MyLessonsFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Lesson lesson = (Lesson) lessonsAdapter.getItem(position);
                 startActivity(LessonActivity.getIntent(getActivity(), lesson.getName(),
-                        lesson.getDescription(),lesson.getId()));
+                        lesson.getSummary(),lesson.getId()));
             }
         });
 
@@ -144,15 +144,15 @@ public class MyLessonsFragment extends Fragment {
                             JSONObject object = (JSONObject) jsonLessons.get(i);
                             //TODO refactoring de params 24-10
                             lesson.setName(object.get("name").toString());
-                            lesson.setDescription(object.get("summary").toString());
+                            lesson.setSummary(object.get("summary").toString());
                             lesson.setId(object.get("id").toString());
-                            //lesson.setDescription(learning);
+                            //lesson.setSummary(learning);
                             lesson.setMotivation(object.get("motivation").toString());
                             lesson.setLearning(object.get("learning").toString());
                             lesson.setValidation(object.get("validation").toString());
-                            lesson.setUser_id(object.get("user_id").toString());
-                            lesson.setProject_id(object.get("project_id").toString());
-                            lesson.setCompany_id(object.get("company_id").toString());
+                            lesson.setUserId(object.get("user_id").toString());
+                            lesson.setProjectId(object.get("project_id").toString());
+                            lesson.setCompanyId(object.get("company_id").toString());
                             try {
                                 new InsertLessonTask(lesson, getContext()).execute().get();
                             } catch (ExecutionException e) {

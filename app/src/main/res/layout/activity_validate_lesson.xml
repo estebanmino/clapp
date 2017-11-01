@@ -180,7 +180,7 @@
 
 
             <TextView
-                android:id="@+id/text_lesson_description"
+                android:id="@+id/text_lesson_summary"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
@@ -468,7 +468,7 @@
                 android:visibility="gone"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/text_lesson_description"
+                app:layout_constraintTop_toBottomOf="@+id/text_lesson_summary"
                 app:layout_constraintHorizontal_bias="0.0" />
 
             <EditText

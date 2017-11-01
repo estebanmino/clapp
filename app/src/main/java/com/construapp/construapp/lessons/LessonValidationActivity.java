@@ -100,12 +100,12 @@ public class LessonValidationActivity extends LessonBaseActivity {
         final String CACHE_FOLDER = LessonValidationActivity.this.getCacheDir().toString();
 
         lessonName = findViewById(R.id.text_lesson_name);
-        lessonDescription = findViewById(R.id.text_lesson_description);
+        lessonDescription = findViewById(R.id.text_lesson_summary);
 
         setLesson();
 
         lessonName.setText(lesson.getName());
-        lessonDescription.setText(lesson.getDescription());
+        lessonDescription.setText(lesson.getSummary());
         ////HORIZONTAL IMAGES SCROLLING
 
         //GENRAL LAYOUT SCROLL
@@ -440,7 +440,7 @@ public class LessonValidationActivity extends LessonBaseActivity {
     public void setLesson() {
         lesson = new Lesson();
         lesson.setName(getIntent().getStringExtra(LESSON_NAME));
-        lesson.setDescription(getIntent().getStringExtra(LESSON_DESCRIPTION));
+        lesson.setSummary(getIntent().getStringExtra(LESSON_DESCRIPTION));
         lesson.setId(getIntent().getStringExtra(LESSON_ID));
         lesson.initMultimediaFiles();
     }

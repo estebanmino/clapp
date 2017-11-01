@@ -73,7 +73,6 @@ public interface Constants {
     String P_ADMIN = "4";
 
     //BUNDLE FRAGMENTS
-    String B_LESSON_NAME = "lesson_name";
-    String B_LESSON_DESCRIPTION = "lesson_description";
+    String B_LESSON_ARRAY_LIST = "lesson_array_list";
 
 }
