@@ -1,15 +1,13 @@
-package com.construapp.construapp;
+package com.construapp.construapp.lessons;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -21,6 +19,8 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.android.volley.VolleyError;
+import com.construapp.construapp.main.MainActivity;
+import com.construapp.construapp.R;
 import com.construapp.construapp.api.VolleyPutRejectLesson;
 import com.construapp.construapp.api.VolleyPutValidateLesson;
 import com.construapp.construapp.listeners.VolleyJSONCallback;

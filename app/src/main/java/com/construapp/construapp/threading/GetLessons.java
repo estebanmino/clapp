@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.android.volley.VolleyError;
-import com.construapp.construapp.MainActivity;
 import com.construapp.construapp.api.VolleyGetLessons;
 import com.construapp.construapp.db.Connectivity;
 import com.construapp.construapp.dbTasks.InsertLessonTask;
