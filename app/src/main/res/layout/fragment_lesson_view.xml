@@ -39,7 +39,7 @@
         android:inputType="none|textPersonName"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_new_lesson_name" />
+        app:layout_constraintTop_toBottomOf="@+id/text_label_lesson_name" />
 
     <TextView
         android:id="@+id/text_label_summary"
@@ -71,7 +71,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_new_lesson_description" />
+        app:layout_constraintTop_toBottomOf="@+id/text_label_lesson_description" />
 
     <TextView
         android:id="@+id/text_label_motivation"
@@ -103,7 +103,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_new_lesson_description" />
+        app:layout_constraintTop_toBottomOf="@+id/text_label_lesson_description" />
 
     <TextView
         android:id="@+id/text_label_learning"
@@ -135,5 +135,5 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_new_lesson_description" />
+        app:layout_constraintTop_toBottomOf="@+id/text_label_lesson_description" />
 </LinearLayout>

@@ -42,8 +42,8 @@ public class LessonFormActivity extends LessonBaseActivity {
         sessionManager = new SessionManager(LessonFormActivity.this);
 
         //FIND XML ELEMENTS
-        lessonName = findViewById(R.id.text_new_lesson_name);
-        lessonDescription = findViewById(R.id.text_new_lesson_description);
+        textLessonName = findViewById(R.id.text_label_lesson_name);
+        textLessonSummary = findViewById(R.id.text_label_lesson_description);
 
         editLessonName = findViewById(R.id.text_lesson_name);
         editLessonDescription = findViewById(R.id.text_lesson_summary);

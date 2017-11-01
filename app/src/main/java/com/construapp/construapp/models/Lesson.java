@@ -239,4 +239,12 @@ public class Lesson {
         arrayList.add(motivation);
         return arrayList;
     }
+
+    public Boolean hasMultimediaFiles() {
+        return
+                multimediaPictureFiles.size() > 0 ||
+                multimediaAudioFiles.size() > 0 ||
+                multimediaVideosFiles.size() > 0 ||
+                multimediaDocumentsFiles.size() > 0 ;
+    }
 }

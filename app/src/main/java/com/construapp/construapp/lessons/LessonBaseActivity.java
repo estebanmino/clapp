@@ -61,8 +61,10 @@ public class LessonBaseActivity extends AppCompatActivity {
 
 
     //XML ELEMENTS
-    public TextView lessonName;
-    public TextView  lessonDescription;
+    public TextView textLessonName;
+    public TextView textLessonSummary;
+    public TextView textLessonMotivation;
+    public TextView textLessonLearning;
 
     public FloatingActionButton fabCamera;
     public FloatingActionButton fabGallery;
