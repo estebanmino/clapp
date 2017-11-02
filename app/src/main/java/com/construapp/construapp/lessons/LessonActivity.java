@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -89,6 +90,7 @@ public class LessonActivity extends LessonBaseActivity {
 
         constants = new General();
 
+        linearLayoutMultimedia = findViewById(R.id.linear_layout_multimedia);
         sessionManager = new SessionManager(LessonActivity.this);
         userPermission = Integer.parseInt(sessionManager.getActualUserPermission());
 
@@ -103,6 +105,7 @@ public class LessonActivity extends LessonBaseActivity {
         textVideos = findViewById(R.id.text_videos);
         textAudios = findViewById(R.id.text_audios);
         textDocuments = findViewById(R.id.text_documents);
+        textAttachments = findViewById(R.id.text_attachments);
 
         fabCamera = findViewById(R.id.fab_camera);
         fabGallery = findViewById(R.id.fab_gallery);
@@ -197,16 +200,6 @@ public class LessonActivity extends LessonBaseActivity {
                     ArrayList<String> documentPathsList  = new ArrayList<>();
                     ArrayList<String> videosPathsList  = new ArrayList<>();
 
-                    // TODO: 25-10-2017 dynamic changes in view
-                    textImages.setVisibility(View.VISIBLE);
-                    mPicturesRecyclerView.setVisibility(View.VISIBLE);
-                    textAudios.setVisibility(View.VISIBLE);
-                    mAudiosRecyclerView.setVisibility(View.VISIBLE);
-                    textDocuments.setVisibility(View.VISIBLE);
-                    mDocumentsRecyclerView.setVisibility(View.VISIBLE);
-                    textVideos.setVisibility(View.VISIBLE);
-                    mVideosRecyclerView.setVisibility(View.VISIBLE);
-
                     for (String fileKey: arrayList) {
                         if (fileKey.contains(Constants.S3_IMAGES_PATH)){
                             picturePathsList.add(fileKey);
@@ -257,6 +250,28 @@ public class LessonActivity extends LessonBaseActivity {
                         lesson.getMultimediaVideosFiles().add(documentMultimedia);
                     }
                     multimediaVideoAdapter.notifyDataSetChanged();
+
+                    if (!lesson.hasMultimediaFiles()) {
+                        linearLayoutMultimedia.setVisibility(View.GONE);
+                        textAttachments.setText(Constants.NO_ATTACHMENTS);
+                    } else {
+                        if (lesson.getMultimediaPicturesFiles().isEmpty()){
+                            textImages.setText(Constants.NO_PICTURES);
+                            mPicturesRecyclerView.setVisibility(View.GONE);
+                        }
+                        if (lesson.getMultimediaAudiosFiles().isEmpty()){
+                            textAudios.setText(Constants.NO_AUDIOS);
+                            mAudiosRecyclerView.setVisibility(View.GONE);
+                        }
+                        if (lesson.getMultimediaVideosFiles().isEmpty()){
+                            textDocuments.setText(Constants.NO_VIDEOS);
+                            mDocumentsRecyclerView.setVisibility(View.GONE);
+                        }
+                        if (lesson.getMultimediaDocumentsFiles().isEmpty()){
+                            textVideos.setText(Constants.NO_DOCUMENTS);
+                            mVideosRecyclerView.setVisibility(View.GONE);
+                        }
+                    }
                 }
                 catch (Exception e) {}
             }
