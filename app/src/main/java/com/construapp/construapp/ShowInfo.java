@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.construapp.construapp.main.MainActivity;
+
 public class ShowInfo extends AppCompatActivity {
 
     @Override

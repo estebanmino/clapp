@@ -72,4 +72,7 @@ public interface Constants {
     String P_VALIDATE = "3";
     String P_ADMIN = "4";
 
+    //BUNDLE FRAGMENTS
+    String B_LESSON_ARRAY_LIST = "lesson_array_list";
+
 }

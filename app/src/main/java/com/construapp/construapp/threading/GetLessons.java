@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.android.volley.VolleyError;
-import com.construapp.construapp.MainActivity;
 import com.construapp.construapp.api.VolleyGetLessons;
 import com.construapp.construapp.db.Connectivity;
 import com.construapp.construapp.dbTasks.InsertLessonTask;
@@ -46,15 +45,15 @@ public class GetLessons extends AsyncTask {
                             Log.i("JSON",jsonLessons.get(i).toString());
                             JSONObject object = (JSONObject) jsonLessons.get(i);
                             lesson.setName(object.get("name").toString());
-                            lesson.setDescription(object.get("summary").toString());
+                            lesson.setSummary(object.get("summary").toString());
                             lesson.setId(object.get("id").toString());
-                            //lesson.setDescription(learning);
+                            //lesson.setSummary(learning);
                             lesson.setMotivation(object.get("motivation").toString());
                             lesson.setLearning(object.get("learning").toString());
                             lesson.setValidation(object.get("validation").toString());
-                            lesson.setUser_id(object.get("user_id").toString());
-                            lesson.setProject_id(object.get("project_id").toString());
-                            lesson.setCompany_id(object.get("company_id").toString());
+                            lesson.setUserId(object.get("user_id").toString());
+                            lesson.setProjectId(object.get("project_id").toString());
+                            lesson.setCompanyId(object.get("company_id").toString());
                             try {
                                 new InsertLessonTask(lesson, context).execute().get();
                                 //databaseThread.addLesson(getActivity(),name,summary,id);

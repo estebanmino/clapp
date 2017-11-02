@@ -1,20 +1,18 @@
-package com.construapp.construapp;
+package com.construapp.construapp.lessons;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.android.volley.VolleyError;
-import com.construapp.construapp.api.VolleyPutLesson;
+import com.construapp.construapp.main.MainActivity;
+import com.construapp.construapp.R;
 import com.construapp.construapp.listeners.VolleyJSONCallback;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.General;
@@ -30,8 +28,6 @@ import com.construapp.construapp.api.VolleyPostS3;
 
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-
 public class LessonFormActivity extends LessonBaseActivity {
 
     private Boolean editing = true;
@@ -46,11 +42,11 @@ public class LessonFormActivity extends LessonBaseActivity {
         sessionManager = new SessionManager(LessonFormActivity.this);
 
         //FIND XML ELEMENTS
-        lessonName = findViewById(R.id.text_new_lesson_name);
-        lessonDescription = findViewById(R.id.text_new_lesson_description);
+        textLessonName = findViewById(R.id.text_label_lesson_name);
+        textLessonSummary = findViewById(R.id.text_label_lesson_description);
 
         editLessonName = findViewById(R.id.text_lesson_name);
-        editLessonDescription = findViewById(R.id.text_lesson_description);
+        editLessonDescription = findViewById(R.id.text_lesson_summary);
 
         mLayout = findViewById(R.id.lesson_form_layout);
 
