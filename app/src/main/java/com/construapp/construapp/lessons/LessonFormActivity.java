@@ -52,10 +52,14 @@ public class LessonFormActivity extends LessonBaseActivity {
 
         fabCamera = findViewById(R.id.fab_camera);
         fabGallery = findViewById(R.id.fab_gallery);
+        textLessonImages = findViewById(R.id.text_images);
         fabRecordAudio = findViewById(R.id.fab_record_audio);
+        textLessonAudios = findViewById(R.id.text_audio);
         fabSend = findViewById(R.id.fab_send);
         fabFiles = findViewById(R.id.fab_files);
+        textLessonDocuments = findViewById(R.id.text_documents);
         fabVideo = findViewById(R.id.fab_video);
+        textLessonVideos = findViewById(R.id.text_videos);
         fabSave = findViewById(R.id.fab_save);
         textRecording = findViewById(R.id.text_recording);
 
@@ -86,10 +90,14 @@ public class LessonFormActivity extends LessonBaseActivity {
         //SET BUTTONS LISTENER
         setFabCameraOnClickListener();
         setFabGalleryOnClickListener();
+        setTextGalleryOnClickListener();
         setFabSendOnClickListener();
         setFabRecordAudioOnClickListener();
+        setTextRecordAudioOnClickListener();
         setFabFilesOnClickListener();
+        setTextFilesOnClickListener();
         setFabVideoOnClickListener();
+        setTextVideoOnClickListener();
         setFabSaveOnClickListener();
 
         ////HORIZONTAL IMAGES SCROLLING

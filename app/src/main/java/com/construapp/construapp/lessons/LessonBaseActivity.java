@@ -65,6 +65,10 @@ public class LessonBaseActivity extends AppCompatActivity {
     public TextView textLessonSummary;
     public TextView textLessonMotivation;
     public TextView textLessonLearning;
+    public TextView textLessonImages;
+    public TextView textLessonVideos;
+    public TextView textLessonAudios;
+    public TextView textLessonDocuments;
 
     public FloatingActionButton fabCamera;
     public FloatingActionButton fabGallery;
@@ -153,6 +157,17 @@ public class LessonBaseActivity extends AppCompatActivity {
             }
         });
     }
+    public void setTextFilesOnClickListener(){
+        textLessonDocuments.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                Uri uri = Uri.parse(ABSOLUTE_STORAGE_PATH); // a directory
+                intent.setDataAndType(uri, "*/*");
+                startActivityForResult(Intent.createChooser(intent, "Open"), FILES_REQUEST);
+            }
+        });
+    }
 
     public void setFabRecordAudioOnClickListener() {
         //
@@ -193,8 +208,66 @@ public class LessonBaseActivity extends AppCompatActivity {
         });
     }
 
+    public void setTextRecordAudioOnClickListener(){
+        textLessonAudios.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (ContextCompat.checkSelfPermission(LessonBaseActivity.this,
+                        Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
+                    onRecord(mStartRecording);
+                    if (mStartRecording) {
+                        constraintMultimediaBar.setVisibility(View.VISIBLE);
+                        textRecording.setVisibility(View.VISIBLE);
+                        fabRecordAudio.setSize(FloatingActionButton.SIZE_NORMAL);
+                        fabFiles.setVisibility(View.GONE);
+                        fabGallery.setVisibility(View.GONE);
+                        fabCamera.setVisibility(View.GONE);
+                        fabSend.setVisibility(View.GONE);
+                        fabSave.setVisibility(View.GONE);
+                        fabVideo.setVisibility(View.GONE);
+                        imageAttach.setVisibility(View.GONE);
+                    }
+                    else{
+                        fabRecordAudio.setSize(FloatingActionButton.SIZE_MINI);
+                        textRecording.setVisibility(View.GONE);
+                        constraintMultimediaBar.setVisibility(View.GONE);
+                        fabFiles.setVisibility(View.VISIBLE);
+                        fabGallery.setVisibility(View.VISIBLE);
+                        fabCamera.setVisibility(View.VISIBLE);
+                        fabSend.setVisibility(View.VISIBLE);
+                        fabSave.setVisibility(View.VISIBLE);
+                        fabVideo.setVisibility(View.VISIBLE);
+                        imageAttach.setVisibility(View.VISIBLE);
+                    }
+                    mStartRecording = !mStartRecording;
+
+                } else {
+                    getRecorAudioPermissions();
+                }
+            }
+        });
+    }
+
     public void setFabGalleryOnClickListener() {
         fabGallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (ContextCompat.checkSelfPermission(LessonBaseActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED){
+                    getReadStoragePermissions();
+                }
+                else {
+                    Intent intent = new Intent();
+                    intent.setType("image/*");
+                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                    startActivityForResult(Intent.createChooser(intent, "Select Picture"),SELECT_IMAGE);
+                }
+            }
+        });
+    }
+    public void setTextGalleryOnClickListener(){
+        textLessonImages.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -233,6 +306,24 @@ public class LessonBaseActivity extends AppCompatActivity {
 
     public void setFabVideoOnClickListener() {
         fabVideo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (ContextCompat.checkSelfPermission(LessonBaseActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    getWriteStoragePermissions();
+                }
+                else if (ContextCompat.checkSelfPermission(LessonBaseActivity.this, Manifest.permission.CAMERA)
+                        != PackageManager.PERMISSION_GRANTED){
+                    getCameraPermissions();
+                }
+                else {
+                    dispatchRecordVideoIntent();
+                }
+            }
+        });
+    }
+    public void setTextVideoOnClickListener(){
+        textLessonVideos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (ContextCompat.checkSelfPermission(LessonBaseActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)

@@ -381,31 +381,31 @@ public class LessonValidationActivity extends LessonBaseActivity {
 
                     if (!lesson.hasMultimediaFiles()) {
                         linearLayoutMultimedia.setVisibility(View.GONE);
-                        validateImagesSwitch.setChecked(false);
-                        validateAudiosSwitch.setChecked(false);
-                        validateVideosSwitch.setChecked(false);
-                        validateDocumentsSwitch.setChecked(false);
+                        validateImagesSwitch.setChecked(true);
+                        validateAudiosSwitch.setChecked(true);
+                        validateVideosSwitch.setChecked(true);
+                        validateDocumentsSwitch.setChecked(true);
                     } else {
                         if (lesson.getMultimediaPicturesFiles().size() == 0){
-                            validateImagesSwitch.setChecked(false);
+                            validateImagesSwitch.setChecked(true);
                             linearLayoutPictures.setVisibility(View.GONE);
                             mPicturesRecyclerView.setVisibility(View.GONE);
                             editCommentPictures.setVisibility(View.GONE);
                         }
                         if (lesson.getMultimediaAudiosFiles().size() == 0){
-                            validateAudiosSwitch.setChecked(false);
+                            validateAudiosSwitch.setChecked(true);
                             linearLayoutAudios.setVisibility(View.GONE);
                             mAudiosRecyclerView.setVisibility(View.GONE);
                             editCommentAudios.setVisibility(View.GONE);
                         }
                         if (lesson.getMultimediaVideosFiles().size() == 0){
-                            validateVideosSwitch.setChecked(false);
+                            validateVideosSwitch.setChecked(true);
                             linearLayoutVideos.setVisibility(View.GONE);
                             mVideosRecyclerView.setVisibility(View.GONE);
                             editCommentVideos.setVisibility(View.GONE);
                         }
                         if (lesson.getMultimediaDocumentsFiles().size() == 0){
-                            validateDocumentsSwitch.setChecked(false);
+                            validateDocumentsSwitch.setChecked(true);
                             linearLayoutDocuments.setVisibility(View.GONE);
                             mDocumentsRecyclerView.setVisibility(View.GONE);
                             editCommentDocuments.setVisibility(View.GONE);
@@ -506,10 +506,10 @@ public class LessonValidationActivity extends LessonBaseActivity {
 
 
     public void checkedComments(){
-        if (validateNameSwitch.isChecked() || validateSummarySwitch.isChecked() ||
-                validateMotivationSwitch.isChecked() || validateLearningSwitch.isChecked() ||
-                validateImagesSwitch.isChecked() || validateVideosSwitch.isChecked() ||
-                validateAudiosSwitch.isChecked() || validateDocumentsSwitch.isChecked()){
+        if (!validateNameSwitch.isChecked() || !validateSummarySwitch.isChecked() ||
+                !validateMotivationSwitch.isChecked() || !validateLearningSwitch.isChecked() ||
+                !validateImagesSwitch.isChecked() || !validateVideosSwitch.isChecked() ||
+                !validateAudiosSwitch.isChecked() || !validateDocumentsSwitch.isChecked()){
             textSaveValidatedLesson.setVisibility(View.GONE);
             fabValidateLesson.setVisibility(View.GONE);
             textSendValidatedLessonComments.setVisibility(View.VISIBLE);
