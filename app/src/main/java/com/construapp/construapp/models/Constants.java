@@ -13,6 +13,8 @@ public interface Constants {
     String USERS = "users";
     String GET_PROJECTS = "get_projects";
     String GET_PERMISSION = "get_permission";
+    String GET_USERS = "get_users";
+    String ASSIGN_VALIDATOR = "assign_validator";
     String PROJECTS = "projects";
     String SESSIONS = "sessions";
     String SAVE_KEY = "save_key";

@@ -1,10 +1,14 @@
 package com.construapp.construapp.lessons;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
@@ -30,12 +34,10 @@ import org.json.JSONObject;
 
 public class LessonFormActivity extends LessonBaseActivity {
 
-    private Boolean editing = true;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_lesson_form);
+        setContentView(R.layout.activity_lesson);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -54,7 +56,7 @@ public class LessonFormActivity extends LessonBaseActivity {
         fabGallery = findViewById(R.id.fab_gallery);
         textLessonImages = findViewById(R.id.text_images);
         fabRecordAudio = findViewById(R.id.fab_record_audio);
-        textLessonAudios = findViewById(R.id.text_audio);
+        textLessonAudios = findViewById(R.id.text_audios);
         fabSend = findViewById(R.id.fab_send);
         fabFiles = findViewById(R.id.fab_files);
         textLessonDocuments = findViewById(R.id.text_documents);
@@ -62,6 +64,8 @@ public class LessonFormActivity extends LessonBaseActivity {
         textLessonVideos = findViewById(R.id.text_videos);
         fabSave = findViewById(R.id.fab_save);
         textRecording = findViewById(R.id.text_recording);
+
+        fabSend.setVisibility(View.VISIBLE);
 
         constraintActionBar = findViewById(R.id.constraint_action_bar);
         constraintMultimediaBar = findViewById(R.id.constraint_multimedia_bar);
@@ -79,7 +83,16 @@ public class LessonFormActivity extends LessonBaseActivity {
 
         mStartRecording = true;
 
-
+        Bundle bundle = new Bundle();
+        bundle.putStringArrayList(Constants.B_LESSON_ARRAY_LIST, lesson.getFormAttributes());
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        LessonEditFragment lessonEditFragment = new LessonEditFragment();
+        lessonEditFragment.setArguments(bundle);
+        fragmentTransaction.add(R.id.constraint_fragment_container,lessonEditFragment);
+        fragmentTransaction.commit();
+        constraintActionBar.setVisibility(View.VISIBLE);
+        fabSend.setVisibility(View.VISIBLE);
         // Record to the external cache directory for visibility
         ABSOLUTE_STORAGE_PATH = getExternalCacheDir().getAbsolutePath();
 
@@ -155,10 +168,17 @@ public class LessonFormActivity extends LessonBaseActivity {
     }
 
     public void createLesson(String validateState) {
+        SessionManager sessionManager = new SessionManager(LessonFormActivity.this);
+        Fragment fragment = getFragmentManager().findFragmentById(R.id.constraint_fragment_container);
+        EditText editLessonName = fragment.getView().findViewById(R.id.edit_lesson_name);
+        EditText editLessonSummary = fragment.getView().findViewById(R.id.edit_lesson_summary);
+        EditText editLessonMotivation = fragment.getView().findViewById(R.id.edit_lesson_motivation);
+        EditText editLessonLearning = fragment.getView().findViewById(R.id.edit_lesson_learning);
+
         String lesson_name = editLessonName.getText().toString();
-        String lesson_summary = editLessonDescription.getText().toString();
-        String lesson_motivation = null;
-        String lesson_learning = null;
+        String lesson_summary = editLessonSummary.getText().toString();
+        String lesson_motivation = editLessonMotivation.getText().toString();
+        String lesson_learning = editLessonLearning.getText().toString();
         String project_id = sessionManager.getActualProjectId();
 
         VolleyCreateLesson.volleyCreateLesson(new VolleyJSONCallback() {
