@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.construapp.construapp.R;
 import com.construapp.construapp.models.Lesson;
+import com.construapp.construapp.models.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,21 +21,17 @@ import java.util.List;
 public class ValidatorsAdapter extends BaseAdapter {
 
     private final Context context;
-    private final ArrayList<String> validatorsList;
+    private final ArrayList<User> usersList;
 
-    private TextView lessonName;
-    private TextView lessonDescription;
-    private TextView lessonStatus;
-
-    public ValidatorsAdapter(Context context, ArrayList<String> validatorsList) {
+    public ValidatorsAdapter(Context context, ArrayList<User> usersList) {
         this.context = context;
-        this.validatorsList = validatorsList;
+        this.usersList = usersList;
     }
 
     @Override
     public int getCount() {
-        if(validatorsList != null) {
-            return validatorsList.size();
+        if(usersList != null) {
+            return usersList.size();
         }
 
         else {
@@ -44,7 +41,7 @@ public class ValidatorsAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        return validatorsList.get(position);
+        return usersList.get(position);
     }
 
     @Override
@@ -55,25 +52,21 @@ public class ValidatorsAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        //firebaseFirebase.init();
-
         if (convertView == null) {
             LayoutInflater layoutInflater =
                     (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = layoutInflater.inflate(R.layout.lesson_list_item,null);
+            convertView = layoutInflater.inflate(R.layout.validator_list_item,null);
         }
 
-        lessonName = convertView.findViewById(R.id.lesson_name);
-        lessonName = convertView.findViewById(R.id.lesson_name);
-        lessonDescription = convertView.findViewById(R.id.lesson_description);
-        lessonStatus = convertView.findViewById(R.id.lesson_status);
+        TextView textUserFullName = convertView.findViewById(R.id.user_full_name);
+        TextView textUserPosition = convertView.findViewById(R.id.user_position);
 
-        final String elementName = validatorsList.get(position);
-        final String elementDescription = "";
+        final String userFirstName = usersList.get(position).getFirstName();
+        final String userLastName = usersList.get(position).getLastName();
+        final String userPosition = usersList.get(position).getPosition();
 
-        lessonName.setText(elementName);
-        lessonDescription.setText(elementDescription);
-        lessonStatus.setText("En Espera");
+        textUserFullName.setText(userFirstName+" "+userLastName);
+        textUserPosition.setText(userPosition);
 
         return convertView;
     }

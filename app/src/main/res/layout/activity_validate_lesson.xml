@@ -49,7 +49,7 @@
         app:layout_constraintRight_toRightOf="parent">
 
         <TextView
-            android:id="@+id/textView_send_validated_lesson_comments"
+            android:id="@+id/text_comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Comentar"
@@ -62,7 +62,20 @@
             app:layout_constraintTop_toBottomOf="@+id/fab_comment_lesson" />
 
         <TextView
-            android:id="@+id/textView_rechazar"
+            android:id="@+id/text_assign_validator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Asignar"
+            android:textColor="@color/cardview_light_background"
+            android:textSize="14sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@+id/fab_assign_validator"
+            app:layout_constraintRight_toRightOf="@+id/fab_assign_validator"
+            app:layout_constraintTop_toBottomOf="@+id/fab_assign_validator" />
+
+        <TextView
+            android:id="@+id/text_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
@@ -77,7 +90,7 @@
             app:layout_constraintTop_toBottomOf="@+id/fab_reject_lesson" />
 
         <TextView
-            android:id="@+id/textView_save_validated_lesson"
+            android:id="@+id/text_validate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="7dp"
@@ -98,6 +111,21 @@
             android:layout_marginTop="8dp"
             android:visibility="visible"
             app:backgroundTint="@color/colorSecondary"
+            app:fabSize="normal"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@android:drawable/ic_menu_send" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_assign_validator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:visibility="gone"
+            app:backgroundTint="@color/colorAccent"
             app:fabSize="normal"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintLeft_toLeftOf="parent"

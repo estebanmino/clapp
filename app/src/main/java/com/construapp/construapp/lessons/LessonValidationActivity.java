@@ -2,6 +2,7 @@ package com.construapp.construapp.lessons;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -23,7 +25,10 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.android.volley.VolleyError;
+import com.construapp.construapp.api.VolleyGetProjectUsers;
+import com.construapp.construapp.api.VolleyPostAssignValidator;
 import com.construapp.construapp.dbTasks.GetLessonTask;
+import com.construapp.construapp.listeners.VolleyStringCallback;
 import com.construapp.construapp.main.MainActivity;
 import com.construapp.construapp.R;
 import com.construapp.construapp.api.VolleyPutRejectLesson;
@@ -32,6 +37,7 @@ import com.construapp.construapp.listeners.VolleyJSONCallback;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.General;
 import com.construapp.construapp.models.MultimediaFile;
+import com.construapp.construapp.models.User;
 import com.construapp.construapp.multimedia.MultimediaAudioAdapter;
 import com.construapp.construapp.multimedia.MultimediaDocumentAdapter;
 import com.construapp.construapp.multimedia.MultimediaPictureAdapter;
@@ -43,6 +49,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -54,8 +61,9 @@ public class LessonValidationActivity extends LessonBaseActivity {
     private static final String LESSON_ID = "id";
     private static final String PROJECT_FOLDER = Constants.M_APP_DIRECTORY;
 
-    private TextView textSaveValidatedLesson;
-    private TextView textSendValidatedLessonComments;
+    private TextView textValidate;
+    private TextView textComment;
+    private TextView textAssign;
 
     private Switch validateNameSwitch;
     private Switch validateSummarySwitch;
@@ -75,8 +83,9 @@ public class LessonValidationActivity extends LessonBaseActivity {
     private EditText editCommentAudios;
     private EditText editCommentDocuments;
     private FloatingActionButton fabValidateLesson;
-    private FloatingActionButton fabCommentLeson;
+    private FloatingActionButton fabCommentLesson;
     private FloatingActionButton fabCancel;
+    private FloatingActionButton fabAssign;
 
     private TextView textImages;
     private TextView textVideos;
@@ -99,7 +108,7 @@ public class LessonValidationActivity extends LessonBaseActivity {
 
     private Button btnAssignValidator;
     private ListView listAssignValidator;
-    private ArrayList<String> validatorsList;
+    private ArrayList<User> validatorsList;
     private ValidatorsAdapter validatorsAdapter;
 
     @Override
@@ -113,11 +122,6 @@ public class LessonValidationActivity extends LessonBaseActivity {
         btnAssignValidator = findViewById(R.id.btn_secondary_validator);
         listAssignValidator = findViewById(R.id.list_assign_validator);
 
-        validatorsList = new ArrayList<>();
-        validatorsAdapter= new ValidatorsAdapter(this, validatorsList);
-        listAssignValidator.setAdapter(validatorsAdapter);
-
-        setBtnAssignValidator();
 
         // Create an S3 client
         AmazonS3 s3 = new AmazonS3Client(constants.getCredentialsProvider(LessonValidationActivity.this));
@@ -206,11 +210,13 @@ public class LessonValidationActivity extends LessonBaseActivity {
         editCommentAudios = findViewById(R.id.edit_comment_audios);
         editCommentDocuments = findViewById(R.id.edit_comment_documents);
 
-        textSaveValidatedLesson = findViewById(R.id.textView_save_validated_lesson);
-        textSendValidatedLessonComments = findViewById(R.id.textView_send_validated_lesson_comments);
+        textValidate = findViewById(R.id.text_validate);
+        textComment = findViewById(R.id.text_comment);
         fabValidateLesson = findViewById(R.id.fab_validate_lesson);
-        fabCommentLeson = findViewById(R.id.fab_comment_lesson);
+        fabCommentLesson = findViewById(R.id.fab_comment_lesson);
         fabCancel = findViewById(R.id.fab_reject_lesson);
+        fabAssign = findViewById(R.id.fab_assign_validator);
+        textAssign = findViewById(R.id.text_assign_validator);
 
         textImages = findViewById(R.id.text_images);
         textVideos = findViewById(R.id.text_videos);
@@ -447,21 +453,25 @@ public class LessonValidationActivity extends LessonBaseActivity {
                 VolleyPutValidateLesson.volleyPutValidateLesson(new VolleyJSONCallback() {
                     @Override
                     public void onSuccess(JSONObject result) {
-                        Toast.makeText(getApplicationContext(),"Validación realizada con éxito",Toast.LENGTH_LONG);
-                        MainActivity.getIntent(LessonValidationActivity.this);
+                        Toast.makeText(getApplicationContext(),"Validación realizada con éxito",Toast.LENGTH_LONG).show();
+                        //MainActivity.getIntent(LessonValidationActivity.this);
+                        killActivity();
                     }
 
                     @Override
                     public void onErrorResponse(VolleyError result) {
-                        Toast.makeText(getApplicationContext(),"No se pudo realizar la validación solicitada",Toast.LENGTH_LONG);
+                        Toast.makeText(getApplicationContext(),"No se pudo realizar la validación solicitada",Toast.LENGTH_LONG).show();
                     }
                 }, LessonValidationActivity.this, lesson.getId());
             }
         });
+
+        setBtnAssignValidator();
+
     }
 
     public void setFabCommentLessonListener() {
-        fabCommentLeson.setOnClickListener(new View.OnClickListener() {
+        fabCommentLesson.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String comment = "COMENTARIOS POR SEGMENTO: \n";
@@ -510,7 +520,7 @@ public class LessonValidationActivity extends LessonBaseActivity {
         fabCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //
+                finish();
             }
         });
     }
@@ -521,16 +531,16 @@ public class LessonValidationActivity extends LessonBaseActivity {
                 validateMotivationSwitch.isChecked() || validateLearningSwitch.isChecked() ||
                 validateImagesSwitch.isChecked() || validateVideosSwitch.isChecked() ||
                 validateAudiosSwitch.isChecked() || validateDocumentsSwitch.isChecked()){
-            textSaveValidatedLesson.setVisibility(View.GONE);
+            textValidate.setVisibility(View.GONE);
             fabValidateLesson.setVisibility(View.GONE);
-            textSendValidatedLessonComments.setVisibility(View.VISIBLE);
-            fabCommentLeson.setVisibility(View.VISIBLE);
+            textComment.setVisibility(View.VISIBLE);
+            fabCommentLesson.setVisibility(View.VISIBLE);
         }
         else {
-            textSaveValidatedLesson.setVisibility(View.VISIBLE);
+            textValidate.setVisibility(View.VISIBLE);
             fabValidateLesson.setVisibility(View.VISIBLE);
-            textSendValidatedLessonComments.setVisibility(View.GONE);
-            fabCommentLeson.setVisibility(View.GONE);
+            textComment.setVisibility(View.GONE);
+            fabCommentLesson.setVisibility(View.GONE);
         }
     }
 
@@ -551,28 +561,105 @@ public class LessonValidationActivity extends LessonBaseActivity {
     }
 
     public void setBtnAssignValidator() {
+
         btnAssignValidator.setOnClickListener(new View.OnClickListener() {
+
+            String assignedUserId = null;
             @Override
             public void onClick(View view) {
-                Log.i("ASSIGNVALIDATOR","clicked");
-                validatorsList.clear();
-                validatorsList.add("Mumbai");
-                validatorsList.add("Delhi");
-                validatorsList.add("Bangalore");
-                validatorsList.add("Chennai");
-                validatorsList.add("Pune");
+                final int fabValidateVisibility = fabValidateLesson.getVisibility();
+                final int fabCommentVisibility = fabCommentLesson.getVisibility();
+                final int textValidateVisibility = textValidate.getVisibility();
+                final int textCommentVisibility = textComment.getVisibility();
 
-                validatorsAdapter.notifyDataSetChanged();
-                listAssignValidator.setVisibility(View.VISIBLE);
+                fabValidateLesson.setVisibility(View.GONE);
+                fabCommentLesson.setVisibility(View.GONE);
+                textComment.setVisibility(View.GONE);
+                textValidate.setVisibility(View.GONE);
 
+                fabAssign.setVisibility(View.VISIBLE);
+                textAssign.setVisibility(View.VISIBLE);
+
+                VolleyGetProjectUsers.volleyGetProjectUsers(new VolleyStringCallback() {
+                    @Override
+                    public void onSuccess(String result) {
+                        try {
+                            JSONArray jsonArray = new JSONArray(result);
+                            validatorsList = new ArrayList<>();
+
+                            for (int i = 0; i <  jsonArray.length(); i++) {
+                                JSONObject jsonObject = (JSONObject) jsonArray.get(i);
+                                User user = new User();
+                                user.setEmail(jsonObject.get("email").toString());
+                                user.setId(jsonObject.get("id").toString());
+                                user.setFirstName(jsonObject.get("first_name").toString());
+                                user.setLastName(jsonObject.get("last_name").toString());
+                                user.setPosition(jsonObject.get("position").toString());
+                                validatorsList.add(user);
+                            }
+                            validatorsAdapter= new ValidatorsAdapter(LessonValidationActivity.this, validatorsList);
+                            listAssignValidator.setAdapter(validatorsAdapter);
+                            listAssignValidator.setVisibility(View.VISIBLE);
+
+                        } catch  (Exception e) {}
+                    }
+
+                    @Override
+                    public void onErrorResponse(VolleyError result) {
+                        Toast.makeText(getApplicationContext(),"Esta acción no se puede realizar sin conexión a internet",Toast.LENGTH_LONG);
+                    }
+                },LessonValidationActivity.this);
+
+                listAssignValidator.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    View lastView = null;
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        if (lastView != null) {
+                            lastView.setBackgroundColor(Color.WHITE);
+                        }
+                        view.setBackgroundColor(Color.rgb(247,119,47));
+                        lastView = view;
+                        assignedUserId = validatorsList.get(i).getId();
+                    }
+                });
+
+                fabAssign.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        VolleyPostAssignValidator.volleyPostSendValidationLesson(new VolleyStringCallback() {
+                            @Override
+                            public void onSuccess(String result) {
+                                Log.i("RESULT",result.toString());
+                                //listAssignValidator.setVisibility(View.GONE);
+                                Toast.makeText(LessonValidationActivity.this,"Asignada con éxito",Toast.LENGTH_LONG).show();
+                                killActivity();
+                            }
+                            @Override
+                            public void onErrorResponse(VolleyError result) {
+                                Log.i("ERROR",result.toString());
+                                Toast.makeText(LessonValidationActivity.this,"No se pudo realizar la asignación en este momento",Toast.LENGTH_LONG).show();
+                            }
+                        },LessonValidationActivity.this, lesson.getId(),assignedUserId);
+                    }
+                });
                 fabCancel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                    fabAssign.setVisibility(View.GONE);
+                    textAssign.setVisibility(View.GONE);
                         listAssignValidator.setVisibility(View.GONE);
-                        setFabCancelLessonListener();
+                    fabValidateLesson.setVisibility(fabValidateVisibility);
+                    fabCommentLesson.setVisibility(fabCommentVisibility);
+                    textComment.setVisibility(textCommentVisibility);
+                    textValidate.setVisibility(textValidateVisibility);
+                    setFabCancelLessonListener();
                     }
                 });
             }
         });
+    }
+
+    public void killActivity() {
+        finish();
     }
 }
