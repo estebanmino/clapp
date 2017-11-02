@@ -1,6 +1,7 @@
 package com.construapp.construapp.validations;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,5 +71,4 @@ public class ValidatorsAdapter extends BaseAdapter {
 
         return convertView;
     }
-
 }

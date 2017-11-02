@@ -615,11 +615,11 @@ public class LessonValidationActivity extends LessonBaseActivity {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                         if (lastView != null) {
-                            lastView.setBackgroundColor(Color.WHITE);
+                            lastView.setSelected(false);
                         }
-                        view.setBackgroundColor(Color.rgb(247,119,47));
-                        lastView = view;
+                        view.setSelected(true);
                         assignedUserId = validatorsList.get(i).getId();
+                        lastView = view;
                     }
                 });
 
@@ -647,7 +647,7 @@ public class LessonValidationActivity extends LessonBaseActivity {
                     public void onClick(View view) {
                     fabAssign.setVisibility(View.GONE);
                     textAssign.setVisibility(View.GONE);
-                        listAssignValidator.setVisibility(View.GONE);
+                    listAssignValidator.setVisibility(View.GONE);
                     fabValidateLesson.setVisibility(fabValidateVisibility);
                     fabCommentLesson.setVisibility(fabCommentVisibility);
                     textComment.setVisibility(textCommentVisibility);
