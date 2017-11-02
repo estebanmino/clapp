@@ -1,10 +1,9 @@
-package com.construapp.construapp;
+package com.construapp.construapp.lessons;
 
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
@@ -62,8 +61,10 @@ public class LessonBaseActivity extends AppCompatActivity {
 
 
     //XML ELEMENTS
-    public TextView lessonName;
-    public TextView  lessonDescription;
+    public TextView textLessonName;
+    public TextView textLessonSummary;
+    public TextView textLessonMotivation;
+    public TextView textLessonLearning;
 
     public FloatingActionButton fabCamera;
     public FloatingActionButton fabGallery;
@@ -439,7 +440,7 @@ public class LessonBaseActivity extends AppCompatActivity {
 
     public void setLesson() {
         //lesson.setName("Nueva leccion");
-        //lesson.setDescription("Agregar form con datos");
+        //lesson.setSummary("Agregar form con datos");
         lesson.initMultimediaFiles();
     }
 

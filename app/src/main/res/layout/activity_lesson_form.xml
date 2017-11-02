@@ -5,7 +5,7 @@
     android:id="@+id/lesson_form_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.construapp.construapp.LessonFormActivity"
+    tools:context="com.construapp.construapp.lessons.LessonFormActivity"
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true"
     tools:layout_editor_absoluteX="0dp"
@@ -299,7 +299,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/recycler_horizontal_audios" />
 
             <EditText
-                android:id="@+id/text_lesson_description"
+                android:id="@+id/text_lesson_summary"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
@@ -311,7 +311,7 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/text_new_lesson_description" />
+                app:layout_constraintTop_toBottomOf="@+id/text_label_lesson_description" />
 
             <TextView
                 android:id="@+id/text_project_name"
@@ -332,7 +332,7 @@
                 tools:layout_constraintTop_creator="1" />
 
             <TextView
-                android:id="@+id/text_new_lesson_name"
+                android:id="@+id/text_label_lesson_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
@@ -349,7 +349,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/text_project_name" />
 
             <TextView
-                android:id="@+id/text_new_lesson_description"
+                android:id="@+id/text_label_lesson_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
@@ -376,7 +376,7 @@
                 android:inputType="none|textPersonName"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/text_new_lesson_name" />
+                app:layout_constraintTop_toBottomOf="@+id/text_label_lesson_name" />
 
             <TextView
                 android:id="@+id/text_new_attachments"
@@ -388,7 +388,7 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/text_lesson_description"
+                app:layout_constraintTop_toBottomOf="@+id/text_lesson_summary"
                 android:layout_marginLeft="16dp" />
 
             <android.support.v7.widget.RecyclerView

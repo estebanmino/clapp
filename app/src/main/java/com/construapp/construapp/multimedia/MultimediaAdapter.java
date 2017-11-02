@@ -10,9 +10,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import com.construapp.construapp.LessonActivity;
-import com.construapp.construapp.validations.LessonValidationActivity;
+import com.construapp.construapp.lessons.LessonActivity;
+import com.construapp.construapp.lessons.LessonValidationActivity;
 import com.construapp.construapp.R;
 import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.models.MultimediaFile;
