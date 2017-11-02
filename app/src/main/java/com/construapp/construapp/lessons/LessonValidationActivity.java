@@ -170,15 +170,6 @@ public class LessonValidationActivity extends LessonBaseActivity {
         validateAudiosSwitch = findViewById(R.id.switch_lesson_audios);
         validateDocumentsSwitch = findViewById(R.id.switch_lesson_documents);
 
-        validateNameSwitch.setChecked(true);
-        validateSummarySwitch.setChecked(true);
-        validateMotivationSwitch.setChecked(true);
-        validateLearningSwitch.setChecked(true);
-        validateImagesSwitch.setChecked(true);
-        validateVideosSwitch.setChecked(true);
-        validateAudiosSwitch.setChecked(true);
-        validateDocumentsSwitch.setChecked(true);
-
         editCommentName = findViewById(R.id.edit_comment_name);
         editCommentSummary = findViewById(R.id.edit_comment_summary);
         editCommentMotivation = findViewById(R.id.edit_comment_motivation);
@@ -203,10 +194,12 @@ public class LessonValidationActivity extends LessonBaseActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked){
-                    editCommentName.setVisibility(View.VISIBLE);
+                    editCommentName.setVisibility(View.GONE);
+                    validateNameSwitch.setText("OK");
                 }
                 else {
-                    editCommentName.setVisibility(View.GONE);
+                    editCommentName.setVisibility(View.VISIBLE);
+                    validateNameSwitch.setText("Comentar");
                 }
                 checkedComments();
             }
@@ -216,10 +209,12 @@ public class LessonValidationActivity extends LessonBaseActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked){
-                    editCommentSummary.setVisibility(View.VISIBLE);
+                    editCommentSummary.setVisibility(View.GONE);
+                    validateSummarySwitch.setText("OK");
                 }
                 else {
-                    editCommentSummary.setVisibility(View.GONE);
+                    editCommentSummary.setVisibility(View.VISIBLE);
+                    validateSummarySwitch.setText("Comentar");
                 }
                 checkedComments();
             }
@@ -229,10 +224,12 @@ public class LessonValidationActivity extends LessonBaseActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked){
-                    editCommentMotivation.setVisibility(View.VISIBLE);
+                    editCommentMotivation.setVisibility(View.GONE);
+                    validateMotivationSwitch.setText("OK");
                 }
                 else {
-                    editCommentMotivation.setVisibility(View.GONE);
+                    editCommentMotivation.setVisibility(View.VISIBLE);
+                    validateMotivationSwitch.setText("Comentar");
                 }
                 checkedComments();
             }
@@ -242,10 +239,12 @@ public class LessonValidationActivity extends LessonBaseActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked){
-                    editCommentLearning.setVisibility(View.VISIBLE);
+                    editCommentLearning.setVisibility(View.GONE);
+                    validateLearningSwitch.setText("OK");
                 }
                 else {
-                    editCommentLearning.setVisibility(View.GONE);
+                    editCommentLearning.setVisibility(View.VISIBLE);
+                    validateLearningSwitch.setText("Comentar");
                 }
                 checkedComments();
             }
@@ -255,10 +254,12 @@ public class LessonValidationActivity extends LessonBaseActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked){
-                    editCommentPictures.setVisibility(View.VISIBLE);
+                    editCommentPictures.setVisibility(View.GONE);
+                    validateImagesSwitch.setText("OK");
                 }
                 else {
-                    editCommentPictures.setVisibility(View.GONE);
+                    editCommentPictures.setVisibility(View.VISIBLE);
+                    validateImagesSwitch.setText("Comentar");
                 }
                 checkedComments();
             }
@@ -268,10 +269,12 @@ public class LessonValidationActivity extends LessonBaseActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked){
-                    editCommentVideos.setVisibility(View.VISIBLE);
+                    editCommentVideos.setVisibility(View.GONE);
+                    validateVideosSwitch.setText("OK");
                 }
                 else {
-                    editCommentVideos.setVisibility(View.GONE);
+                    editCommentVideos.setVisibility(View.VISIBLE);
+                    validateVideosSwitch.setText("Comentar");
                 }
                 checkedComments();
             }
@@ -281,10 +284,12 @@ public class LessonValidationActivity extends LessonBaseActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked){
-                    editCommentAudios.setVisibility(View.VISIBLE);
+                    editCommentAudios.setVisibility(View.GONE);
+                    validateAudiosSwitch.setText("OK");
                 }
                 else {
-                    editCommentAudios.setVisibility(View.GONE);
+                    editCommentAudios.setVisibility(View.VISIBLE);
+                    validateAudiosSwitch.setText("Comentar");
                 }
                 checkedComments();
             }
@@ -294,10 +299,12 @@ public class LessonValidationActivity extends LessonBaseActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked){
-                    editCommentDocuments.setVisibility(View.VISIBLE);
+                    editCommentDocuments.setVisibility(View.GONE);
+                    validateDocumentsSwitch.setText("OK");
                 }
                 else {
-                    editCommentDocuments.setVisibility(View.GONE);
+                    editCommentDocuments.setVisibility(View.VISIBLE);
+                    validateDocumentsSwitch.setText("Comentar");
                 }
                 checkedComments();
             }
