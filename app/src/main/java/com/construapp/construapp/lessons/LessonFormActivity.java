@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -153,7 +154,15 @@ public class LessonFormActivity extends LessonBaseActivity {
         fabSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                createLesson(Constants.R_WAITING);
+                Snackbar mySnackbar = Snackbar.make(findViewById(R.id.lesson_form_layout),
+                        "Confirme que desea enviar la lección a validar", Snackbar.LENGTH_LONG);
+                mySnackbar.setAction("Confirmar", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        createLesson(Constants.R_WAITING);
+                    }
+                });
+                mySnackbar.show();
             }
         });
     }
@@ -162,7 +171,15 @@ public class LessonFormActivity extends LessonBaseActivity {
         fabSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                createLesson(Constants.R_SAVED);
+                Snackbar mySnackbar = Snackbar.make(findViewById(R.id.lesson_form_layout),
+                        "Confirme que desea guardar la lección en borradores", Snackbar.LENGTH_LONG);
+                mySnackbar.setAction("Confirmar", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        createLesson(Constants.R_SAVED);
+                    }
+                });
+                mySnackbar.show();
             }
         });
     }
