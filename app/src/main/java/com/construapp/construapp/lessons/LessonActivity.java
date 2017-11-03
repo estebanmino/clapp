@@ -12,7 +12,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -132,13 +131,8 @@ public class LessonActivity extends LessonBaseActivity {
         fragmentTransaction.add(R.id.constraint_fragment_container,lessonViewFragment);
         fragmentTransaction.commit();
 
-        if (lesson.getReject_comment() != null) {
-            Log.i("COMMENTS", lesson.getReject_comment());
-        } else {
-            Log.i("NO COMMENTS", "no comments");
-        }
-        if (lesson.getReject_comment() != null) {
-            Log.i("COMMENTSin", lesson.getReject_comment());
+
+        if (lesson.getReject_comment() !=  null && lesson.getValidation().equals(Constants.R_REJECTED)) {
             Bundle bundleComment = new Bundle();
             bundleComment.putString(Constants.B_LESSON_COMMENT, lesson.getReject_comment());
             FragmentManager fragmentManagerComment = getFragmentManager();
@@ -149,7 +143,7 @@ public class LessonActivity extends LessonBaseActivity {
             fragmentTransactionComment.commit();
         }
 
-        if (!lesson.getValidation().equals("1")){
+        if (!lesson.getValidation().equals(Constants.R_VALIDATED)){
             fabSend.setImageDrawable(ContextCompat.getDrawable(LessonActivity.this, R.drawable.ic_send_dark));
         }
 
@@ -427,7 +421,6 @@ public class LessonActivity extends LessonBaseActivity {
     public class DeleteListener implements View.OnClickListener {
         @Override
         public void onClick(View view) {
-            Log.i("DELETE","Lesson deleted");
             VolleyDeleteLesson.volleyDeleteLesson(new VolleyStringCallback() {
                 @Override
                 public void onSuccess(String result) {
