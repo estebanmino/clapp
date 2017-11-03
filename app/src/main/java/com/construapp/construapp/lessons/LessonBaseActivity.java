@@ -24,6 +24,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -122,6 +123,8 @@ public class LessonBaseActivity extends AppCompatActivity {
     public int added = 1;
     private Boolean multimediaIsOpen = false;
 
+    public LinearLayout linearLayoutMultimedia;
+    public TextView textAttachments;
 
 
     @Override

@@ -510,7 +510,7 @@ public class LessonValidationActivity extends LessonBaseActivity {
                     @Override
                     public void onSuccess(JSONObject result) {
                         Toast.makeText(LessonValidationActivity.this, "Se han enviado los comentarios", Toast.LENGTH_LONG).show();
-                        startActivity(MainActivity.getIntent(LessonValidationActivity.this));
+                        killActivity();
                     }
 
                     @Override

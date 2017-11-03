@@ -12,7 +12,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -64,7 +63,6 @@ public class LessonActivity extends LessonBaseActivity {
 
     //MM ADAPTER
 
-
     private Button btnEdit;
     private Button btnDelete;
 
@@ -89,6 +87,7 @@ public class LessonActivity extends LessonBaseActivity {
 
         constants = new General();
 
+        linearLayoutMultimedia = findViewById(R.id.linear_layout_multimedia);
         sessionManager = new SessionManager(LessonActivity.this);
         userPermission = Integer.parseInt(sessionManager.getActualUserPermission());
 
@@ -103,6 +102,7 @@ public class LessonActivity extends LessonBaseActivity {
         textVideos = findViewById(R.id.text_videos);
         textAudios = findViewById(R.id.text_audios);
         textDocuments = findViewById(R.id.text_documents);
+        textAttachments = findViewById(R.id.text_attachments);
 
         fabCamera = findViewById(R.id.fab_camera);
         fabGallery = findViewById(R.id.fab_gallery);
@@ -131,7 +131,19 @@ public class LessonActivity extends LessonBaseActivity {
         fragmentTransaction.add(R.id.constraint_fragment_container,lessonViewFragment);
         fragmentTransaction.commit();
 
-        if (!lesson.getValidation().equals("1")){
+
+        if (lesson.getReject_comment() !=  null && lesson.getValidation().equals(Constants.R_REJECTED)) {
+            Bundle bundleComment = new Bundle();
+            bundleComment.putString(Constants.B_LESSON_COMMENT, lesson.getReject_comment());
+            FragmentManager fragmentManagerComment = getFragmentManager();
+            FragmentTransaction fragmentTransactionComment = fragmentManagerComment.beginTransaction();
+            LessonCommentFragment lessonCommentFragment = new LessonCommentFragment();
+            lessonCommentFragment.setArguments(bundleComment);
+            fragmentTransactionComment.add(R.id.constraint_fragment_comment_container, lessonCommentFragment);
+            fragmentTransactionComment.commit();
+        }
+
+        if (!lesson.getValidation().equals(Constants.R_VALIDATED)){
             fabSend.setImageDrawable(ContextCompat.getDrawable(LessonActivity.this, R.drawable.ic_send_dark));
         }
 
@@ -197,16 +209,6 @@ public class LessonActivity extends LessonBaseActivity {
                     ArrayList<String> documentPathsList  = new ArrayList<>();
                     ArrayList<String> videosPathsList  = new ArrayList<>();
 
-                    // TODO: 25-10-2017 dynamic changes in view
-                    textImages.setVisibility(View.VISIBLE);
-                    mPicturesRecyclerView.setVisibility(View.VISIBLE);
-                    textAudios.setVisibility(View.VISIBLE);
-                    mAudiosRecyclerView.setVisibility(View.VISIBLE);
-                    textDocuments.setVisibility(View.VISIBLE);
-                    mDocumentsRecyclerView.setVisibility(View.VISIBLE);
-                    textVideos.setVisibility(View.VISIBLE);
-                    mVideosRecyclerView.setVisibility(View.VISIBLE);
-
                     for (String fileKey: arrayList) {
                         if (fileKey.contains(Constants.S3_IMAGES_PATH)){
                             picturePathsList.add(fileKey);
@@ -257,6 +259,28 @@ public class LessonActivity extends LessonBaseActivity {
                         lesson.getMultimediaVideosFiles().add(documentMultimedia);
                     }
                     multimediaVideoAdapter.notifyDataSetChanged();
+
+                    if (!lesson.hasMultimediaFiles()) {
+                        linearLayoutMultimedia.setVisibility(View.GONE);
+                        textAttachments.setText(Constants.NO_ATTACHMENTS);
+                    } else {
+                        if (lesson.getMultimediaPicturesFiles().isEmpty()){
+                            textImages.setText(Constants.NO_PICTURES);
+                            mPicturesRecyclerView.setVisibility(View.GONE);
+                        }
+                        if (lesson.getMultimediaAudiosFiles().isEmpty()){
+                            textAudios.setText(Constants.NO_AUDIOS);
+                            mAudiosRecyclerView.setVisibility(View.GONE);
+                        }
+                        if (lesson.getMultimediaVideosFiles().isEmpty()){
+                            textDocuments.setText(Constants.NO_VIDEOS);
+                            mDocumentsRecyclerView.setVisibility(View.GONE);
+                        }
+                        if (lesson.getMultimediaDocumentsFiles().isEmpty()){
+                            textVideos.setText(Constants.NO_DOCUMENTS);
+                            mVideosRecyclerView.setVisibility(View.GONE);
+                        }
+                    }
                 }
                 catch (Exception e) {}
             }
@@ -273,7 +297,6 @@ public class LessonActivity extends LessonBaseActivity {
         //SET BUTTONS LISTENER
         setFabCameraOnClickListener();
         setFabGalleryOnClickListener();
-        Log.i("VALIDATION", lesson.getValidation());
         if (!lesson.getValidation().equals("1")) {
             setFabSendOnClickListener();
         } else {
@@ -384,7 +407,7 @@ public class LessonActivity extends LessonBaseActivity {
         int deletePermission = constants.xmlPermissionTagToInt((btnEdit.getTag().toString()));
 
         if (editPermission <= userPermission || sessionManager.getUserAdmin().equals(Constants.S_ADMIN_ADMIN)
-                || (sessionManager.getUserId().equals(lesson.getUserId()) &&
+                || (sessionManager.getUserId().equals(lesson.getUser_id()) &&
                 !lesson.getValidation().equals(Constants.R_VALIDATED)
                 ))
         {
@@ -398,7 +421,6 @@ public class LessonActivity extends LessonBaseActivity {
     public class DeleteListener implements View.OnClickListener {
         @Override
         public void onClick(View view) {
-            Log.i("DELETE","Lesson deleted");
             VolleyDeleteLesson.volleyDeleteLesson(new VolleyStringCallback() {
                 @Override
                 public void onSuccess(String result) {
@@ -436,7 +458,7 @@ public class LessonActivity extends LessonBaseActivity {
                 String lesson_summary = editLessonSummary.getText().toString();
                 String lesson_motivation = editLessonMotivation.getText().toString();
                 String lesson_learning = editLessonLearning.getText().toString();
-                String project_id = lesson.getProjectId();
+                String project_id = lesson.getProject_id();
                 String validation = lesson.getValidation();
                 ArrayList<String> array_added =  lesson.getAddedMultimediaKeysS3();
                 ArrayList<String> array_deleted =  lesson.getDeletedMultimediaFilesS3Keys();
@@ -500,8 +522,8 @@ public class LessonActivity extends LessonBaseActivity {
                 String lesson_summary = editLessonSummary.getText().toString();
                 String lesson_motivation = editLessonMotivation.getText().toString();
                 String lesson_learning = editLessonLearning.getText().toString();
-                String project_id = lesson.getProjectId();
-                String validation = lesson.getValidation();
+                String project_id = lesson.getProject_id();
+                String validation = Constants.R_WAITING;
                 ArrayList<String> array_added =  lesson.getAddedMultimediaKeysS3();
                 ArrayList<String> array_deleted =  lesson.getDeletedMultimediaFilesS3Keys();
                 VolleyPutLesson.volleyPutLesson(new VolleyJSONCallback() {

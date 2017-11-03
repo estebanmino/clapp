@@ -51,9 +51,9 @@ public class GetLessons extends AsyncTask {
                             lesson.setMotivation(object.get("motivation").toString());
                             lesson.setLearning(object.get("learning").toString());
                             lesson.setValidation(object.get("validation").toString());
-                            lesson.setUserId(object.get("user_id").toString());
-                            lesson.setProjectId(object.get("project_id").toString());
-                            lesson.setCompanyId(object.get("company_id").toString());
+                            lesson.setUser_id(object.get("user_id").toString());
+                            lesson.setProject_id(object.get("project_id").toString());
+                            lesson.setCompany_id(object.get("company_id").toString());
                             try {
                                 new InsertLessonTask(lesson, context).execute().get();
                                 //databaseThread.addLesson(getActivity(),name,summary,id);
