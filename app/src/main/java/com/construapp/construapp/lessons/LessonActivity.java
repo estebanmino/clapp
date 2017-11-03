@@ -16,7 +16,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,7 +63,6 @@ public class LessonActivity extends LessonBaseActivity {
     private int userPermission;
 
     //MM ADAPTER
-
 
     private Button btnEdit;
     private Button btnDelete;
@@ -133,6 +131,23 @@ public class LessonActivity extends LessonBaseActivity {
         lessonViewFragment.setArguments(bundle);
         fragmentTransaction.add(R.id.constraint_fragment_container,lessonViewFragment);
         fragmentTransaction.commit();
+
+        if (lesson.getReject_comment() != null) {
+            Log.i("COMMENTS", lesson.getReject_comment());
+        } else {
+            Log.i("NO COMMENTS", "no comments");
+        }
+        if (lesson.getReject_comment() != null) {
+            Log.i("COMMENTSin", lesson.getReject_comment());
+            Bundle bundleComment = new Bundle();
+            bundleComment.putString(Constants.B_LESSON_COMMENT, lesson.getReject_comment());
+            FragmentManager fragmentManagerComment = getFragmentManager();
+            FragmentTransaction fragmentTransactionComment = fragmentManagerComment.beginTransaction();
+            LessonCommentFragment lessonCommentFragment = new LessonCommentFragment();
+            lessonCommentFragment.setArguments(bundleComment);
+            fragmentTransactionComment.add(R.id.constraint_fragment_comment_container, lessonCommentFragment);
+            fragmentTransactionComment.commit();
+        }
 
         if (!lesson.getValidation().equals("1")){
             fabSend.setImageDrawable(ContextCompat.getDrawable(LessonActivity.this, R.drawable.ic_send_dark));
@@ -288,7 +303,6 @@ public class LessonActivity extends LessonBaseActivity {
         //SET BUTTONS LISTENER
         setFabCameraOnClickListener();
         setFabGalleryOnClickListener();
-        Log.i("VALIDATION", lesson.getValidation());
         if (!lesson.getValidation().equals("1")) {
             setFabSendOnClickListener();
         } else {
@@ -399,7 +413,7 @@ public class LessonActivity extends LessonBaseActivity {
         int deletePermission = constants.xmlPermissionTagToInt((btnEdit.getTag().toString()));
 
         if (editPermission <= userPermission || sessionManager.getUserAdmin().equals(Constants.S_ADMIN_ADMIN)
-                || (sessionManager.getUserId().equals(lesson.getUserId()) &&
+                || (sessionManager.getUserId().equals(lesson.getUser_id()) &&
                 !lesson.getValidation().equals(Constants.R_VALIDATED)
                 ))
         {
@@ -451,7 +465,7 @@ public class LessonActivity extends LessonBaseActivity {
                 String lesson_summary = editLessonSummary.getText().toString();
                 String lesson_motivation = editLessonMotivation.getText().toString();
                 String lesson_learning = editLessonLearning.getText().toString();
-                String project_id = lesson.getProjectId();
+                String project_id = lesson.getProject_id();
                 String validation = lesson.getValidation();
                 ArrayList<String> array_added =  lesson.getAddedMultimediaKeysS3();
                 ArrayList<String> array_deleted =  lesson.getDeletedMultimediaFilesS3Keys();
@@ -515,8 +529,8 @@ public class LessonActivity extends LessonBaseActivity {
                 String lesson_summary = editLessonSummary.getText().toString();
                 String lesson_motivation = editLessonMotivation.getText().toString();
                 String lesson_learning = editLessonLearning.getText().toString();
-                String project_id = lesson.getProjectId();
-                String validation = lesson.getValidation();
+                String project_id = lesson.getProject_id();
+                String validation = Constants.R_WAITING;
                 ArrayList<String> array_added =  lesson.getAddedMultimediaKeysS3();
                 ArrayList<String> array_deleted =  lesson.getDeletedMultimediaFilesS3Keys();
                 VolleyPutLesson.volleyPutLesson(new VolleyJSONCallback() {

@@ -15,7 +15,6 @@ import com.android.volley.VolleyError;
 import com.construapp.construapp.lessons.LessonValidationActivity;
 import com.construapp.construapp.R;
 import com.construapp.construapp.api.VolleyGetLessons;
-import com.construapp.construapp.api.VolleyGetValidationPermission;
 import com.construapp.construapp.db.Connectivity;
 import com.construapp.construapp.dbTasks.GetValidationsTask;
 import com.construapp.construapp.dbTasks.InsertLessonTask;
@@ -24,7 +23,6 @@ import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.models.SessionManager;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -125,9 +123,10 @@ public class LessonValidateFragment extends Fragment {
                             lesson.setMotivation(object.get("motivation").toString());
                             lesson.setLearning(object.get("learning").toString());
                             lesson.setValidation(object.get("validation").toString());
-                            lesson.setUserId(object.get("user_id").toString());
-                            lesson.setProjectId(object.get("project_id").toString());
-                            lesson.setCompanyId(object.get("company_id").toString());
+                            lesson.setUser_id(object.get("user_id").toString());
+                            lesson.setProject_id(object.get("project_id").toString());
+                            lesson.setCompany_id(object.get("company_id").toString());
+                            lesson.setReject_comment(object.get("reject_comment").toString());
                             lesson.setValidator("true");
                             try {
                                 new InsertLessonTask(lesson, getContext()).execute().get();

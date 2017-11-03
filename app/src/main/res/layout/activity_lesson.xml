@@ -511,6 +511,13 @@
 
             </LinearLayout>
 
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/constraint_fragment_comment_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            </android.support.constraint.ConstraintLayout>
+
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 

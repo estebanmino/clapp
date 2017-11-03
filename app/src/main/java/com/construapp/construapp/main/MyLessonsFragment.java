@@ -142,17 +142,16 @@ public class MyLessonsFragment extends Fragment {
                         jsonLessons = new JSONArray(result);
                         for (int i = 0; i < jsonLessons.length(); i++) {
                             JSONObject object = (JSONObject) jsonLessons.get(i);
-                            //TODO refactoring de params 24-10
                             lesson.setName(object.get("name").toString());
                             lesson.setSummary(object.get("summary").toString());
                             lesson.setId(object.get("id").toString());
-                            //lesson.setSummary(learning);
                             lesson.setMotivation(object.get("motivation").toString());
                             lesson.setLearning(object.get("learning").toString());
                             lesson.setValidation(object.get("validation").toString());
-                            lesson.setUserId(object.get("user_id").toString());
-                            lesson.setProjectId(object.get("project_id").toString());
-                            lesson.setCompanyId(object.get("company_id").toString());
+                            lesson.setUser_id(object.get("user_id").toString());
+                            lesson.setProject_id(object.get("project_id").toString());
+                            lesson.setCompany_id(object.get("company_id").toString());
+                            lesson.setReject_comment(object.get("reject_comment").toString());
                             try {
                                 new InsertLessonTask(lesson, getContext()).execute().get();
                             } catch (ExecutionException e) {

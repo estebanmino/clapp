@@ -36,29 +36,29 @@ public class Lesson {
     private String motivation;
     private String learning;
     private String validation;
-    private String userId;
-    private String projectId;
-    private String rejectComment;
-    private String companyId;
+    private String user_id;
+    private String project_id;
+    private String reject_comment;
+    private String company_id;
     private String validator;
-    private String validatorSec;
+    private String validator_sec;
 
 
-    public String getRejectComment() {
-        return rejectComment;
+    public String getReject_comment() {
+        return reject_comment;
     }
 
-    public void setRejectComment(String rejectComment) {
-        this.rejectComment = rejectComment;
+    public void setReject_comment(String reject_comment) {
+        this.reject_comment = reject_comment;
     }
 
 
-    public String getValidatorSec() {
-        return validatorSec;
+    public String getValidator_sec() {
+        return validator_sec;
     }
 
-    public void setValidatorSec(String validatorSec) {
-        this.validatorSec = validatorSec;
+    public void setValidator_sec(String validator_sec) {
+        this.validator_sec = validator_sec;
     }
 
     public String getValidator() {
@@ -69,12 +69,12 @@ public class Lesson {
         this.validator = validator;
     }
 
-    public String getProjectId() {
-        return projectId;
+    public String getProject_id() {
+        return project_id;
     }
 
-    public void setProjectId(String projectId) {
-        this.projectId = projectId;
+    public void setProject_id(String project_id) {
+        this.project_id = project_id;
     }
 
     public String getValidation() {
@@ -102,20 +102,20 @@ public class Lesson {
     }
 
 
-    public String getUserId() {
-        return userId;
+    public String getUser_id() {
+        return user_id;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
     }
 
-    public String getCompanyId() {
-        return companyId;
+    public String getCompany_id() {
+        return company_id;
     }
 
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
+    public void setCompany_id(String company_id) {
+        this.company_id = company_id;
     }
 
     public String getId() {
