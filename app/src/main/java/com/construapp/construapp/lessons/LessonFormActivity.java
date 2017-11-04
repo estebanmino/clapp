@@ -16,6 +16,7 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.android.volley.VolleyError;
+import com.construapp.construapp.db.Connectivity;
 import com.construapp.construapp.main.MainActivity;
 import com.construapp.construapp.R;
 import com.construapp.construapp.listeners.VolleyJSONCallback;
@@ -270,6 +271,16 @@ public class LessonFormActivity extends LessonBaseActivity {
               }
           }, LessonFormActivity.this, lesson_name, lesson_summary,
         lesson_motivation, lesson_learning,project_id, validateState).execute();
+
+        if (!Connectivity.isConnected(LessonFormActivity.this)) {
+            Toast.makeText(LessonFormActivity.this, "Estás sin conexión, cuando se conecte se enviará automátocamente", Toast.LENGTH_LONG).show();
+
+            killActivity();
+        }
+    }
+
+    public void killActivity() {
+        finish();
     }
 
 }

@@ -46,7 +46,7 @@ public class VolleyCreateLesson extends AsyncTask<Void,Void,Boolean> {
         this.callback = callback;
         this.context = context;
         this.lesson_name = lesson_name;
-        this.lesson_name = project_id;
+        this.project_id = project_id;
         this.lesson_summary = lesson_summary;
         this.lesson_motivation = lesson_motivation;
         this.lesson_learning = lesson_learning;
