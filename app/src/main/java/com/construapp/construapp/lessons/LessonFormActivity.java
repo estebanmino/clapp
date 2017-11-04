@@ -198,7 +198,7 @@ public class LessonFormActivity extends LessonBaseActivity {
         String lesson_learning = editLessonLearning.getText().toString();
         String project_id = sessionManager.getActualProjectId();
 
-        VolleyCreateLesson.volleyCreateLesson(new VolleyJSONCallback() {
+        new VolleyCreateLesson(new VolleyJSONCallback() {
               @Override
               public void onSuccess(JSONObject result) {
                   if(!lesson.isEmptyMultimedia()) {
@@ -269,7 +269,7 @@ public class LessonFormActivity extends LessonBaseActivity {
                   Toast.makeText(LessonFormActivity.this, "No se pudo crear lección", Toast.LENGTH_LONG).show();
               }
           }, LessonFormActivity.this, lesson_name, lesson_summary,
-        lesson_motivation, lesson_learning,project_id, validateState);
+        lesson_motivation, lesson_learning,project_id, validateState).execute();
     }
 
 }
