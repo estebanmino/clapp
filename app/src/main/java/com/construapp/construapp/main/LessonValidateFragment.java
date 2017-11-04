@@ -12,6 +12,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.android.volley.VolleyError;
+import com.construapp.construapp.dbTasks.GetLessonTask;
+import com.construapp.construapp.dbTasks.GetLessonsTask;
 import com.construapp.construapp.lessons.LessonValidationActivity;
 import com.construapp.construapp.R;
 import com.construapp.construapp.api.VolleyGetLessons;
@@ -19,6 +21,7 @@ import com.construapp.construapp.db.Connectivity;
 import com.construapp.construapp.dbTasks.GetValidationsTask;
 import com.construapp.construapp.dbTasks.InsertLessonTask;
 import com.construapp.construapp.listeners.VolleyStringCallback;
+import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.models.SessionManager;
 
@@ -106,8 +109,8 @@ public class LessonValidateFragment extends Fragment {
         user_id = sessionManager.getUserId();
         project_id = sessionManager.getActualProjectId();
         if(is_connected) {
-
-            VolleyGetLessons.volleyGetLessons(new VolleyStringCallback() {
+            if (Integer.parseInt(sessionManager.getActualUserPermission()) >= Integer.parseInt(Constants.P_VALIDATE)){
+                VolleyGetLessons.volleyGetLessons(new VolleyStringCallback() {
                 @Override
                 public void onSuccess(String result) {
                     Lesson lesson = new Lesson();
@@ -148,6 +151,17 @@ public class LessonValidateFragment extends Fragment {
                     } catch ( Exception e ){}
                 }
             }, getContext());
+            } else {
+                lessonList.clear();
+                ArrayList<String> idsArray = sessionManager.getPendingValidations();
+                for (String id: idsArray) {
+                    try {
+                        lessonList.add(new GetLessonTask(getActivity(), id).execute().get());
+                    } catch (Exception e) {}
+                }
+                lessonsAdapter = new LessonsAdapter(getActivity(), lessonList);
+                validateLessonsList.setAdapter(lessonsAdapter);
+            }
         } else {
             try {
                 lessonList = new GetValidationsTask(getActivity(), project_id).execute().get();
