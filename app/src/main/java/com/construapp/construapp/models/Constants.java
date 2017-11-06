@@ -77,6 +77,7 @@ public interface Constants {
     //BUNDLE FRAGMENTS
     String B_LESSON_ARRAY_LIST = "lesson_array_list";
     String B_LESSON_COMMENT = "lesson_COMMENT";
+    String B_SECTION_ARRAY_LIST = "sections_array_list";
 
     //MESSAGES
     String NO_ATTACHMENTS = "NO EXISTEN ARCHIVOS ADJUNTOS";

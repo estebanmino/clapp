@@ -23,6 +23,7 @@ import com.construapp.construapp.LoginActivity;
 import com.construapp.construapp.R;
 import com.construapp.construapp.cache.LRUCache;
 import com.construapp.construapp.lessons.LessonFormActivity;
+import com.construapp.construapp.microblog.MicroblogFragment;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.General;
 import com.construapp.construapp.models.SessionManager;
@@ -181,7 +182,10 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
             sessionManager.setActualProject(Constants.ALL_PROJECTS_KEY,Constants.ALL_PROJECTS_NAME);
         } else  if (item.getItemId() == R.id.to_blog) {
-            //
+
+            startActivity(MicroblogActivity.getIntent(MainActivity.this));
+
+            //TODO jose aqui va lo de micrblog
         }
         else {
             String map = item.getTitle().toString();

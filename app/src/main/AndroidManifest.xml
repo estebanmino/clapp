@@ -60,6 +60,9 @@
         <activity
             android:name=".lessons.LessonValidationActivity"
             android:label="@string/title_activity_validate_lesson_form"/>
+        <activity
+            android:name=".main.MicroblogActivity"
+            android:label="microblog"/>
     </application>
 
 </manifest>
