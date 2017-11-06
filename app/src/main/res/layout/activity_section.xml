@@ -50,7 +50,7 @@
             android:visibility="visible">
 
             <ListView
-                android:id="@+id/sections_list"
+                android:id="@+id/threads_list"
                 android:layout_width="match_parent"
                 android:layout_height="455dp"
                 tools:layout_editor_absoluteX="8dp"

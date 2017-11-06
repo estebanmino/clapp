@@ -1,5 +1,21 @@
 package com.construapp.construapp.main;
 
+/**
+ * Created by jose on 06-11-17.
+ */
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.TextView;
+
+import com.construapp.construapp.R;
+import com.construapp.construapp.models.Section;
+
+import java.util.List;
+
 
 import android.content.Context;
 
@@ -12,6 +28,7 @@ import android.widget.TextView;
 import com.construapp.construapp.R;
 import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.models.Section;
+import com.construapp.construapp.models.Threadblog;
 
 import java.util.List;
 
@@ -20,22 +37,21 @@ import java.util.List;
  * Created by JOSE on 18-09-2017.
  */
 
-public class SectionsAdapter extends BaseAdapter {
+public class ThreadsAdapter extends BaseAdapter {
     private final Context context;
-    private final List<Section> sectionModelList;
+    private final List<Threadblog> threadModelList;
 
-    private TextView sectionName;
-    private TextView sectionDescription;
+    private TextView threadName;
 
-    public SectionsAdapter(Context context, List<Section> sectionModelList) {
+    public ThreadsAdapter(Context context, List<Threadblog> threadModelList) {
         this.context = context;
-        this.sectionModelList = sectionModelList;
+        this.threadModelList = threadModelList;
     }
 
     @Override
     public int getCount() {
-        if(sectionModelList != null) {
-            return sectionModelList.size();
+        if(threadModelList != null) {
+            return threadModelList.size();
         }
 
         else {
@@ -45,7 +61,7 @@ public class SectionsAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        return sectionModelList.get(position);
+        return threadModelList.get(position);
     }
 
     @Override
@@ -61,17 +77,17 @@ public class SectionsAdapter extends BaseAdapter {
         if (convertView == null) {
             LayoutInflater layoutInflater =
                     (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = layoutInflater.inflate(R.layout.section_list_item,null);
+            convertView = layoutInflater.inflate(R.layout.thread_list_item,null);
         }
 
-        sectionName = convertView.findViewById(R.id.section_name);
-        sectionDescription = convertView.findViewById(R.id.section_description);
+        threadName = convertView.findViewById(R.id.section_name);
 
-        final String elementName = sectionModelList.get(position).getName();
-        final String elementDescription = sectionModelList.get(position).getDescription();
 
-        sectionName.setText(elementName);
-        sectionDescription.setText(elementDescription);
+        final String elementName = threadModelList.get(position).getName();
+
+
+        threadName.setText(elementName);
+
 
 
         return convertView;

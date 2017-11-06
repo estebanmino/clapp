@@ -1,5 +1,43 @@
 package com.construapp.construapp.main;
 
+/**
+ * Created by jose on 06-11-17.
+ */
+
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.construapp.construapp.LoginActivity;
+import com.construapp.construapp.R;
+import com.construapp.construapp.dbTasks.DeleteLessonTable;
+import com.construapp.construapp.models.Constants;
+import com.construapp.construapp.models.General;
+import com.construapp.construapp.models.Section;
+import com.construapp.construapp.models.SessionManager;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
@@ -34,6 +72,7 @@ import com.construapp.construapp.models.General;
 import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.models.Section;
 import com.construapp.construapp.models.SessionManager;
+import com.construapp.construapp.models.Threadblog;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -44,12 +83,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-public class MicroblogActivity extends AppCompatActivity
+public class SectionActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
 
-    private ListView sectionsListListView;
-    private ArrayList<Section> sectionsList;
-    private SectionsAdapter sectionsAdapter;
+    private ListView threadsListListView;
+    private ArrayList<Threadblog> threadsList;
+    private ThreadsAdapter threadsAdapter;
     private NavigationView navigationView;
     private SessionManager sessionManager;
     private String[] mProjectTitles;
@@ -66,20 +105,20 @@ public class MicroblogActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_microblog);
+        setContentView(R.layout.activity_section);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("Microblog");
+        toolbar.setTitle("Thread name");
         setSupportActionBar(toolbar);
 
         //TODO fix obtener y hacer get
-        sectionsList = new ArrayList<Section>();
-        sectionsList.add(0,new Section("1","General","Cosas generales"));
-        sectionsList.add(1,new Section("1","Otros","Cosas varias"));
+        threadsList = new ArrayList<Threadblog>();
+        threadsList.add(0,new Threadblog("1","Primero"));
+        threadsList.add(1,new Threadblog("1","Segundo :("));
 
-        sessionManager = new SessionManager(MicroblogActivity.this);
-        sectionsListListView = findViewById(R.id.sections_list);
-        sectionsAdapter = new SectionsAdapter(getApplicationContext(), sectionsList);
+        sessionManager = new SessionManager(SectionActivity.this);
+        threadsListListView = findViewById(R.id.threads_list);
+        threadsAdapter = new ThreadsAdapter(getApplicationContext(), threadsList);
 
         try {
             jsonArray = new JSONArray(sessionManager.getProjects());
@@ -100,8 +139,6 @@ public class MicroblogActivity extends AppCompatActivity
         navigationView = findViewById(R.id.nav_view);
 
 
-
-
         navigationView.setNavigationItemSelectedListener(this);
         mUserName = navigationView.getHeaderView(0).findViewById(R.id.main_username);
         mUserName.setText(sessionManager.getActualProjectName());
@@ -116,12 +153,12 @@ public class MicroblogActivity extends AppCompatActivity
             }
         });
 
-        sectionsListListView.setAdapter(sectionsAdapter);
-        sectionsListListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        threadsListListView.setAdapter(threadsAdapter);
+        threadsListListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Section section = (Section) sectionsAdapter.getItem(position);
-                startActivity(SectionActivity.getIntent(MicroblogActivity.this));
+                Threadblog thread = (Threadblog) threadsAdapter.getItem(position);
+                //
             }
         });
 
@@ -129,7 +166,7 @@ public class MicroblogActivity extends AppCompatActivity
     }
 
     public static Intent getIntent(Context context) {
-        Intent intent = new Intent(context,MicroblogActivity.class);
+        Intent intent = new Intent(context,SectionActivity.class);
         return intent;
     }
 
@@ -151,15 +188,15 @@ public class MicroblogActivity extends AppCompatActivity
                 e.printStackTrace();
             }
             Toast.makeText(this,"Se ha  cerrado su sesión",Toast.LENGTH_LONG).show();
-            startActivity(LoginActivity.getIntent(MicroblogActivity.this));
+            startActivity(LoginActivity.getIntent(SectionActivity.this));
         } else if (item.getItemId() == R.id.to_all_projects) {
             sessionManager.setActualProject(Constants.ALL_PROJECTS_KEY,Constants.ALL_PROJECTS_NAME);
-            startActivity(MainActivity.getIntent(MicroblogActivity.this));
+            startActivity(MainActivity.getIntent(SectionActivity.this));
         } else  if (item.getItemId() == R.id.to_blog) {
             //startActivity(MicroblogActivity.getIntent(FavouriteLessonsActivity.this));
         } //else  if (item.getItemId() == R.id.to_favourites) {
-            //startActivity(FavouriteLessonsActivity.getIntent(FavouriteLessonsActivity.this));
-            //IMPLEMENT
+        //startActivity(FavouriteLessonsActivity.getIntent(FavouriteLessonsActivity.this));
+        //IMPLEMENT
         //}
         else {
             String map = item.getTitle().toString();

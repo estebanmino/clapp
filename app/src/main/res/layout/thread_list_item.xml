@@ -18,19 +18,6 @@
         android:textStyle="bold"
         tools:text="hola que tal" />
 
-    <TextView
-        android:id="@+id/section_description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@+id/lesson_name"
-        android:paddingTop="30dp"
-        android:paddingBottom="20dp"
-        android:paddingLeft="20dp"
-
-        android:paddingRight="20dp"
-        android:textSize="12sp"
-        tools:text="hola"/>
 
 
 

@@ -63,6 +63,9 @@
         <activity
             android:name=".main.MicroblogActivity"
             android:label="microblog"/>
+        <activity
+            android:name=".main.SectionActivity"
+            android:label="microblog"/>
     </application>
 
 </manifest>
