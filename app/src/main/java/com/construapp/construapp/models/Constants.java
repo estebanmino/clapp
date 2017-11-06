@@ -19,6 +19,7 @@ public interface Constants {
     String PROJECTS = "projects";
     String SESSIONS = "sessions";
     String SAVE_KEY = "save_key";
+    String FAVOURITES = "favourites";
     String ALL_PROJECTS_KEY = "null";
     String ALL_PROJECTS_NAME = "Todos los proyectos";
 
@@ -87,4 +88,9 @@ public interface Constants {
     String NO_VIDEOS = "No existen videos";
     String NO_DOCUMENTS = "No existen documentos";
     String NO_PICTURES = "No existen imagenes";
+
+    //TITLES
+    String TITLE_FAVOURITE_LESSONS = "Lecciones favoritas";
+
+
 }

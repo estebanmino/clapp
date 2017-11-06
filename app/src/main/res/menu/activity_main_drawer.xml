@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <group android:id="@+id/lessons_menu">
+        <item android:title="Favoritas">
+            <menu>
+                <item
+                    android:id="@+id/to_favourites"
+                    android:title="Lecciones Favoritas" />
+            </menu>
+        </item>
+
+    </group>
 
     <group android:id="@+id/blog_menu">
         <item android:title="Blog">
@@ -29,7 +39,7 @@
             <menu>
                 <item
                     android:id="@+id/to_all_projects"
-                    android:title="Todos los Proyectos" />
+                    android:title="Todos las lecciones" />
             </menu>
         </item>
 

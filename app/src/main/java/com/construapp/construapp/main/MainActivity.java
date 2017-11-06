@@ -26,6 +26,7 @@ import com.construapp.construapp.R;
 import com.construapp.construapp.api.VolleyGetPendingValidations;
 import com.construapp.construapp.cache.LRUCache;
 import com.construapp.construapp.db.Connectivity;
+import com.construapp.construapp.lessons.FavouriteLessonsActivity;
 import com.construapp.construapp.lessons.LessonFormActivity;
 import com.construapp.construapp.listeners.VolleyStringCallback;
 import com.construapp.construapp.models.Constants;
@@ -191,6 +192,8 @@ public class MainActivity extends AppCompatActivity
             sessionManager.setActualProject(Constants.ALL_PROJECTS_KEY,Constants.ALL_PROJECTS_NAME);
         } else  if (item.getItemId() == R.id.to_blog) {
             //
+        } else  if (item.getItemId() == R.id.to_favourites) {
+            startActivity(FavouriteLessonsActivity.getIntent(MainActivity.this));
         }
         else {
             String map = item.getTitle().toString();

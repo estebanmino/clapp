@@ -40,11 +40,11 @@ public class GetLessonsTask extends AsyncTask<Void,Void,List<Lesson>>{
             Log.i("JSON", "byprojectid");
             list = AppDatabase.getDatabase(context.getApplicationContext()).lessonDAO().getLessonByProjectId(projectId);
         }
-        /*else if (projectId.equals("null") && !userId.equals("null") && validation.isEmpty()) {
+        else if (projectId.equals("null") && !userId.equals("null") && validation.isEmpty()) {
             Log.i("JSON", "byuserid");
 
             list = AppDatabase.getDatabase(context.getApplicationContext()).lessonDAO().getLessonByUserId(userId);
-        }*/
+        }
         else {
             Log.i("JSON", "byuserprojectid");
             list = AppDatabase.getDatabase(context.getApplicationContext()).lessonDAO().getLessonByUserProjectIdAndValidation(userId,projectId,validation);
