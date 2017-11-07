@@ -6,6 +6,11 @@ import android.util.Log;
 
 import com.google.gson.JsonArray;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
 /**
  * Created by ESTEBANFML on 30-10-2017.
  */
@@ -74,7 +79,7 @@ public class SessionManager {
     public void setActualProject(String currentProjectId, String currentProjectName) {
         editor.putString(Constants.SP_ACTUAL_PROJECT, currentProjectId);
         editor.putString(Constants.SP_ACTUAL_PROJECT_NAME, currentProjectName);
-        editor.putString(Constants.SP_USER_PERMISSION, getProjectPermission(currentProjectId));
+        editor.putString(Constants.SP_USER_PERMISSION, getProjectPermission());
         editor.apply();
     }
 
@@ -100,7 +105,8 @@ public class SessionManager {
         editor.apply();
     }
 
-    public String getProjectPermission(String projectId) {
+    public String getProjectPermission() {
+        String projectId = sharedPreferences.getString(Constants.SP_ACTUAL_PROJECT, "");
         if (projectId.equals("null")) {
             if (sharedPreferences.getString(Constants.SP_ADMIN, "").equals(Constants.S_ADMIN_ADMIN)) {
                 return Constants.P_ADMIN;
@@ -132,4 +138,39 @@ public class SessionManager {
     }
 
 
+    public String getHasPendingValidations() {
+        if (!sharedPreferences.contains(Constants.SP_HAS_PENDING_VALIDATIONS)){
+            return "false";
+        } else {
+            return sharedPreferences.getString(Constants.SP_HAS_PENDING_VALIDATIONS, "");
+        }
+    }
+
+    public void setHasPendingValidations(String pendingValidations) {
+        editor.putString(Constants.SP_HAS_PENDING_VALIDATIONS,  pendingValidations);
+        editor.apply();
+    }
+
+    public void setPendingValidations(String pendingValidations) {
+        editor.putString(Constants.SP_PENDING_VALIDATIONS,  pendingValidations);
+        Log.i("PENDINGVALIDATIONS1",pendingValidations);
+
+        editor.apply();
+    }
+
+    public ArrayList<String> getPendingValidations() {
+        JSONArray jsonLessons;
+        ArrayList<String> idsList = new ArrayList<>();
+        try {
+            jsonLessons = new JSONArray(sharedPreferences.getString(Constants.SP_PENDING_VALIDATIONS, ""));
+            Log.i("PENDINGVALIDATIONS",jsonLessons.toString());
+
+            for (int i = 0; i < jsonLessons.length(); i++) {
+                JSONObject object = (JSONObject) jsonLessons.get(i);
+                Log.i("LESSONVALIDATE",object.toString());
+                idsList.add(object.get("id").toString());
+            }
+        } catch (Exception e) {}
+        return idsList;
+    }
 }

@@ -18,6 +18,7 @@ public interface Constants {
     String GET_PERMISSION = "get_permission";
     String GET_USERS = "get_users";
     String ASSIGN_VALIDATOR = "assign_validator";
+    String PENDING_VALIDATIONS = "pending_validations";
     String PROJECTS = "projects";
     String SESSIONS = "sessions";
     String SAVE_KEY = "save_key";
@@ -49,6 +50,8 @@ public interface Constants {
     String SP_USER_PERMISSION = "user_permission";
     String SP_PERMISSION_PROJECT = "permission_project_";
     String SP_ACTUAL_SECTION = "actual_section";
+    String SP_HAS_PENDING_VALIDATIONS = "has_pending_validations";
+    String SP_PENDING_VALIDATIONS = "pending_validations";
 
     //Queries
     String Q_AUTHORIZATION = "Authorization";

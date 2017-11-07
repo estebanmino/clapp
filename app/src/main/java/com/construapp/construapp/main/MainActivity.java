@@ -17,21 +17,26 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.android.volley.VolleyError;
 import com.construapp.construapp.LoginActivity;
 import com.construapp.construapp.R;
+import com.construapp.construapp.api.VolleyGetPendingValidations;
 import com.construapp.construapp.cache.LRUCache;
+import com.construapp.construapp.db.Connectivity;
 import com.construapp.construapp.lessons.LessonFormActivity;
-import com.construapp.construapp.microblog.MicroblogFragment;
+import com.construapp.construapp.listeners.VolleyStringCallback;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.General;
 import com.construapp.construapp.models.SessionManager;
 import com.construapp.construapp.dbTasks.DeleteLessonTable;
 import com.construapp.construapp.threading.GetLessons;
 
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import org.json.JSONArray;
@@ -62,12 +67,19 @@ public class MainActivity extends AppCompatActivity
     Map<String, String> projects;
 
     TextView mUserName;
+    String pendingValidations;
+
+
+    private static String PENDING_VALIDATIONS = "lesson_validation";
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         sessionManager = new SessionManager(MainActivity.this);
 
@@ -89,12 +101,8 @@ public class MainActivity extends AppCompatActivity
             new GetLessons(MainActivity.this).execute().get();
         } catch (Exception e) {}
 
-
-
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
         general = new General();
+        pendingValidations = sessionManager.getHasPendingValidations();
 
         FloatingActionButton fab = findViewById(R.id.fab);
         lruCache = LRUCache.getInstance();
@@ -118,14 +126,14 @@ public class MainActivity extends AppCompatActivity
         } else {
             getSupportActionBar().setTitle("Proyecto " + sessionManager.getActualProjectName());
         }
+
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         mViewPager = findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-
-
+        mSectionsPagerAdapter.notifyDataSetChanged();
 
         TabLayout tabLayout = findViewById(R.id.tabs);
-        if (userPermission == 1) {
+        if (userPermission == 1 && !sessionManager.getHasPendingValidations().equals("true")) {
             tabLayout.setVisibility(View.GONE);
         }
         tabLayout.setupWithViewPager(mViewPager);
@@ -227,6 +235,8 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         public Fragment getItem(int position) {
+            Log.i("PENDINGVALIDATION",pendingValidations.toString());
+
             if (userPermission >= 3){
                 switch (position) {
                     case 0:
@@ -238,7 +248,15 @@ public class MainActivity extends AppCompatActivity
                 }
             }
             else if (userPermission == 1) {
-                return new LessonsFragment();
+
+                if (!pendingValidations.equals("true")) {return new LessonsFragment();}
+                else {
+                    switch(position) {
+                    case 0:
+                        return new LessonsFragment();
+                    case 1:
+                        return new LessonValidateFragment();}
+                }
             }
             else {
                 switch (position) {
@@ -258,7 +276,8 @@ public class MainActivity extends AppCompatActivity
                 return 3;
             }
             else if (userPermission == 1) {
-                return 1;
+                if (!pendingValidations.equals("true")) {return 1;}
+                else {return 2; }
             }
             else {
                 return 2;
@@ -278,9 +297,18 @@ public class MainActivity extends AppCompatActivity
                 }
             }
             else if (userPermission == 1) {
-                switch (position) {
-                    case 0:
-                        return null;
+                if (!pendingValidations.equals("true")) {
+                    switch (position) {
+                        case 0:
+                            return null;
+                    }
+                } else {
+                    switch (position) {
+                        case 0:
+                            return "Lecciones";
+                        case 1:
+                            return "Validar lecciones";
+                    }
                 }
             }
             else {
@@ -296,6 +324,32 @@ public class MainActivity extends AppCompatActivity
     }
 
     public static Intent getIntent(Context context) {
+        final SessionManager sessionManager = new SessionManager(context);
+        if (Connectivity.isConnected(context)) {
+            VolleyGetPendingValidations.volleyGetPendingValidations(new VolleyStringCallback() {
+                @Override
+                public void onSuccess(String result) {
+                    try {
+                        Log.i("GETVALIDATIONSPRENDING",result);
+                        if (new JSONArray(result).length() > 0) {
+                            sessionManager.setHasPendingValidations("true");
+                            sessionManager.setPendingValidations(result);
+                        } else {
+                            sessionManager.setHasPendingValidations("false");
+                        }
+                    } catch (Exception e) {
+                        sessionManager.setHasPendingValidations("false");
+                    }
+                }
+
+                @Override
+                public void onErrorResponse(VolleyError result) {
+                    sessionManager.setHasPendingValidations("false");
+                }
+            }, context, sessionManager.getUserId());
+        } else {
+            sessionManager.setHasPendingValidations("false");
+        }
         Intent intent = new Intent(context,MainActivity.class);
         return intent;
     }
