@@ -36,6 +36,7 @@ public class LessonValidateFragment extends Fragment {
     private LessonsAdapter lessonsAdapter;
     private List<Lesson> lessonList;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private SwipeRefreshLayout.OnRefreshListener swipeRefreshListener;
     private SessionManager sessionManager;
 
     private String user_id;
@@ -86,12 +87,20 @@ public class LessonValidateFragment extends Fragment {
         });
         getLessonsToValidate();
 
-        swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_validations);
         setSwipeRefreshLayout();
+        swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_validations);
+        swipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                swipeRefreshLayout.setRefreshing(true);
+                swipeRefreshListener.onRefresh();
+            }
+        });
+        swipeRefreshLayout.setOnRefreshListener(swipeRefreshListener);
     }
 
     public void setSwipeRefreshLayout() {
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        swipeRefreshListener = (new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 getLessonsToValidate();
