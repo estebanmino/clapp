@@ -15,19 +15,30 @@ public class Threadblog {
 
     private String id;
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    private String name;
+    private String title;
 
-    public Threadblog(String id, String name)
+    public Threadblog(String id, String title,String text)
     {
         this.id=id;
-        this.name=name;
+        this.title=title;
+        this.text = text;
     }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    private String text;
 }

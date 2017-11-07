@@ -12,8 +12,10 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -21,9 +23,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.VolleyError;
 import com.construapp.construapp.LoginActivity;
 import com.construapp.construapp.R;
+import com.construapp.construapp.api.VolleyGetSections;
+import com.construapp.construapp.api.VolleyGetThreads;
+import com.construapp.construapp.db.Connectivity;
 import com.construapp.construapp.dbTasks.DeleteLessonTable;
+import com.construapp.construapp.listeners.VolleyStringCallback;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.General;
 import com.construapp.construapp.models.Section;
@@ -93,7 +100,12 @@ public class SectionActivity extends AppCompatActivity
     private SessionManager sessionManager;
     private String[] mProjectTitles;
     private ViewPager sectionsView;
-    private ArrayList<String> section_arrayList;
+    private SwipeRefreshLayout.OnRefreshListener swipeRefreshListener;
+    private SwipeRefreshLayout swipeRefreshLayout;
+
+    private String name;
+    private String description;
+    private String section_id;
 
     JSONArray jsonArray;
     Map<String, String> projects;
@@ -109,8 +121,12 @@ public class SectionActivity extends AppCompatActivity
         setContentView(R.layout.activity_section);
 
 
-        String name = getIntent().getStringExtra("NAME");
-        String description=getIntent().getStringExtra("DESCRIPTION");
+        name = getIntent().getStringExtra("NAME");
+        description=getIntent().getStringExtra("DESCRIPTION");
+        section_id=getIntent().getStringExtra("ID");
+
+        sessionManager = new SessionManager(SectionActivity.this);
+        sessionManager.setSection(section_id);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(name);
@@ -119,12 +135,22 @@ public class SectionActivity extends AppCompatActivity
         TextView sectionDescription = findViewById(R.id.section_description);
         sectionDescription.setText(description);
 
-
-
-        //TODO jose fix obtener y hacer get
         threadsList = new ArrayList<Threadblog>();
-        threadsList.add(new Threadblog("1","Primero"));
-        threadsList.add(new Threadblog("1","Segundo :("));
+
+        swipeRefreshLayout = findViewById(R.id.swipe_refresh_threads);
+
+        setSwipeRefreshLayout();
+        swipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                swipeRefreshLayout.setRefreshing(true);
+                swipeRefreshListener.onRefresh();
+            }
+        });
+        swipeRefreshLayout.setOnRefreshListener(swipeRefreshListener);
+
+
+
 
         sessionManager = new SessionManager(SectionActivity.this);
         threadsListListView = findViewById(R.id.threads_list);
@@ -233,10 +259,58 @@ public class SectionActivity extends AppCompatActivity
         return dir.delete();
     }
 
+    public void setSwipeRefreshLayout() {
+        swipeRefreshListener = (new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                boolean is_connected = Connectivity.isConnected(getApplicationContext());
+                if(is_connected) {
+                    VolleyGetThreads.volleyGetThreads(new VolleyStringCallback() {
+                        @Override
+                        public void onSuccess(String result) {
+                            Threadblog thread;
+                            JSONArray jsonThreads;
+                            try {
+                                JSONObject request = new JSONObject(result);
+                                jsonThreads = new JSONArray(request.getString("microblog_threads"));
+                                threadsList.clear();
+
+                                for (int i = 0; i < jsonThreads.length(); i++) {
+                                    thread = new Threadblog("","","");
+                                    Log.i("JSON", jsonThreads.get(i).toString());
+                                    JSONObject object = (JSONObject) jsonThreads.get(i);
+                                    thread.setTitle(object.get("title").toString());
+                                    thread.setText(object.get("text").toString().substring(0,10)+"...");
+                                    thread.setId(object.get("id").toString());
+                                    threadsList.add(thread);
+
+                                }
+                                Log.i("REQ","HACIENDO REQ");
+                                threadsAdapter = new ThreadsAdapter(getApplicationContext(), threadsList);
+                                threadsListListView.setAdapter(threadsAdapter);
+                            } catch (Exception e) {
+                            }
+                        }
+
+                        @Override
+                        public void onErrorResponse(VolleyError result) {
+
+                        }
+                    }, getApplicationContext());
+                } else {
+
+                }
+                swipeRefreshLayout.setRefreshing(false);
+            }
+
+        });
+    }
+
     @Override
     public void onBackPressed()
     {
 
+        sessionManager.clearSection(section_id);
         super.onBackPressed();
         overridePendingTransition(R.anim.animation_back1,R.anim.animation_back2);
 

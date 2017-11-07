@@ -116,4 +116,20 @@ public class SessionManager {
         editor.apply();
     }
 
+    public void setSection(String section) {
+        editor.putString(Constants.SP_ACTUAL_SECTION, section);
+        editor.apply();
+    }
+
+    public String getSection() {
+        return sharedPreferences.getString(Constants.SP_ACTUAL_SECTION, "");
+    }
+
+    public void clearSection(String section)
+    {
+        editor.remove(section);
+        editor.commit();
+    }
+
+
 }

@@ -41,7 +41,7 @@ public class ThreadsAdapter extends BaseAdapter {
     private final Context context;
     private final List<Threadblog> threadModelList;
 
-    private TextView threadName;
+    private TextView threadTitle;
 
     public ThreadsAdapter(Context context, List<Threadblog> threadModelList) {
         this.context = context;
@@ -80,13 +80,13 @@ public class ThreadsAdapter extends BaseAdapter {
             convertView = layoutInflater.inflate(R.layout.thread_list_item,null);
         }
 
-        threadName = convertView.findViewById(R.id.section_name);
+        threadTitle = convertView.findViewById(R.id.section_title);
 
 
-        final String elementName = threadModelList.get(position).getName();
+        final String elementTitle = threadModelList.get(position).getTitle();
 
 
-        threadName.setText(elementName);
+        threadTitle.setText(elementTitle);
 
 
 

@@ -11,6 +11,7 @@ public interface Constants {
     String COMPANIES = "companies";
     String MICROBLOG = "microblogs";
     String SECTIONS = "sections";
+    String THREADS = "threads";
     String LESSONS = "lessons";
     String USERS = "users";
     String GET_PROJECTS = "get_projects";
@@ -47,6 +48,7 @@ public interface Constants {
     String SP_USER_PERMISSION_NAME = "name_permission";
     String SP_USER_PERMISSION = "user_permission";
     String SP_PERMISSION_PROJECT = "permission_project_";
+    String SP_ACTUAL_SECTION = "actual_section";
 
     //Queries
     String Q_AUTHORIZATION = "Authorization";
