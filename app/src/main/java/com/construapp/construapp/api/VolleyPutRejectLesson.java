@@ -46,7 +46,7 @@ public class VolleyPutRejectLesson {
             jsonObject1.put("reject_comment", comment);
         } catch (Exception e) {}
 
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PATCH, url, jsonObject,
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PUT, url, jsonObject,
                 new com.android.volley.Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
