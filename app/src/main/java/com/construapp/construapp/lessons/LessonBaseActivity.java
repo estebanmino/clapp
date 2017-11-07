@@ -84,6 +84,8 @@ public class LessonBaseActivity extends AppCompatActivity {
     public ConstraintLayout constraintMultimediaBar;
     public ConstraintLayout constraintActionBar;
 
+    public LinearLayout linearEdition;
+
     public ImageView imageAttach;
 
     //LOCAL VARIABLES

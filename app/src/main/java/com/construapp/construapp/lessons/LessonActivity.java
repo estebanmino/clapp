@@ -114,7 +114,7 @@ public class LessonActivity extends LessonBaseActivity {
         textRecording = findViewById(R.id.text_recording);
 
         constraintMultimediaBar = findViewById(R.id.constraint_multimedia_bar);
-
+        linearEdition = findViewById(R.id.linear_edition);
         constraintActionBar = findViewById(R.id.constraint_action_bar);
         constraintMultimediaBar = findViewById(R.id.constraint_multimedia_bar);
         imageAttach = findViewById(R.id.image_attach);
@@ -411,9 +411,11 @@ public class LessonActivity extends LessonBaseActivity {
                 !lesson.getValidation().equals(Constants.R_VALIDATED)
                 ))
         {
+            //linearEdition.setVisibility(View.VISIBLE);
             btnEdit.setVisibility(View.VISIBLE);
         }
         if (deletePermission <= userPermission || sessionManager.getUserAdmin().equals(Constants.S_ADMIN_ADMIN)){
+            //linearEdition.setVisibility(View.VISIBLE);
             btnDelete.setVisibility(View.VISIBLE);
         }
     }
