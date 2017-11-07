@@ -65,6 +65,7 @@ public class MicroblogActivity extends AppCompatActivity
     private SessionManager sessionManager;
     private String[] mProjectTitles;
     private ViewPager sectionsView;
+    private SwipeRefreshLayout.OnRefreshListener swipeRefreshListener;
 
     JSONArray jsonArray;
     Map<String, String> projects;
@@ -83,12 +84,25 @@ public class MicroblogActivity extends AppCompatActivity
         toolbar.setTitle("Microblog");
         setSupportActionBar(toolbar);
 
+        Log.i("TEST","voy aca");
 
 
         //TODO jose fix obtener y hacer get
         sectionsList = new ArrayList<Section>();
-        sectionsList.add(new Section("1","General","Cosas generales"));
-        sectionsList.add(new Section("2","Otros","Cosas varias"));
+        swipeRefreshLayout = findViewById(R.id.swipe_refresh_sections);
+
+        setSwipeRefreshLayout();
+        swipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                swipeRefreshLayout.setRefreshing(true);
+                swipeRefreshListener.onRefresh();
+            }
+        });
+        swipeRefreshLayout.setOnRefreshListener(swipeRefreshListener);
+
+        //sectionsList.add(new Section("1","General","Cosas generales"));
+        //sectionsList.add(new Section("2","Otros","Cosas varias"));
 
         sessionManager = new SessionManager(MicroblogActivity.this);
         sectionsListListView = findViewById(R.id.sections_list);
@@ -132,14 +146,13 @@ public class MicroblogActivity extends AppCompatActivity
                 startActivity(intent,bndlanimation);
             }
         });
-        swipeRefreshLayout = findViewById(R.id.swipe_refresh_sections);
-        setSwipeRefreshLayout();
+
 
 
     }
 
     public void setSwipeRefreshLayout() {
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        swipeRefreshListener = (new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 boolean is_connected = Connectivity.isConnected(getApplicationContext());
@@ -150,16 +163,21 @@ public class MicroblogActivity extends AppCompatActivity
                             Section section = new Section("","","");
                             JSONArray jsonSections;
                             try {
-                                jsonSections = new JSONArray(result);
+                                JSONObject request = new JSONObject(result);
+                                jsonSections = new JSONArray(request.getString("sections"));
+                                sectionsList.clear();
+
                                 for (int i = 0; i < jsonSections.length(); i++) {
+                                    section = new Section("","","");
                                     Log.i("JSON", jsonSections.get(i).toString());
                                     JSONObject object = (JSONObject) jsonSections.get(i);
                                     section.setName(object.get("name").toString());
+                                    //section.setDescription("Aqui van cosas varias");
                                     section.setId(object.get("id").toString());
                                     sectionsList.add(section);
 
                                 }
-
+                                Log.i("REQ","HACIENDO REQ");
                                 sectionsAdapter = new SectionsAdapter(getApplicationContext(), sectionsList);
                                 sectionsListListView.setAdapter(sectionsAdapter);
                             } catch (Exception e) {
