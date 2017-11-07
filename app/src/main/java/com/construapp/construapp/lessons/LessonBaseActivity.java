@@ -129,7 +129,8 @@ public class LessonBaseActivity extends AppCompatActivity {
     public LinearLayout linearLayoutMultimedia;
     public TextView textAttachments;
 
-    public ImageSwitcher imageSwitcherFavourite;
+    public ImageView imageSetFavourite;
+    public ImageView imageUndoFavourite;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

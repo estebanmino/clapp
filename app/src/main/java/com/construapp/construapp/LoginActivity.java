@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.construapp.construapp.api.VolleyGetFavouriteLessons;
 import com.construapp.construapp.listeners.VolleyJSONCallback;
 import com.construapp.construapp.listeners.VolleyStringCallback;
 import com.construapp.construapp.api.VolleyGetUserProject;
@@ -61,7 +62,6 @@ public class LoginActivity extends AppCompatActivity {
                         public void onSuccess(JSONObject result) {
                             Toast.makeText(LoginActivity.this, "Bienvenido", Toast.LENGTH_LONG).show();
                             try {
-                                Log.i("USER",result.toString());
                                 admin = result.getString("admin");
                                 user_id = result.getString("id");
                                 company = result.getJSONObject("company");
@@ -73,6 +73,17 @@ public class LoginActivity extends AppCompatActivity {
                             } catch (Exception e) {}
 
                             Log.i("PERMISSION",admin);
+
+                            VolleyGetFavouriteLessons.volleyGetFavouriteLessons(new VolleyStringCallback() {
+                                @Override
+                                public void onSuccess(String result) {
+                                    sessionManager.setFavouriteLessons(result);
+                                }
+
+                                @Override
+                                public void onErrorResponse(VolleyError result) {
+                                }
+                            }, LoginActivity.this);
 
                             VolleyGetUserProject.volleyGetUserProject(new VolleyStringCallback() {
                                 @Override

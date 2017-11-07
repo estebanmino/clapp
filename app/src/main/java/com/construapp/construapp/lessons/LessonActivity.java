@@ -23,6 +23,8 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.android.volley.VolleyError;
+import com.construapp.construapp.api.VolleyDeleteFavouriteLesson;
+import com.construapp.construapp.api.VolleyGetFavouriteLessons;
 import com.construapp.construapp.api.VolleyPostFavouriteLesson;
 import com.construapp.construapp.main.MainActivity;
 import com.construapp.construapp.R;
@@ -100,7 +102,8 @@ public class LessonActivity extends LessonBaseActivity {
         btnEdit = findViewById(R.id.btn_edit);
         btnDelete = findViewById(R.id.btn_delete);
 
-        imageSwitcherFavourite = findViewById(R.id.image_switcher_favourite);
+        imageSetFavourite = findViewById(R.id.image_set_favourite);
+        imageUndoFavourite = findViewById(R.id.image_undo_favourite);
 
         textImages = findViewById(R.id.text_images);
         textVideos = findViewById(R.id.text_videos);
@@ -150,8 +153,6 @@ public class LessonActivity extends LessonBaseActivity {
         if (!lesson.getValidation().equals(Constants.R_VALIDATED)){
             fabSend.setImageDrawable(ContextCompat.getDrawable(LessonActivity.this, R.drawable.ic_send_dark));
         }
-
-        if (lesson.getValidation().equals(Constants.R_VALIDATED)) imageSwitcherFavourite.setVisibility(View.VISIBLE);
 
         mStartRecording = true;
 
@@ -299,7 +300,8 @@ public class LessonActivity extends LessonBaseActivity {
 
         setImageDeleteLessonListener();
         setImageEditLessonListener();
-        setImageSwitcherFavouriteListener();
+        setImageSetFavouriteListener();
+        setImageUndoFavouriteListener();
 
         //SET BUTTONS LISTENER
         setFabCameraOnClickListener();
@@ -313,6 +315,16 @@ public class LessonActivity extends LessonBaseActivity {
         setFabRecordAudioOnClickListener();
         setFabFilesOnClickListener();
         setFabVideoOnClickListener();
+
+        if (lesson.getValidation().equals(Constants.R_VALIDATED)) {
+            if (sessionManager.getFavouriteLessonsIds().contains(lesson.getId())) {
+                imageUndoFavourite.setVisibility(View.VISIBLE);
+                imageSetFavourite.setVisibility(View.GONE);
+            } else {
+                imageUndoFavourite.setVisibility(View.GONE);
+                imageSetFavourite.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     public void setImageDeleteLessonListener() {
@@ -583,21 +595,53 @@ public class LessonActivity extends LessonBaseActivity {
         return editing;
     }
 
-    public void setImageSwitcherFavouriteListener() {
-        imageSwitcherFavourite.setOnClickListener(new View.OnClickListener() {
+    public void setImageSetFavouriteListener() {
+        imageSetFavourite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 VolleyPostFavouriteLesson.volleyPostFavouriteLesson(new VolleyStringCallback() {
                     @Override
                     public void onSuccess(String result) {
+                        VolleyGetFavouriteLessons.volleyGetFavouriteLessons(new VolleyStringCallback() {
+                            @Override
+                            public void onSuccess(String result) {
+                                sessionManager.setFavouriteLessons(result);
+                            }
+
+                            @Override
+                            public void onErrorResponse(VolleyError result) {
+                            }
+                        }, LessonActivity.this);
                         Toast.makeText(LessonActivity.this,"Lección favorita agregada con éxito.",Toast.LENGTH_LONG).show();
-                        Log.i("POSTFAVOURITE", "success");
+                        imageUndoFavourite.setVisibility(View.VISIBLE);
+                        imageSetFavourite.setVisibility(View.GONE);
                     }
 
                     @Override
                     public void onErrorResponse(VolleyError result) {
-                        Toast.makeText(LessonActivity.this,"Lección favorita no se logró agregarla con éxito.",Toast.LENGTH_LONG).show();
-                        Log.i("POSTFAVOURITE", "error");
+                        Toast.makeText(LessonActivity.this,"Lección favorita no se logró agregar con éxito.",Toast.LENGTH_LONG).show();
+                    }
+                },LessonActivity.this,lesson.getId());
+            }
+        });
+    }
+
+    public void setImageUndoFavouriteListener() {
+        imageUndoFavourite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                VolleyDeleteFavouriteLesson.volleyDeleteFavouriteLesson(new VolleyStringCallback() {
+                    @Override
+                    public void onSuccess(String result) {
+                        sessionManager.setFavouriteLessons(result);
+                        Toast.makeText(LessonActivity.this,"Lección favorita eliminada con éxito.",Toast.LENGTH_LONG).show();
+                        imageUndoFavourite.setVisibility(View.GONE);
+                        imageSetFavourite.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onErrorResponse(VolleyError result) {
+                        Toast.makeText(LessonActivity.this,"Lección favorita no se logró eliminar con éxito.",Toast.LENGTH_LONG).show();
                     }
                 },LessonActivity.this,lesson.getId());
             }

@@ -171,6 +171,7 @@ public class FavouriteLessonsActivity extends AppCompatActivity
                 @Override
                 public void onSuccess(String result) {
                     JSONArray jsonLessons;
+                    sessionManager.setFavouriteLessons(result);
                     try {
                         jsonLessons = new JSONArray(result);
                         for (int i = 0; i < jsonLessons.length(); i++) {

@@ -243,8 +243,18 @@
             tools:layout_editor_absoluteX="8dp"
             tools:layout_editor_absoluteY="8dp">
 
-            <ImageSwitcher
-                android:id="@+id/image_switcher_favourite"
+            <ImageView
+                android:id="@+id/image_set_favourite"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="right"
+                android:background="@android:drawable/btn_star_big_off"
+                android:visibility="gone"
+                tools:layout_editor_absoluteX="384dp"
+                tools:layout_editor_absoluteY="56dp" />
+
+            <ImageView
+                android:id="@+id/image_undo_favourite"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_gravity="right"

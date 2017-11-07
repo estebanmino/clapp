@@ -49,6 +49,7 @@ public interface Constants {
     String SP_PERMISSION_PROJECT = "permission_project_";
     String SP_HAS_PENDING_VALIDATIONS = "has_pending_validations";
     String SP_PENDING_VALIDATIONS = "pending_validations";
+    String SP_FAVOURITE_LESSONS = "favourite_lessons";
 
     //Queries
     String Q_AUTHORIZATION = "Authorization";
