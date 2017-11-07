@@ -15,8 +15,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
+        android:elevation="4dp"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/linear_edition"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent">
@@ -86,6 +87,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
+        android:elevation="4dp"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/constraint_action_bar"
         app:layout_constraintHorizontal_bias="0.0"
@@ -221,16 +223,17 @@
         android:id="@+id/nestedScrollView3"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginBottom="0dp"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="0dp"
         app:layout_constraintBottom_toTopOf="@+id/constraint_multimedia_bar"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -240,64 +243,29 @@
             tools:layout_editor_absoluteX="8dp"
             tools:layout_editor_absoluteY="8dp">
 
+            <ImageView
+                android:id="@+id/image_set_favourite"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="right"
+                android:background="@android:drawable/btn_star_big_off"
+                android:visibility="gone"
+                tools:layout_editor_absoluteX="384dp"
+                tools:layout_editor_absoluteY="56dp" />
+
+            <ImageView
+                android:id="@+id/image_undo_favourite"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="right"
+                android:background="@android:drawable/btn_star_big_on"
+                android:visibility="gone"
+                tools:layout_editor_absoluteX="384dp"
+                tools:layout_editor_absoluteY="56dp" />
+
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="0dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginTop="0dp"
-                    android:orientation="horizontal"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <Button
-                        android:id="@+id/btn_edit"
-                        android:layout_width="150dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_weight="1"
-                        android:background="@color/colorPrimary"
-                        android:tag="@integer/admin_permission"
-                        android:text="EDITAR"
-                        android:textColor="@color/cardview_light_background"
-                        android:textSize="14sp"
-                        android:visibility="gone"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.0" />
-
-                    <Button
-                        android:id="@+id/btn_delete"
-                        android:layout_width="150dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginRight="8dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_weight="1"
-                        android:background="@android:color/holo_red_dark"
-                        android:tag="@integer/admin_permission"
-                        android:text="ELIMINAR"
-                        android:textColor="@color/cardview_light_background"
-                        android:textSize="14sp"
-                        android:visibility="gone"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintHorizontal_bias="0.37"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toLeftOf="@+id/btn_lessons_saved"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.0" />
-
-                </LinearLayout>
 
             </android.support.constraint.ConstraintLayout>
 
@@ -520,6 +488,53 @@
 
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
+
+    <LinearLayout
+        android:id="@+id/linear_edition"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:elevation="4dp"
+        android:orientation="horizontal"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
+
+        <Button
+            android:id="@+id/btn_edit"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/colorPrimary"
+            android:tag="@integer/admin_permission"
+            android:text="EDITAR"
+            android:textColor="@color/cardview_light_background"
+            android:textSize="14sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <Button
+            android:id="@+id/btn_delete"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/holo_red_dark"
+            android:tag="@integer/admin_permission"
+            android:text="ELIMINAR"
+            android:textColor="@color/cardview_light_background"
+            android:textSize="14sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.37"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/btn_lessons_saved"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
+
+    </LinearLayout>
 
 
 </android.support.constraint.ConstraintLayout>

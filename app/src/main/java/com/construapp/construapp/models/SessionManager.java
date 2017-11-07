@@ -157,4 +157,27 @@ public class SessionManager {
         } catch (Exception e) {}
         return idsList;
     }
+
+    public ArrayList<String> getFavouriteLessonsIds() {
+        JSONArray jsonLessons;
+        ArrayList<String> idsList = new ArrayList<>();
+        try {
+            jsonLessons = new JSONArray(sharedPreferences.getString(Constants.SP_FAVOURITE_LESSONS, ""));
+            Log.i("SP_FAVOURITE_LESSONS",jsonLessons.toString());
+
+            for (int i = 0; i < jsonLessons.length(); i++) {
+                JSONObject object = (JSONObject) jsonLessons.get(i);
+                Log.i("LESSONVALIDATE",object.toString());
+                idsList.add(object.get("id").toString());
+            }
+        } catch (Exception e) {}
+        return idsList;
+    }
+
+    public void setFavouriteLessons(String favouriteLessons) {
+        editor.putString(Constants.SP_FAVOURITE_LESSONS,  favouriteLessons);
+        Log.i("SP_FAVOURITE_LESSONS",favouriteLessons);
+
+        editor.apply();
+    }
 }

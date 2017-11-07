@@ -60,6 +60,9 @@
         <activity
             android:name=".lessons.LessonValidationActivity"
             android:label="@string/title_activity_validate_lesson_form"/>
+        <activity
+            android:name=".lessons.FavouriteLessonsActivity"
+            android:label="@string/title_activity_favourite_lessons" />
     </application>
 
 </manifest>
