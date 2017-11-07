@@ -40,6 +40,7 @@ public class LessonsFragment extends Fragment {
     private ListView lessonsList;
     private List<Lesson> lessonList;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private SwipeRefreshLayout.OnRefreshListener swipeRefreshListener;
 
     private SharedPreferences sharedPreferences;
     private String user_id = "null";
@@ -78,14 +79,24 @@ public class LessonsFragment extends Fragment {
                 Lesson lesson = (Lesson) lessonsAdapter.getItem(position);
                 startActivity(LessonActivity.getIntent(getActivity(), lesson.getName(),
                         lesson.getSummary(), lesson.getId()));
+
             }
         });
-        swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_lessons);
         setSwipeRefreshLayout();
+        swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_lessons);
+        swipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                swipeRefreshLayout.setRefreshing(true);
+                swipeRefreshListener.onRefresh();
+            }
+        });
+        swipeRefreshLayout.setOnRefreshListener(swipeRefreshListener);
+
     }
 
     public void setSwipeRefreshLayout() {
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        swipeRefreshListener = (new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 boolean is_connected = Connectivity.isConnected(getContext());

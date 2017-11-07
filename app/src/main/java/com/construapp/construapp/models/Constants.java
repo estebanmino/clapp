@@ -9,6 +9,9 @@ public interface Constants {
     // General
     String BASE_URL = "http://construapp-api.ing.puc.cl";
     String COMPANIES = "companies";
+    String MICROBLOG = "microblogs";
+    String SECTIONS = "sections";
+    String THREADS = "threads";
     String LESSONS = "lessons";
     String USERS = "users";
     String GET_PROJECTS = "get_projects";
@@ -47,6 +50,7 @@ public interface Constants {
     String SP_USER_PERMISSION_NAME = "name_permission";
     String SP_USER_PERMISSION = "user_permission";
     String SP_PERMISSION_PROJECT = "permission_project_";
+    String SP_ACTUAL_SECTION = "actual_section";
     String SP_HAS_PENDING_VALIDATIONS = "has_pending_validations";
     String SP_PENDING_VALIDATIONS = "pending_validations";
     String SP_FAVOURITE_LESSONS = "favourite_lessons";
@@ -82,6 +86,7 @@ public interface Constants {
     //BUNDLE FRAGMENTS
     String B_LESSON_ARRAY_LIST = "lesson_array_list";
     String B_LESSON_COMMENT = "lesson_COMMENT";
+    String B_SECTION_ARRAY_LIST = "sections_array_list";
 
     //MESSAGES
     String NO_ATTACHMENTS = "NO EXISTEN ARCHIVOS ADJUNTOS";

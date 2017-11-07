@@ -122,6 +122,22 @@ public class SessionManager {
         editor.apply();
     }
 
+    public void setSection(String section) {
+        editor.putString(Constants.SP_ACTUAL_SECTION, section);
+        editor.apply();
+    }
+
+    public String getSection() {
+        return sharedPreferences.getString(Constants.SP_ACTUAL_SECTION, "");
+    }
+
+    public void clearSection(String section)
+    {
+        editor.remove(section);
+        editor.commit();
+    }
+
+
     public String getHasPendingValidations() {
         if (!sharedPreferences.contains(Constants.SP_HAS_PENDING_VALIDATIONS)){
             return "false";

@@ -63,6 +63,12 @@
         <activity
             android:name=".lessons.FavouriteLessonsActivity"
             android:label="@string/title_activity_favourite_lessons" />
+        <activity
+            android:name=".main.MicroblogActivity"
+            android:label="microblog"/>
+        <activity
+            android:name=".main.SectionActivity"
+            android:label="microblog"/>
     </application>
 
 </manifest>

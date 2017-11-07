@@ -36,6 +36,7 @@ public class MyLessonsFragment extends Fragment {
     private LessonsAdapter lessonsAdapter;
     private List<Lesson> lessonList;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private SwipeRefreshLayout.OnRefreshListener swipeRefreshListener;
 
     private String user_id;
     private String project_id;
@@ -115,12 +116,21 @@ public class MyLessonsFragment extends Fragment {
             }
         });
 
-        swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_my_lessons);
+
         setSwipeRefreshLayout();
+        swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_my_lessons);
+        swipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                swipeRefreshLayout.setRefreshing(true);
+                swipeRefreshListener.onRefresh();
+            }
+        });
+        swipeRefreshLayout.setOnRefreshListener(swipeRefreshListener);
     }
 
     public void setSwipeRefreshLayout() {
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        swipeRefreshListener = (new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 refreshData();
