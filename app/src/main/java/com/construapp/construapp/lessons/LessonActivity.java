@@ -462,7 +462,7 @@ public class LessonActivity extends LessonBaseActivity {
                 String validation = lesson.getValidation();
                 ArrayList<String> array_added =  lesson.getAddedMultimediaKeysS3();
                 ArrayList<String> array_deleted =  lesson.getDeletedMultimediaFilesS3Keys();
-                VolleyPutLesson.volleyPutLesson(new VolleyJSONCallback() {
+                new VolleyPutLesson(new VolleyJSONCallback() {
                     @Override
                     public void onSuccess(JSONObject result) {
                         Toast.makeText(LessonActivity.this, "Lección editada", Toast.LENGTH_LONG).show();
@@ -501,7 +501,7 @@ public class LessonActivity extends LessonBaseActivity {
                 }, LessonActivity.this,
                         lesson.getId(), lesson_name, lesson_summary,
                         lesson_motivation, lesson_learning, array_added, array_deleted, validation
-                );
+                ).execute();
 
             }
         });
@@ -526,7 +526,7 @@ public class LessonActivity extends LessonBaseActivity {
                 String validation = Constants.R_WAITING;
                 ArrayList<String> array_added =  lesson.getAddedMultimediaKeysS3();
                 ArrayList<String> array_deleted =  lesson.getDeletedMultimediaFilesS3Keys();
-                VolleyPutLesson.volleyPutLesson(new VolleyJSONCallback() {
+                new VolleyPutLesson(new VolleyJSONCallback() {
                     @Override
                     public void onSuccess(JSONObject result) {
                         Toast.makeText(LessonActivity.this, "Lección editada", Toast.LENGTH_LONG).show();
@@ -565,7 +565,7 @@ public class LessonActivity extends LessonBaseActivity {
                 }, LessonActivity.this,
                         lesson.getId(), lesson_name, lesson_summary,
                         lesson_motivation, lesson_learning, array_added, array_deleted, validation
-                );
+                ).execute();
 
             }
         });
