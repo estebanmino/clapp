@@ -78,6 +78,7 @@ public class LessonsFragment extends Fragment {
                 Lesson lesson = (Lesson) lessonsAdapter.getItem(position);
                 startActivity(LessonActivity.getIntent(getActivity(), lesson.getName(),
                         lesson.getSummary(), lesson.getId()));
+
             }
         });
         swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_lessons);

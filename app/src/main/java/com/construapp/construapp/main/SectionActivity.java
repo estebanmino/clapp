@@ -93,6 +93,7 @@ public class SectionActivity extends AppCompatActivity
     private SessionManager sessionManager;
     private String[] mProjectTitles;
     private ViewPager sectionsView;
+    private ArrayList<String> section_arrayList;
 
     JSONArray jsonArray;
     Map<String, String> projects;
@@ -107,14 +108,23 @@ public class SectionActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_section);
 
+
+        String name = getIntent().getStringExtra("NAME");
+        String description=getIntent().getStringExtra("DESCRIPTION");
+
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("Thread name");
+        toolbar.setTitle(name);
         setSupportActionBar(toolbar);
 
-        //TODO fix obtener y hacer get
+        TextView sectionDescription = findViewById(R.id.section_description);
+        sectionDescription.setText(description);
+
+
+
+        //TODO jose fix obtener y hacer get
         threadsList = new ArrayList<Threadblog>();
-        threadsList.add(0,new Threadblog("1","Primero"));
-        threadsList.add(1,new Threadblog("1","Segundo :("));
+        threadsList.add(new Threadblog("1","Primero"));
+        threadsList.add(new Threadblog("1","Segundo :("));
 
         sessionManager = new SessionManager(SectionActivity.this);
         threadsListListView = findViewById(R.id.threads_list);
@@ -221,5 +231,14 @@ public class SectionActivity extends AppCompatActivity
             }
         }
         return dir.delete();
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+
+        super.onBackPressed();
+        overridePendingTransition(R.anim.animation_back1,R.anim.animation_back2);
+
     }
 }

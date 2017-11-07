@@ -9,6 +9,8 @@ public interface Constants {
     // General
     String BASE_URL = "http://construapp-api.ing.puc.cl";
     String COMPANIES = "companies";
+    String MICROBLOG = "microblogs";
+    String SECTIONS = "sections";
     String LESSONS = "lessons";
     String USERS = "users";
     String GET_PROJECTS = "get_projects";

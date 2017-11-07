@@ -1,5 +1,6 @@
 package com.construapp.construapp.main;
 
+import android.app.ActivityOptions;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
@@ -7,14 +8,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -22,11 +26,18 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.VolleyError;
 import com.construapp.construapp.LoginActivity;
 import com.construapp.construapp.R;
+import com.construapp.construapp.api.VolleyGetLessons;
+import com.construapp.construapp.api.VolleyGetSections;
+import com.construapp.construapp.db.Connectivity;
 import com.construapp.construapp.dbTasks.DeleteLessonTable;
+import com.construapp.construapp.dbTasks.GetLessonsTask;
+import com.construapp.construapp.dbTasks.InsertLessonTask;
 import com.construapp.construapp.lessons.LessonActivity;
 import com.construapp.construapp.lessons.LessonViewFragment;
+import com.construapp.construapp.listeners.VolleyStringCallback;
 import com.construapp.construapp.main.MainActivity;
 import com.construapp.construapp.microblog.MicroblogFragment;
 import com.construapp.construapp.models.Constants;
@@ -59,7 +70,7 @@ public class MicroblogActivity extends AppCompatActivity
     Map<String, String> projects;
 
     TextView mUserName;
-    private General general;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
 
     private ConstraintLayout constraintLayoutFvourites;
@@ -72,30 +83,21 @@ public class MicroblogActivity extends AppCompatActivity
         toolbar.setTitle("Microblog");
         setSupportActionBar(toolbar);
 
-        //TODO fix obtener y hacer get
+
+
+        //TODO jose fix obtener y hacer get
         sectionsList = new ArrayList<Section>();
-        sectionsList.add(0,new Section("1","General","Cosas generales"));
-        sectionsList.add(1,new Section("1","Otros","Cosas varias"));
+        sectionsList.add(new Section("1","General","Cosas generales"));
+        sectionsList.add(new Section("2","Otros","Cosas varias"));
 
         sessionManager = new SessionManager(MicroblogActivity.this);
         sectionsListListView = findViewById(R.id.sections_list);
         sectionsAdapter = new SectionsAdapter(getApplicationContext(), sectionsList);
 
         try {
-            jsonArray = new JSONArray(sessionManager.getProjects());
-            mProjectTitles = new String[(jsonArray.length())];
-
-            projects = new HashMap<String, String>();
-            for (int i=0; i < jsonArray.length(); i++) {
-                JSONObject project = (JSONObject) jsonArray.get(i);
-                projects.put(project.getString("name"),project.getString("id"));
-                mProjectTitles[i] = project.getString("name");
-
-            }
             projects.put(Constants.ALL_PROJECTS_NAME,Constants.ALL_PROJECTS_KEY);
         } catch (Exception e) {}
 
-        general = new General();
 
         navigationView = findViewById(R.id.nav_view);
 
@@ -121,11 +123,61 @@ public class MicroblogActivity extends AppCompatActivity
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Section section = (Section) sectionsAdapter.getItem(position);
-                startActivity(SectionActivity.getIntent(MicroblogActivity.this));
+
+                Intent intent = new Intent(getBaseContext(),SectionActivity.class);
+                intent.putExtra("NAME",section.getName());
+                intent.putExtra("DESCRIPTION",section.getDescription());
+                intent.putExtra("ID",section.getId());
+                Bundle bndlanimation = ActivityOptionsCompat.makeCustomAnimation(getApplicationContext(),R.anim.animation,R.anim.animation2).toBundle();
+                startActivity(intent,bndlanimation);
             }
         });
+        swipeRefreshLayout = findViewById(R.id.swipe_refresh_sections);
+        setSwipeRefreshLayout();
 
 
+    }
+
+    public void setSwipeRefreshLayout() {
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                boolean is_connected = Connectivity.isConnected(getApplicationContext());
+                if(is_connected) {
+                    VolleyGetSections.volleyGetSections(new VolleyStringCallback() {
+                        @Override
+                        public void onSuccess(String result) {
+                            Section section = new Section("","","");
+                            JSONArray jsonSections;
+                            try {
+                                jsonSections = new JSONArray(result);
+                                for (int i = 0; i < jsonSections.length(); i++) {
+                                    Log.i("JSON", jsonSections.get(i).toString());
+                                    JSONObject object = (JSONObject) jsonSections.get(i);
+                                    section.setName(object.get("name").toString());
+                                    section.setId(object.get("id").toString());
+                                    sectionsList.add(section);
+
+                                }
+
+                                sectionsAdapter = new SectionsAdapter(getApplicationContext(), sectionsList);
+                                sectionsListListView.setAdapter(sectionsAdapter);
+                            } catch (Exception e) {
+                            }
+                        }
+
+                        @Override
+                        public void onErrorResponse(VolleyError result) {
+
+                        }
+                    }, getApplicationContext());
+                } else {
+
+                }
+                swipeRefreshLayout.setRefreshing(false);
+            }
+
+        });
     }
 
     public static Intent getIntent(Context context) {
@@ -185,4 +237,5 @@ public class MicroblogActivity extends AppCompatActivity
         }
         return dir.delete();
     }
+
 }
