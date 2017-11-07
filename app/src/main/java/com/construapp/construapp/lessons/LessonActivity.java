@@ -12,6 +12,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,6 +23,7 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.android.volley.VolleyError;
+import com.construapp.construapp.api.VolleyPostFavouriteLesson;
 import com.construapp.construapp.main.MainActivity;
 import com.construapp.construapp.R;
 import com.construapp.construapp.ShowInfo;
@@ -98,6 +100,8 @@ public class LessonActivity extends LessonBaseActivity {
         btnEdit = findViewById(R.id.btn_edit);
         btnDelete = findViewById(R.id.btn_delete);
 
+        imageSwitcherFavourite = findViewById(R.id.image_switcher_favourite);
+
         textImages = findViewById(R.id.text_images);
         textVideos = findViewById(R.id.text_videos);
         textAudios = findViewById(R.id.text_audios);
@@ -146,6 +150,8 @@ public class LessonActivity extends LessonBaseActivity {
         if (!lesson.getValidation().equals(Constants.R_VALIDATED)){
             fabSend.setImageDrawable(ContextCompat.getDrawable(LessonActivity.this, R.drawable.ic_send_dark));
         }
+
+        if (lesson.getValidation().equals(Constants.R_VALIDATED)) imageSwitcherFavourite.setVisibility(View.VISIBLE);
 
         mStartRecording = true;
 
@@ -293,6 +299,7 @@ public class LessonActivity extends LessonBaseActivity {
 
         setImageDeleteLessonListener();
         setImageEditLessonListener();
+        setImageSwitcherFavouriteListener();
 
         //SET BUTTONS LISTENER
         setFabCameraOnClickListener();
@@ -509,7 +516,6 @@ public class LessonActivity extends LessonBaseActivity {
         });
     }
 
-
     public void setFabSendOnClickListener() {
         fabSend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -577,4 +583,24 @@ public class LessonActivity extends LessonBaseActivity {
         return editing;
     }
 
+    public void setImageSwitcherFavouriteListener() {
+        imageSwitcherFavourite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                VolleyPostFavouriteLesson.volleyPostFavouriteLesson(new VolleyStringCallback() {
+                    @Override
+                    public void onSuccess(String result) {
+                        Toast.makeText(LessonActivity.this,"Lección favorita agregada con éxito.",Toast.LENGTH_LONG).show();
+                        Log.i("POSTFAVOURITE", "success");
+                    }
+
+                    @Override
+                    public void onErrorResponse(VolleyError result) {
+                        Toast.makeText(LessonActivity.this,"Lección favorita no se logró agregarla con éxito.",Toast.LENGTH_LONG).show();
+                        Log.i("POSTFAVOURITE", "error");
+                    }
+                },LessonActivity.this,lesson.getId());
+            }
+        });
+    }
 }

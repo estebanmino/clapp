@@ -23,6 +23,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageSwitcher;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -128,6 +129,7 @@ public class LessonBaseActivity extends AppCompatActivity {
     public LinearLayout linearLayoutMultimedia;
     public TextView textAttachments;
 
+    public ImageSwitcher imageSwitcherFavourite;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

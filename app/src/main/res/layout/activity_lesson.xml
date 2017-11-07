@@ -13,8 +13,7 @@
     <android.support.constraint.ConstraintLayout
         android:id="@+id/constraint_action_bar"
         android:layout_width="0dp"
-        android:layout_height="72dp"
-        android:layout_marginBottom="0dp"
+        android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         android:elevation="4dp"
         android:visibility="gone"
@@ -224,11 +223,12 @@
         android:id="@+id/nestedScrollView3"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="0dp"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="0dp"
         app:layout_constraintBottom_toTopOf="@+id/constraint_multimedia_bar"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -242,6 +242,16 @@
             android:orientation="vertical"
             tools:layout_editor_absoluteX="8dp"
             tools:layout_editor_absoluteY="8dp">
+
+            <ImageSwitcher
+                android:id="@+id/image_switcher_favourite"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="right"
+                android:background="@android:drawable/btn_star_big_on"
+                android:visibility="gone"
+                tools:layout_editor_absoluteX="384dp"
+                tools:layout_editor_absoluteY="56dp" />
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
@@ -473,9 +483,6 @@
         android:id="@+id/linear_edition"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="0dp"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="0dp"
         android:elevation="4dp"
         android:orientation="horizontal"
         android:visibility="visible"
