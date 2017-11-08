@@ -63,6 +63,13 @@
 
     </android.support.constraint.ConstraintLayout>
 
+    <TextView
+        android:id="@+id/textViewNoMyLessons"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="No hay lecciones"
+        android:gravity="center"/>
+
     <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/swipe_refresh_my_lessons"
         android:layout_width="match_parent"
