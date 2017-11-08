@@ -258,7 +258,7 @@ public class LessonFormActivity extends LessonBaseActivity {
                               }
                           }, LessonFormActivity.this, new_lesson_id, path_input.split(";"));
                       } catch (Exception e) {
-                          Toast.makeText(LessonFormActivity.this, "No se pudo crear lección", Toast.LENGTH_LONG).show();
+                          Toast.makeText(LessonFormActivity.this, "Error con archivos multimedia", Toast.LENGTH_LONG).show();
                       }
                   } else {
                       Toast.makeText(LessonFormActivity.this, "Nueva lección creada", Toast.LENGTH_LONG).show();
@@ -267,13 +267,13 @@ public class LessonFormActivity extends LessonBaseActivity {
               }
               @Override
               public void onErrorResponse(VolleyError result) {
-                  Toast.makeText(LessonFormActivity.this, "No se pudo crear lección", Toast.LENGTH_LONG).show();
+                  Toast.makeText(LessonFormActivity.this, "No se pudo crear lección. Revisar que todos los campos estén completos", Toast.LENGTH_LONG).show();
               }
           }, LessonFormActivity.this, lesson_name, lesson_summary,
         lesson_motivation, lesson_learning,project_id, validateState).execute();
 
         if (!Connectivity.isConnected(LessonFormActivity.this)) {
-            Toast.makeText(LessonFormActivity.this, "Estás sin conexión, cuando se conecte se enviará automátocamente", Toast.LENGTH_LONG).show();
+            Toast.makeText(LessonFormActivity.this, "Estás sin conexión, cuando se conecte se enviará automáticamente", Toast.LENGTH_LONG).show();
 
             killActivity();
         }
