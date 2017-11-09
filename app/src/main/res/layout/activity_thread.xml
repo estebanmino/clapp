@@ -36,11 +36,11 @@
             </android.support.v7.widget.Toolbar>
 
             <TextView
-                android:id="@+id/section_description"
+                android:id="@+id/thread_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
                 android:layout_marginBottom="5dp"
+                android:layout_marginLeft="15dp"
                 android:layout_weight="1" />
 
         </android.support.design.widget.AppBarLayout>
@@ -58,7 +58,22 @@
                 android:layout_height="wrap_content">
 
                 <TextView
+                    android:id="@+id/textview_thread_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentStart="true"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="20dp"
+                    android:paddingTop="10dp"
+                    android:textColor="@color/colorSecondary"
+                    android:textSize="20sp"
+                    android:textStyle="normal"
+                    tools:text="Thread title" />
+
+                <TextView
                     android:id="@+id/textview_fullname"
+                    android:layout_below="@id/textview_thread_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
@@ -126,35 +141,23 @@
                 android:text="Comentarios" />
 
             <android.support.v4.widget.SwipeRefreshLayout
-                android:id="@+id/swipe_refresh_threads"
+                android:id="@+id/swipe_refresh_posts"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_below="@id/textview_comments_tag"
+                android:layout_height="wrap_content">
+
+                <ListView
+                    android:id="@+id/posts_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/textview_comments_tag"
+                    tools:layout_editor_absoluteX="8dp"
+                    tools:layout_editor_absoluteY="8dp" />
 
             </android.support.v4.widget.SwipeRefreshLayout>
 
-            <ListView
-                android:id="@+id/threads_list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/textview_comments_tag"
-                tools:layout_editor_absoluteX="8dp"
-                tools:layout_editor_absoluteY="8dp" />
 
         </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="282dp"
-            android:visibility="visible"></RelativeLayout>
-
-        <android.support.v4.view.ViewPager
-            android:id="@+id/fragment_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        </android.support.v4.view.ViewPager>
 
     </android.support.design.widget.CoordinatorLayout>
 

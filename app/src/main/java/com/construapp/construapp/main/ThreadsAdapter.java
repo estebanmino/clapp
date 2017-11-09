@@ -30,6 +30,8 @@ import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.models.Section;
 import com.construapp.construapp.models.Threadblog;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 
@@ -42,6 +44,7 @@ public class ThreadsAdapter extends BaseAdapter {
     private final List<Threadblog> threadModelList;
 
     private TextView threadTitle;
+    private TextView threadText;
 
     public ThreadsAdapter(Context context, List<Threadblog> threadModelList) {
         this.context = context;
@@ -80,13 +83,16 @@ public class ThreadsAdapter extends BaseAdapter {
             convertView = layoutInflater.inflate(R.layout.thread_list_item,null);
         }
 
-        threadTitle = convertView.findViewById(R.id.section_title);
+        threadTitle = convertView.findViewById(R.id.textview_thread_title);
+        threadText = convertView.findViewById(R.id.textview_thread_text);
 
 
         final String elementTitle = threadModelList.get(position).getTitle();
+        final String elementText = threadModelList.get(position).getText();
 
 
         threadTitle.setText(elementTitle);
+        threadText.setText(elementText);
 
 
 

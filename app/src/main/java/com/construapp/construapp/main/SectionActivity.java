@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -194,7 +195,12 @@ public class SectionActivity extends AppCompatActivity
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Threadblog thread = (Threadblog) threadsAdapter.getItem(position);
-                //
+                Intent intent = new Intent(getBaseContext(),ThreadActivity.class);
+                intent.putExtra("TITLE",thread.getTitle());
+                intent.putExtra("TEXT",thread.getAllText());
+                intent.putExtra("ID",thread.getId());
+                Bundle bndlanimation = ActivityOptionsCompat.makeCustomAnimation(getApplicationContext(),R.anim.animation,R.anim.animation2).toBundle();
+                startActivity(intent,bndlanimation);
             }
         });
 
@@ -280,7 +286,8 @@ public class SectionActivity extends AppCompatActivity
                                     Log.i("JSON", jsonThreads.get(i).toString());
                                     JSONObject object = (JSONObject) jsonThreads.get(i);
                                     thread.setTitle(object.get("title").toString());
-                                    thread.setText(object.get("text").toString().substring(0,10)+"...");
+                                    //TODO jose verificar que funcione substring
+                                    thread.setText(object.get("text").toString());
                                     thread.setId(object.get("id").toString());
                                     threadsList.add(thread);
 

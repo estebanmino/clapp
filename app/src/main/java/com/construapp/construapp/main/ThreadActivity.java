@@ -23,6 +23,7 @@ import com.android.volley.VolleyError;
 import com.construapp.construapp.LoginActivity;
 import com.construapp.construapp.R;
 import com.construapp.construapp.api.VolleyGetSections;
+import com.construapp.construapp.api.VolleyGetThread;
 import com.construapp.construapp.api.VolleyGetThreads;
 import com.construapp.construapp.db.Connectivity;
 import com.construapp.construapp.dbTasks.DeleteLessonTable;
@@ -109,6 +110,7 @@ public class ThreadActivity extends AppCompatActivity
     private String fullname;
     private String position;
     private String thread_id;
+    private String timestamp;
 
     JSONArray jsonArray;
     Map<String, String> projects;
@@ -116,33 +118,51 @@ public class ThreadActivity extends AppCompatActivity
     TextView mUserName;
     private General general;
 
+    private TextView threadtext;
+    private TextView userName;
+    private TextView threadTimestamp;
+    private TextView userPosition;
+
 
     private ConstraintLayout constraintLayoutFvourites;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_section);
+        setContentView(R.layout.activity_thread);
 
 
         title = getIntent().getStringExtra("TITLE");
-        text=getIntent().getStringExtra("TEXT");
+        text = getIntent().getStringExtra("TEXT");
+        fullname = "";
+        position = "";
+        timestamp = "";
         thread_id=getIntent().getStringExtra("ID");
 
-        sessionManager = new SessionManager(ThreadActivity.this);
-        sessionManager.setSection(thread_id);
-
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle(title);
+        //todo jose VAMOS A PROBAR SI QUEDA BIEN EL TITULO
+        //toolbar.setTitle(title);
         setSupportActionBar(toolbar);
 
         //todo jose terminar de pasar el codigo
 
-        TextView sectionDescription = findViewById(R.id.section_description);
-        sectionDescription.setText(description);
+        TextView threadTitle = findViewById(R.id.textview_thread_title);
+        threadTitle.setText(title);
 
-        threadsList = new ArrayList<Threadblog>();
+        threadtext = findViewById(R.id.textview_post_message);
+        threadtext.setText(text);
 
-        swipeRefreshLayout = findViewById(R.id.swipe_refresh_threads);
+        userName = findViewById(R.id.textview_fullname);
+        userName.setText(fullname);
+
+        threadTimestamp = findViewById(R.id.textview_post_timestamp);
+        threadTimestamp.setText(timestamp);
+
+        userPosition = findViewById(R.id.textview_position);
+        userPosition.setText(position);
+
+        postsList = new ArrayList<Post>();
+
+        swipeRefreshLayout = findViewById(R.id.swipe_refresh_posts);
 
         setSwipeRefreshLayout();
         swipeRefreshLayout.post(new Runnable() {
@@ -158,8 +178,10 @@ public class ThreadActivity extends AppCompatActivity
 
 
         sessionManager = new SessionManager(ThreadActivity.this);
-        threadsListListView = findViewById(R.id.threads_list);
-        threadsAdapter = new ThreadsAdapter(getApplicationContext(), threadsList);
+        sessionManager.setThreadId(thread_id);
+
+        postsListListView = findViewById(R.id.posts_list);
+        postsAdapter = new PostsAdapter(getApplicationContext(), postsList);
 
         try {
             jsonArray = new JSONArray(sessionManager.getProjects());
@@ -194,11 +216,11 @@ public class ThreadActivity extends AppCompatActivity
             }
         });
 
-        threadsListListView.setAdapter(threadsAdapter);
-        threadsListListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        postsListListView.setAdapter(postsAdapter);
+        postsListListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Threadblog thread = (Threadblog) threadsAdapter.getItem(position);
+                Post post = (Post) postsAdapter.getItem(position);
                 //
             }
         });
@@ -207,7 +229,7 @@ public class ThreadActivity extends AppCompatActivity
     }
 
     public static Intent getIntent(Context context) {
-        Intent intent = new Intent(context,SectionActivity.class);
+        Intent intent = new Intent(context,ThreadActivity.class);
         return intent;
     }
 
@@ -270,29 +292,39 @@ public class ThreadActivity extends AppCompatActivity
             public void onRefresh() {
                 boolean is_connected = Connectivity.isConnected(getApplicationContext());
                 if(is_connected) {
-                    VolleyGetThreads.volleyGetThreads(new VolleyStringCallback() {
+                    VolleyGetThread.volleyGetThread(new VolleyStringCallback() {
                         @Override
                         public void onSuccess(String result) {
-                            Threadblog thread;
-                            JSONArray jsonThreads;
+                            Post post;
+                            JSONArray jsonPosts;
                             try {
                                 JSONObject request = new JSONObject(result);
-                                jsonThreads = new JSONArray(request.getString("microblog_threads"));
-                                threadsList.clear();
+                                JSONObject user = new JSONObject(request.getString("user"));
+                                updateTextView(user.get("first_name").toString()+ " "+ user.get("last_name").toString(),R.id.textview_fullname);
+                                updateTextView(user.get("position").toString(),R.id.textview_position);
+                                //updateTextView(user.get("timestamp").toString(),R.id.textview_post_timestamp);
 
-                                for (int i = 0; i < jsonThreads.length(); i++) {
-                                    thread = new Threadblog("","","");
-                                    Log.i("JSON", jsonThreads.get(i).toString());
-                                    JSONObject object = (JSONObject) jsonThreads.get(i);
-                                    thread.setTitle(object.get("title").toString());
-                                    thread.setText(object.get("text").toString().substring(0,10)+"...");
-                                    thread.setId(object.get("id").toString());
-                                    threadsList.add(thread);
+                                jsonPosts = new JSONArray(request.getString("posts"));
+                                postsList.clear();
+
+                                for (int i = 0; i < jsonPosts.length(); i++) {
+                                    post = new Post();
+                                    Log.i("JSON", jsonPosts.get(i).toString());
+                                    JSONObject object = (JSONObject) jsonPosts.get(i);
+                                    post.setText(object.get("text").toString());
+                                    post.setId(object.get("id").toString());
+                                    JSONObject object2 = new JSONObject(object.getString("user"));
+                                    post.setTimestamp(object2.getString("created_at"));
+                                    post.setPosition(object2.getString("position"));
+                                    post.setFirst_name(object2.getString("first_name"));
+                                    post.setLast_name(object2.getString("last_name"));
+
+                                    postsList.add(post);
 
                                 }
                                 Log.i("REQ","HACIENDO REQ");
-                                threadsAdapter = new ThreadsAdapter(getApplicationContext(), threadsList);
-                                threadsListListView.setAdapter(threadsAdapter);
+                                postsAdapter = new PostsAdapter(getApplicationContext(), postsList);
+                                postsListListView.setAdapter(postsAdapter);
                             } catch (Exception e) {
                             }
                         }
@@ -315,9 +347,14 @@ public class ThreadActivity extends AppCompatActivity
     public void onBackPressed()
     {
 
-        sessionManager.clearSection(section_id);
+        sessionManager.clearThreadId();
         super.onBackPressed();
         overridePendingTransition(R.anim.animation_back1,R.anim.animation_back2);
 
+    }
+
+    public void updateTextView(String toThis,int tv) {
+        TextView textView = (TextView) findViewById(tv);
+        textView.setText(toThis);
     }
 }

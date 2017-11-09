@@ -5,6 +5,16 @@ package com.construapp.construapp.models;
  */
 
 public class Post {
+
+    public Post() {
+        setId("");
+        setText("");
+        setFirst_name("");
+        setLast_name("");
+        setPosition("");
+        setTimestamp("");
+    }
+
     private String text;
 
     public String getId() {
