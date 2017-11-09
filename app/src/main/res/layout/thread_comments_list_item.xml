@@ -6,13 +6,8 @@
     android:layout_height="match_parent">
 
 
-    <GridView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:numColumns="2"/>
-
     <TextView
-        android:id="@+id/section_name"
+        android:id="@+id/textview_fullname"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
@@ -26,11 +21,11 @@
         tools:text="Woody del Oeste" />
 
     <TextView
-        android:id="@+id/post_message"
+        android:id="@+id/textview_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/imageView2"
+        android:layout_below="@+id/imageview_user"
         android:paddingBottom="20dp"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
@@ -39,24 +34,34 @@
         tools:text="Hola, me gustó mucho tu comentario. Espero ser tu amigo fiel." />
 
     <TextView
-        android:id="@+id/post_timestamp"
+        android:id="@+id/textview_post_timestamp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/section_name"
+        android:layout_below="@+id/textview_fullname"
         android:paddingRight="10dp"
         android:text="9 Nov 2017, 03:33 PM"
         android:textAlignment="textEnd"
         android:textSize="9sp" />
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/imageview_user"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:srcCompat="@mipmap/admin_img"
         android:layout_marginStart="12dp"
-        android:layout_below="@+id/section_name"
+        android:layout_below="@+id/textview_post_timestamp"
         android:layout_alignParentStart="true" />
+
+    <TextView
+        android:id="@+id/textview_position"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="DEV conquistador del mundo"
+        android:textSize="12sp"
+        android:textColor="@color/colorAccent"
+        android:layout_above="@+id/imageview_user"
+        android:layout_alignStart="@+id/imageview_user" />
 
 
 </RelativeLayout>
