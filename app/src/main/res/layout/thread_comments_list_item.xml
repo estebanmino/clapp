@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <GridView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:numColumns="2"/>
+
+    <TextView
+        android:id="@+id/section_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:paddingBottom="10dp"
+        android:paddingLeft="20dp"
+        android:paddingTop="10dp"
+        android:textSize="14sp"
+        android:textStyle="normal"
+        android:textColor="@color/colorSecondary"
+        tools:text="Woody del Oeste" />
+
+    <TextView
+        android:id="@+id/post_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/imageView2"
+        android:paddingBottom="20dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:textColor="@color/black_overlay"
+        android:textSize="12sp"
+        tools:text="Hola, me gustó mucho tu comentario. Espero ser tu amigo fiel." />
+
+    <TextView
+        android:id="@+id/post_timestamp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/section_name"
+        android:paddingRight="10dp"
+        android:text="9 Nov 2017, 03:33 PM"
+        android:textAlignment="textEnd"
+        android:textSize="9sp" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@mipmap/admin_img"
+        android:layout_marginStart="12dp"
+        android:layout_below="@+id/section_name"
+        android:layout_alignParentStart="true" />
+
+
+</RelativeLayout>
