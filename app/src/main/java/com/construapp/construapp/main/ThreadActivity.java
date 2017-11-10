@@ -12,9 +12,12 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -127,6 +130,8 @@ public class ThreadActivity extends AppCompatActivity
     private TextView threadTimestamp;
     private TextView userPosition;
 
+    private LinearLayout mContainerView;
+
 
     private ConstraintLayout constraintLayoutFvourites;
     @Override
@@ -229,6 +234,13 @@ public class ThreadActivity extends AppCompatActivity
             }
         });
 
+        postsListListView.setOnTouchListener(new View.OnTouchListener() {
+
+            public boolean onTouch(View v, MotionEvent event) {
+                return (event.getAction() == MotionEvent.ACTION_MOVE);
+            }
+        });
+
 
     }
 
@@ -312,27 +324,41 @@ public class ThreadActivity extends AppCompatActivity
                                 //updateTextView(user.get("timestamp").toString(),R.id.textview_post_timestamp);
 
                                 jsonPosts = new JSONArray(request.getString("posts"));
-                                postsList.clear();
+                                //postsList.clear();
+
+                                mContainerView = (LinearLayout)findViewById(R.id.linear_layout_posts);
 
 
                                 for (int i = 0; i < jsonPosts.length(); i++) {
-                                    post = new Post();
+                                    //post = new Post();
+                                    LayoutInflater inflater =(LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                                    View myView = inflater.inflate(R.layout.thread_comments_list_item, null);
+
                                     Log.i("JSON", jsonPosts.get(i).toString());
                                     JSONObject object = (JSONObject) jsonPosts.get(i);
-                                    post.setText(object.get("text").toString());
-                                    post.setId(object.get("id").toString());
+                                    //post.setText(object.get("text").toString());
+                                    //post.setId(object.get("id").toString());
                                     JSONObject object2 = new JSONObject(object.getString("user"));
-                                    post.setTimestamp(object2.getString("created_at"));
-                                    post.setPosition(object2.getString("position"));
-                                    post.setFirst_name(object2.getString("first_name"));
-                                    post.setLast_name(object2.getString("last_name"));
+                                    TextView fullname = myView.findViewById(R.id.textview_fullname);
+                                    fullname.setText(object2.getString("first_name")+" "+object2.getString("last_name"));
 
-                                    postsList.add(post);
+                                    TextView timestamp = myView.findViewById(R.id.textview_post_timestamp);
+                                    timestamp.setText(object2.getString("created_at"));
+
+                                    TextView position = myView.findViewById(R.id.textview_position);
+                                    position.setText(object2.getString("position"));
+
+                                    TextView text = myView.findViewById(R.id.textview_text);
+                                    text.setText(object.getString("text"));
+
+                                    mContainerView.addView(myView);
+
+                                    //postsList.add(post);
 
                                 }
                                 Log.i("REQ","HACIENDO REQ");
-                                postsAdapter = new PostsAdapter(getApplicationContext(), postsList);
-                                postsListListView.setAdapter(postsAdapter);
+                                //postsAdapter = new PostsAdapter(getApplicationContext(), postsList);
+                                //postsListListView.setAdapter(postsAdapter);
                             } catch (Exception e) {
                             }
                         }
@@ -350,6 +376,7 @@ public class ThreadActivity extends AppCompatActivity
 
         });
     }
+
 
     @Override
     public void onBackPressed()

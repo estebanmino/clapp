@@ -44,13 +44,23 @@
                 android:layout_weight="1" />
 
         </android.support.design.widget.AppBarLayout>
-
-
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh_posts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="88dp">
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:id="@+id/linear_layout_posts"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
         <RelativeLayout
             android:id="@+id/thread_relativelayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="85dp">
+            android:layout_height="wrap_content">
 
             <RelativeLayout
                 android:id="@+id/thread_content"
@@ -132,11 +142,7 @@
                 android:layout_below="@id/thread_content"
                 android:text="" />
 
-            <android.support.v4.widget.SwipeRefreshLayout
-                android:id="@+id/swipe_refresh_posts"
-                android:layout_width="match_parent"
-                android:layout_below="@id/textview_comments_tag"
-                android:layout_height="wrap_content">
+
 
                 <ListView
                     android:id="@+id/posts_list"
@@ -146,10 +152,11 @@
                     tools:layout_editor_absoluteX="8dp"
                     tools:layout_editor_absoluteY="8dp" />
 
-            </android.support.v4.widget.SwipeRefreshLayout>
-
 
         </RelativeLayout>
+    </LinearLayout>
+</ScrollView>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     </android.support.design.widget.CoordinatorLayout>
 

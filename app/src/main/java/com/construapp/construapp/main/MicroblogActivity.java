@@ -22,6 +22,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -67,6 +68,7 @@ public class MicroblogActivity extends AppCompatActivity
     private String[] mProjectTitles;
     private ViewPager sectionsView;
     private SwipeRefreshLayout.OnRefreshListener swipeRefreshListener;
+
 
     JSONArray jsonArray;
     Map<String, String> projects;
