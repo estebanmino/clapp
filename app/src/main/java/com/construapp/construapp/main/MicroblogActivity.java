@@ -35,6 +35,7 @@ import com.construapp.construapp.db.Connectivity;
 import com.construapp.construapp.dbTasks.DeleteLessonTable;
 import com.construapp.construapp.dbTasks.GetLessonsTask;
 import com.construapp.construapp.dbTasks.InsertLessonTask;
+import com.construapp.construapp.lessons.FavouriteLessonsActivity;
 import com.construapp.construapp.lessons.LessonActivity;
 import com.construapp.construapp.lessons.LessonViewFragment;
 import com.construapp.construapp.listeners.VolleyStringCallback;
@@ -198,6 +199,22 @@ public class MicroblogActivity extends AppCompatActivity
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        if (navigationView.isShown())
+        {
+            DrawerLayout drawer = findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
+        }
+        else
+        {
+            finish();
+
+        }
+
+
+    }
+
     public static Intent getIntent(Context context) {
         Intent intent = new Intent(context,MicroblogActivity.class);
         return intent;
@@ -226,11 +243,11 @@ public class MicroblogActivity extends AppCompatActivity
             sessionManager.setActualProject(Constants.ALL_PROJECTS_KEY,Constants.ALL_PROJECTS_NAME);
             startActivity(MainActivity.getIntent(MicroblogActivity.this));
         } else  if (item.getItemId() == R.id.to_blog) {
-            //startActivity(MicroblogActivity.getIntent(FavouriteLessonsActivity.this));
-        } //else  if (item.getItemId() == R.id.to_favourites) {
-            //startActivity(FavouriteLessonsActivity.getIntent(FavouriteLessonsActivity.this));
+            //startActivity(MicroblogActivity.getIntent(MicroblogActivity.this));
+        } else  if (item.getItemId() == R.id.to_favourites) {
+            startActivity(FavouriteLessonsActivity.getIntent(MicroblogActivity.this));
             //IMPLEMENT
-        //}
+        }
         else {
             String map = item.getTitle().toString();
             Intent intent = getIntent();

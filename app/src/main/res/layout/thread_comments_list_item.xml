@@ -30,7 +30,7 @@
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
         android:textColor="@color/black_overlay"
-        android:textSize="12sp"
+        android:textSize="16sp"
         tools:text="Hola, me gustó mucho tu comentario. Espero ser tu amigo fiel." />
 
     <TextView
@@ -42,7 +42,7 @@
         android:paddingRight="10dp"
         android:text="9 Nov 2017, 03:33 PM"
         android:textAlignment="textEnd"
-        android:textSize="9sp" />
+        android:textSize="12sp" />
 
     <ImageView
         android:id="@+id/imageview_user"
@@ -58,7 +58,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="DEV conquistador del mundo"
-        android:textSize="12sp"
+        android:textSize="14sp"
         android:textColor="@color/colorAccent"
         android:layout_above="@+id/imageview_user"
         android:layout_alignStart="@+id/imageview_user" />

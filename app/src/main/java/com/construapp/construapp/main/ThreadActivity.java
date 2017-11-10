@@ -348,8 +348,9 @@ public class ThreadActivity extends AppCompatActivity
     {
 
         sessionManager.clearThreadId();
-        super.onBackPressed();
-        overridePendingTransition(R.anim.animation_back1,R.anim.animation_back2);
+        //super.onBackPressed();
+        //overridePendingTransition(R.anim.animation_back1,R.anim.animation_back2);
+        finish();
 
     }
 

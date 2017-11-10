@@ -103,7 +103,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:layout_below="@+id/textview_post_timestamp"
-                    android:layout_marginStart="12dp"
+                    android:layout_marginStart="16dp"
                     app:srcCompat="@mipmap/admin_img" />
 
                 <TextView
@@ -114,7 +114,7 @@
                     android:layout_alignStart="@+id/imageview_user"
                     android:text="DEV conquistador del mundo"
                     android:textColor="@color/colorAccent"
-                    android:textSize="12sp" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/textview_post_message"
@@ -126,7 +126,7 @@
                     android:paddingLeft="20dp"
                     android:paddingRight="20dp"
                     android:textColor="@android:color/black"
-                    android:textSize="12sp"
+                    android:textSize="16sp"
                     tools:text="Hola, me gustó mucho tu comentario. Espero ser tu amigo fiel." />
             </RelativeLayout>
 

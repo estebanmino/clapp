@@ -318,8 +318,9 @@ public class SectionActivity extends AppCompatActivity
     {
 
         sessionManager.clearSection(section_id);
-        super.onBackPressed();
-        overridePendingTransition(R.anim.animation_back1,R.anim.animation_back2);
+        //super.onBackPressed();
+        //overridePendingTransition(R.anim.animation_back1,R.anim.animation_back2);
+        finish();
 
     }
 }
