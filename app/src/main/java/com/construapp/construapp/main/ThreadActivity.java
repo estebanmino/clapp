@@ -38,8 +38,12 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -309,6 +313,7 @@ public class ThreadActivity extends AppCompatActivity
 
                                 jsonPosts = new JSONArray(request.getString("posts"));
                                 postsList.clear();
+
 
                                 for (int i = 0; i < jsonPosts.length(); i++) {
                                     post = new Post();
