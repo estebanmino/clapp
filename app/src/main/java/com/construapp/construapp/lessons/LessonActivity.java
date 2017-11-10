@@ -465,65 +465,11 @@ public class LessonActivity extends LessonBaseActivity {
         }
     }
 
-    public void setFabSaveOnClickListener(){
+    public void setFabSaveOnClickListener() {
         fabSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment fragment = getFragmentManager().findFragmentById(R.id.constraint_fragment_container);
-                EditText editLessonName = fragment.getView().findViewById(R.id.edit_lesson_name);
-                EditText editLessonSummary = fragment.getView().findViewById(R.id.edit_lesson_summary);
-                EditText editLessonMotivation = fragment.getView().findViewById(R.id.edit_lesson_motivation);
-                EditText editLessonLearning = fragment.getView().findViewById(R.id.edit_lesson_learning);
-
-                String lesson_name = editLessonName.getText().toString();
-                String lesson_summary = editLessonSummary.getText().toString();
-                String lesson_motivation = editLessonMotivation.getText().toString();
-                String lesson_learning = editLessonLearning.getText().toString();
-                String project_id = lesson.getProject_id();
-                String validation = lesson.getValidation();
-                ArrayList<String> array_added =  lesson.getAddedMultimediaKeysS3();
-                ArrayList<String> array_deleted =  lesson.getDeletedMultimediaFilesS3Keys();
-                new VolleyPutLesson(new VolleyJSONCallback() {
-                    @Override
-                    public void onSuccess(JSONObject result) {
-                        Toast.makeText(LessonActivity.this, "Lección editada", Toast.LENGTH_LONG).show();
-                        String start = Constants.S3_LESSONS_PATH+"/"+lesson.getId()+"/";
-                        for (MultimediaFile multimediaFile: lesson.getMultimediaPicturesFiles()) {
-                            if (multimediaFile.getAdded() == 1) {
-                                multimediaFile.setExtension(start+Constants.S3_IMAGES_PATH);
-                                multimediaFile.initUploadThread();
-                            }
-                        }
-                        for (MultimediaFile multimediaFile: lesson.getMultimediaAudiosFiles()) {
-                            if (multimediaFile.getAdded() == 1) {
-                                multimediaFile.setExtension(start+Constants.S3_AUDIOS_PATH);
-                                multimediaFile.initUploadThread();
-                            }
-                        }
-                        for (MultimediaFile multimediaFile: lesson.getMultimediaDocumentsFiles()) {
-                            if (multimediaFile.getAdded() == 1) {
-                                multimediaFile.setExtension(start+Constants.S3_DOCS_PATH);
-                                multimediaFile.initUploadThread();
-                            }
-                        }
-                        for (MultimediaFile multimediaFile: lesson.getMultimediaVideosFiles()) {
-                            if (multimediaFile.getAdded() == 1) {
-                                multimediaFile.setExtension(start+Constants.S3_VIDEOS_PATH);
-                                multimediaFile.initUploadThread();
-                            }
-                        }
-                        startActivity(MainActivity.getIntent(LessonActivity.this));
-                    }
-
-                    @Override
-                    public void onErrorResponse(VolleyError result) {
-                        Toast.makeText(LessonActivity.this, "No se puede editar la lección en este momento", Toast.LENGTH_LONG).show();
-                    }
-                }, LessonActivity.this,
-                        lesson.getId(), lesson_name, lesson_summary,
-                        lesson_motivation, lesson_learning, array_added, array_deleted, validation
-                ).execute();
-
+                putLesson(lesson.getValidation());
             }
         });
     }
@@ -532,64 +478,71 @@ public class LessonActivity extends LessonBaseActivity {
         fabSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment fragment = getFragmentManager().findFragmentById(R.id.constraint_fragment_container);
-                EditText editLessonName = fragment.getView().findViewById(R.id.edit_lesson_name);
-                EditText editLessonSummary = fragment.getView().findViewById(R.id.edit_lesson_summary);
-                EditText editLessonMotivation = fragment.getView().findViewById(R.id.edit_lesson_motivation);
-                EditText editLessonLearning = fragment.getView().findViewById(R.id.edit_lesson_learning);
-
-                String lesson_name = editLessonName.getText().toString();
-                String lesson_summary = editLessonSummary.getText().toString();
-                String lesson_motivation = editLessonMotivation.getText().toString();
-                String lesson_learning = editLessonLearning.getText().toString();
-                String project_id = lesson.getProject_id();
-                String validation = Constants.R_WAITING;
-                ArrayList<String> array_added =  lesson.getAddedMultimediaKeysS3();
-                ArrayList<String> array_deleted =  lesson.getDeletedMultimediaFilesS3Keys();
-                new VolleyPutLesson(new VolleyJSONCallback() {
-                    @Override
-                    public void onSuccess(JSONObject result) {
-                        Toast.makeText(LessonActivity.this, "Lección editada", Toast.LENGTH_LONG).show();
-                        String start = Constants.S3_LESSONS_PATH+"/"+lesson.getId()+"/";
-                        for (MultimediaFile multimediaFile: lesson.getMultimediaPicturesFiles()) {
-                            if (multimediaFile.getAdded() == 1) {
-                                multimediaFile.setExtension(start+Constants.S3_IMAGES_PATH);
-                                multimediaFile.initUploadThread();
-                            }
-                        }
-                        for (MultimediaFile multimediaFile: lesson.getMultimediaAudiosFiles()) {
-                            if (multimediaFile.getAdded() == 1) {
-                                multimediaFile.setExtension(start+Constants.S3_AUDIOS_PATH);
-                                multimediaFile.initUploadThread();
-                            }
-                        }
-                        for (MultimediaFile multimediaFile: lesson.getMultimediaDocumentsFiles()) {
-                            if (multimediaFile.getAdded() == 1) {
-                                multimediaFile.setExtension(start+Constants.S3_DOCS_PATH);
-                                multimediaFile.initUploadThread();
-                            }
-                        }
-                        for (MultimediaFile multimediaFile: lesson.getMultimediaVideosFiles()) {
-                            if (multimediaFile.getAdded() == 1) {
-                                multimediaFile.setExtension(start+Constants.S3_VIDEOS_PATH);
-                                multimediaFile.initUploadThread();
-                            }
-                        }
-                        startActivity(MainActivity.getIntent(LessonActivity.this));
-                    }
-
-                    @Override
-                    public void onErrorResponse(VolleyError result) {
-                        Toast.makeText(LessonActivity.this, "No se puede editar la lección en este momento", Toast.LENGTH_LONG).show();
-                    }
-                }, LessonActivity.this,
-                        lesson.getId(), lesson_name, lesson_summary,
-                        lesson_motivation, lesson_learning, array_added, array_deleted, validation
-                ).execute();
-
+                putLesson(Constants.R_WAITING);
             }
         });
     }
+
+
+
+    public void putLesson(String validation){
+        Fragment fragment = getFragmentManager().findFragmentById(R.id.constraint_fragment_container);
+        EditText editLessonName = fragment.getView().findViewById(R.id.edit_lesson_name);
+        EditText editLessonSummary = fragment.getView().findViewById(R.id.edit_lesson_summary);
+        EditText editLessonMotivation = fragment.getView().findViewById(R.id.edit_lesson_motivation);
+        EditText editLessonLearning = fragment.getView().findViewById(R.id.edit_lesson_learning);
+
+        String lesson_name = editLessonName.getText().toString();
+        String lesson_summary = editLessonSummary.getText().toString();
+        String lesson_motivation = editLessonMotivation.getText().toString();
+        String lesson_learning = editLessonLearning.getText().toString();
+        String project_id = lesson.getProject_id();
+        //String validation = lesson.getValidation();
+        ArrayList<String> array_added =  lesson.getAddedMultimediaKeysS3();
+        ArrayList<String> array_deleted =  lesson.getDeletedMultimediaFilesS3Keys();
+        VolleyPutLesson.volleyPutLesson(new VolleyJSONCallback() {
+            @Override
+            public void onSuccess(JSONObject result) {
+                Toast.makeText(LessonActivity.this, "Lección editada", Toast.LENGTH_LONG).show();
+                String start = Constants.S3_LESSONS_PATH+"/"+lesson.getId()+"/";
+                for (MultimediaFile multimediaFile: lesson.getMultimediaPicturesFiles()) {
+                    if (multimediaFile.getAdded() == 1) {
+                        multimediaFile.setExtension(start+Constants.S3_IMAGES_PATH);
+                        multimediaFile.initUploadThread();
+                    }
+                }
+                for (MultimediaFile multimediaFile: lesson.getMultimediaAudiosFiles()) {
+                    if (multimediaFile.getAdded() == 1) {
+                        multimediaFile.setExtension(start+Constants.S3_AUDIOS_PATH);
+                        multimediaFile.initUploadThread();
+                    }
+                }
+                for (MultimediaFile multimediaFile: lesson.getMultimediaDocumentsFiles()) {
+                    if (multimediaFile.getAdded() == 1) {
+                        multimediaFile.setExtension(start+Constants.S3_DOCS_PATH);
+                        multimediaFile.initUploadThread();
+                    }
+                }
+                for (MultimediaFile multimediaFile: lesson.getMultimediaVideosFiles()) {
+                    if (multimediaFile.getAdded() == 1) {
+                        multimediaFile.setExtension(start+Constants.S3_VIDEOS_PATH);
+                        multimediaFile.initUploadThread();
+                    }
+                }
+                startActivity(MainActivity.getIntent(LessonActivity.this));
+            }
+
+            @Override
+            public void onErrorResponse(VolleyError result) {
+                Toast.makeText(LessonActivity.this, "No se puede editar la lección en este momento", Toast.LENGTH_LONG).show();
+            }
+        }, LessonActivity.this,
+                lesson.getId(), lesson_name, lesson_summary,
+                lesson_motivation, lesson_learning, array_added, array_deleted, validation
+        );
+
+    }
+
 
     public Boolean getEditing(){
         return editing;
