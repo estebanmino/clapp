@@ -327,6 +327,7 @@ public class ThreadActivity extends AppCompatActivity
                                 //postsList.clear();
 
                                 mContainerView = (LinearLayout)findViewById(R.id.linear_layout_posts);
+                                mContainerView.removeAllViews();
 
 
                                 for (int i = 0; i < jsonPosts.length(); i++) {
@@ -381,13 +382,19 @@ public class ThreadActivity extends AppCompatActivity
     @Override
     public void onBackPressed()
     {
-
-        sessionManager.clearThreadId();
-        //super.onBackPressed();
-        //overridePendingTransition(R.anim.animation_back1,R.anim.animation_back2);
-        finish();
-
+        if (navigationView.isShown())
+        {
+            DrawerLayout drawer = findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
+        }
+        else {
+            sessionManager.clearThreadId();
+            //super.onBackPressed();
+            //overridePendingTransition(R.anim.animation_back1,R.anim.animation_back2);
+            finish();
+        }
     }
+
 
     public void updateTextView(String toThis,int tv) {
         TextView textView = (TextView) findViewById(tv);

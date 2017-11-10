@@ -33,8 +33,8 @@ public class Threadblog {
     }
 
     public String getText() {
-        if(text.length()>20) {
-            return text.substring(0, 20) + "....";
+        if(text.length()>40) {
+            return text.substring(0, 40) + "....";
         }
         else return text;
     }

@@ -316,11 +316,17 @@ public class SectionActivity extends AppCompatActivity
     @Override
     public void onBackPressed()
     {
-
-        sessionManager.clearSection(section_id);
-        //super.onBackPressed();
-        //overridePendingTransition(R.anim.animation_back1,R.anim.animation_back2);
-        finish();
-
+        if (navigationView.isShown())
+        {
+            DrawerLayout drawer = findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
+        }
+        else {
+            sessionManager.clearSection(section_id);
+            //super.onBackPressed();
+            //overridePendingTransition(R.anim.animation_back1,R.anim.animation_back2);
+            finish();
+        }
     }
+
 }
