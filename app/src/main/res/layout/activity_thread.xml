@@ -138,7 +138,7 @@
                 android:layout_marginLeft="20dp"
                 android:textColor="@color/colorSecondary"
                 android:layout_below="@id/thread_content"
-                android:text="Comentarios" />
+                android:text="" />
 
             <android.support.v4.widget.SwipeRefreshLayout
                 android:id="@+id/swipe_refresh_posts"

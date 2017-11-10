@@ -145,11 +145,11 @@ public class ThreadActivity extends AppCompatActivity
 
         //todo jose terminar de pasar el codigo
 
-        TextView threadTitle = findViewById(R.id.textview_thread_title);
-        threadTitle.setText(title);
+        //TextView threadTitle = findViewById(R.id.textview_thread_title);
+        //threadTitle.setText(title);
 
-        threadtext = findViewById(R.id.textview_post_message);
-        threadtext.setText(text);
+        //threadtext = findViewById(R.id.textview_post_message);
+        //threadtext.setText(text);
 
         userName = findViewById(R.id.textview_fullname);
         userName.setText(fullname);
@@ -302,6 +302,9 @@ public class ThreadActivity extends AppCompatActivity
                                 JSONObject user = new JSONObject(request.getString("user"));
                                 updateTextView(user.get("first_name").toString()+ " "+ user.get("last_name").toString(),R.id.textview_fullname);
                                 updateTextView(user.get("position").toString(),R.id.textview_position);
+                                updateTextView(title,R.id.textview_thread_title);
+                                updateTextView(text,R.id.textview_post_message);
+                                updateTextView("Comentarios",R.id.textview_comments_tag);
                                 //updateTextView(user.get("timestamp").toString(),R.id.textview_post_timestamp);
 
                                 jsonPosts = new JSONArray(request.getString("posts"));
