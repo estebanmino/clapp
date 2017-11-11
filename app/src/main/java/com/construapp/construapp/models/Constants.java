@@ -54,6 +54,7 @@ public interface Constants {
     String SP_HAS_PENDING_VALIDATIONS = "has_pending_validations";
     String SP_PENDING_VALIDATIONS = "pending_validations";
     String SP_FAVOURITE_LESSONS = "favourite_lessons";
+    String SP_THREAD_ID = "thread_id";
 
     //Queries
     String Q_AUTHORIZATION = "Authorization";

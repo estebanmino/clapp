@@ -85,7 +85,7 @@ public class MyLessonsFragment extends Fragment {
         btnLessonsRejected  = view.findViewById(R.id.btn_lessons_rejected);
         btnLessonsSaved  = view.findViewById(R.id.btn_lessons_saved);
         btnLessonsSaved.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-        lessonsValidationState = Constants.R_REJECTED;
+        lessonsValidationState = Constants.R_SAVED;
 
         btnLessonsRejected.setOnClickListener(new View.OnClickListener() {
             @Override

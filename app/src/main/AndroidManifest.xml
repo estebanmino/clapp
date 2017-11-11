@@ -65,10 +65,16 @@
             android:label="@string/title_activity_favourite_lessons" />
         <activity
             android:name=".main.MicroblogActivity"
-            android:label="microblog"/>
+            android:label="microblog"
+            android:configChanges="orientation|screenSize"/>
         <activity
             android:name=".main.SectionActivity"
-            android:label="microblog"/>
+            android:label="Section"
+            android:configChanges="orientation|screenSize"/>
+        <activity
+            android:name=".main.ThreadActivity"
+            android:label="Thread"
+            android:configChanges="orientation|screenSize"/>
     </application>
 
 </manifest>

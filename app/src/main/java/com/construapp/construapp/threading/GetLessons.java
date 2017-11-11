@@ -42,7 +42,6 @@ public class GetLessons extends AsyncTask {
                     try {
                         jsonLessons = new JSONArray(result);
                         for (int i = 0; i  < jsonLessons.length(); i++) {
-                            Log.i("JSON",jsonLessons.get(i).toString());
                             JSONObject object = (JSONObject) jsonLessons.get(i);
                             lesson.setName(object.get("name").toString());
                             lesson.setSummary(object.get("summary").toString());

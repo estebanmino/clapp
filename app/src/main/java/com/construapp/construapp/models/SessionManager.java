@@ -196,4 +196,21 @@ public class SessionManager {
 
         editor.apply();
     }
+
+    public void setThreadId(String threadId)
+    {
+        editor.putString(Constants.SP_THREAD_ID,  threadId);
+        editor.apply();
+    }
+
+    public String getThreadId()
+    {
+        return sharedPreferences.getString(Constants.SP_THREAD_ID, "");
+    }
+
+    public void clearThreadId()
+    {
+        editor.remove(Constants.SP_THREAD_ID);
+        editor.commit();
+    }
 }
