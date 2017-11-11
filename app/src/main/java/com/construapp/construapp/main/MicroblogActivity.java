@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
@@ -42,6 +43,7 @@ import com.construapp.construapp.lessons.LessonViewFragment;
 import com.construapp.construapp.listeners.VolleyStringCallback;
 import com.construapp.construapp.main.MainActivity;
 import com.construapp.construapp.microblog.MicroblogFragment;
+import com.construapp.construapp.microblog.MicroblogSectionsActivity;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.General;
 import com.construapp.construapp.models.Lesson;
@@ -68,6 +70,7 @@ public class MicroblogActivity extends AppCompatActivity
     private String[] mProjectTitles;
     private ViewPager sectionsView;
     private SwipeRefreshLayout.OnRefreshListener swipeRefreshListener;
+    private FloatingActionButton fabNewSection;
 
 
     JSONArray jsonArray;
@@ -117,7 +120,13 @@ public class MicroblogActivity extends AppCompatActivity
 
 
         navigationView = findViewById(R.id.nav_view);
-
+        fabNewSection = findViewById(R.id.fab_new_section);
+        fabNewSection.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(MicroblogSectionsActivity.getIntent(MicroblogActivity.this));
+            }
+        });
 
 
 

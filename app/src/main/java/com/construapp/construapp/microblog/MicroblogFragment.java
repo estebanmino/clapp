@@ -1,23 +1,21 @@
 package com.construapp.construapp.microblog;
 
-import android.content.Context;
-import android.net.Uri;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.app.Fragment;
+import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.construapp.construapp.R;
-import com.construapp.construapp.main.LessonsAdapter;
 import com.construapp.construapp.models.Constants;
 
 import java.util.ArrayList;
 
 
 public class MicroblogFragment extends Fragment {
-
 
     ArrayList<String> sectionsArray;
     @Override

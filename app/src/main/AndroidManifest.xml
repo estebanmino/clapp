@@ -59,22 +59,25 @@
         <activity android:name=".ShowInfo" />
         <activity
             android:name=".lessons.LessonValidationActivity"
-            android:label="@string/title_activity_validate_lesson_form"/>
+            android:label="@string/title_activity_validate_lesson_form" />
         <activity
             android:name=".lessons.FavouriteLessonsActivity"
             android:label="@string/title_activity_favourite_lessons" />
         <activity
             android:name=".main.MicroblogActivity"
-            android:label="microblog"
-            android:configChanges="orientation|screenSize"/>
+            android:configChanges="orientation|screenSize"
+            android:label="microblog" />
         <activity
             android:name=".main.SectionActivity"
-            android:label="Section"
-            android:configChanges="orientation|screenSize"/>
+            android:configChanges="orientation|screenSize"
+            android:label="Section" />
         <activity
             android:name=".main.ThreadActivity"
-            android:label="Thread"
-            android:configChanges="orientation|screenSize"/>
+            android:configChanges="orientation|screenSize"
+            android:label="Thread" />
+        <activity
+            android:name=".microblog.MicroblogSectionsActivity"
+            android:label="@string/title_activity_microblog_sections"></activity>
     </application>
 
 </manifest>

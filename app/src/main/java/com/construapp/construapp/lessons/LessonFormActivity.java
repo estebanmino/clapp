@@ -188,7 +188,7 @@ public class LessonFormActivity extends LessonBaseActivity {
     public void createLesson(String validateState) {
         SessionManager sessionManager = new SessionManager(LessonFormActivity.this);
         Fragment fragment = getFragmentManager().findFragmentById(R.id.constraint_fragment_container);
-        EditText editLessonName = fragment.getView().findViewById(R.id.edit_lesson_name);
+        EditText editLessonName = fragment.getView().findViewById(R.id.new_section_name);
         EditText editLessonSummary = fragment.getView().findViewById(R.id.edit_lesson_summary);
         EditText editLessonMotivation = fragment.getView().findViewById(R.id.edit_lesson_motivation);
         EditText editLessonLearning = fragment.getView().findViewById(R.id.edit_lesson_learning);
