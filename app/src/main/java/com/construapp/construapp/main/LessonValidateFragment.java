@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.construapp.construapp.dbTasks.GetLessonTask;
@@ -41,6 +42,7 @@ public class LessonValidateFragment extends Fragment {
     private SwipeRefreshLayout swipeRefreshLayout;
     private SwipeRefreshLayout.OnRefreshListener swipeRefreshListener;
     private SessionManager sessionManager;
+    private TextView noLessons;
 
     private String user_id;
     private String project_id;
@@ -76,7 +78,7 @@ public class LessonValidateFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
+        noLessons = view.findViewById(R.id.textViewNoValidateLessons);
         validateLessonsList = view.findViewById(R.id.validation_lessons_list);
 
         validateLessonsList.setAdapter(lessonsAdapter);
@@ -100,6 +102,12 @@ public class LessonValidateFragment extends Fragment {
             }
         });
         swipeRefreshLayout.setOnRefreshListener(swipeRefreshListener);
+        if (lessonList.isEmpty()){
+            noLessons.setVisibility(View.VISIBLE);
+        }
+        else {
+            noLessons.setVisibility(View.GONE);
+        }
     }
 
     public void setSwipeRefreshLayout() {
