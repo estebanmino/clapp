@@ -24,6 +24,7 @@ import android.view.View;
 
 import com.android.volley.VolleyError;
 import com.construapp.construapp.LoginActivity;
+import com.construapp.construapp.PanoramicViewActivity;
 import com.construapp.construapp.R;
 import com.construapp.construapp.api.VolleyGetPendingValidations;
 import com.construapp.construapp.cache.LRUCache;
@@ -197,6 +198,8 @@ public class MainActivity extends AppCompatActivity
 
         } else  if (item.getItemId() == R.id.to_favourites) {
             startActivity(FavouriteLessonsActivity.getIntent(MainActivity.this));
+        } else  if (item.getItemId() == R.id.to_360) {
+            startActivity(PanoramicViewActivity.getIntent(MainActivity.this));
         }
         else {
             String map = item.getTitle().toString();

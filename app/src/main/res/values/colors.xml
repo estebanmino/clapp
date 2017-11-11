@@ -8,5 +8,6 @@
     <color name="colorAccent3">#398f26</color>
     <color name="black_overlay">#66000000</color> 
     <color name="color_tint">#F0C19D</color>
-
+    <color name="textDark">#222</color>
+    <color name="textLight">#555</color>
 </resources>
