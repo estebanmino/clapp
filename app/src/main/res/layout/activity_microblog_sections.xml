@@ -10,7 +10,7 @@ android:descendantFocusability="beforeDescendants"
 android:focusableInTouchMode="true">
 
 <TextView
-    android:id="@+id/text_label_name"
+    android:id="@+id/text_label_new_section"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginBottom="8dp"
@@ -24,6 +24,23 @@ android:focusableInTouchMode="true">
     app:layout_constraintLeft_toLeftOf="parent"
     app:layout_constraintRight_toRightOf="parent"
     app:layout_constraintTop_toBottomOf="@+id/text_project_name" />
+
+    <TextView
+        android:id="@+id/text_label_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="Nombre"
+        android:textColor="#08088A"
+        android:layout_gravity="left"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_project_name" />
 
 <EditText
     android:id="@+id/new_section_name"
@@ -44,6 +61,43 @@ android:focusableInTouchMode="true">
     app:layout_constraintLeft_toLeftOf="parent"
     app:layout_constraintRight_toRightOf="parent"
     app:layout_constraintTop_toBottomOf="@+id/text_lesson_description_edit" />
+
+    <TextView
+        android:id="@+id/text_label_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="Descripción"
+        android:textColor="#08088A"
+        android:layout_gravity="left"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_project_name" />
+
+    <EditText
+        android:id="@+id/new_section_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="Ingresar descripción"
+        android:textSize="14sp"
+        android:visibility="visible"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_lesson_description_edit" />
 
     <Button
         android:id="@+id/button_new_section"

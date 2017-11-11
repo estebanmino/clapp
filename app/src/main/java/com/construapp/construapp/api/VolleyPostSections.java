@@ -26,8 +26,8 @@ import java.util.Map;
  */
 
 public class VolleyPostSections {
-    public static void volleyPostFavouriteLesson(final VolleyStringCallback callback,
-                                                 Context context, String name, String description) {
+    public static void volleyPostSections(final VolleyStringCallback callback,
+                                                 Context context, String name) {
 
         SharedPreferences sharedpreferences = context.getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
         String company_id = sharedpreferences.getString(Constants.SP_COMPANY, "");
@@ -40,13 +40,9 @@ public class VolleyPostSections {
 
 
         final JSONObject jsonObject1 = new JSONObject();
-        final JSONObject jsonObject2 = new JSONObject();
 
         try {
             jsonObject1.put("name",name);
-            try {
-                jsonObject2.put("description",description);
-            } catch (Exception e) {}
         } catch (Exception e) {}
 
 
@@ -83,7 +79,7 @@ public class VolleyPostSections {
                 try {
                     return jsonObject1 == null ? null : jsonObject1.toString().getBytes("utf-8");
                 } catch (UnsupportedEncodingException uee) {
-                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", jsonObject2.toString(), "utf-8");
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", jsonObject1.toString(), "utf-8");
                     return null;
                 }
             }
