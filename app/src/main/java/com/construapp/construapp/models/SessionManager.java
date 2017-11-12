@@ -48,6 +48,10 @@ public class SessionManager {
         return sharedPreferences.getString(Constants.SP_TOKEN,"");
     }
 
+    public String getCompany() {
+        return sharedPreferences.getString(Constants.SP_COMPANY,"");
+    }
+
     public String getUserAdmin() {
         return sharedPreferences.getString(Constants.SP_ADMIN,"");
     }

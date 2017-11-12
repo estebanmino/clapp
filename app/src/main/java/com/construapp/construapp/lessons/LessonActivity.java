@@ -12,7 +12,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -136,17 +135,23 @@ public class LessonActivity extends LessonBaseActivity {
         LessonViewFragment lessonViewFragment = new LessonViewFragment();
         lessonViewFragment.setArguments(bundle);
         fragmentTransaction.add(R.id.constraint_fragment_container,lessonViewFragment);
+
+        Bundle bundleComments = new Bundle();
+        bundleComments.putString(Constants.B_LESSON_ID, lesson.getId());
+        LessonCommentsFragment lessonCommentsFragment = new LessonCommentsFragment();
+        lessonCommentsFragment.setArguments(bundleComments);
+        fragmentTransaction.add(R.id.constraint_comments_container,lessonCommentsFragment);
         fragmentTransaction.commit();
 
 
         if (lesson.getReject_comment() !=  null && lesson.getValidation().equals(Constants.R_REJECTED)) {
             Bundle bundleComment = new Bundle();
-            bundleComment.putString(Constants.B_LESSON_COMMENT, lesson.getReject_comment());
+            bundleComment.putString(Constants.B_LESSON_REJECT_COMMENT, lesson.getReject_comment());
             FragmentManager fragmentManagerComment = getFragmentManager();
             FragmentTransaction fragmentTransactionComment = fragmentManagerComment.beginTransaction();
-            LessonCommentFragment lessonCommentFragment = new LessonCommentFragment();
-            lessonCommentFragment.setArguments(bundleComment);
-            fragmentTransactionComment.add(R.id.constraint_fragment_comment_container, lessonCommentFragment);
+            LessonRejectCommentFragment lessonRejectCommentFragment = new LessonRejectCommentFragment();
+            lessonRejectCommentFragment.setArguments(bundleComment);
+            fragmentTransactionComment.add(R.id.constraint_fragment_comment_container, lessonRejectCommentFragment);
             fragmentTransactionComment.commit();
         }
 

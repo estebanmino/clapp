@@ -223,13 +223,12 @@
         android:id="@+id/nestedScrollView3"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="0dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/constraint_multimedia_bar"
+        app:layout_constraintBottom_toTopOf="@+id/linear_edition"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -475,7 +474,9 @@
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/text_documents"
-                    app:layout_constraintVertical_bias="0.0" />
+                    app:layout_constraintVertical_bias="0.0">
+
+                </android.support.v7.widget.RecyclerView>
 
             </LinearLayout>
 
@@ -486,13 +487,24 @@
 
             </android.support.constraint.ConstraintLayout>
 
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/constraint_comments_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintBottom_toTopOf="@+id/linear_edition"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent">
+
+            </android.support.constraint.ConstraintLayout>
+
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 
     <LinearLayout
         android:id="@+id/linear_edition"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:elevation="4dp"
         android:orientation="horizontal"
         android:visibility="visible"

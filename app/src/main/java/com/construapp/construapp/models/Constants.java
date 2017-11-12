@@ -12,6 +12,7 @@ public interface Constants {
     String MICROBLOG = "microblogs";
     String SECTIONS = "sections";
     String THREADS = "threads";
+    String COMMENTS = "comments";
     String LESSONS = "lessons";
     String USERS = "users";
     String GET_PROJECTS = "get_projects";
@@ -86,8 +87,9 @@ public interface Constants {
 
     //BUNDLE FRAGMENTS
     String B_LESSON_ARRAY_LIST = "lesson_array_list";
-    String B_LESSON_COMMENT = "lesson_COMMENT";
+    String B_LESSON_REJECT_COMMENT = "lesson_COMMENT";
     String B_SECTION_ARRAY_LIST = "sections_array_list";
+    String B_LESSON_ID = "lesson_id";
 
     //MESSAGES
     String NO_ATTACHMENTS = "NO EXISTEN ARCHIVOS ADJUNTOS";
