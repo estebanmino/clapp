@@ -1,4 +1,4 @@
-package com.construapp.construapp.main;
+package com.construapp.construapp.microblog;
 
 import android.content.Context;
 import android.content.Intent;
@@ -29,7 +29,9 @@ import com.construapp.construapp.db.Connectivity;
 import com.construapp.construapp.dbTasks.DeleteLessonTable;
 import com.construapp.construapp.lessons.FavouriteLessonsActivity;
 import com.construapp.construapp.listeners.VolleyStringCallback;
-import com.construapp.construapp.microblog.MicroblogSectionsActivity;
+import com.construapp.construapp.main.MainActivity;
+import com.construapp.construapp.main.SectionActivity;
+import com.construapp.construapp.main.SectionsAdapter;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.Section;
 import com.construapp.construapp.models.SessionManager;

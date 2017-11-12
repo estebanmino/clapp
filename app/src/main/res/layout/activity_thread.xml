@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
-        tools:context="com.construapp.construapp.main.MicroblogActivity">
+        tools:context="com.construapp.construapp.microblog.MicroblogActivity">
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/appbar"
@@ -150,6 +150,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/textview_comments_tag"
+                android:focusable="true"
+                android:clickable="true"
                 tools:layout_editor_absoluteX="8dp"
                 tools:layout_editor_absoluteY="8dp" />
 
@@ -159,6 +161,8 @@
             android:id="@+id/linear_layout_posts"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
             android:orientation="vertical">
 
         </LinearLayout>

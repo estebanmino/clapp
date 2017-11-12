@@ -64,7 +64,7 @@
             android:name=".lessons.FavouriteLessonsActivity"
             android:label="@string/title_activity_favourite_lessons" />
         <activity
-            android:name=".main.MicroblogActivity"
+            android:name=".microblog.MicroblogActivity"
             android:configChanges="orientation|screenSize"
             android:label="microblog" />
         <activity
@@ -72,12 +72,15 @@
             android:configChanges="orientation|screenSize"
             android:label="Section" />
         <activity
-            android:name=".main.ThreadActivity"
+            android:name=".microblog.ThreadActivity"
             android:configChanges="orientation|screenSize"
             android:label="Thread" />
         <activity
             android:name=".microblog.MicroblogSectionsActivity"
-            android:label="@string/title_activity_microblog_sections"></activity>
+            android:label="@string/title_activity_microblog_sections" />
+        <activity
+            android:name=".microblog.PostActivity"
+            android:label="@string/title_activity_post"></activity>
     </application>
 
 </manifest>

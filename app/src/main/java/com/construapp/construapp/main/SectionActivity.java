@@ -31,6 +31,8 @@ import com.construapp.construapp.api.VolleyGetThreads;
 import com.construapp.construapp.db.Connectivity;
 import com.construapp.construapp.dbTasks.DeleteLessonTable;
 import com.construapp.construapp.listeners.VolleyStringCallback;
+import com.construapp.construapp.microblog.ThreadActivity;
+import com.construapp.construapp.microblog.ThreadsAdapter;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.General;
 import com.construapp.construapp.models.SessionManager;

@@ -1,10 +1,11 @@
-package com.construapp.construapp.main;
+package com.construapp.construapp.microblog;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -29,6 +30,8 @@ import com.construapp.construapp.api.VolleyGetThread;
 import com.construapp.construapp.db.Connectivity;
 import com.construapp.construapp.dbTasks.DeleteLessonTable;
 import com.construapp.construapp.listeners.VolleyStringCallback;
+import com.construapp.construapp.main.MainActivity;
+import com.construapp.construapp.main.SectionActivity;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.General;
 import com.construapp.construapp.models.Post;
@@ -284,7 +287,7 @@ public class ThreadActivity extends AppCompatActivity
                                     View myView = inflater.inflate(R.layout.thread_comments_list_item, null);
 
                                     Log.i("JSON", jsonPosts.get(i).toString());
-                                    JSONObject object = (JSONObject) jsonPosts.get(i);
+                                    final JSONObject object = (JSONObject) jsonPosts.get(i);
                                     //post.setText(object.get("text").toString());
                                     //post.setId(object.get("id").toString());
                                     JSONObject object2 = new JSONObject(object.getString("user"));
@@ -299,6 +302,14 @@ public class ThreadActivity extends AppCompatActivity
 
                                     TextView text = myView.findViewById(R.id.textview_text);
                                     text.setText(object.getString("text"));
+
+
+                                    text.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            startActivity(PostActivity.getIntent(ThreadActivity.this));
+                                        }
+                                    });
 
                                     mContainerView.addView(myView);
 

@@ -4,27 +4,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.app.Activity;
-import android.text.Layout;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.construapp.construapp.R;
 import com.construapp.construapp.api.VolleyGetFavouriteLessons;
-import com.construapp.construapp.api.VolleyGetPendingValidations;
 import com.construapp.construapp.api.VolleyPostSections;
-import com.construapp.construapp.db.Connectivity;
-import com.construapp.construapp.lessons.LessonActivity;
 import com.construapp.construapp.listeners.VolleyStringCallback;
-import com.construapp.construapp.listeners.VolleyJSONCallback;
-import com.construapp.construapp.main.MainActivity;
-import com.construapp.construapp.main.MicroblogActivity;
-import com.construapp.construapp.models.SessionManager;
-
-import org.json.JSONArray;
 
 public class MicroblogSectionsActivity extends Activity {
 
