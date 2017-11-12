@@ -18,19 +18,19 @@ import java.util.List;
 public class GetCommentsTask extends AsyncTask<Void,Void,List<Comment>>{
 
     private Context context;
-    private String userId;
+    private String lessonId;
     private List<Comment> list;
 
-    public GetCommentsTask(Context context, String userId)
+    public GetCommentsTask(Context context, String lessonId)
     {
         this.context=context;
-        this.userId=userId;
+        this.lessonId=lessonId;
     }
     @Override
     protected List<Comment> doInBackground(Void... params) {
         CommentDatabase commentDatabase = CommentDatabase.getDatabase(context.getApplicationContext());
 
-        list = commentDatabase.commentDAO().getAllLessonComments(userId);
+        list = commentDatabase.commentDAO().getAllLessonComments(lessonId);
 
         return  list;
     }

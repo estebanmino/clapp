@@ -23,7 +23,7 @@ public interface CommentDAO {
     @Query("select * from Comment")
     List<Comment> getAllComments();
 
-    @Query("select * from Comment where lessonId = :lessonId ")
+    @Query("select * from Comment where lessonId = :lessonId order by id ASC")
     List<Comment> getAllLessonComments(String lessonId);
 
     @Query("select * from Comment where id = :id")
