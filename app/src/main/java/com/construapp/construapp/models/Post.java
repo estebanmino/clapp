@@ -16,6 +16,20 @@ public class Post {
     }
 
     private String text;
+    private String id;
+    private String authorId;
+    private String position;
+    private String first_name;
+    private String last_name;
+    private String timestamp;
+
+    public String getAuthorId() {
+        return authorId;
+    }
+
+    public void setAuthorId(String authorId) {
+        this.authorId = authorId;
+    }
 
     public String getId() {
         return id;
@@ -25,8 +39,6 @@ public class Post {
         this.id = id;
     }
 
-    private String id;
-
     public String getPosition() {
         return position;
     }
@@ -34,8 +46,6 @@ public class Post {
     public void setPosition(String position) {
         this.position = position;
     }
-
-    private String position;
 
     public String getText() {
         return text;
@@ -53,8 +63,6 @@ public class Post {
         this.first_name = first_name;
     }
 
-    private String first_name;
-
     public String getLast_name() {
         return last_name;
     }
@@ -63,8 +71,6 @@ public class Post {
         this.last_name = last_name;
     }
 
-    private String last_name;
-
     public String getTimestamp() {
         return timestamp;
     }
@@ -72,9 +78,5 @@ public class Post {
     public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }
-
-    private String timestamp;
-
-
 
 }

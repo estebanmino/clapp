@@ -147,6 +147,8 @@ public class LessonValidateFragment extends Fragment {
                             lesson.setProject_id(object.get("project_id").toString());
                             lesson.setCompany_id(object.get("company_id").toString());
                             lesson.setReject_comment(object.get("reject_comment").toString());
+                            lesson.setComments(object.get("comments").toString());
+
                             lesson.setValidator("true");
                             try {
                                 new InsertLessonTask(lesson, getContext()).execute().get();

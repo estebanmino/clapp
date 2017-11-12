@@ -12,6 +12,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -137,6 +138,7 @@ public class LessonActivity extends LessonBaseActivity {
         fragmentTransaction.add(R.id.constraint_fragment_container,lessonViewFragment);
 
         Bundle bundleComments = new Bundle();
+        bundleComments.putString(Constants.B_LESSON_COMMENTS, lesson.getComments());
         bundleComments.putString(Constants.B_LESSON_ID, lesson.getId());
         LessonCommentsFragment lessonCommentsFragment = new LessonCommentsFragment();
         lessonCommentsFragment.setArguments(bundleComments);

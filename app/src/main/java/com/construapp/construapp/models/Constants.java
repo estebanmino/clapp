@@ -87,8 +87,9 @@ public interface Constants {
 
     //BUNDLE FRAGMENTS
     String B_LESSON_ARRAY_LIST = "lesson_array_list";
-    String B_LESSON_REJECT_COMMENT = "lesson_COMMENT";
+    String B_LESSON_REJECT_COMMENT = "lesson_reject_comment";
     String B_SECTION_ARRAY_LIST = "sections_array_list";
+    String B_LESSON_COMMENTS = "lesson_comment";
     String B_LESSON_ID = "lesson_id";
 
     //MESSAGES
