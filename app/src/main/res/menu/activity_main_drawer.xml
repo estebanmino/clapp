@@ -1,16 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <group android:id="@+id/tressesenta">
-        <item android:title="tressesenta">
-            <menu>
-                <item
-                    android:id="@+id/to_360"
-                    android:title="360" />
-            </menu>
-        </item>
-
-    </group>
     <group android:id="@+id/lessons_menu">
         <item android:title="Favoritas">
             <menu>

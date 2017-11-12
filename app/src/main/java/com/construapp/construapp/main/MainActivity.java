@@ -198,8 +198,6 @@ public class MainActivity extends AppCompatActivity
 
         } else  if (item.getItemId() == R.id.to_favourites) {
             startActivity(FavouriteLessonsActivity.getIntent(MainActivity.this));
-        } else  if (item.getItemId() == R.id.to_360) {
-            startActivity(PanoramicViewActivity.getIntent(MainActivity.this));
         }
         else {
             String map = item.getTitle().toString();

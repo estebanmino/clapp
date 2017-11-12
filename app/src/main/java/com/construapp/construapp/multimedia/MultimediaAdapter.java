@@ -58,7 +58,7 @@ public abstract class MultimediaAdapter  extends RecyclerView.Adapter<Multimedia
 
 
         holder.multimediaFile = multimediaFile;
-
+        holder.isPanoramic =  false;
     }
 
     @Override
@@ -71,6 +71,7 @@ public abstract class MultimediaAdapter  extends RecyclerView.Adapter<Multimedia
             implements View.OnClickListener {
 
         public ImageView imageThumbnail;
+        public ImageView imagePanoramic;
         public TextView textPath;
         public ImageButton imageButtonDelete;
         public ProgressBar progressBar;
@@ -79,10 +80,13 @@ public abstract class MultimediaAdapter  extends RecyclerView.Adapter<Multimedia
 
 
         MultimediaFile multimediaFile;
+        Boolean isPanoramic;
         ArrayList<MultimediaFile> multimediaFileArrayList;
 
         public MultimediaViewHolder(View view) {
             super(view);
+            isPanoramic = false;
+            imagePanoramic =  view.findViewById(R.id.image_panoramic);
             imageThumbnail = view.findViewById(R.id.image_thumbnail);
             textPath = view.findViewById(R.id.image_path);
             imageButtonDelete = view.findViewById(R.id.image_button_delete);

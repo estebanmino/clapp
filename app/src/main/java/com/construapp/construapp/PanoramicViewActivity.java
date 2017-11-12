@@ -15,15 +15,21 @@ import android.util.Pair;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.drew.imaging.ImageMetadataReader;
+import com.drew.metadata.Metadata;
 import com.google.vr.sdk.widgets.pano.VrPanoramaEventListener;
 import com.google.vr.sdk.widgets.pano.VrPanoramaView;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 public class PanoramicViewActivity extends AppCompatActivity {
+
+    private static String IMAGE_PATH = "image_path";
 
     private static final String TAG = PanoramicViewActivity.class.getSimpleName();
     /** Actual panorama widget. **/
@@ -144,9 +150,10 @@ public class PanoramicViewActivity extends AppCompatActivity {
                     || fileInformation[0] == null || fileInformation[0].first == null) {
                 AssetManager assetManager = getAssets();
                 try {
-                    istr = assetManager.open("andes.jpg");
+                    istr = new FileInputStream(new File(getIntent().getStringExtra(IMAGE_PATH)));
                     panoOptions = new VrPanoramaView.Options();
-                    panoOptions.inputType = VrPanoramaView.Options.TYPE_STEREO_OVER_UNDER;
+                    //panoOptions.inputType = VrPanoramaView.Options.TYPE_STEREO_OVER_UNDER;
+                    panoOptions.inputType = VrPanoramaView.Options.TYPE_MONO;
                 } catch (IOException e) {
                     Log.e(TAG, "Could not decode default bitmap: " + e);
                     return false;
@@ -197,8 +204,9 @@ public class PanoramicViewActivity extends AppCompatActivity {
         }
     }
 
-    public static Intent getIntent(Context context) {
+    public static Intent getIntent(Context context, String imagePath) {
         Intent intent = new Intent(context,PanoramicViewActivity.class);
+        intent.putExtra(IMAGE_PATH, imagePath);
         return intent;
     }
 }
