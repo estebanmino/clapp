@@ -30,8 +30,6 @@ import com.construapp.construapp.dbTasks.DeleteLessonTable;
 import com.construapp.construapp.lessons.FavouriteLessonsActivity;
 import com.construapp.construapp.listeners.VolleyStringCallback;
 import com.construapp.construapp.main.MainActivity;
-import com.construapp.construapp.main.SectionActivity;
-import com.construapp.construapp.main.SectionsAdapter;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.Section;
 import com.construapp.construapp.models.SessionManager;
@@ -109,7 +107,7 @@ public class MicroblogActivity extends AppCompatActivity
         fabNewSection.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(MicroblogSectionsActivity.getIntent(MicroblogActivity.this));
+                startActivity(NewSectionActivity.getIntent(MicroblogActivity.this));
             }
         });
 

@@ -15,7 +15,7 @@ import com.construapp.construapp.api.VolleyGetFavouriteLessons;
 import com.construapp.construapp.api.VolleyPostSections;
 import com.construapp.construapp.listeners.VolleyStringCallback;
 
-public class MicroblogSectionsActivity extends Activity {
+public class NewSectionActivity extends Activity {
 
     Button createNewSectionButton;
     EditText name;
@@ -30,7 +30,7 @@ public class MicroblogSectionsActivity extends Activity {
        setCreateNewSectionListener();
     }
     public static Intent getIntent(Context context) {
-        Intent intent = new Intent(context,MicroblogSectionsActivity.class);
+        Intent intent = new Intent(context,NewSectionActivity.class);
         return intent;
     }
     public void setCreateNewSectionListener(){
@@ -51,14 +51,14 @@ public class MicroblogSectionsActivity extends Activity {
                             @Override
                             public void onErrorResponse(VolleyError result) {
                             }
-                        },MicroblogSectionsActivity.this);
+                        },NewSectionActivity.this);
                     }
 
                     @Override
                     public void onErrorResponse(VolleyError result) {
                     }
-                },MicroblogSectionsActivity.this, name.getText().toString());
-                startActivity(MicroblogActivity.getIntent(MicroblogSectionsActivity.this));
+                },NewSectionActivity.this, name.getText().toString());
+                startActivity(MicroblogActivity.getIntent(NewSectionActivity.this));
             }
         });
     }

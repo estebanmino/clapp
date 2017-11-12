@@ -1,4 +1,4 @@
-package com.construapp.construapp.main;
+package com.construapp.construapp.microblog;
 
 /**
  * Created by jose on 06-11-17.
@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.GravityCompat;
@@ -20,6 +21,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,12 +29,14 @@ import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.construapp.construapp.LoginActivity;
 import com.construapp.construapp.R;
+import com.construapp.construapp.api.VolleyDeleteFavouriteLesson;
+import com.construapp.construapp.api.VolleyDeleteSection;
 import com.construapp.construapp.api.VolleyGetThreads;
 import com.construapp.construapp.db.Connectivity;
 import com.construapp.construapp.dbTasks.DeleteLessonTable;
+import com.construapp.construapp.lessons.LessonActivity;
 import com.construapp.construapp.listeners.VolleyStringCallback;
-import com.construapp.construapp.microblog.ThreadActivity;
-import com.construapp.construapp.microblog.ThreadsAdapter;
+import com.construapp.construapp.main.MainActivity;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.General;
 import com.construapp.construapp.models.SessionManager;
@@ -64,6 +68,9 @@ public class SectionActivity extends AppCompatActivity
     private String name;
     private String description;
     private String section_id;
+    private Button editSectionButton;
+    private Button deleteSectionButton;
+    private FloatingActionButton newThread;
 
     JSONArray jsonArray;
     Map<String, String> projects;
@@ -92,6 +99,27 @@ public class SectionActivity extends AppCompatActivity
 
         TextView sectionDescription = findViewById(R.id.section_description);
         sectionDescription.setText(description);
+
+        editSectionButton = findViewById(R.id.btn_edit);
+        deleteSectionButton = findViewById(R.id.btn_delete);
+        newThread = findViewById(R.id.fab_new_thread);
+
+        deleteSectionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                VolleyDeleteSection.volleyDeleteSection(new VolleyStringCallback() {
+                    @Override
+                    public void onSuccess(String result) {
+                        sessionManager.setSection(result);
+                    }
+
+                    @Override
+                    public void onErrorResponse(VolleyError result) {
+                    }
+                },SectionActivity.this,section_id);
+                startActivity(MicroblogActivity.getIntent(SectionActivity.this));
+            }
+        });
 
         threadsList = new ArrayList<Threadblog>();
 

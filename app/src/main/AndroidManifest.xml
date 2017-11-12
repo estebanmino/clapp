@@ -68,7 +68,7 @@
             android:configChanges="orientation|screenSize"
             android:label="microblog" />
         <activity
-            android:name=".main.SectionActivity"
+            android:name=".microblog.SectionActivity"
             android:configChanges="orientation|screenSize"
             android:label="Section" />
         <activity
@@ -76,7 +76,7 @@
             android:configChanges="orientation|screenSize"
             android:label="Thread" />
         <activity
-            android:name=".microblog.MicroblogSectionsActivity"
+            android:name=".microblog.NewSectionActivity"
             android:label="@string/title_activity_microblog_sections" />
         <activity
             android:name=".microblog.PostActivity"

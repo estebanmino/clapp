@@ -4,8 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -31,7 +32,6 @@ import com.construapp.construapp.db.Connectivity;
 import com.construapp.construapp.dbTasks.DeleteLessonTable;
 import com.construapp.construapp.listeners.VolleyStringCallback;
 import com.construapp.construapp.main.MainActivity;
-import com.construapp.construapp.main.SectionActivity;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.General;
 import com.construapp.construapp.models.Post;
@@ -62,6 +62,9 @@ public class ThreadActivity extends AppCompatActivity
     private ViewPager sectionsView;
     private SwipeRefreshLayout.OnRefreshListener swipeRefreshListener;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private Button editThreadButton;
+    private Button deleteThreadButton;
+    private FloatingActionButton newPost;
 
     private String title;
     private String text;
@@ -119,6 +122,10 @@ public class ThreadActivity extends AppCompatActivity
 
         userPosition = findViewById(R.id.textview_position);
         userPosition.setText(position);
+
+        editThreadButton = findViewById(R.id.btn_edit);
+        deleteThreadButton = findViewById(R.id.btn_delete);
+        newPost = findViewById(R.id.fab_new_post);
 
         postsList = new ArrayList<Post>();
 
