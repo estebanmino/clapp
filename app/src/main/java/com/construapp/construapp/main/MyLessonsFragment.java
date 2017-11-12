@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.construapp.construapp.R;
@@ -44,6 +45,7 @@ public class MyLessonsFragment extends Fragment {
     private Button btnLessonsSaved;
     private Button btnLessonsRejected;
     private String lessonsValidationState;
+    private TextView noLessons;
 
     private SessionManager sessionManager;
     @Override
@@ -77,12 +79,13 @@ public class MyLessonsFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        noLessons = view.findViewById(R.id.textViewNoMyLessons);
         myLessonsList = view.findViewById(R.id.my_lessons_list);
 
         btnLessonsRejected  = view.findViewById(R.id.btn_lessons_rejected);
         btnLessonsSaved  = view.findViewById(R.id.btn_lessons_saved);
         btnLessonsSaved.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-        lessonsValidationState = Constants.R_REJECTED;
+        lessonsValidationState = Constants.R_SAVED;
 
         btnLessonsRejected.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,6 +130,12 @@ public class MyLessonsFragment extends Fragment {
             }
         });
         swipeRefreshLayout.setOnRefreshListener(swipeRefreshListener);
+        if (lessonList.isEmpty()){
+            noLessons.setVisibility(View.VISIBLE);
+        }
+        else {
+            noLessons.setVisibility(View.GONE);
+        }
     }
 
     public void setSwipeRefreshLayout() {

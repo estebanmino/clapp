@@ -29,6 +29,7 @@ import com.construapp.construapp.dbTasks.InsertLessonTask;
 import com.construapp.construapp.listeners.VolleyStringCallback;
 import com.construapp.construapp.main.LessonsAdapter;
 import com.construapp.construapp.main.MainActivity;
+import com.construapp.construapp.main.MicroblogActivity;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.models.SessionManager;
@@ -132,7 +133,7 @@ public class FavouriteLessonsActivity extends AppCompatActivity
             sessionManager.setActualProject(Constants.ALL_PROJECTS_KEY,Constants.ALL_PROJECTS_NAME);
             startActivity(MainActivity.getIntent(FavouriteLessonsActivity.this));
         } else  if (item.getItemId() == R.id.to_blog) {
-            //
+            startActivity(MicroblogActivity.getIntent(FavouriteLessonsActivity.this));
         } else  if (item.getItemId() == R.id.to_favourites) {
             startActivity(FavouriteLessonsActivity.getIntent(FavouriteLessonsActivity.this));
         }
@@ -219,6 +220,22 @@ public class FavouriteLessonsActivity extends AppCompatActivity
         }
 
         swipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (navigationView.isShown())
+        {
+            DrawerLayout drawer = findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
+        }
+        else
+        {
+            finish();
+
+        }
+
+
     }
 
     public void setSwipeRefreshLayout() {

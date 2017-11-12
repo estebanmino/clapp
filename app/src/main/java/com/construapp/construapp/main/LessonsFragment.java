@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.construapp.construapp.R;
@@ -41,6 +42,7 @@ public class LessonsFragment extends Fragment {
     private List<Lesson> lessonList;
     private SwipeRefreshLayout swipeRefreshLayout;
     private SwipeRefreshLayout.OnRefreshListener swipeRefreshListener;
+    private TextView noLessons;
 
     private SharedPreferences sharedPreferences;
     private String user_id = "null";
@@ -70,6 +72,7 @@ public class LessonsFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        noLessons = view.findViewById(R.id.textViewNoLessons);
         lessonsList = view.findViewById(R.id.lessons_list);
 
         lessonsList.setAdapter(lessonsAdapter);
@@ -92,7 +95,12 @@ public class LessonsFragment extends Fragment {
             }
         });
         swipeRefreshLayout.setOnRefreshListener(swipeRefreshListener);
-
+        if (lessonList.isEmpty()){
+            noLessons.setVisibility(View.VISIBLE);
+        }
+        else {
+            noLessons.setVisibility(View.GONE);
+        }
     }
 
     public void setSwipeRefreshLayout() {
