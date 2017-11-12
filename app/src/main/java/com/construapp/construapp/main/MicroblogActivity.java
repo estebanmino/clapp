@@ -1,8 +1,5 @@
 package com.construapp.construapp.main;
 
-import android.app.ActivityOptions;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,10 +7,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -23,7 +17,6 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,22 +24,13 @@ import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.construapp.construapp.LoginActivity;
 import com.construapp.construapp.R;
-import com.construapp.construapp.api.VolleyGetLessons;
 import com.construapp.construapp.api.VolleyGetSections;
 import com.construapp.construapp.db.Connectivity;
 import com.construapp.construapp.dbTasks.DeleteLessonTable;
-import com.construapp.construapp.dbTasks.GetLessonsTask;
-import com.construapp.construapp.dbTasks.InsertLessonTask;
 import com.construapp.construapp.lessons.FavouriteLessonsActivity;
-import com.construapp.construapp.lessons.LessonActivity;
-import com.construapp.construapp.lessons.LessonViewFragment;
 import com.construapp.construapp.listeners.VolleyStringCallback;
-import com.construapp.construapp.main.MainActivity;
-import com.construapp.construapp.microblog.MicroblogFragment;
 import com.construapp.construapp.microblog.MicroblogSectionsActivity;
 import com.construapp.construapp.models.Constants;
-import com.construapp.construapp.models.General;
-import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.models.Section;
 import com.construapp.construapp.models.SessionManager;
 
@@ -55,7 +39,6 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -120,7 +103,7 @@ public class MicroblogActivity extends AppCompatActivity
 
 
         navigationView = findViewById(R.id.nav_view);
-        fabNewSection = findViewById(R.id.fab_new_section);
+        fabNewSection = findViewById(R.id.fab_new_thread);
         fabNewSection.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
