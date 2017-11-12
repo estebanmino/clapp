@@ -99,5 +99,7 @@ public interface Constants {
     //TITLES
     String TITLE_FAVOURITE_LESSONS = "Lecciones favoritas";
 
+    //IMAGES
+    String IMAGE_ICC_PROFILE = "ICC Profile";
 
 }
