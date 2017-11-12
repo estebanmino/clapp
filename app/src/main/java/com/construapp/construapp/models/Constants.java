@@ -12,6 +12,7 @@ public interface Constants {
     String MICROBLOG = "microblogs";
     String SECTIONS = "sections";
     String THREADS = "threads";
+    String POSTS = "posts";
     String LESSONS = "lessons";
     String USERS = "users";
     String GET_PROJECTS = "get_projects";
