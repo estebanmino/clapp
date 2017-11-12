@@ -56,30 +56,25 @@ public class MultimediaPictureAdapter extends MultimediaAdapter {
         MultimediaFile multimediaFile = super.getmMultimediaFiles().get(position);
         multimediaFile.setArrayPosition(position);
 
-
         try {
             Metadata metadata = ImageMetadataReader.readMetadata(new File(multimediaFile.getmPath()));
             for (Directory directory : metadata.getDirectories()) {
-                Log.i("DIRECTORY", directory.getName());
                 if(directory.getName().equals(Constants.IMAGE_ICC_PROFILE)) {
                     holder.isPanoramic = true;
+                    holder.imagePanoramic.setVisibility(View.VISIBLE);
+                    break;
                 }
             }
         } catch (Exception e) {}
-        if (holder.isPanoramic) {
-            holder.imagePanoramic.setVisibility(View.VISIBLE);
-        }
 
         if (multimediaFile.getFileS3Key() != null && LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key()) != null) {
             Bitmap bitmap =  (Bitmap)LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key());
             holder.imageThumbnail.setImageBitmap(ThumbnailUtils.extractThumbnail(bitmap, 80, 80));
-            Log.i("LRU","ss");
         }
         else if (multimediaFile.getmPath() != null && new File(multimediaFile.getmPath()).exists()) {
             Bitmap bitmap = BitmapFactory.decodeFile(multimediaFile.getmPath());
             Bitmap bmRotated = rotateBitmap(bitmap, multimediaFile);
             holder.imageThumbnail.setImageBitmap(ThumbnailUtils.extractThumbnail(bmRotated, 80, 80));
-            Log.i("LRUnext",multimediaFile.getmPath());
         }
         else {
             General constants = new General();
@@ -113,17 +108,9 @@ public class MultimediaPictureAdapter extends MultimediaAdapter {
                 @Override
                 public void onClick(View view) {
 
-                    Log.i("ISPANORAMIC", Boolean.toString(MultimediaViewHolder.super.isPanoramic));
                     //IF CACHE
                     if (MultimediaViewHolder.super.isPanoramic) {
-                        if (multimediaFile.getFileS3Key() != null && LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key()) != null) {
-
-                            String path = MediaStore.Images.Media.insertImage(getContext().getContentResolver(),
-                                    (Bitmap) LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key()), "Title", null);
-                            view.getContext().startActivity(PanoramicViewActivity.getIntent(getContext(),path));
-                        } else {
-                            view.getContext().startActivity(PanoramicViewActivity.getIntent(getContext(),multimediaFile.getmPath()));
-                        }
+                        view.getContext().startActivity(PanoramicViewActivity.getIntent(getContext(),multimediaFile.getmPath()));
                     } else {
                         Intent intent = new Intent();
 
@@ -132,12 +119,9 @@ public class MultimediaPictureAdapter extends MultimediaAdapter {
                         if (multimediaFile.getFileS3Key() != null && LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key()) != null) {
                             String path = MediaStore.Images.Media.insertImage(getContext().getContentResolver(),
                                     (Bitmap) LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key()), "Title", null);
-                            Log.i("ICACHE", "true" + path);
                             intent.setDataAndType(Uri.parse(path), FILE_TYPE);
                         } else {
-                            Log.i("ICACHE", "false" + MultimediaViewHolder.super.multimediaFile.getmPath() + "/// " + multimediaFile.getFileName());
                             File file = new File(getContext().getCacheDir(), multimediaFile.getFileName());
-                            Log.i("ICACHE", "false" + file.getPath());
                             intent.setDataAndType(Uri.parse(multimediaFile.getmPath()
                             ), FILE_TYPE);
                         }

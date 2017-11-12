@@ -80,7 +80,7 @@ public abstract class MultimediaAdapter  extends RecyclerView.Adapter<Multimedia
 
 
         MultimediaFile multimediaFile;
-        Boolean isPanoramic;
+        public Boolean isPanoramic;
         ArrayList<MultimediaFile> multimediaFileArrayList;
 
         public MultimediaViewHolder(View view) {
