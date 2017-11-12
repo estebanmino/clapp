@@ -17,9 +17,13 @@ import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.construapp.construapp.R;
 import com.construapp.construapp.api.VolleyPostLessonComment;
+import com.construapp.construapp.db.Connectivity;
+import com.construapp.construapp.dbTasks.GetCommentsTask;
 import com.construapp.construapp.dbTasks.GetLessonTask;
+import com.construapp.construapp.dbTasks.InsertCommentTask;
 import com.construapp.construapp.listeners.VolleyStringCallback;
 import com.construapp.construapp.main.PostsAdapter;
+import com.construapp.construapp.models.Comment;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.models.Post;
@@ -31,6 +35,7 @@ import com.google.gson.JsonParser;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -41,6 +46,7 @@ public class LessonCommentsFragment extends Fragment {
     }
 
     String lessonComments;
+    List<Comment> arrayComments;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -56,59 +62,51 @@ public class LessonCommentsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         final String lessonId = getArguments().getString(Constants.B_LESSON_ID);
-        ListView listLessonComments = view.findViewById(R.id.list_lesson_comments);
-        TextView textComments = view.findViewById(R.id.text_title);
+        final ListView listLessonComments = view.findViewById(R.id.list_lesson_comments);
+        final TextView textComments = view.findViewById(R.id.text_title);
         Button btnComment = view.findViewById(R.id.btn_comment);
         final EditText editComment = view.findViewById(R.id.edit_comment);
-
-        final ArrayList<Post> arrayComments = new ArrayList<>();
-        JsonParser parser = new JsonParser();
-        JsonArray json = parser.parse(lessonComments).getAsJsonArray();
-        Log.i("LESSONCOMMENTSORIGINAL", lessonComments);
-        for (int i = 0; i < json.size(); i++) {
-            JsonElement jsonObject = json.get(i);
-            Post post = new Post();
-            post.setText(jsonObject.getAsJsonObject().get("text").toString());
-            JsonObject jsonObject1 = (JsonObject) jsonObject.getAsJsonObject().get("user").getAsJsonObject();
-            post.setFirst_name(jsonObject1.get("first_name").toString());
-            post.setLast_name(jsonObject1.get("last_name").toString());
-            post.setPosition(jsonObject1.get("position").toString());
-            arrayComments.add(post);
+        try {
+            arrayComments = new GetCommentsTask(getActivity(), lessonId).execute().get();
+        } catch (Exception e) {
+            arrayComments = null;
         }
 
-        final PostsAdapter postsAdapter = new PostsAdapter(getActivity(), arrayComments);
-        listLessonComments.setAdapter(postsAdapter);
-        Log.i("COMMENTSIZE",Integer.toString(arrayComments.size()));
+        final CommentsAdapter commentsAdapter = new CommentsAdapter(getActivity(), arrayComments);
+        listLessonComments.setAdapter(commentsAdapter);
         if (arrayComments.size() == 0) {
             textComments.setText("No hay comentarios para esta lección");
         }
         btnComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(editComment.getText().toString().isEmpty()) {
-                    Toast.makeText(getActivity(),"Debe escribir un comentario",Toast.LENGTH_LONG).show();
+                if (editComment.getText().toString().isEmpty()) {
+                    Toast.makeText(getActivity(), "Debe escribir un comentario", Toast.LENGTH_LONG).show();
+                } else if (!Connectivity.isConnected(getActivity())) {
+                    Toast.makeText(getActivity(), "Debe estar conectado a internet para comentar", Toast.LENGTH_LONG).show();
                 } else {
                     VolleyPostLessonComment.volleyPostLessonComment(new VolleyStringCallback() {
                         @Override
                         public void onSuccess(String result) {
                             JsonParser parser = new JsonParser();
                             JsonObject json = parser.parse(result).getAsJsonObject();
-                            Post newPost = new Post();
-                            newPost.setId(json.get("id").toString());
-                            newPost.setText(json.get("text").toString());
+                            Comment comment = new Comment();
+                            comment.setId(json.get("id").toString());
+                            comment.setText(json.get("text").toString());
                             JsonObject jsonObject1 = (JsonObject) json.get("user").getAsJsonObject();
-                            newPost.setFirst_name(jsonObject1.get("first_name").toString());
-                            newPost.setLast_name(jsonObject1.get("last_name").toString());
-                            newPost.setAuthorId(jsonObject1.get("id").toString());
-                            newPost.setPosition(jsonObject1.get("position").toString());
-                            arrayComments.add(newPost);
-                            postsAdapter.notifyDataSetChanged();
+                            comment.setFirst_name(jsonObject1.get("first_name").toString());
+                            comment.setLast_name(jsonObject1.get("last_name").toString());
+                            comment.setAuthorId(jsonObject1.get("id").toString());
+                            comment.setPosition(jsonObject1.get("position").toString());
+                            comment.setLessonId(lessonId);
                             try {
-                                Lesson lesson = new GetLessonTask(getActivity(), lessonId).execute().get();
-                                lesson.setComments(arrayComments.toString());
-                                Log.i("LESSONCOMMENTSARRAY",arrayComments.toString());
-                            } catch (Exception e) {}
-
+                                new InsertCommentTask(comment, getActivity()).execute().get();
+                                arrayComments.add(comment);
+                                commentsAdapter.notifyDataSetChanged();
+                            } catch (Exception e) {
+                            }
+                            editComment.setText("");
+                            textComments.setText("Comentarios");
                         }
 
                         @Override
@@ -120,6 +118,5 @@ public class LessonCommentsFragment extends Fragment {
             }
         });
 
-    }
 
-}
+    }}

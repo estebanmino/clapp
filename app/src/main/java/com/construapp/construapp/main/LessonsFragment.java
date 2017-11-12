@@ -19,16 +19,23 @@ import com.construapp.construapp.R;
 import com.construapp.construapp.api.VolleyGetLessons;
 import com.construapp.construapp.db.AppDatabase;
 import com.construapp.construapp.db.Connectivity;
+import com.construapp.construapp.dbTasks.InsertCommentTask;
 import com.construapp.construapp.dbTasks.InsertLessonTask;
 import com.construapp.construapp.lessons.LessonActivity;
 import com.construapp.construapp.listeners.VolleyStringCallback;
+import com.construapp.construapp.models.Comment;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.dbTasks.GetLessonsTask;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -118,7 +125,6 @@ public class LessonsFragment extends Fragment {
                             try {
                                 jsonLessons = new JSONArray(result);
                                 for (int i = 0; i < jsonLessons.length(); i++) {
-                                    Log.i("JSON", jsonLessons.get(i).toString());
                                     JSONObject object = (JSONObject) jsonLessons.get(i);
                                     lesson.setName(object.get("name").toString());
                                     lesson.setSummary(object.get("summary").toString());
@@ -131,6 +137,24 @@ public class LessonsFragment extends Fragment {
                                     lesson.setCompany_id(object.get("company_id").toString());
                                     lesson.setReject_comment(object.get("reject_comment").toString());
                                     lesson.setComments(object.get("comments").toString());
+
+                                    JsonParser parser = new JsonParser();
+                                    JsonArray json = parser.parse(lesson.getComments()).getAsJsonArray();
+                                    for (int j = 0; j < json.size(); j++) {
+                                        JsonElement jsonObject = json.get(j);
+                                        Comment comment = new Comment();
+                                        comment.setText(jsonObject.getAsJsonObject().get("text").toString());
+                                        comment.setId(jsonObject.getAsJsonObject().get("id").toString());
+                                        JsonObject jsonObject1 = jsonObject.getAsJsonObject().get("user").getAsJsonObject();
+                                        comment.setFirst_name(jsonObject1.get("first_name").toString());
+                                        comment.setLast_name(jsonObject1.get("last_name").toString());
+                                        comment.setPosition(jsonObject1.get("position").toString());
+                                        comment.setAuthorId(jsonObject1.get("id").toString());
+                                        comment.setLessonId(lesson.getId());
+                                        try {
+                                            new InsertCommentTask(comment, getContext()).execute().get();
+                                        } catch (Exception e) {}
+                                    }
                                     try {
                                         new InsertLessonTask(lesson, getContext()).execute().get();
                                     } catch (ExecutionException e) {
