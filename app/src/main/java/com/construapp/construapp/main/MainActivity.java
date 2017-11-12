@@ -28,6 +28,7 @@ import com.construapp.construapp.R;
 import com.construapp.construapp.api.VolleyGetPendingValidations;
 import com.construapp.construapp.cache.LRUCache;
 import com.construapp.construapp.db.Connectivity;
+import com.construapp.construapp.dbTasks.DeleteLessonCommentTableTask;
 import com.construapp.construapp.lessons.FavouriteLessonsActivity;
 import com.construapp.construapp.lessons.LessonFormActivity;
 import com.construapp.construapp.listeners.VolleyStringCallback;
@@ -185,6 +186,7 @@ public class MainActivity extends AppCompatActivity
             } catch (Exception e) {}
             try {
                 new DeleteLessonTable(getApplicationContext()).execute().get();
+                new DeleteLessonCommentTableTask(getApplicationContext()).execute().get();
                 deleteDir(this.getCacheDir());
             } catch (InterruptedException e) {
                 e.printStackTrace();
