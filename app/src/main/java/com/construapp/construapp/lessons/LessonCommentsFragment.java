@@ -76,6 +76,7 @@ public class LessonCommentsFragment extends Fragment {
         listLessonComments.setAdapter(commentsAdapter);
         if (arrayComments.size() == 0) {
             textComments.setText("No hay comentarios para esta lección");
+
         }
         btnComment.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -138,6 +138,7 @@ public class LessonActivity extends LessonBaseActivity {
         fragmentTransaction.add(R.id.constraint_fragment_container,lessonViewFragment);
 
         Bundle bundleComments = new Bundle();
+        Log.i("COMMENTS",lesson.getComments());
         bundleComments.putString(Constants.B_LESSON_COMMENTS, lesson.getComments());
         bundleComments.putString(Constants.B_LESSON_ID, lesson.getId());
         LessonCommentsFragment lessonCommentsFragment = new LessonCommentsFragment();

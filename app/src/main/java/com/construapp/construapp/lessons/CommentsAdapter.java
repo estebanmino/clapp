@@ -95,9 +95,10 @@ public class CommentsAdapter extends BaseAdapter {
         linearEdition = convertView.findViewById(R.id.linear_edition);
         linearSendEdition = convertView.findViewById(R.id.linear_send_edition);
 
-        final String postComment = commentList.get(position).getText();
-        final String fullname = commentList.get(position).getFirst_name()+ " " + commentList.get(position).getLast_name();
-        final String postposition = commentList.get(position).getPosition();
+        final String postComment = commentList.get(position).getText().replace("\"","");
+        final String fullname = commentList.get(position).getFirst_name().replace("\"","")+ " "
+                + commentList.get(position).getLast_name().replace("\"","");
+        final String postposition = commentList.get(position).getPosition().replace("\"","");
 
         SessionManager sessionManager =  new SessionManager(context);
 
