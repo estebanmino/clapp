@@ -27,15 +27,20 @@ import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.construapp.construapp.LoginActivity;
 import com.construapp.construapp.R;
+import com.construapp.construapp.api.VolleyDeleteSection;
+import com.construapp.construapp.api.VolleyDeleteThread;
 import com.construapp.construapp.api.VolleyGetThread;
 import com.construapp.construapp.db.Connectivity;
 import com.construapp.construapp.dbTasks.DeleteLessonTable;
+import com.construapp.construapp.listeners.VolleyJSONCallback;
 import com.construapp.construapp.listeners.VolleyStringCallback;
 import com.construapp.construapp.main.MainActivity;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.General;
 import com.construapp.construapp.models.Post;
 import com.construapp.construapp.models.SessionManager;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -127,6 +132,24 @@ public class ThreadActivity extends AppCompatActivity
         deleteThreadButton = findViewById(R.id.btn_delete);
         newPost = findViewById(R.id.fab_new_post);
 
+        deleteThreadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                VolleyDeleteThread.volleyDeleteThread(new VolleyJSONCallback() {
+                    @Override
+                    public void onSuccess(JSONObject result) {
+                        sessionManager.setSection(result.toString());
+                    }
+
+                    @Override
+                    public void onErrorResponse(VolleyError result) {
+                        Log.i("ERROR","erroooooor");
+                    }
+                },ThreadActivity.this,sessionManager.getSection(),thread_id);
+                finish();
+            }
+        });
+
         postsList = new ArrayList<Post>();
 
         swipeRefreshLayout = findViewById(R.id.swipe_refresh_posts);
@@ -200,6 +223,18 @@ public class ThreadActivity extends AppCompatActivity
         });
 
 
+    }
+
+    @Override
+    protected void onRestart(){
+        super.onRestart();
+        swipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                swipeRefreshLayout.setRefreshing(true);
+                swipeRefreshListener.onRefresh();
+            }
+        });
     }
 
     public static Intent getIntent(Context context) {

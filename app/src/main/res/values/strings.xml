@@ -31,5 +31,6 @@
     <string name="title_activity_favourite_lessons">Lecciones favoritas</string>
     <string name="title_activity_microblog_sections">MicroblogSectionsActivity</string>
     <string name="title_activity_post">PostActivity</string>
+    <string name="title_activity_new_thread">NewThreadActivity</string>
 
 </resources>

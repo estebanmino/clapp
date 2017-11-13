@@ -146,6 +146,17 @@ public class MicroblogActivity extends AppCompatActivity
 
     }
 
+    @Override
+    protected void onRestart(){
+        super.onRestart();
+        swipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                swipeRefreshLayout.setRefreshing(true);
+                swipeRefreshListener.onRefresh();
+            }
+        });
+    }
     public void setSwipeRefreshLayout() {
         swipeRefreshListener = (new SwipeRefreshLayout.OnRefreshListener() {
             @Override

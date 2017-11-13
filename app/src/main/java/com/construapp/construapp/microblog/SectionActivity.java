@@ -117,7 +117,7 @@ public class SectionActivity extends AppCompatActivity
                     public void onErrorResponse(VolleyError result) {
                     }
                 },SectionActivity.this,section_id);
-                startActivity(MicroblogActivity.getIntent(SectionActivity.this));
+                finish();
             }
         });
 
@@ -195,6 +195,18 @@ public class SectionActivity extends AppCompatActivity
     public static Intent getIntent(Context context) {
         Intent intent = new Intent(context,SectionActivity.class);
         return intent;
+    }
+
+    @Override
+    protected void onRestart(){
+        super.onRestart();
+        swipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                swipeRefreshLayout.setRefreshing(true);
+                swipeRefreshListener.onRefresh();
+            }
+        });
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

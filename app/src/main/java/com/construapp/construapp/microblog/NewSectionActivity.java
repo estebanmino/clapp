@@ -23,7 +23,7 @@ public class NewSectionActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_microblog_sections);
+        setContentView(R.layout.activity_new_section);
         createNewSectionButton = findViewById(R.id.button_new_section);
         name = findViewById(R.id.new_section_name);
         description = findViewById(R.id.new_section_description);

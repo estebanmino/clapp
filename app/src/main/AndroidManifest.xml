@@ -80,7 +80,10 @@
             android:label="@string/title_activity_microblog_sections" />
         <activity
             android:name=".microblog.PostActivity"
-            android:label="@string/title_activity_post"></activity>
+            android:label="@string/title_activity_post" />
+        <activity
+            android:name=".microblog.NewThreadActivity"
+            android:label="@string/title_activity_new_thread"></activity>
     </application>
 
 </manifest>
