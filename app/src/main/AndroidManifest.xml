@@ -59,7 +59,7 @@
         <activity android:name=".ShowInfo" />
         <activity
             android:name=".lessons.LessonValidationActivity"
-            android:label="@string/title_activity_validate_lesson_form"/>
+            android:label="@string/title_activity_validate_lesson_form" />
         <activity
             android:name=".lessons.FavouriteLessonsActivity"
             android:label="@string/title_activity_favourite_lessons" />
@@ -67,6 +67,7 @@
             android:name=".main.MicroblogActivity"
             android:label="microblog"
             android:configChanges="orientation|screenSize"/>
+        <activity android:name=".PanoramicViewActivity"></activity>
         <activity
             android:name=".main.SectionActivity"
             android:label="Section"
