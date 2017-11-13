@@ -12,6 +12,7 @@ import android.widget.EditText;
 import com.android.volley.VolleyError;
 import com.construapp.construapp.R;
 import com.construapp.construapp.api.VolleyGetFavouriteLessons;
+import com.construapp.construapp.api.VolleyGetSections;
 import com.construapp.construapp.api.VolleyPostSections;
 import com.construapp.construapp.listeners.VolleyStringCallback;
 
@@ -27,7 +28,7 @@ public class NewSectionActivity extends Activity {
         createNewSectionButton = findViewById(R.id.button_new_section);
         name = findViewById(R.id.new_section_name);
         description = findViewById(R.id.new_section_description);
-       setCreateNewSectionListener();
+        setCreateNewSectionListener();
     }
     public static Intent getIntent(Context context) {
         Intent intent = new Intent(context,NewSectionActivity.class);
@@ -42,7 +43,7 @@ public class NewSectionActivity extends Activity {
                 VolleyPostSections.volleyPostSections(new VolleyStringCallback() {
                     @Override
                     public void onSuccess(String result) {
-                        VolleyGetFavouriteLessons.volleyGetFavouriteLessons(new VolleyStringCallback() {
+                        VolleyGetSections.volleyGetSections(new VolleyStringCallback() {
                             @Override
                             public void onSuccess(String result) {
 

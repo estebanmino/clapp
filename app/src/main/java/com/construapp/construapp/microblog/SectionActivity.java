@@ -39,6 +39,7 @@ import com.construapp.construapp.listeners.VolleyStringCallback;
 import com.construapp.construapp.main.MainActivity;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.General;
+import com.construapp.construapp.models.Section;
 import com.construapp.construapp.models.SessionManager;
 
 import org.json.JSONArray;
@@ -103,6 +104,12 @@ public class SectionActivity extends AppCompatActivity
         editSectionButton = findViewById(R.id.btn_edit);
         deleteSectionButton = findViewById(R.id.btn_delete);
         newThread = findViewById(R.id.fab_new_thread);
+        newThread.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(NewThreadActivity.getIntent(SectionActivity.this));
+            }
+        });
 
         deleteSectionButton.setOnClickListener(new View.OnClickListener() {
             @Override
