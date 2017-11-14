@@ -33,6 +33,7 @@ public class NewThreadActivity extends Activity {
         title = findViewById(R.id.new_thread_name);
         description = findViewById(R.id.new_thread_description);
         setCreateNewThreadListener();
+        sessionManager = new SessionManager(NewThreadActivity.this);
     }
 
     public static Intent getIntent(Context context) {
@@ -64,7 +65,7 @@ public class NewThreadActivity extends Activity {
                     public void onErrorResponse(VolleyError result) {
                     }
                 },NewThreadActivity.this, sessionManager.getSection(),title.getText().toString());
-                startActivity(MicroblogActivity.getIntent(NewThreadActivity.this));
+                finish();
             }
         });
     }

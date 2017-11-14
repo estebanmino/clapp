@@ -2,6 +2,7 @@ package com.construapp.construapp.api;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -43,7 +44,6 @@ public class VolleyPostThreads {
         try {
             jsonObject1.put("title",name);
         } catch (Exception e) {}
-
 
         StringRequest jsonObjectRequest = new StringRequest(Request.Method.POST, url,
                 new com.android.volley.Response.Listener<String>() {
