@@ -1,17 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/textinputlayout_newpost"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal">
+        android:layout_gravity="center_horizontal"
+        app:hintAnimationEnabled="false"
+        app:hintEnabled="false">
+
         <EditText
+            android:id="@+id/edittext_new_comment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Comentar\n"/>
+            android:background="@drawable/layout_border"
+            android:hint="Escribe un comentario..." />
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/button_newpost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Comentar"
+            android:textSize="14sp"
+            android:layout_gravity="right"
+            android:layout_marginRight="20dp"/>
 
     </android.support.design.widget.TextInputLayout>
+
 </LinearLayout>

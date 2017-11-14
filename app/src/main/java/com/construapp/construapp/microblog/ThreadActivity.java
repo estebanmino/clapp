@@ -11,6 +11,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.AppCompatButton;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -18,6 +19,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -28,7 +30,10 @@ import com.construapp.construapp.LoginActivity;
 import com.construapp.construapp.R;
 import com.construapp.construapp.api.VolleyDeleteSection;
 import com.construapp.construapp.api.VolleyDeleteThread;
+import com.construapp.construapp.api.VolleyGetSections;
 import com.construapp.construapp.api.VolleyGetThread;
+import com.construapp.construapp.api.VolleyPostPosts;
+import com.construapp.construapp.api.VolleyPostSections;
 import com.construapp.construapp.db.Connectivity;
 import com.construapp.construapp.dbTasks.DeleteLessonTable;
 import com.construapp.construapp.listeners.VolleyJSONCallback;
@@ -89,6 +94,9 @@ public class ThreadActivity extends AppCompatActivity
     private TextView userPosition;
 
     private LinearLayout mContainerView;
+
+    private AppCompatButton createPost;
+    private EditText newComment;
 
 
     private ConstraintLayout constraintLayoutFvourites;
@@ -360,6 +368,29 @@ public class ThreadActivity extends AppCompatActivity
                                 LayoutInflater inflater =(LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                                 View myView = inflater.inflate(R.layout.thread_new_comment, null);
                                 mContainerView.addView(myView);
+
+                                createPost = (AppCompatButton) myView.findViewById(R.id.button_newpost);
+                                newComment = (EditText) myView.findViewById(R.id.edittext_new_comment);
+
+                                createPost.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+
+
+                                        Log.i("TEXT",newComment.getText().toString());
+                                        VolleyPostPosts.volleyPostPosts(new VolleyStringCallback() {
+                                            @Override
+                                            public void onSuccess(String result) {
+                                                onRestart();
+                                            }
+
+                                            @Override
+                                            public void onErrorResponse(VolleyError result) {
+                                                Toast.makeText(getApplicationContext(),"No se pudo publicar el comentario.",Toast.LENGTH_SHORT).show();
+                                            }
+                                        },ThreadActivity.this,newComment.getText().toString());
+                                    }
+                                });
 
 
                                 Log.i("REQ","HACIENDO REQ");
