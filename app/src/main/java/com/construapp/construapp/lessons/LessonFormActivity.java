@@ -8,6 +8,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -74,6 +75,10 @@ public class LessonFormActivity extends LessonBaseActivity {
         imageAttach = findViewById(R.id.image_attach);
         setImageAttachListener();
 
+        tagEditTags = findViewById(R.id.edit_tags);
+        tagEditDisciplines = findViewById(R.id.edit_disciplines);
+        tagEditClassifications = findViewById(R.id.edit_classifications);
+        tagEditDepartments = findViewById(R.id.edit_departments);
 
         //INIT NEW LESSON
         lesson = new Lesson();
@@ -155,7 +160,8 @@ public class LessonFormActivity extends LessonBaseActivity {
         fabSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar mySnackbar = Snackbar.make(findViewById(R.id.lesson_form_layout),
+                Log.i("TAGS",tagEditTags.getText().toString());
+                /*Snackbar mySnackbar = Snackbar.make(findViewById(R.id.lesson_form_layout),
                         "Confirme que desea enviar la lección a validar", Snackbar.LENGTH_LONG);
                 mySnackbar.setAction("Confirmar", new View.OnClickListener() {
                     @Override
@@ -163,7 +169,7 @@ public class LessonFormActivity extends LessonBaseActivity {
                         createLesson(Constants.R_WAITING);
                     }
                 });
-                mySnackbar.show();
+                mySnackbar.show();*/
             }
         });
     }
@@ -270,7 +276,12 @@ public class LessonFormActivity extends LessonBaseActivity {
                   Toast.makeText(LessonFormActivity.this, "No se pudo crear lección. Revisar que todos los campos estén completos", Toast.LENGTH_LONG).show();
               }
           }, LessonFormActivity.this, lesson_name, lesson_summary,
-        lesson_motivation, lesson_learning,project_id, validateState).execute();
+        lesson_motivation, lesson_learning,project_id, validateState,
+                tagEditTags.getText().toString(),
+                tagEditDisciplines.getText().toString(),
+                tagEditClassifications.getText().toString(),
+                tagEditDepartments.getText().toString()
+                ).execute();
 
         if (!Connectivity.isConnected(LessonFormActivity.this)) {
             Toast.makeText(LessonFormActivity.this, "Estás sin conexión, cuando se conecte se enviará automáticamente", Toast.LENGTH_LONG).show();

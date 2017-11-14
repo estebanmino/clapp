@@ -37,4 +37,11 @@
         <item name="android:background">@color/black_overlay</item>
     </style>
 
+    <style name="TagEditText">
+        <item name="android:layout_margin">5dp</item>
+        <item name="textBackgroundRadius">3dp</item>
+        <item name="textBackgroundColor">@color/colorAccent</item>
+        <item name="textSize">4sp</item>
+    </style>
+
 </resources>

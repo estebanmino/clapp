@@ -39,6 +39,7 @@ import com.construapp.construapp.multimedia.MultimediaAudioAdapter;
 import com.construapp.construapp.multimedia.MultimediaDocumentAdapter;
 import com.construapp.construapp.multimedia.MultimediaPictureAdapter;
 import com.construapp.construapp.multimedia.MultimediaVideoAdapter;
+import com.ryanpope.tagedittext.TagEditText;
 
 import java.io.File;
 import java.io.IOException;
@@ -130,6 +131,11 @@ public class LessonBaseActivity extends AppCompatActivity {
 
     public ImageView imageSetFavourite;
     public ImageView imageUndoFavourite;
+
+    public TagEditText tagEditTags;
+    public TagEditText tagEditDisciplines;
+    public TagEditText tagEditClassifications;
+    public TagEditText tagEditDepartments;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

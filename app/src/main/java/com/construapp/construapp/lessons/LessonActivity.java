@@ -12,6 +12,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -126,6 +127,16 @@ public class LessonActivity extends LessonBaseActivity {
         constraintMultimediaBar = findViewById(R.id.constraint_multimedia_bar);
         imageAttach = findViewById(R.id.image_attach);
         setImageAttachListener();
+
+        tagEditTags = findViewById(R.id.edit_tags);
+        tagEditDisciplines = findViewById(R.id.edit_disciplines);
+        tagEditClassifications = findViewById(R.id.edit_classifications);
+        tagEditDepartments = findViewById(R.id.edit_departments);
+
+        tagEditTags.setInputType(InputType.TYPE_NULL);
+        tagEditDisciplines.setInputType(InputType.TYPE_NULL);
+        tagEditClassifications.setInputType(InputType.TYPE_NULL);
+        tagEditDepartments.setInputType(InputType.TYPE_NULL);
 
         setLesson();
 
@@ -365,6 +376,11 @@ public class LessonActivity extends LessonBaseActivity {
                     btnEdit.setText("Cancelar");
                     btnDelete.setVisibility(View.GONE);
 
+                    tagEditTags.setInputType(InputType.TYPE_CLASS_TEXT);
+                    tagEditDisciplines.setInputType(InputType.TYPE_CLASS_TEXT);
+                    tagEditClassifications.setInputType(InputType.TYPE_CLASS_TEXT);
+                    tagEditDepartments.setInputType(InputType.TYPE_CLASS_TEXT);
+
                     Bundle bundle = new Bundle();
                     bundle.putStringArrayList(Constants.B_LESSON_ARRAY_LIST, lesson.getFormAttributes());
                     FragmentManager fragmentManager = getFragmentManager();
@@ -478,7 +494,10 @@ public class LessonActivity extends LessonBaseActivity {
         fabSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.i("TAGS",tagEditTags.getText().toString());
+                /*
                 putLesson(Constants.R_WAITING);
+                */
             }
         });
     }
