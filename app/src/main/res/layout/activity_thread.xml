@@ -63,7 +63,7 @@
                     android:tag="@integer/admin_permission"
                     android:text="EDITAR TEMA"
                     android:textColor="@color/cardview_light_background"
-                    android:textSize="10sp"
+                    android:textSize="12sp"
                     android:visibility="visible" />
 
                 <Button
@@ -77,7 +77,7 @@
                     android:tag="@integer/admin_permission"
                     android:text="ELIMINAR TEMA"
                     android:textColor="@color/cardview_light_background"
-                    android:textSize="10sp"
+                    android:textSize="12sp"
                     android:visibility="visible" />
 
             </LinearLayout>

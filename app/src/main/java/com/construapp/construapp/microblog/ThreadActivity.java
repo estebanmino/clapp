@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnFocusChangeListener;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,12 +29,14 @@ import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.construapp.construapp.LoginActivity;
 import com.construapp.construapp.R;
+import com.construapp.construapp.api.VolleyDeletePost;
 import com.construapp.construapp.api.VolleyDeleteSection;
 import com.construapp.construapp.api.VolleyDeleteThread;
 import com.construapp.construapp.api.VolleyGetSections;
 import com.construapp.construapp.api.VolleyGetThread;
 import com.construapp.construapp.api.VolleyPostPosts;
 import com.construapp.construapp.api.VolleyPostSections;
+import com.construapp.construapp.api.VolleyPutPost;
 import com.construapp.construapp.db.Connectivity;
 import com.construapp.construapp.dbTasks.DeleteLessonTable;
 import com.construapp.construapp.listeners.VolleyJSONCallback;
@@ -338,6 +341,7 @@ public class ThreadActivity extends AppCompatActivity
                                     final JSONObject object = (JSONObject) jsonPosts.get(i);
                                     //post.setText(object.get("text").toString());
                                     //post.setId(object.get("id").toString());
+                                    final String post_id = object.get("id").toString();
                                     JSONObject object2 = new JSONObject(object.getString("user"));
                                     TextView fullname = myView.findViewById(R.id.textview_fullname);
                                     fullname.setText(object2.getString("first_name")+" "+object2.getString("last_name"));
@@ -348,19 +352,98 @@ public class ThreadActivity extends AppCompatActivity
                                     TextView position = myView.findViewById(R.id.textview_position);
                                     position.setText(object2.getString("position"));
 
-                                    TextView text = myView.findViewById(R.id.textview_text);
+                                    final TextView text = myView.findViewById(R.id.textview_text);
                                     text.setText(object.getString("text"));
 
+                                    final EditText editText = myView.findViewById(R.id.edittext_text);
+                                    editText.setText(object.getString("text"));
 
-                                    /*text.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View view) {
-                                            startActivity(PostActivity.getIntent(ThreadActivity.this));
-                                        }
-                                    });*/
+
+                                    final Button edit = myView.findViewById(R.id.btn_edit);
+                                    final Button delete = (Button) myView.findViewById(R.id.btn_delete);
+                                    final Button update = myView.findViewById(R.id.btn_update);
+
+
 
                                     mContainerView.addView(myView);
 
+                                    delete.setOnClickListener(new View.OnClickListener(){
+                                        @Override
+                                        public void onClick(View v) {
+
+
+
+                                            VolleyDeletePost.volleyDeletePost(new VolleyStringCallback() {
+                                                @Override
+                                                public void onSuccess(String result) {
+                                                    onRestart();
+                                                }
+
+                                                @Override
+                                                public void onErrorResponse(VolleyError result) {
+                                                    Toast.makeText(getApplicationContext(),"No se pudo eliminar el comentario.",Toast.LENGTH_SHORT).show();
+                                                }
+                                            },ThreadActivity.this,post_id.toString().toString());
+                                        }
+
+                                    });
+
+                                    edit.setOnClickListener(new View.OnClickListener(){
+                                        @Override
+                                        public void onClick(View v) {
+
+                                            edit.setVisibility(View.GONE);
+                                            delete.setVisibility(View.GONE);
+                                            text.setVisibility(View.GONE);
+                                            update.setVisibility(View.VISIBLE);
+                                            editText.setVisibility(View.VISIBLE);
+                                            editText.setOnFocusChangeListener(new OnFocusChangeListener() {
+                                                @Override
+                                                public void onFocusChange(View v, boolean hasFocus) {
+                                                    if(hasFocus){
+                                                        editText.setSelection(editText.getText().length());
+                                                    }
+                                                }
+                                            });
+                                            editText.requestFocus();
+
+
+
+
+                                        }
+
+                                    });
+                                    update.setOnClickListener(new View.OnClickListener(){
+                                        @Override
+                                        public void onClick(View v) {
+
+                                            VolleyPutPost.volleyPutPost(new VolleyStringCallback() {
+                                                @Override
+                                                public void onSuccess(String result) {
+                                                    edit.setVisibility(View.VISIBLE);
+                                                    delete.setVisibility(View.VISIBLE);
+                                                    text.setVisibility(View.VISIBLE);
+                                                    update.setVisibility(View.GONE);
+                                                    editText.setVisibility(View.GONE);
+                                                    onRestart();
+                                                }
+
+                                                @Override
+                                                public void onErrorResponse(VolleyError result) {
+                                                    Toast.makeText(getApplicationContext(),"No se pudo editar el comentario.",Toast.LENGTH_SHORT).show();
+                                                }
+                                            },ThreadActivity.this,editText.getText().toString(),Integer.parseInt(post_id));
+
+                                            edit.setVisibility(View.GONE);
+                                            delete.setVisibility(View.GONE);
+                                            text.setVisibility(View.GONE);
+                                            update.setVisibility(View.VISIBLE);
+                                            editText.setVisibility(View.VISIBLE);
+
+
+                                        }
+
+                                    });
 
 
                                 }
