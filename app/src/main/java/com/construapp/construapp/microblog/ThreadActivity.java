@@ -347,7 +347,7 @@ public class ThreadActivity extends AppCompatActivity
                                     fullname.setText(object2.getString("first_name")+" "+object2.getString("last_name"));
 
                                     TextView timestamp = myView.findViewById(R.id.textview_post_timestamp);
-                                    timestamp.setText(object2.getString("created_at"));
+                                    timestamp.setText(object.getString("updated_at"));
 
                                     TextView position = myView.findViewById(R.id.textview_position);
                                     position.setText(object2.getString("position"));

@@ -35,6 +35,7 @@ public class VolleyDeletePost {
         final String userToken = sharedpreferences.getString(Constants.SP_TOKEN, "");
 
         String url = Constants.BASE_URL + "/" + Constants.COMPANIES + "/" + company_id + "/" +Constants.SECTIONS + "/" + section_id + "/" + Constants.POSTS+ "?id=" + post_id;
+
         final RequestQueue queue = Volley.newRequestQueue(context);
 
 
