@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
@@ -69,7 +68,7 @@ public class ThreadActivity extends AppCompatActivity
     private SwipeRefreshLayout swipeRefreshLayout;
     private Button editThreadButton;
     private Button deleteThreadButton;
-    private FloatingActionButton newPost;
+
 
     private String title;
     private String text;
@@ -130,7 +129,6 @@ public class ThreadActivity extends AppCompatActivity
 
         editThreadButton = findViewById(R.id.btn_edit);
         deleteThreadButton = findViewById(R.id.btn_delete);
-        newPost = findViewById(R.id.fab_new_post);
 
         deleteThreadButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -346,18 +344,24 @@ public class ThreadActivity extends AppCompatActivity
                                     text.setText(object.getString("text"));
 
 
-                                    text.setOnClickListener(new View.OnClickListener() {
+                                    /*text.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View view) {
                                             startActivity(PostActivity.getIntent(ThreadActivity.this));
                                         }
-                                    });
+                                    });*/
 
                                     mContainerView.addView(myView);
 
-                                    //postsList.add(post);
+
 
                                 }
+
+                                LayoutInflater inflater =(LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                                View myView = inflater.inflate(R.layout.thread_new_comment, null);
+                                mContainerView.addView(myView);
+
+
                                 Log.i("REQ","HACIENDO REQ");
                                 //postsAdapter = new PostsAdapter(getApplicationContext(), postsList);
                                 //postsListListView.setAdapter(postsAdapter);
