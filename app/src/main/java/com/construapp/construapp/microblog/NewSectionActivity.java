@@ -12,6 +12,7 @@ import android.widget.EditText;
 import com.android.volley.VolleyError;
 import com.construapp.construapp.R;
 import com.construapp.construapp.api.VolleyGetFavouriteLessons;
+import com.construapp.construapp.api.VolleyGetSections;
 import com.construapp.construapp.api.VolleyPostSections;
 import com.construapp.construapp.listeners.VolleyStringCallback;
 
@@ -42,7 +43,7 @@ public class NewSectionActivity extends Activity {
                 VolleyPostSections.volleyPostSections(new VolleyStringCallback() {
                     @Override
                     public void onSuccess(String result) {
-                        VolleyGetFavouriteLessons.volleyGetFavouriteLessons(new VolleyStringCallback() {
+                        VolleyGetSections.volleyGetSections(new VolleyStringCallback() {
                             @Override
                             public void onSuccess(String result) {
 
@@ -51,7 +52,7 @@ public class NewSectionActivity extends Activity {
                             @Override
                             public void onErrorResponse(VolleyError result) {
                             }
-                        },NewSectionActivity.this);
+                        }, NewSectionActivity.this);
                     }
 
                     @Override

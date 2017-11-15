@@ -178,7 +178,7 @@ public class MicroblogActivity extends AppCompatActivity
                                     Log.i("JSON", jsonSections.get(i).toString());
                                     JSONObject object = (JSONObject) jsonSections.get(i);
                                     section.setName(object.get("name").toString());
-                                    //section.setDescription("Aqui van cosas varias");
+                                    section.setDescription(object.get("description").toString());
                                     section.setId(object.get("id").toString());
                                     sectionsList.add(section);
 
