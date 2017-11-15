@@ -83,6 +83,9 @@ public class LessonActivity extends LessonBaseActivity {
     private RecyclerView mDocumentsRecyclerView;
     private RecyclerView mAudiosRecyclerView;
 
+    private RecyclerView mDisciplinesRecyclerView;
+    private LessonAttributesAdapter lessonAttributesAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -201,6 +204,20 @@ public class LessonActivity extends LessonBaseActivity {
         mDocumentsRecyclerView.setLayoutManager(documentsLayoutManager);
         multimediaDocumentAdapter = new MultimediaDocumentAdapter(lesson.getMultimediaDocumentsFiles(),LessonActivity.this,lesson);
         mDocumentsRecyclerView.setAdapter(multimediaDocumentAdapter);
+
+        //DOCUMENTS SCROLLING
+        LinearLayoutManager disciplinesLayoutManager = new LinearLayoutManager(this);
+        disciplinesLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        mDisciplinesRecyclerView = findViewById(R.id.recycler_horizontal_disciplines);
+        mDisciplinesRecyclerView.setLayoutManager(disciplinesLayoutManager);
+        final String[] mToppings = new String[5];
+        mToppings[0] = "Cheese";
+        mToppings[1] = "Pepperoni";
+        mToppings[2] = "Black Olives";
+        mToppings[3] = "Black Olives";
+        mToppings[4] = "Black Olives";
+        lessonAttributesAdapter = new LessonAttributesAdapter(mToppings,LessonActivity.this,lesson,editing);
+        mDisciplinesRecyclerView.setAdapter(lessonAttributesAdapter);
 
         // Create an S3 client
         AmazonS3 s3 = new AmazonS3Client(constants.getCredentialsProvider(LessonActivity.this));

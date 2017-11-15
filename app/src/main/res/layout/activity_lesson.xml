@@ -332,6 +332,12 @@
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/edit_comment_images" />
 
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_horizontal_disciplines"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
                 <com.ryanpope.tagedittext.TagEditText
                     android:id="@+id/edit_tags"
                     style="@style/TagEditText"
