@@ -10,8 +10,10 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.construapp.construapp.listeners.VolleyJSONCallback;
 import com.construapp.construapp.listeners.VolleyStringCallback;
 import com.construapp.construapp.models.Constants;
 
@@ -26,8 +28,8 @@ import java.util.Map;
  */
 
 public class VolleyPostSections {
-    public static void volleyPostSections(final VolleyStringCallback callback,
-                                                 Context context, String name) {
+    public static void volleyPostSections(final VolleyJSONCallback callback,
+                                                 Context context, String name, String description) {
 
         SharedPreferences sharedpreferences = context.getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
         String company_id = sharedpreferences.getString(Constants.SP_COMPANY, "");
@@ -40,16 +42,19 @@ public class VolleyPostSections {
 
 
         final JSONObject jsonObject1 = new JSONObject();
+        final String requestBody =
+                "{\"name\":\"" + name + "\"\"description\":\"" + description + "}";
 
         try {
             jsonObject1.put("name",name);
+            jsonObject1.put("description",description);
         } catch (Exception e) {}
 
 
-        StringRequest jsonObjectRequest = new StringRequest(Request.Method.POST, url,
-                new com.android.volley.Response.Listener<String>() {
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jsonObject1,
+                new com.android.volley.Response.Listener<JSONObject>() {
                     @Override
-                    public void onResponse(String  response) {
+                    public void onResponse(JSONObject  response) {
                         callback.onSuccess(response);
                     }
                 },
@@ -77,9 +82,9 @@ public class VolleyPostSections {
             @Override
             public byte[] getBody() {
                 try {
-                    return jsonObject1 == null ? null : jsonObject1.toString().getBytes("utf-8");
+                    return requestBody == null ? null : jsonObject1.toString().getBytes("utf-8");
                 } catch (UnsupportedEncodingException uee) {
-                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", jsonObject1.toString(), "utf-8");
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
                     return null;
                 }
             }

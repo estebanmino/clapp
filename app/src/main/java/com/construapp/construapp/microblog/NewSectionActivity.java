@@ -14,7 +14,10 @@ import com.construapp.construapp.R;
 import com.construapp.construapp.api.VolleyGetFavouriteLessons;
 import com.construapp.construapp.api.VolleyGetSections;
 import com.construapp.construapp.api.VolleyPostSections;
+import com.construapp.construapp.listeners.VolleyJSONCallback;
 import com.construapp.construapp.listeners.VolleyStringCallback;
+
+import org.json.JSONObject;
 
 public class NewSectionActivity extends Activity {
 
@@ -40,9 +43,9 @@ public class NewSectionActivity extends Activity {
             public void onClick(View view) {
                 Log.i("NAME",name.getText().toString());
                 Log.i("DESCRIPTION",description.getText().toString());
-                VolleyPostSections.volleyPostSections(new VolleyStringCallback() {
+                VolleyPostSections.volleyPostSections(new VolleyJSONCallback() {
                     @Override
-                    public void onSuccess(String result) {
+                    public void onSuccess(JSONObject result) {
                         VolleyGetSections.volleyGetSections(new VolleyStringCallback() {
                             @Override
                             public void onSuccess(String result) {
@@ -58,7 +61,7 @@ public class NewSectionActivity extends Activity {
                     @Override
                     public void onErrorResponse(VolleyError result) {
                     }
-                },NewSectionActivity.this, name.getText().toString());
+                },NewSectionActivity.this, name.getText().toString(), description.getText().toString()) ;
                 startActivity(MicroblogActivity.getIntent(NewSectionActivity.this));
             }
         });
