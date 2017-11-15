@@ -213,4 +213,27 @@ public class SessionManager {
         editor.remove(Constants.SP_THREAD_ID);
         editor.commit();
     }
+
+    public void setDisciplines(String disciplines) {
+        editor.putString(Constants.SP_DISCIPLINES,  disciplines);
+        editor.apply();
+    }
+    public void setClassifications(String classifications) {
+        editor.putString(Constants.SP_CLASSIFICATIONS,  classifications);
+        editor.apply();
+    }
+    public void setDepartments(String departments) {
+        editor.putString(Constants.SP_DEPARTMENTS,  departments);
+        editor.apply();
+    }
+
+    public String getDisciplines() {
+        return sharedPreferences.getString(Constants.SP_DISCIPLINES, "");
+    }
+    public String getClassifications() {
+        return sharedPreferences.getString(Constants.SP_CLASSIFICATIONS, "");
+    }
+    public String getDepartments() {
+        return sharedPreferences.getString(Constants.SP_DEPARTMENTS, "");
+    }
 }

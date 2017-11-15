@@ -13,6 +13,7 @@ public interface Constants {
     String SECTIONS = "sections";
     String THREADS = "threads";
     String LESSONS = "lessons";
+    String ATTRIBUTES = "attributes";
     String USERS = "users";
     String GET_PROJECTS = "get_projects";
     String GET_PERMISSION = "get_permission";
@@ -55,6 +56,9 @@ public interface Constants {
     String SP_PENDING_VALIDATIONS = "pending_validations";
     String SP_FAVOURITE_LESSONS = "favourite_lessons";
     String SP_THREAD_ID = "thread_id";
+    String SP_DISCIPLINES = "disciplines";
+    String SP_CLASSIFICATIONS = "classifications";
+    String SP_DEPARTMENTS = "departments";
 
     //Queries
     String Q_AUTHORIZATION = "Authorization";
