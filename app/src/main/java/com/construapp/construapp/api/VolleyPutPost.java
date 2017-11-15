@@ -2,6 +2,7 @@ package com.construapp.construapp.api;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -9,12 +10,12 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.construapp.construapp.listeners.VolleyStringCallback;
 import com.construapp.construapp.models.Constants;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
@@ -22,12 +23,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by user on 12/11/2017.
+ * Created by jose on 14-11-17.
  */
 
-public class VolleyPostPosts {
-    public static void volleyPostPosts(final VolleyStringCallback callback,
-                                          Context context, String text) {
+public class VolleyPutPost {
+    public static void volleyPutPost(final VolleyStringCallback callback,
+                                       Context context, String text,int id) {
 
         SharedPreferences sharedpreferences = context.getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
         String company_id = sharedpreferences.getString(Constants.SP_COMPANY, "");
@@ -41,18 +42,19 @@ public class VolleyPostPosts {
 
 
         final JSONObject jsonObject1 = new JSONObject();
-        final JSONObject jsonObject2 = new JSONObject();
 
 
 
         try {
-            jsonObject2.put("text",text);
-            jsonObject2.put("microblog_thread_id",thread_id);
-            jsonObject1.put("post",jsonObject2);
+            Log.i("TOKEN",userToken);
+            Log.i("TEXT",text);
+            Log.i("id",Integer.toString(id));
+            jsonObject1.put("id",id);
+            jsonObject1.put("text",text);
         } catch (Exception e) {}
 
 
-        StringRequest jsonObjectRequest = new StringRequest(Request.Method.POST, url,
+        StringRequest jsonObjectRequest = new StringRequest(Request.Method.PUT, url,
                 new com.android.volley.Response.Listener<String>() {
                     @Override
                     public void onResponse(String  response) {

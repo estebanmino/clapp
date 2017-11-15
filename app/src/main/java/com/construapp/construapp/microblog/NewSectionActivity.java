@@ -52,7 +52,7 @@ public class NewSectionActivity extends Activity {
                             @Override
                             public void onErrorResponse(VolleyError result) {
                             }
-                        },NewSectionActivity.this);
+                        }, NewSectionActivity.this);
                     }
 
                     @Override
