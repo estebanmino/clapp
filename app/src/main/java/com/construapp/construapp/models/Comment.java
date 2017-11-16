@@ -1,27 +1,31 @@
 package com.construapp.construapp.models;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+
 /**
- * Created by jose on 09-11-17.
+ * Created by ESTEBANFML on 12-11-2017.
  */
 
-public class Post {
+@Entity
+public class Comment {
 
-    public Post() {
-        setId("");
-        setText("");
-        setFirst_name("");
-        setLast_name("");
-        setPosition("");
-        setTimestamp("");
-    }
-
-    private String text;
+    @PrimaryKey
     private String id;
+    private String lessonId;
+    private String text;
     private String authorId;
     private String position;
     private String first_name;
     private String last_name;
-    private String timestamp;
+
+    public String getLessonId() {
+        return lessonId;
+    }
+
+    public void setLessonId(String lessonId) {
+        this.lessonId = lessonId;
+    }
 
     public String getAuthorId() {
         return authorId;
@@ -69,14 +73,6 @@ public class Post {
 
     public void setLast_name(String last_name) {
         this.last_name = last_name;
-    }
-
-    public String getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(String timestamp) {
-        this.timestamp = timestamp;
     }
 
 }

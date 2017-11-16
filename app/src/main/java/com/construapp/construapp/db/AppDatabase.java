@@ -13,7 +13,6 @@ import com.construapp.construapp.models.Lesson;
 
 
 @Database(entities = {Lesson.class}, version = 1, exportSchema = false)
-
 public abstract class AppDatabase extends RoomDatabase {
 
     private static AppDatabase INSTANCE;

@@ -49,7 +49,15 @@ public class Lesson {
     private String company_id;
     private String validator;
     private String validator_sec;
+    private String comments;
 
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
+    }
 
     public String getReject_comment() {
         return reject_comment;
