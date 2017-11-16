@@ -35,6 +35,8 @@ import com.construapp.construapp.api.VolleyDeleteThread;
 import com.construapp.construapp.api.VolleyGetThread;
 import com.construapp.construapp.api.VolleyPostPosts;
 import com.construapp.construapp.api.VolleyPutPost;
+import com.construapp.construapp.api.VolleyPutSection;
+import com.construapp.construapp.api.VolleyPutThread;
 import com.construapp.construapp.db.Connectivity;
 import com.construapp.construapp.dbTasks.DeleteLessonTable;
 import com.construapp.construapp.listeners.VolleyJSONCallback;
@@ -180,8 +182,21 @@ public class ThreadActivity extends AppCompatActivity
         saveEditThreadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                editThreadLayout.setVisibility(View.GONE);
-                threadCommentsLayout.setVisibility(View.VISIBLE);
+                VolleyPutThread.volleyPutThread(new VolleyStringCallback() {
+                    @Override
+                    public void onSuccess(String result) {
+                        title = editThreadName.getText().toString();
+                        text = editThreadDescription.getText().toString();
+                        editThreadLayout.setVisibility(View.GONE);
+                        threadCommentsLayout.setVisibility(View.VISIBLE);
+                        onRestart();
+                    }
+
+                    @Override
+                    public void onErrorResponse(VolleyError result) {
+                        Toast.makeText(getApplicationContext(),"No se pudo editar el post.",Toast.LENGTH_SHORT).show();
+                    }
+                },ThreadActivity.this,editThreadName.getText().toString(),editThreadDescription.getText().toString(),thread_id);
             }
         });
 
