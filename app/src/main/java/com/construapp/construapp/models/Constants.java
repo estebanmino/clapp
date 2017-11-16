@@ -13,6 +13,7 @@ public interface Constants {
     String SECTIONS = "sections";
     String THREADS = "threads";
     String POSTS = "posts";
+    String POST = "Post";
     String LESSONS = "lessons";
     String USERS = "users";
     String GET_PROJECTS = "get_projects";

@@ -1,6 +1,7 @@
 package com.construapp.construapp.microblog;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
@@ -10,6 +11,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.AppCompatButton;
@@ -31,6 +33,7 @@ import com.android.volley.VolleyError;
 import com.construapp.construapp.LoginActivity;
 import com.construapp.construapp.R;
 import com.construapp.construapp.api.VolleyDeletePost;
+import com.construapp.construapp.api.VolleyDeleteSection;
 import com.construapp.construapp.api.VolleyDeleteThread;
 import com.construapp.construapp.api.VolleyGetThread;
 import com.construapp.construapp.api.VolleyPostPosts;
@@ -78,7 +81,6 @@ public class ThreadActivity extends AppCompatActivity
     private CoordinatorLayout threadCommentsLayout;
     private LinearLayout editThreadLayout;
 
-
     private String title;
     private String text;
     private String fullname;
@@ -104,13 +106,11 @@ public class ThreadActivity extends AppCompatActivity
     private EditText editThreadName;
     private EditText editThreadDescription;
 
-
     private ConstraintLayout constraintLayoutFvourites;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_thread);
-
 
         title = getIntent().getStringExtra("TITLE");
         text = getIntent().getStringExtra("TEXT");
@@ -120,17 +120,8 @@ public class ThreadActivity extends AppCompatActivity
         thread_id=getIntent().getStringExtra("ID");
 
         Toolbar toolbar = findViewById(R.id.toolbar);
-        //todo jose VAMOS A PROBAR SI QUEDA BIEN EL TITULO
-        //toolbar.setTitle(title);
+        toolbar.setTitle(Constants.POST);
         setSupportActionBar(toolbar);
-
-        //todo jose terminar de pasar el codigo
-
-        //TextView threadTitle = findViewById(R.id.textview_thread_title);
-        //threadTitle.setText(title);
-
-        //threadtext = findViewById(R.id.textview_post_message);
-        //threadtext.setText(text);
 
         userName = findViewById(R.id.textview_fullname);
         userName.setText(fullname);
@@ -155,18 +146,8 @@ public class ThreadActivity extends AppCompatActivity
         deleteThreadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                VolleyDeleteThread.volleyDeleteThread(new VolleyJSONCallback() {
-                    @Override
-                    public void onSuccess(JSONObject result) {
-                        sessionManager.setSection(result.toString());
-                    }
-
-                    @Override
-                    public void onErrorResponse(VolleyError result) {
-                        Log.i("ERROR","erroooooor");
-                    }
-                },ThreadActivity.this,sessionManager.getSection(),thread_id);
-                finish();
+                AlertDialog diaBox = AskOption();
+                diaBox.show();
             }
         });
 
@@ -214,9 +195,6 @@ public class ThreadActivity extends AppCompatActivity
         });
         swipeRefreshLayout.setOnRefreshListener(swipeRefreshListener);
 
-
-
-
         sessionManager = new SessionManager(ThreadActivity.this);
         sessionManager.setThreadId(thread_id);
 
@@ -232,7 +210,6 @@ public class ThreadActivity extends AppCompatActivity
                 JSONObject project = (JSONObject) jsonArray.get(i);
                 projects.put(project.getString("name"),project.getString("id"));
                 mProjectTitles[i] = project.getString("name");
-
             }
             projects.put(Constants.ALL_PROJECTS_NAME,Constants.ALL_PROJECTS_KEY);
         } catch (Exception e) {}
@@ -261,7 +238,6 @@ public class ThreadActivity extends AppCompatActivity
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Post post = (Post) postsAdapter.getItem(position);
-                //
             }
         });
 
@@ -271,8 +247,6 @@ public class ThreadActivity extends AppCompatActivity
                 return (event.getAction() == MotionEvent.ACTION_MOVE);
             }
         });
-
-
     }
 
     @Override
@@ -315,11 +289,9 @@ public class ThreadActivity extends AppCompatActivity
             sessionManager.setActualProject(Constants.ALL_PROJECTS_KEY,Constants.ALL_PROJECTS_NAME);
             startActivity(MainActivity.getIntent(ThreadActivity.this));
         } else  if (item.getItemId() == R.id.to_blog) {
-            //startActivity(MicroblogActivity.getIntent(FavouriteLessonsActivity.this));
-        } //else  if (item.getItemId() == R.id.to_favourites) {
-        //startActivity(FavouriteLessonsActivity.getIntent(FavouriteLessonsActivity.this));
-        //IMPLEMENT
-        //}
+
+        }
+
         else {
             String map = item.getTitle().toString();
             Intent intent = getIntent();
@@ -372,7 +344,6 @@ public class ThreadActivity extends AppCompatActivity
                                 mContainerView = (LinearLayout)findViewById(R.id.linear_layout_posts);
                                 mContainerView.removeAllViews();
 
-
                                 for (int i = 0; i < jsonPosts.length(); i++) {
                                     //post = new Post();
                                     LayoutInflater inflater =(LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -399,20 +370,15 @@ public class ThreadActivity extends AppCompatActivity
                                     final EditText editText = myView.findViewById(R.id.edittext_text);
                                     editText.setText(object.getString("text"));
 
-
                                     final Button edit = myView.findViewById(R.id.btn_edit);
                                     final Button delete = (Button) myView.findViewById(R.id.btn_delete);
                                     final Button update = myView.findViewById(R.id.btn_update);
-
-
 
                                     mContainerView.addView(myView);
 
                                     delete.setOnClickListener(new View.OnClickListener(){
                                         @Override
                                         public void onClick(View v) {
-
-
 
                                             VolleyDeletePost.volleyDeletePost(new VolleyStringCallback() {
                                                 @Override
@@ -447,10 +413,6 @@ public class ThreadActivity extends AppCompatActivity
                                                 }
                                             });
                                             editText.requestFocus();
-
-
-
-
                                         }
 
                                     });
@@ -515,15 +477,9 @@ public class ThreadActivity extends AppCompatActivity
                                         },ThreadActivity.this,newComment.getText().toString());
                                     }
                                 });
-
-
-                                Log.i("REQ","HACIENDO REQ");
-                                //postsAdapter = new PostsAdapter(getApplicationContext(), postsList);
-                                //postsListListView.setAdapter(postsAdapter);
                             } catch (Exception e) {
                             }
                         }
-
                         @Override
                         public void onErrorResponse(VolleyError result) {
 
@@ -538,7 +494,6 @@ public class ThreadActivity extends AppCompatActivity
         });
     }
 
-
     @Override
     public void onBackPressed()
     {
@@ -549,12 +504,40 @@ public class ThreadActivity extends AppCompatActivity
         }
         else {
             sessionManager.clearThreadId();
-            //super.onBackPressed();
-            //overridePendingTransition(R.anim.animation_back1,R.anim.animation_back2);
             finish();
         }
     }
 
+    private AlertDialog AskOption()
+    {
+        AlertDialog myQuittingDialogBox =new AlertDialog.Builder(this)
+                .setTitle("Salir")
+                .setMessage("¿Estás seguro que quieres eliminar este post?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        VolleyDeleteThread.volleyDeleteThread(new VolleyJSONCallback() {
+                            @Override
+                            public void onSuccess(JSONObject result) {
+                                sessionManager.setSection(result.toString());
+                            }
+
+                            @Override
+                            public void onErrorResponse(VolleyError result) {
+                                Log.i("ERROR","erroooooor");
+                            }
+                        },ThreadActivity.this,sessionManager.getSection(),thread_id);
+                        finish();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .create();
+        return myQuittingDialogBox;
+
+    }
 
     public void updateTextView(String toThis,int tv) {
         TextView textView = (TextView) findViewById(tv);

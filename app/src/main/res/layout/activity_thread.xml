@@ -61,7 +61,7 @@
                     android:layout_weight="1"
                     android:background="@color/colorSecondary"
                     android:tag="@integer/admin_permission"
-                    android:text="EDITAR TEMA"
+                    android:text="EDITAR POST"
                     android:textColor="@color/cardview_light_background"
                     android:textSize="12sp"
                     android:visibility="visible" />
@@ -75,14 +75,12 @@
                     android:layout_weight="1"
                     android:background="@android:color/holo_red_dark"
                     android:tag="@integer/admin_permission"
-                    android:text="ELIMINAR TEMA"
+                    android:text="ELIMINAR POST"
                     android:textColor="@color/cardview_light_background"
                     android:textSize="12sp"
                     android:visibility="visible" />
 
             </LinearLayout>
-
-
 
         </android.support.design.widget.AppBarLayout>
 

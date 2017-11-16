@@ -125,36 +125,22 @@
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="80dp"
             android:layout_alignParentBottom="true"
             android:layout_gravity="bottom">
-
-            <TextView
-                android:id="@+id/textView_new_thread"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
-                android:layout_marginRight="0dp"
-                android:tag="@integer/admin_permission"
-                android:textAlignment="center"
-                app:layout_constraintTop_toBottomOf="@+id/fab_new_thread"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintLeft_toLeftOf="@+id/fab_new_thread"
-                app:layout_constraintRight_toRightOf="@+id/fab_new_thread"
-                android:layout_marginTop="4dp" />
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/fab_new_thread"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="24dp"
+                android:layout_marginRight="8dp"
                 android:clickable="true"
                 android:tag="@integer/admin_permission"
                 app:fabSize="normal"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="parent"
                 app:srcCompat="@drawable/ic_add_dark"
-                android:layout_marginTop="0dp" />
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="8dp" />
         </android.support.constraint.ConstraintLayout>
 
     </android.support.design.widget.CoordinatorLayout>
