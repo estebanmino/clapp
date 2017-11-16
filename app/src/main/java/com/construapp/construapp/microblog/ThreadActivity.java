@@ -118,6 +118,7 @@ public class ThreadActivity extends AppCompatActivity
         position = "";
         timestamp = "";
         thread_id=getIntent().getStringExtra("ID");
+        sessionManager = new SessionManager(ThreadActivity.this);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(Constants.POST);
@@ -142,6 +143,17 @@ public class ThreadActivity extends AppCompatActivity
         editThreadDescription = findViewById(R.id.text_edit_thread_description);
 
         saveEditThreadButton = findViewById(R.id.button_edit_thread);
+
+        if (sessionManager.getUserId().equals(userThreadId) ||
+                sessionManager.getUserAdmin().equals(Constants.S_ADMIN_ADMIN)){
+            editThreadButton.setVisibility(View.VISIBLE);
+            deleteThreadButton.setVisibility(View.VISIBLE);
+        }
+        else {
+            editThreadButton.setVisibility(View.GONE);
+            deleteThreadButton.setVisibility(View.GONE);
+        }
+
 
         deleteThreadButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -197,7 +209,6 @@ public class ThreadActivity extends AppCompatActivity
         });
         swipeRefreshLayout.setOnRefreshListener(swipeRefreshListener);
 
-        sessionManager = new SessionManager(ThreadActivity.this);
         sessionManager.setThreadId(thread_id);
 
         postsListListView = findViewById(R.id.posts_list);

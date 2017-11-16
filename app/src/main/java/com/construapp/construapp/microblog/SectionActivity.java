@@ -352,11 +352,12 @@ public class SectionActivity extends AppCompatActivity
                                     thread.setTitle(object.get("title").toString());
                                     thread.setText(object.get("text").toString());
                                     thread.setId(object.get("id").toString());
-                                    thread.setUserThreadId(object2.get("email").toString());
+                                    thread.setUserThreadId(object2.get("id").toString());
+                                    Log.i("USER_ID",sessionManager.getUserId());
+                                    Log.i("USER_THREAD_ID",object2.get("id").toString());
                                     threadsList.add(thread);
 
                                 }
-                                Log.i("REQ","HACIENDO REQ");
                                 threadsAdapter = new ThreadsAdapter(getApplicationContext(), threadsList);
                                 threadsListListView.setAdapter(threadsAdapter);
                             } catch (Exception e) {
