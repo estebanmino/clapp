@@ -36,6 +36,8 @@ import com.construapp.construapp.R;
 import com.construapp.construapp.api.VolleyDeleteFavouriteLesson;
 import com.construapp.construapp.api.VolleyDeleteSection;
 import com.construapp.construapp.api.VolleyGetThreads;
+import com.construapp.construapp.api.VolleyPutPost;
+import com.construapp.construapp.api.VolleyPutSection;
 import com.construapp.construapp.db.Connectivity;
 import com.construapp.construapp.dbTasks.DeleteLessonTable;
 import com.construapp.construapp.lessons.LessonActivity;
@@ -72,6 +74,7 @@ public class SectionActivity extends AppCompatActivity
     private LinearLayout editSectionFormLayout;
     private CoordinatorLayout sectionThreadsLayout;
     private LinearLayout bottomBarLayout;
+    private Toolbar toolbar;
 
     private String name;
     private String description;
@@ -97,20 +100,13 @@ public class SectionActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_section);
 
-
         name = getIntent().getStringExtra("NAME");
         description=getIntent().getStringExtra("DESCRIPTION");
         section_id=getIntent().getStringExtra("ID");
+        UpdateToolbar();
 
         sessionManager = new SessionManager(SectionActivity.this);
         sessionManager.setSection(section_id);
-
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle(name);
-        setSupportActionBar(toolbar);
-
-        TextView sectionDescription = findViewById(R.id.section_description);
-        sectionDescription.setText(description);
 
         sectionThreadsLayout = findViewById(R.id.main_content);
         editSectionFormLayout = findViewById(R.id.layout_edit_section_form);
@@ -162,9 +158,22 @@ public class SectionActivity extends AppCompatActivity
         saveEditSectionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                editSectionFormLayout.setVisibility(View.GONE);
-                sectionThreadsLayout.setVisibility(View.VISIBLE);
-                bottomBarLayout.setVisibility(View.VISIBLE);
+                VolleyPutSection.volleyPutSection(new VolleyStringCallback() {
+                    @Override
+                    public void onSuccess(String result) {
+                        name = editSectionName.getText().toString();
+                        description = editSectionDescription.getText().toString();
+                        editSectionFormLayout.setVisibility(View.GONE);
+                        sectionThreadsLayout.setVisibility(View.VISIBLE);
+                        bottomBarLayout.setVisibility(View.VISIBLE);
+                        UpdateToolbar();
+                    }
+
+                    @Override
+                    public void onErrorResponse(VolleyError result) {
+                        Toast.makeText(getApplicationContext(),"No se pudo editar la sección.",Toast.LENGTH_SHORT).show();
+                    }
+                },SectionActivity.this,editSectionName.getText().toString(),editSectionDescription.getText().toString());
             }
         });
 
@@ -237,6 +246,15 @@ public class SectionActivity extends AppCompatActivity
         });
 
 
+    }
+
+    private void UpdateToolbar(){
+        toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle(name);
+        setSupportActionBar(toolbar);
+
+        TextView sectionDescription = findViewById(R.id.section_description);
+        sectionDescription.setText(description);
     }
 
     public static Intent getIntent(Context context) {
