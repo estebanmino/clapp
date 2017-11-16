@@ -76,10 +76,6 @@ public class MicroblogActivity extends AppCompatActivity
         TextView description = findViewById(R.id.section_description);
         description.setText("Secciones");
 
-        Log.i("TEST","voy aca");
-
-
-        //TODO jose fix obtener y hacer get
         sectionsList = new ArrayList<Section>();
         swipeRefreshLayout = findViewById(R.id.swipe_refresh_sections);
 
@@ -93,9 +89,6 @@ public class MicroblogActivity extends AppCompatActivity
         });
         swipeRefreshLayout.setOnRefreshListener(swipeRefreshListener);
 
-        //sectionsList.add(new Section("1","General","Cosas generales"));
-        //sectionsList.add(new Section("2","Otros","Cosas varias"));
-
         sessionManager = new SessionManager(MicroblogActivity.this);
         sectionsListListView = findViewById(R.id.sections_list);
         sectionsAdapter = new SectionsAdapter(getApplicationContext(), sectionsList);
@@ -107,13 +100,19 @@ public class MicroblogActivity extends AppCompatActivity
 
         navigationView = findViewById(R.id.nav_view);
         fabNewSection = findViewById(R.id.fab_new_thread);
-        fabNewSection.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(NewSectionActivity.getIntent(MicroblogActivity.this));
-            }
-        });
 
+        if (sessionManager.getUserAdmin().equals(Constants.S_ADMIN_ADMIN)){
+            fabNewSection.setVisibility(View.VISIBLE);
+            fabNewSection.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(NewSectionActivity.getIntent(MicroblogActivity.this));
+                }
+            });
+        }
+        else {
+            fabNewSection.setVisibility(View.GONE);
+        }
 
 
         navigationView.setNavigationItemSelectedListener(this);
@@ -144,9 +143,6 @@ public class MicroblogActivity extends AppCompatActivity
                 startActivity(intent,bndlanimation);
             }
         });
-
-
-
     }
 
     @Override

@@ -136,6 +136,12 @@ public class SectionActivity extends AppCompatActivity
                 diaBox.show();
             }
         });
+        if (sessionManager.getUserAdmin().equals(Constants.S_ADMIN_ADMIN)){
+            bottomBarLayout.setVisibility(View.VISIBLE);
+        }
+        else{
+            bottomBarLayout.setVisibility(View.GONE);
+        }
 
         editSectionButton.setOnClickListener(new View.OnClickListener() {
             @Override
