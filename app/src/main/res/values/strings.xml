@@ -3,6 +3,7 @@
     <string name="action_settings">Configuración</string>
     <string name="action_logout">Cerrar Sesión</string>
     <string name="section_format">Hello World from section: %1$d</string>
+    <string name="action_search">Buscar</string>
 
     <string name="hello_my_lessons_fragment">Hello MyLessons fragment</string>
     <string name="hello_lessons_fragment">Hello Lessons fragment</string>
