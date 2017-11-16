@@ -69,13 +69,13 @@ public class VolleyGetCompanyAttributes  {
                         JsonArray jsonDisciplines = (JsonArray) json.get(Constants.SP_DISCIPLINES);
                         for (int i = 0; i < jsonDisciplines.size(); i++) {
                             JsonElement jsonObject = jsonDisciplines.get(i);
-                            disciplinesStringArray += "/"+jsonObject.getAsJsonObject().get("name").toString();
+                            disciplinesStringArray += "/"+jsonObject.getAsJsonObject().get("name").getAsString();
                         }
                         sessionManager.setDisciplines(disciplinesStringArray);
                         JsonArray jsonDepartments = (JsonArray) json.get(Constants.SP_DEPARTMENTS);
                         for (int i = 0; i < jsonDepartments.size(); i++) {
                             JsonElement jsonObject = jsonDepartments.get(i);
-                            departmentsStringArray += "/"+jsonObject.getAsJsonObject().get("name").toString();
+                            departmentsStringArray += "/"+jsonObject.getAsJsonObject().get("name").getAsString();
                         }
                         sessionManager.setDepartments(departmentsStringArray);
                         callback.onSuccess(result);

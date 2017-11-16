@@ -461,10 +461,12 @@ public class LessonActivity extends LessonBaseActivity {
                                 }
 
                                 String[] disciplinesArray =  sessionManager.getDisciplines();
+                                //String[] disciplinesArray =  lesson.getDisciplinesArray();
                                 if (disciplinesArray.length != 0) {
                                     disciplinesAttributesAdapter = new LessonAttributesAdapter(disciplinesArray,
-                                            LessonActivity.this, lesson, editing, Constants.TAG_DISCIPLINES);
+                                            LessonActivity.this, lesson, true, Constants.TAG_DISCIPLINES);
                                     mDisciplinesRecyclerView.setAdapter(disciplinesAttributesAdapter);
+                                    mDisciplinesRecyclerView.setVisibility(View.VISIBLE);
                                 } else {
                                     textDisciplines.setText("Disciplinas (no hay disciplinas asignadas)");
                                     mDisciplinesRecyclerView.setVisibility(View.GONE);
@@ -475,6 +477,7 @@ public class LessonActivity extends LessonBaseActivity {
                                     departmentsAttributesAdapter = new LessonAttributesAdapter(departmentsArray,
                                             LessonActivity.this, lesson, editing, Constants.TAG_DEPARTMENTS);
                                     mDepartmentsRecyclerView.setAdapter(departmentsAttributesAdapter);
+                                    mDepartmentsRecyclerView.setVisibility(View.VISIBLE);
                                 } else {
                                     textDepartments.setText("Departamento (no hay departamentos asignados)");
                                     mDepartmentsRecyclerView.setVisibility(View.GONE);
@@ -499,9 +502,10 @@ public class LessonActivity extends LessonBaseActivity {
                         }
 
                         String[] disciplinesArray =  sessionManager.getDisciplines();
+                        //String[] disciplinesArray =  lesson.getDisciplinesArray();
                         if (disciplinesArray.length != 0) {
                             disciplinesAttributesAdapter = new LessonAttributesAdapter(disciplinesArray,
-                                    LessonActivity.this, lesson, editing, Constants.TAG_DISCIPLINES);
+                                    LessonActivity.this, lesson, true, Constants.TAG_DISCIPLINES);
                             mDisciplinesRecyclerView.setAdapter(disciplinesAttributesAdapter);
                         } else {
                             textDisciplines.setText("Disciplinas (no hay disciplinas asignadas)");

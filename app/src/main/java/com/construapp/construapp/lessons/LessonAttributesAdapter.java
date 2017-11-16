@@ -53,19 +53,19 @@ public class LessonAttributesAdapter extends RecyclerView.Adapter<LessonAttribut
     public void onBindViewHolder(LessonAttributesAdapter.AttributeViewHolder holder, int position) {
         holder.textAttribute.setText(attributesList[position]);
         if (tagType.equals(Constants.TAG_CLASSIFICATIONS)) {
-            if (thisLesson.getClassifications().contains(attributesList[position])){
+            if (thisLesson.getClassifications() != null && thisLesson.getClassifications().contains(attributesList[position])){
                 holder.textAttribute.setBackgroundColor(Color.parseColor("#f7772f"));
                 holder.textAttribute.setTag("true");
                 selectedAttributes.add(holder.textAttribute.getText().toString());
             }
         } else if (tagType.equals(Constants.TAG_DISCIPLINES)) {
-            if (thisLesson.getDisciplines().contains(attributesList[position])){
+            if (thisLesson.getDisciplines() != null && thisLesson.getDisciplines().contains(attributesList[position])){
                 holder.textAttribute.setBackgroundColor(Color.parseColor("#f7772f"));
                 holder.textAttribute.setTag("true");
                 selectedAttributes.add(holder.textAttribute.getText().toString());
             }
         } else if (tagType.equals(Constants.TAG_DEPARTMENTS)) {
-            if (thisLesson.getDepartments().contains(attributesList[position])){
+            if (thisLesson.getDepartments() != null && thisLesson.getDepartments().contains(attributesList[position])){
                 holder.textAttribute.setBackgroundColor(Color.parseColor("#f7772f"));
                 holder.textAttribute.setTag("true");
                 selectedAttributes.add(holder.textAttribute.getText().toString());
