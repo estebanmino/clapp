@@ -91,7 +91,7 @@ public class VolleyPutLesson {
 
             final String requestBody =
                     "{\"lesson\":{\"name\":\"" + lesson_name + "\",\"summary\":\"" + lesson_summary + "\"," +
-                            "\"motivation\":\"" + lesson_motivation + "\",\"learning\":\"" + lesson_learning + "\"," +
+                            "\"motivation\":\"" + lesson_motivation + "\",\"trigger_id\":" + lesson.getTrigger_id() +",\"learning\":\"" + lesson_learning + "\"," +
                             "\"validation\":\"" + validation + "\"}," +
                             "\"array_add_path\":" + added_array + "," +
                             "\"array_delete_path\":" + deleted_array + "," +
@@ -110,13 +110,13 @@ public class VolleyPutLesson {
                             + "}";
 
             Log.i("EDITREQUEST",requestBody);
-            Log.i("EDITREQUEST",newTags);
-            Log.i("EDITREQUEST",lesson.getTags());
+
 
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PUT, url, jsonObject,
                     new com.android.volley.Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
+                            Log.i("response", response.toString());
                             callback.onSuccess(response);
                         }
                     }, new Response.ErrorListener() {

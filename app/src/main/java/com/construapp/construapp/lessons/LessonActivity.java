@@ -29,6 +29,7 @@ import com.construapp.construapp.api.VolleyDeleteFavouriteLesson;
 import com.construapp.construapp.api.VolleyGetCompanyAttributes;
 import com.construapp.construapp.api.VolleyGetFavouriteLessons;
 import com.construapp.construapp.api.VolleyPostFavouriteLesson;
+import com.construapp.construapp.dbTasks.InsertLessonTask;
 import com.construapp.construapp.main.LessonsFragment;
 import com.construapp.construapp.main.MainActivity;
 import com.construapp.construapp.R;
@@ -178,7 +179,20 @@ public class LessonActivity extends LessonBaseActivity {
         }
 
         mStartRecording = true;
+        linearLayoutTriggers = findViewById(R.id.linear_triggers);
+        linearLayoutTriggers.setClickable(false);
+        btnTriggerError = findViewById(R.id.btn_trigger_trerror);
+        btnTriggerOmision = findViewById(R.id.btn_trigger_omision);
+        btnTriggerGoodPractice = findViewById(R.id.btn_trigger_good_practices);
+        btnTriggerImprovement = findViewById(R.id.btn_trigger_improvement);
 
+        btnTriggerError.setClickable(false);
+        btnTriggerOmision.setClickable(false);
+        btnTriggerGoodPractice.setClickable(false);
+        btnTriggerImprovement.setClickable(false);
+
+        Log.i("TRIGGERID",Integer.toString(lesson.getTrigger_id()));
+        linearTriggersSetTriggerIdClicked(lesson.getTrigger_id());
         ////HORIZONTAL IMAGES SCROLLING
 
         //GENRAL LAYOUT SCROLL
@@ -439,6 +453,13 @@ public class LessonActivity extends LessonBaseActivity {
             public void onClick(View view) {
                 editing = !editing;
                 if (editing) {
+                    linearLayoutTriggers.setClickable(true);
+                    btnTriggerError.setClickable(true);
+                    btnTriggerOmision.setClickable(true);
+                    btnTriggerGoodPractice.setClickable(true);
+                    btnTriggerImprovement.setClickable(true);
+                    setLinearTriggersButtonClick();
+
                     constraintActionBar.setVisibility(View.VISIBLE);
                     btnEdit.setText("Cancelar");
                     btnDelete.setVisibility(View.GONE);
@@ -638,9 +659,7 @@ public class LessonActivity extends LessonBaseActivity {
             @Override
             public void onClick(View view) {
                 Log.i("TAGS",tagEditTags.getText().toString());
-                /*
                 putLesson(Constants.R_WAITING);
-                */
             }
         });
     }
@@ -661,11 +680,21 @@ public class LessonActivity extends LessonBaseActivity {
         String project_id = lesson.getProject_id();
         ArrayList<String> array_added =  lesson.getAddedMultimediaKeysS3();
         ArrayList<String> array_deleted =  lesson.getDeletedMultimediaFilesS3Keys();
+        lesson.setTrigger_id(linearTriggersGetTriggerId());
         VolleyPutLesson.volleyPutLesson(new VolleyJSONCallback() {
             @Override
             public void onSuccess(JSONObject result) {
                 Toast.makeText(LessonActivity.this, "Lección editada", Toast.LENGTH_LONG).show();
                 String start = Constants.S3_LESSONS_PATH+"/"+lesson.getId()+"/";
+
+                try {
+                    new InsertLessonTask(lesson, LessonActivity.this).execute().get();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
                 for (MultimediaFile multimediaFile: lesson.getMultimediaPicturesFiles()) {
                     if (multimediaFile.getAdded() == 1) {
                         multimediaFile.setExtension(start+Constants.S3_IMAGES_PATH);
@@ -690,7 +719,8 @@ public class LessonActivity extends LessonBaseActivity {
                         multimediaFile.initUploadThread();
                     }
                 }
-                startActivity(MainActivity.getIntent(LessonActivity.this));
+                //startActivity(MainActivity.getIntent(LessonActivity.this));
+                finish();
             }
 
             @Override
@@ -706,7 +736,6 @@ public class LessonActivity extends LessonBaseActivity {
                 (departmentsAttributesAdapter!=null) ? departmentsAttributesAdapter.getSelectedAttributes() : new ArrayList<String>(),
                 lesson
         );
-
     }
 
 

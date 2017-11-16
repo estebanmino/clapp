@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.media.MediaScannerConnection;
@@ -22,6 +23,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -43,6 +45,7 @@ import com.ryanpope.tagedittext.TagEditText;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class LessonBaseActivity extends AppCompatActivity {
 
@@ -133,6 +136,12 @@ public class LessonBaseActivity extends AppCompatActivity {
     public ImageView imageUndoFavourite;
 
     public TagEditText tagEditTags;
+
+    public LinearLayout linearLayoutTriggers;
+    public Button btnTriggerError;
+    public Button btnTriggerOmision;
+    public Button btnTriggerGoodPractice;
+    public Button btnTriggerImprovement;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -718,5 +727,108 @@ public class LessonBaseActivity extends AppCompatActivity {
         mRecorder = null;
         multimediaAudioAdapter.notifyDataSetChanged();
     }
+
+    public void setLinearTriggersButtonClick() {
+        btnTriggerError.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (btnTriggerError.getTag().equals("false")){
+                    btnTriggerError.setBackgroundColor(Color.parseColor("#f7772f"));
+                    btnTriggerError.setTag("true");
+                    linearTriggersDeleteSelected(btnTriggerError);
+                } else {
+                    btnTriggerError.setBackgroundColor(Color.parseColor("#161542"));
+                    btnTriggerError.setTag("false");
+                }
+            }
+        });
+        btnTriggerImprovement.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (btnTriggerImprovement.getTag().equals("false")){
+                    btnTriggerImprovement.setBackgroundColor(Color.parseColor("#f7772f"));
+                    btnTriggerImprovement.setTag("true");
+                    linearTriggersDeleteSelected(btnTriggerImprovement);
+                } else {
+                    btnTriggerImprovement.setBackgroundColor(Color.parseColor("#161542"));
+                    btnTriggerImprovement.setTag("false");
+                }
+            }
+        });
+        btnTriggerGoodPractice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (btnTriggerGoodPractice.getTag().equals("false")){
+                    btnTriggerGoodPractice.setBackgroundColor(Color.parseColor("#f7772f"));
+                    btnTriggerGoodPractice.setTag("true");
+                    linearTriggersDeleteSelected(btnTriggerGoodPractice);
+                } else {
+                    btnTriggerGoodPractice.setBackgroundColor(Color.parseColor("#161542"));
+                    btnTriggerGoodPractice.setTag("false");
+                }
+            }
+        });
+        btnTriggerOmision.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (btnTriggerOmision.getTag().equals("false")){
+                    btnTriggerOmision.setBackgroundColor(Color.parseColor("#f7772f"));
+                    btnTriggerOmision.setTag("true");
+                    linearTriggersDeleteSelected(btnTriggerOmision);
+                } else {
+                    btnTriggerOmision.setBackgroundColor(Color.parseColor("#161542"));
+                    btnTriggerOmision.setTag("false");
+                }
+            }
+        });
+    }
+
+    public void linearTriggersDeleteSelected(Button fromButton) {
+        ArrayList<Button> buttons = new ArrayList<>();
+        buttons.add(btnTriggerError);
+        buttons.add(btnTriggerImprovement);
+        buttons.add(btnTriggerGoodPractice);
+        buttons.add(btnTriggerOmision);
+        for (Button button : buttons) {
+            if (button != fromButton) {
+                button.setTag("false");
+                button.setBackgroundColor(Color.parseColor("#161542"));
+            }
+        }
+    }
+
+    public int linearTriggersGetTriggerId() {
+        ArrayList<Button> buttons = new ArrayList<>();
+        buttons.add(btnTriggerError);
+        buttons.add(btnTriggerOmision);
+        buttons.add(btnTriggerGoodPractice);
+        buttons.add(btnTriggerImprovement);
+        int i = 0;
+        for (Button button : buttons) {
+            i++;
+            if (button.getTag().toString().equals("true")) {
+                return i;
+            }
+        }
+        return 1;
+    }
+
+    public void linearTriggersSetTriggerIdClicked(int i) {
+        Log.i("LESSONSTRIGGERSSET",Integer.toString(i));
+        if (i == 1) {
+            btnTriggerError.setTag("true");
+            btnTriggerError.setBackgroundColor(Color.parseColor("#f7772f"));
+        } else if (i == 2){
+            btnTriggerOmision.setTag("true");
+            btnTriggerOmision.setBackgroundColor(Color.parseColor("#f7772f"));
+        } else if (i ==3){
+            btnTriggerGoodPractice.setTag("true");
+            btnTriggerGoodPractice.setBackgroundColor(Color.parseColor("#f7772f"));
+        } else if (i == 4) {
+            btnTriggerImprovement.setTag("true");
+            btnTriggerImprovement.setBackgroundColor(Color.parseColor("#f7772f"));
+        }
+    }
+
 
 }

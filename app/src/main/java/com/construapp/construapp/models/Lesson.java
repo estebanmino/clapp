@@ -47,12 +47,21 @@ public class Lesson {
     private String project_id;
     private String reject_comment;
     private String company_id;
+    private int trigger_id;
     private String validator;
     private String validator_sec;
     private String disciplines;
     private String departments;
     private String classifications;
     private String tags;
+
+    public int getTrigger_id() {
+        return trigger_id;
+    }
+
+    public void setTrigger_id(int trigger_id) {
+        this.trigger_id = trigger_id;
+    }
 
     public String getDisciplines() {
         return disciplines;

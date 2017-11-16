@@ -64,6 +64,7 @@ public class VolleyGetLessons {
                             lesson.setUser_id(object.get("user_id").toString());
                             lesson.setProject_id(object.get("project_id").toString());
                             lesson.setCompany_id(object.get("company_id").toString());
+                            lesson.setTrigger_id((int) object.get("trigger_id"));
                             lesson.setReject_comment(object.get("reject_comment").toString());
 
                             String classificationsStringArray = "";
