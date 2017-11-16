@@ -15,6 +15,8 @@ public class Threadblog {
 
     private String id;
 
+    private String userThreadId;
+
     public String getTitle() {
         return title;
     }
@@ -25,11 +27,12 @@ public class Threadblog {
 
     private String title;
 
-    public Threadblog(String id, String title,String text)
+    public Threadblog(String id, String title,String text, String userThreadId)
     {
         this.id=id;
         this.title=title;
         this.text = text;
+        this.userThreadId = userThreadId;
     }
 
     public String getText() {
@@ -43,10 +46,12 @@ public class Threadblog {
     {
         return text;
     }
+    public String getUserThreadId(){return userThreadId;}
 
     public void setText(String text) {
         this.text = text;
     }
+    public void setUserThreadId (String userThreadId) { this.userThreadId = userThreadId;}
 
     private String text;
 }

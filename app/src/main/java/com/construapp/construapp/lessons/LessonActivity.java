@@ -12,7 +12,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -495,7 +494,7 @@ public class LessonActivity extends LessonBaseActivity {
 
     public void putLesson(String validation){
         Fragment fragment = getFragmentManager().findFragmentById(R.id.constraint_fragment_container);
-        EditText editLessonName = fragment.getView().findViewById(R.id.edit_lesson_name);
+        EditText editLessonName = fragment.getView().findViewById(R.id.new_section_name);
         EditText editLessonSummary = fragment.getView().findViewById(R.id.edit_lesson_summary);
         EditText editLessonMotivation = fragment.getView().findViewById(R.id.edit_lesson_motivation);
         EditText editLessonLearning = fragment.getView().findViewById(R.id.edit_lesson_learning);

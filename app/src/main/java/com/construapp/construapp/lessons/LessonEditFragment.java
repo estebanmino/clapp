@@ -42,7 +42,7 @@ public class LessonEditFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        EditText editLessonName = view.findViewById(R.id.edit_lesson_name);
+        EditText editLessonName = view.findViewById(R.id.new_section_name);
         EditText editLessonSummary = view.findViewById(R.id.edit_lesson_summary);
         EditText editLessonMotivation = view.findViewById(R.id.edit_lesson_motivation);
         EditText editLessonLearning = view.findViewById(R.id.edit_lesson_learning);

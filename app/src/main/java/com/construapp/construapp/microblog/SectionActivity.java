@@ -1,86 +1,54 @@
-package com.construapp.construapp.main;
+package com.construapp.construapp.microblog;
 
 /**
  * Created by jose on 06-11-17.
  */
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.construapp.construapp.LoginActivity;
 import com.construapp.construapp.R;
-import com.construapp.construapp.api.VolleyGetSections;
+import com.construapp.construapp.api.VolleyDeleteFavouriteLesson;
+import com.construapp.construapp.api.VolleyDeleteSection;
 import com.construapp.construapp.api.VolleyGetThreads;
+import com.construapp.construapp.api.VolleyPutPost;
+import com.construapp.construapp.api.VolleyPutSection;
 import com.construapp.construapp.db.Connectivity;
 import com.construapp.construapp.dbTasks.DeleteLessonTable;
-import com.construapp.construapp.listeners.VolleyStringCallback;
-import com.construapp.construapp.models.Constants;
-import com.construapp.construapp.models.General;
-import com.construapp.construapp.models.Section;
-import com.construapp.construapp.models.SessionManager;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ExecutionException;
-
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.construapp.construapp.LoginActivity;
-import com.construapp.construapp.R;
-import com.construapp.construapp.dbTasks.DeleteLessonTable;
 import com.construapp.construapp.lessons.LessonActivity;
-import com.construapp.construapp.lessons.LessonViewFragment;
+import com.construapp.construapp.listeners.VolleyStringCallback;
 import com.construapp.construapp.main.MainActivity;
-import com.construapp.construapp.microblog.MicroblogFragment;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.General;
-import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.models.Section;
 import com.construapp.construapp.models.SessionManager;
-import com.construapp.construapp.models.Threadblog;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -90,6 +58,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+
+import com.construapp.construapp.models.Threadblog;
+import com.google.gson.JsonObject;
 
 public class SectionActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
@@ -103,10 +74,21 @@ public class SectionActivity extends AppCompatActivity
     private ViewPager sectionsView;
     private SwipeRefreshLayout.OnRefreshListener swipeRefreshListener;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private LinearLayout editSectionFormLayout;
+    private CoordinatorLayout sectionThreadsLayout;
+    private LinearLayout bottomBarLayout;
+    private Toolbar toolbar;
 
     private String name;
     private String description;
     private String section_id;
+    private Button editSectionButton;
+    private Button deleteSectionButton;
+    private Button saveEditSectionButton;
+    private FloatingActionButton newThread;
+    private EditText editSectionName;
+    private EditText editSectionDescription;
+
 
     JSONArray jsonArray;
     Map<String, String> projects;
@@ -121,20 +103,79 @@ public class SectionActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_section);
 
-
         name = getIntent().getStringExtra("NAME");
         description=getIntent().getStringExtra("DESCRIPTION");
         section_id=getIntent().getStringExtra("ID");
+        UpdateToolbar();
 
         sessionManager = new SessionManager(SectionActivity.this);
         sessionManager.setSection(section_id);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle(name);
-        setSupportActionBar(toolbar);
+        sectionThreadsLayout = findViewById(R.id.main_content);
+        editSectionFormLayout = findViewById(R.id.layout_edit_section_form);
+        bottomBarLayout = findViewById(R.id.linear_edition);
 
-        TextView sectionDescription = findViewById(R.id.section_description);
-        sectionDescription.setText(description);
+        editSectionButton = findViewById(R.id.btn_edit);
+        deleteSectionButton = findViewById(R.id.btn_delete);
+        saveEditSectionButton = findViewById(R.id.button_edit_section);
+        newThread = findViewById(R.id.fab_new_thread);
+
+        editSectionName = findViewById(R.id.text_edit_section_name);
+        editSectionDescription = findViewById(R.id.text_edit_section_description);
+
+        newThread.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(NewThreadActivity.getIntent(SectionActivity.this));
+            }
+        });
+
+        deleteSectionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog diaBox = AskOption();
+                diaBox.show();
+            }
+        });
+        if (sessionManager.getUserAdmin().equals(Constants.S_ADMIN_ADMIN)){
+            bottomBarLayout.setVisibility(View.VISIBLE);
+        }
+        else{
+            bottomBarLayout.setVisibility(View.GONE);
+        }
+
+        editSectionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sectionThreadsLayout.setVisibility(View.GONE);
+                bottomBarLayout.setVisibility(View.GONE);
+                editSectionName.setText(name);
+                editSectionDescription.setText(description);
+                editSectionFormLayout.setVisibility(View.VISIBLE);
+            }
+        });
+
+        saveEditSectionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                VolleyPutSection.volleyPutSection(new VolleyStringCallback() {
+                    @Override
+                    public void onSuccess(String result) {
+                        name = editSectionName.getText().toString();
+                        description = editSectionDescription.getText().toString();
+                        editSectionFormLayout.setVisibility(View.GONE);
+                        sectionThreadsLayout.setVisibility(View.VISIBLE);
+                        bottomBarLayout.setVisibility(View.VISIBLE);
+                        UpdateToolbar();
+                    }
+
+                    @Override
+                    public void onErrorResponse(VolleyError result) {
+                        Toast.makeText(getApplicationContext(),"No se pudo editar la sección.",Toast.LENGTH_SHORT).show();
+                    }
+                },SectionActivity.this,editSectionName.getText().toString(),editSectionDescription.getText().toString());
+            }
+        });
 
         threadsList = new ArrayList<Threadblog>();
 
@@ -199,6 +240,7 @@ public class SectionActivity extends AppCompatActivity
                 intent.putExtra("TITLE",thread.getTitle());
                 intent.putExtra("TEXT",thread.getAllText());
                 intent.putExtra("ID",thread.getId());
+                intent.putExtra("THREAD_USER",thread.getUserThreadId());
                 Bundle bndlanimation = ActivityOptionsCompat.makeCustomAnimation(getApplicationContext(),R.anim.animation,R.anim.animation2).toBundle();
                 startActivity(intent,bndlanimation);
             }
@@ -207,9 +249,30 @@ public class SectionActivity extends AppCompatActivity
 
     }
 
+    private void UpdateToolbar(){
+        toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle(name);
+        setSupportActionBar(toolbar);
+
+        TextView sectionDescription = findViewById(R.id.section_description);
+        sectionDescription.setText(description);
+    }
+
     public static Intent getIntent(Context context) {
         Intent intent = new Intent(context,SectionActivity.class);
         return intent;
+    }
+
+    @Override
+    protected void onRestart(){
+        super.onRestart();
+        swipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                swipeRefreshLayout.setRefreshing(true);
+                swipeRefreshListener.onRefresh();
+            }
+        });
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -282,17 +345,19 @@ public class SectionActivity extends AppCompatActivity
                                 threadsList.clear();
 
                                 for (int i = 0; i < jsonThreads.length(); i++) {
-                                    thread = new Threadblog("","","");
+                                    thread = new Threadblog("","","","");
                                     Log.i("JSON", jsonThreads.get(i).toString());
                                     JSONObject object = (JSONObject) jsonThreads.get(i);
+                                    JSONObject object2 = new JSONObject(object.get("user").toString());
                                     thread.setTitle(object.get("title").toString());
-                                    //TODO jose verificar que funcione substring
                                     thread.setText(object.get("text").toString());
                                     thread.setId(object.get("id").toString());
+                                    thread.setUserThreadId(object2.get("id").toString());
+                                    Log.i("USER_ID",sessionManager.getUserId());
+                                    Log.i("USER_THREAD_ID",object2.get("id").toString());
                                     threadsList.add(thread);
 
                                 }
-                                Log.i("REQ","HACIENDO REQ");
                                 threadsAdapter = new ThreadsAdapter(getApplicationContext(), threadsList);
                                 threadsListListView.setAdapter(threadsAdapter);
                             } catch (Exception e) {
@@ -327,6 +392,36 @@ public class SectionActivity extends AppCompatActivity
             //overridePendingTransition(R.anim.animation_back1,R.anim.animation_back2);
             finish();
         }
+    }
+
+    private AlertDialog AskOption()
+    {
+        AlertDialog myQuittingDialogBox =new AlertDialog.Builder(this)
+                .setTitle("Salir")
+                .setMessage("¿Estás seguro que quieres eliminar esta sección?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        VolleyDeleteSection.volleyDeleteSection(new VolleyStringCallback() {
+                            @Override
+                            public void onSuccess(String result) {
+                                sessionManager.setSection(result);
+                            }
+
+                            @Override
+                            public void onErrorResponse(VolleyError result) {
+                            }
+                        },SectionActivity.this,section_id);
+                        finish();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .create();
+        return myQuittingDialogBox;
+
     }
 
 }

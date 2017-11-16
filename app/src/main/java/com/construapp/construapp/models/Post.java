@@ -13,6 +13,7 @@ public class Post {
         setLast_name("");
         setPosition("");
         setTimestamp("");
+        setPostUserId("");
     }
 
     private String text;
@@ -31,9 +32,15 @@ public class Post {
         this.authorId = authorId;
     }
 
+    private String postUserId;
+
     public String getId() {
         return id;
     }
+
+    public String getPostUserId(){return postUserId;}
+
+    public void setPostUserId(String postUserId) {this.postUserId = postUserId;}
 
     public void setId(String id) {
         this.id = id;
