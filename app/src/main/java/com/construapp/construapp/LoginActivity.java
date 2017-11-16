@@ -53,7 +53,7 @@ public class LoginActivity extends AppCompatActivity {
         btnSignin = findViewById(R.id.btn_sigin);
 
         if (sessionManager.isLoggedIn()) {
-            startActivity(MicroblogActivity.getIntent(LoginActivity.this));
+            startActivity(MainActivity.getIntent(LoginActivity.this));
         } else {
             btnSignin.setOnClickListener(new View.OnClickListener() {
                 @Override

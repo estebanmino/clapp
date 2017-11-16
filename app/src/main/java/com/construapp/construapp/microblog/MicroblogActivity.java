@@ -73,6 +73,9 @@ public class MicroblogActivity extends AppCompatActivity
         toolbar.setTitle("Microblog");
         setSupportActionBar(toolbar);
 
+        TextView description = findViewById(R.id.section_description);
+        description.setText("Secciones");
+
         Log.i("TEST","voy aca");
 
 
