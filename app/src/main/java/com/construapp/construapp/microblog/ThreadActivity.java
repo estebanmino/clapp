@@ -368,6 +368,7 @@ public class ThreadActivity extends AppCompatActivity
                                     //post.setId(object.get("id").toString());
                                     final String post_id = object.get("id").toString();
                                     JSONObject object2 = new JSONObject(object.getString("user"));
+                                    final String postUserId = object2.get("id").toString();
                                     TextView fullname = myView.findViewById(R.id.textview_fullname);
                                     fullname.setText(object2.getString("first_name")+" "+object2.getString("last_name"));
 
@@ -386,6 +387,15 @@ public class ThreadActivity extends AppCompatActivity
                                     final Button edit = myView.findViewById(R.id.btn_edit);
                                     final Button delete = (Button) myView.findViewById(R.id.btn_delete);
                                     final Button update = myView.findViewById(R.id.btn_update);
+                                    if (sessionManager.getUserId().equals(postUserId) ||
+                                            sessionManager.getUserAdmin().equals(Constants.S_ADMIN_ADMIN)){
+                                        edit.setVisibility(myView.VISIBLE);
+                                        delete.setVisibility(myView.VISIBLE);
+                                    }
+                                    else {
+                                        edit.setVisibility(myView.GONE);
+                                        delete.setVisibility(myView.GONE);
+                                    }
 
                                     mContainerView.addView(myView);
 
