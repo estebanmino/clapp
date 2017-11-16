@@ -60,6 +60,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import com.construapp.construapp.models.Threadblog;
+import com.google.gson.JsonObject;
 
 public class SectionActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
@@ -239,6 +240,7 @@ public class SectionActivity extends AppCompatActivity
                 intent.putExtra("TITLE",thread.getTitle());
                 intent.putExtra("TEXT",thread.getAllText());
                 intent.putExtra("ID",thread.getId());
+                intent.putExtra("THREAD_USER",thread.getUserThreadId());
                 Bundle bndlanimation = ActivityOptionsCompat.makeCustomAnimation(getApplicationContext(),R.anim.animation,R.anim.animation2).toBundle();
                 startActivity(intent,bndlanimation);
             }
@@ -343,13 +345,14 @@ public class SectionActivity extends AppCompatActivity
                                 threadsList.clear();
 
                                 for (int i = 0; i < jsonThreads.length(); i++) {
-                                    thread = new Threadblog("","","");
+                                    thread = new Threadblog("","","","");
                                     Log.i("JSON", jsonThreads.get(i).toString());
                                     JSONObject object = (JSONObject) jsonThreads.get(i);
+                                    JSONObject object2 = new JSONObject(object.get("user").toString());
                                     thread.setTitle(object.get("title").toString());
-                                    //TODO jose verificar que funcione substring
                                     thread.setText(object.get("text").toString());
                                     thread.setId(object.get("id").toString());
+                                    thread.setUserThreadId(object2.get("email").toString());
                                     threadsList.add(thread);
 
                                 }

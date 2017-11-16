@@ -33,12 +33,10 @@ import com.android.volley.VolleyError;
 import com.construapp.construapp.LoginActivity;
 import com.construapp.construapp.R;
 import com.construapp.construapp.api.VolleyDeletePost;
-import com.construapp.construapp.api.VolleyDeleteSection;
 import com.construapp.construapp.api.VolleyDeleteThread;
 import com.construapp.construapp.api.VolleyGetThread;
 import com.construapp.construapp.api.VolleyPostPosts;
 import com.construapp.construapp.api.VolleyPutPost;
-import com.construapp.construapp.api.VolleyPutSection;
 import com.construapp.construapp.api.VolleyPutThread;
 import com.construapp.construapp.db.Connectivity;
 import com.construapp.construapp.dbTasks.DeleteLessonTable;
@@ -87,6 +85,7 @@ public class ThreadActivity extends AppCompatActivity
     private String position;
     private String thread_id;
     private String timestamp;
+    private String userThreadId;
 
     JSONArray jsonArray;
     Map<String, String> projects;
@@ -114,6 +113,7 @@ public class ThreadActivity extends AppCompatActivity
 
         title = getIntent().getStringExtra("TITLE");
         text = getIntent().getStringExtra("TEXT");
+        userThreadId = getIntent().getStringExtra("THREAD_USER");
         fullname = "";
         position = "";
         timestamp = "";
@@ -146,7 +146,7 @@ public class ThreadActivity extends AppCompatActivity
         deleteThreadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog diaBox = AskOption();
+                AlertDialog diaBox = AskOptionThread();
                 diaBox.show();
             }
         });
@@ -180,6 +180,8 @@ public class ThreadActivity extends AppCompatActivity
                 },ThreadActivity.this,editThreadName.getText().toString(),editThreadDescription.getText().toString(),thread_id);
             }
         });
+
+        Log.i("USER_THREAD", userThreadId);
 
         postsList = new ArrayList<Post>();
 
@@ -379,18 +381,8 @@ public class ThreadActivity extends AppCompatActivity
                                     delete.setOnClickListener(new View.OnClickListener(){
                                         @Override
                                         public void onClick(View v) {
-
-                                            VolleyDeletePost.volleyDeletePost(new VolleyStringCallback() {
-                                                @Override
-                                                public void onSuccess(String result) {
-                                                    onRestart();
-                                                }
-
-                                                @Override
-                                                public void onErrorResponse(VolleyError result) {
-                                                    Toast.makeText(getApplicationContext(),"No se pudo eliminar el comentario.",Toast.LENGTH_SHORT).show();
-                                                }
-                                            },ThreadActivity.this,post_id.toString().toString());
+                                            AlertDialog diaBox = AskOptionPost(post_id);
+                                            diaBox.show();
                                         }
 
                                     });
@@ -508,9 +500,9 @@ public class ThreadActivity extends AppCompatActivity
         }
     }
 
-    private AlertDialog AskOption()
+    private AlertDialog AskOptionThread()
     {
-        AlertDialog myQuittingDialogBox =new AlertDialog.Builder(this)
+        AlertDialog myQuittingDialogBoxThread =new AlertDialog.Builder(this)
                 .setTitle("Salir")
                 .setMessage("¿Estás seguro que quieres eliminar este post?")
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -535,7 +527,37 @@ public class ThreadActivity extends AppCompatActivity
                     }
                 })
                 .create();
-        return myQuittingDialogBox;
+        return myQuittingDialogBoxThread;
+
+    }
+    private AlertDialog AskOptionPost(final String post_id)
+    {
+        AlertDialog myQuittingDialogBoxPost =new AlertDialog.Builder(this)
+                .setTitle("Salir")
+                .setMessage("¿Estás seguro que quieres eliminar este comentario?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        String postId = post_id;
+                        VolleyDeletePost.volleyDeletePost(new VolleyStringCallback() {
+                            @Override
+                            public void onSuccess(String result) {
+                                onRestart();
+                            }
+
+                            @Override
+                            public void onErrorResponse(VolleyError result) {
+                                Toast.makeText(getApplicationContext(),"No se pudo eliminar el comentario.",Toast.LENGTH_SHORT).show();
+                            }
+                        },ThreadActivity.this,postId);
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .create();
+        return myQuittingDialogBoxPost;
 
     }
 
