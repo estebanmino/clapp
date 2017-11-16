@@ -107,4 +107,10 @@ public interface Constants {
     //IMAGES
     String IMAGE_ICC_PROFILE = "ICC Profile";
 
+    //TAGS
+    String TAG_TAGS = "TAG_TAGS";
+    String TAG_DISCIPLINES = "TAG_DISCIPLINES";
+    String TAG_CLASSIFICATIONS = "TAG_CLASSIFICATIONS";
+    String TAG_DEPARTMENTS = "TAG_DEPARTMENTS";
+
 }

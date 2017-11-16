@@ -178,7 +178,7 @@ public class LessonFormActivity extends LessonBaseActivity {
         //String[] disciplinesArray =  lesson.getDisciplinesArray();
         if (disciplinesArray.length != 0) {
             disciplinesAttributesAdapter = new LessonAttributesAdapter(disciplinesArray,
-                    LessonFormActivity.this, lesson, true);
+                    LessonFormActivity.this, lesson, true, Constants.TAG_DISCIPLINES);
             mDisciplinesRecyclerView.setAdapter(disciplinesAttributesAdapter);
         } else {
             textDisciplines.setText("Disciplinas (no hay disciplinas asignadas)");
@@ -194,7 +194,7 @@ public class LessonFormActivity extends LessonBaseActivity {
         //String[] classificationsArray =  lesson.getClassificationsArray();
         if (classificationsArray.length != 0) {
             classificationsAttributesAdapter = new LessonAttributesAdapter(classificationsArray,
-                    LessonFormActivity.this, lesson, true);
+                    LessonFormActivity.this, lesson, true, Constants.TAG_CLASSIFICATIONS);
             mClassificationsRecyclerView.setAdapter(classificationsAttributesAdapter);
         } else {
             textClassifications.setText("Clasificación (no hay clasificaciones asignadas)");
@@ -210,7 +210,7 @@ public class LessonFormActivity extends LessonBaseActivity {
         //String[] departmentsArray =  lesson.getDepartmentsArray();
         if (departmentsArray.length != 0) {
             departmentsAttributesAdapter = new LessonAttributesAdapter(departmentsArray,
-                    LessonFormActivity.this, lesson, true);
+                    LessonFormActivity.this, lesson, true, Constants.TAG_DEPARTMENTS);
             mDepartmentsRecyclerView.setAdapter(departmentsAttributesAdapter);
         } else {
             textDepartments.setText("Departamento (no hay departamentos asignados)");

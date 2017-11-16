@@ -114,6 +114,14 @@ public class Lesson {
         }
     }
 
+    public String getTagsSpaced() {
+        if (tags == null ||  tags.isEmpty()){
+            return "";
+        } else {
+            return tags.substring(1).replace("/"," ");
+        }
+    }
+
     public void setTags(String tags) {
         this.tags = tags;
     }

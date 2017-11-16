@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.construapp.construapp.R;
+import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.Lesson;
 
 import java.util.ArrayList;
@@ -28,13 +29,15 @@ public class LessonAttributesAdapter extends RecyclerView.Adapter<LessonAttribut
     private Lesson thisLesson;
     private ArrayList<String> selectedAttributes;
     private Boolean editing;
+    private String tagType;
 
-    public LessonAttributesAdapter(String[] attributesList, Context context, Lesson thisLesson, Boolean editing) {
+    public LessonAttributesAdapter(String[] attributesList, Context context, Lesson thisLesson, Boolean editing, String tagType) {
         this.attributesList = attributesList;
         this.context = context;
         this.thisLesson = thisLesson;
         this.selectedAttributes = new ArrayList<>();
         this.editing = editing;
+        this.tagType = tagType;
     }
 
     @Override
@@ -49,7 +52,25 @@ public class LessonAttributesAdapter extends RecyclerView.Adapter<LessonAttribut
     @Override
     public void onBindViewHolder(LessonAttributesAdapter.AttributeViewHolder holder, int position) {
         holder.textAttribute.setText(attributesList[position]);
-
+        if (tagType.equals(Constants.TAG_CLASSIFICATIONS)) {
+            if (thisLesson.getClassifications().contains(attributesList[position])){
+                holder.textAttribute.setBackgroundColor(Color.parseColor("#f7772f"));
+                holder.textAttribute.setTag("true");
+                selectedAttributes.add(holder.textAttribute.getText().toString());
+            }
+        } else if (tagType.equals(Constants.TAG_DISCIPLINES)) {
+            if (thisLesson.getDisciplines().contains(attributesList[position])){
+                holder.textAttribute.setBackgroundColor(Color.parseColor("#f7772f"));
+                holder.textAttribute.setTag("true");
+                selectedAttributes.add(holder.textAttribute.getText().toString());
+            }
+        } else if (tagType.equals(Constants.TAG_DEPARTMENTS)) {
+            if (thisLesson.getDepartments().contains(attributesList[position])){
+                holder.textAttribute.setBackgroundColor(Color.parseColor("#f7772f"));
+                holder.textAttribute.setTag("true");
+                selectedAttributes.add(holder.textAttribute.getText().toString());
+            }
+        }
     }
 
     @Override
@@ -74,9 +95,6 @@ public class LessonAttributesAdapter extends RecyclerView.Adapter<LessonAttribut
 
         @Override
         public void onClick(View view) {
-            Toast.makeText(context,
-                    "You have clicked from adapter " + Boolean.toString(editing) + ((TextView) view).getText(),
-                    Toast.LENGTH_LONG).show();
             if ((context.getClass() == LessonActivity.class && !((LessonActivity) context).getEditing()) ||
                     context.getClass() == LessonValidationActivity.class) {
 

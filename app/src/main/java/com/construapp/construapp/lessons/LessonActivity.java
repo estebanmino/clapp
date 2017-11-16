@@ -227,7 +227,7 @@ public class LessonActivity extends LessonBaseActivity {
         String[] disciplinesArray =  lesson.getDisciplinesArray();
         if (disciplinesArray.length != 0) {
             disciplinesAttributesAdapter = new LessonAttributesAdapter(disciplinesArray,
-                    LessonActivity.this, lesson, editing);
+                    LessonActivity.this, lesson, editing, Constants.TAG_DISCIPLINES);
             mDisciplinesRecyclerView.setAdapter(disciplinesAttributesAdapter);
         } else {
             textDisciplines.setText("Disciplinas (no hay disciplinas asignadas)");
@@ -243,7 +243,7 @@ public class LessonActivity extends LessonBaseActivity {
         String[] classificationsArray =  lesson.getClassificationsArray();
         if (classificationsArray.length != 0) {
             classificationsAttributesAdapter = new LessonAttributesAdapter(classificationsArray,
-                    LessonActivity.this, lesson, editing);
+                    LessonActivity.this, lesson, editing, Constants.TAG_CLASSIFICATIONS);
             mClassificationsRecyclerView.setAdapter(classificationsAttributesAdapter);
         } else {
             textClassifications.setText("Clasificación (no hay clasificaciones asignadas)");
@@ -259,7 +259,7 @@ public class LessonActivity extends LessonBaseActivity {
         String[] departmentsArray =  lesson.getDepartmentsArray();
         if (departmentsArray.length != 0) {
             departmentsAttributesAdapter = new LessonAttributesAdapter(departmentsArray,
-                    LessonActivity.this, lesson, editing);
+                    LessonActivity.this, lesson, editing, Constants.TAG_DEPARTMENTS);
             mDepartmentsRecyclerView.setAdapter(departmentsAttributesAdapter);
         } else {
             textDepartments.setText("Departamento (no hay departamentos asignados)");
@@ -267,7 +267,8 @@ public class LessonActivity extends LessonBaseActivity {
         }
 
         //TAGS
-        tagEditTags.setText(lesson.getTags());
+        tagEditTags.setText(lesson.getTagsSpaced());
+        if (!editing) {tagEditTags.setClickable(false);};
 
         // Create an S3 client
         AmazonS3 s3 = new AmazonS3Client(constants.getCredentialsProvider(LessonActivity.this));
@@ -448,16 +449,35 @@ public class LessonActivity extends LessonBaseActivity {
                             @Override
                             public void onSuccess(JSONObject result) {
                                 String[] classificationsArray =  sessionManager.getClassifications();
-                                Log.i("GETCLASSIFICATOIN",classificationsArray.toString());
                                 if (classificationsArray.length != 0) {
                                     textClassifications.setText("Clasificación (seleccione para agregar)");
                                     classificationsAttributesAdapter = new LessonAttributesAdapter(classificationsArray,
-                                            LessonActivity.this, lesson, editing);
+                                            LessonActivity.this, lesson, editing, Constants.TAG_CLASSIFICATIONS);
                                     mClassificationsRecyclerView.setAdapter(classificationsAttributesAdapter);
                                     mClassificationsRecyclerView.setVisibility(View.VISIBLE);
                                 } else {
                                     textClassifications.setText("Clasificación (no hay clasificaciones asignadas)");
                                     mClassificationsRecyclerView.setVisibility(View.GONE);
+                                }
+
+                                String[] disciplinesArray =  sessionManager.getDisciplines();
+                                if (disciplinesArray.length != 0) {
+                                    disciplinesAttributesAdapter = new LessonAttributesAdapter(disciplinesArray,
+                                            LessonActivity.this, lesson, editing, Constants.TAG_DISCIPLINES);
+                                    mDisciplinesRecyclerView.setAdapter(disciplinesAttributesAdapter);
+                                } else {
+                                    textDisciplines.setText("Disciplinas (no hay disciplinas asignadas)");
+                                    mDisciplinesRecyclerView.setVisibility(View.GONE);
+                                }
+
+                                String[] departmentsArray =  sessionManager.getDepartments();
+                                if (departmentsArray.length != 0) {
+                                    departmentsAttributesAdapter = new LessonAttributesAdapter(departmentsArray,
+                                            LessonActivity.this, lesson, editing, Constants.TAG_DEPARTMENTS);
+                                    mDepartmentsRecyclerView.setAdapter(departmentsAttributesAdapter);
+                                } else {
+                                    textDepartments.setText("Departamento (no hay departamentos asignados)");
+                                    mDepartmentsRecyclerView.setVisibility(View.GONE);
                                 }
                             }
 
@@ -468,12 +488,34 @@ public class LessonActivity extends LessonBaseActivity {
                     } else {
                         String[] classificationsArray =  sessionManager.getClassifications();
                         if (classificationsArray.length != 0) {
+                            textClassifications.setText("Clasificación (seleccione para agregar)");
                             classificationsAttributesAdapter = new LessonAttributesAdapter(classificationsArray,
-                                    LessonActivity.this, lesson, editing);
+                                    LessonActivity.this, lesson, editing, Constants.TAG_CLASSIFICATIONS);
                             mClassificationsRecyclerView.setAdapter(classificationsAttributesAdapter);
+                            mClassificationsRecyclerView.setVisibility(View.VISIBLE);
                         } else {
                             textClassifications.setText("Clasificación (no hay clasificaciones asignadas)");
                             mClassificationsRecyclerView.setVisibility(View.GONE);
+                        }
+
+                        String[] disciplinesArray =  sessionManager.getDisciplines();
+                        if (disciplinesArray.length != 0) {
+                            disciplinesAttributesAdapter = new LessonAttributesAdapter(disciplinesArray,
+                                    LessonActivity.this, lesson, editing, Constants.TAG_DISCIPLINES);
+                            mDisciplinesRecyclerView.setAdapter(disciplinesAttributesAdapter);
+                        } else {
+                            textDisciplines.setText("Disciplinas (no hay disciplinas asignadas)");
+                            mDisciplinesRecyclerView.setVisibility(View.GONE);
+                        }
+
+                        String[] departmentsArray =  sessionManager.getDepartments();
+                        if (departmentsArray.length != 0) {
+                            departmentsAttributesAdapter = new LessonAttributesAdapter(departmentsArray,
+                                    LessonActivity.this, lesson, editing, Constants.TAG_DEPARTMENTS);
+                            mDepartmentsRecyclerView.setAdapter(departmentsAttributesAdapter);
+                        } else {
+                            textDepartments.setText("Departamento (no hay departamentos asignados)");
+                            mDepartmentsRecyclerView.setVisibility(View.GONE);
                         }
                     }
 
@@ -653,7 +695,12 @@ public class LessonActivity extends LessonBaseActivity {
             }
         }, LessonActivity.this,
                 lesson.getId(), lesson_name, lesson_summary,
-                lesson_motivation, lesson_learning, array_added, array_deleted, validation
+                lesson_motivation, lesson_learning, array_added, array_deleted, validation,
+                tagEditTags.getText().toString(),
+                (disciplinesAttributesAdapter!=null) ? disciplinesAttributesAdapter.getSelectedAttributes() : new ArrayList<String>(),
+                (classificationsAttributesAdapter!=null) ? classificationsAttributesAdapter.getSelectedAttributes() : new ArrayList<String>(),
+                (departmentsAttributesAdapter!=null) ? departmentsAttributesAdapter.getSelectedAttributes() : new ArrayList<String>(),
+                lesson
         );
 
     }
