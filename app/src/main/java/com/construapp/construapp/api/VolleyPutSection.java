@@ -12,10 +12,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.construapp.construapp.listeners.VolleyJSONCallback;
 import com.construapp.construapp.listeners.VolleyStringCallback;
 import com.construapp.construapp.models.Constants;
-import com.construapp.construapp.models.Section;
 
 import org.json.JSONObject;
 
@@ -24,31 +22,34 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by user on 12/11/2017.
+ * Created by user on 15/11/2017.
  */
 
-public class VolleyPostThreads {
-    public static void volleyPostThreads(final VolleyStringCallback callback,
-                                         Context context, String section_id, String name, String description) {
+public class VolleyPutSection {
+    public static void volleyPutSection(final VolleyStringCallback callback,
+                                     Context context, String name, String description) {
 
         SharedPreferences sharedpreferences = context.getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
         String company_id = sharedpreferences.getString(Constants.SP_COMPANY, "");
+        String section_id = sharedpreferences.getString(Constants.SP_ACTUAL_SECTION, "");
         final String userToken = sharedpreferences.getString(Constants.SP_TOKEN, "");
 
-        String url = Constants.BASE_URL + "/" + Constants.COMPANIES + "/" + company_id + "/" +
-                Constants.SECTIONS + "/" + section_id + "/" + Constants.THREADS;
+        String url = Constants.BASE_URL + "/" + Constants.COMPANIES + "/" + company_id + "/" + Constants.SECTIONS+"/" + section_id;
 
         final RequestQueue queue = Volley.newRequestQueue(context);
 
 
         final JSONObject jsonObject1 = new JSONObject();
 
+
+
         try {
-            jsonObject1.put("title",name);
-            jsonObject1.put("text",description);
+            jsonObject1.put("name",name);
+            jsonObject1.put("description",description);
         } catch (Exception e) {}
 
-        StringRequest jsonObjectRequest = new StringRequest(Request.Method.POST, url,
+
+        StringRequest jsonObjectRequest = new StringRequest(Request.Method.PUT, url,
                 new com.android.volley.Response.Listener<String>() {
                     @Override
                     public void onResponse(String  response) {
@@ -89,5 +90,4 @@ public class VolleyPostThreads {
         };
         queue.add(jsonObjectRequest);
     }
-
 }

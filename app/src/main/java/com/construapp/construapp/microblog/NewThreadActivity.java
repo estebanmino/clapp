@@ -64,7 +64,7 @@ public class NewThreadActivity extends Activity {
                     @Override
                     public void onErrorResponse(VolleyError result) {
                     }
-                },NewThreadActivity.this, sessionManager.getSection(),title.getText().toString());
+                },NewThreadActivity.this, sessionManager.getSection(),title.getText().toString(),description.getText().toString());
                 finish();
             }
         });

@@ -30,12 +30,9 @@ import com.android.volley.VolleyError;
 import com.construapp.construapp.LoginActivity;
 import com.construapp.construapp.R;
 import com.construapp.construapp.api.VolleyDeletePost;
-import com.construapp.construapp.api.VolleyDeleteSection;
 import com.construapp.construapp.api.VolleyDeleteThread;
-import com.construapp.construapp.api.VolleyGetSections;
 import com.construapp.construapp.api.VolleyGetThread;
 import com.construapp.construapp.api.VolleyPostPosts;
-import com.construapp.construapp.api.VolleyPostSections;
 import com.construapp.construapp.api.VolleyPutPost;
 import com.construapp.construapp.db.Connectivity;
 import com.construapp.construapp.dbTasks.DeleteLessonTable;
@@ -46,8 +43,6 @@ import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.General;
 import com.construapp.construapp.models.Post;
 import com.construapp.construapp.models.SessionManager;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -74,8 +69,11 @@ public class ThreadActivity extends AppCompatActivity
     private ViewPager sectionsView;
     private SwipeRefreshLayout.OnRefreshListener swipeRefreshListener;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private Button editThreadButton;
     private Button deleteThreadButton;
+    private Button editThreadButton;
+    private Button saveEditThreadButton;
+    private LinearLayout threadsLayout;
+    private LinearLayout editSectionLayout;
 
 
     private String title;
@@ -100,6 +98,8 @@ public class ThreadActivity extends AppCompatActivity
 
     private AppCompatButton createPost;
     private EditText newComment;
+    private EditText editThreadName;
+    private EditText editThreadDescription;
 
 
     private ConstraintLayout constraintLayoutFvourites;
@@ -141,6 +141,14 @@ public class ThreadActivity extends AppCompatActivity
         editThreadButton = findViewById(R.id.btn_edit);
         deleteThreadButton = findViewById(R.id.btn_delete);
 
+        threadsLayout = findViewById(R.id.linear_layout_thread);
+        editSectionLayout = findViewById(R.id.layout_edit_thread_form);
+
+        editThreadName = findViewById(R.id.text_edit_thread_name);
+        editThreadDescription = findViewById(R.id.text_edit_thread_description);
+
+        saveEditThreadButton = findViewById(R.id.button_edit_thread);
+
         deleteThreadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -156,6 +164,23 @@ public class ThreadActivity extends AppCompatActivity
                     }
                 },ThreadActivity.this,sessionManager.getSection(),thread_id);
                 finish();
+            }
+        });
+
+        editThreadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                threadsLayout.setVisibility(View.GONE);
+                editThreadName.setText(title);
+                editThreadDescription.setText(text);
+                editSectionLayout.setVisibility(View.VISIBLE);
+            }
+        });
+        saveEditThreadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                editSectionLayout.setVisibility(View.GONE);
+                threadsLayout.setVisibility(View.VISIBLE);
             }
         });
 

@@ -62,7 +62,7 @@ public class NewSectionActivity extends Activity {
                     public void onErrorResponse(VolleyError result) {
                     }
                 },NewSectionActivity.this, name.getText().toString(), description.getText().toString()) ;
-                startActivity(MicroblogActivity.getIntent(NewSectionActivity.this));
+                finish();
             }
         });
     }
