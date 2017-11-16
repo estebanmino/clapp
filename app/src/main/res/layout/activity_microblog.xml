@@ -79,6 +79,7 @@
                     android:layout_marginBottom="4dp"
                     android:layout_marginRight="8dp"
                     android:text="Nueva Sección"
+                    android:textAlignment="center"
                     android:tag="@integer/admin_permission"
                     app:layout_constraintBottom_toTopOf="parent"
                     app:layout_constraintHorizontal_bias="1.0"

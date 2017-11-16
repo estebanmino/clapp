@@ -19,6 +19,7 @@ import com.construapp.construapp.listeners.VolleyStringCallback;
 import com.construapp.construapp.api.VolleyGetUserProject;
 import com.construapp.construapp.api.VolleyLoginConnection;
 import com.construapp.construapp.main.MainActivity;
+import com.construapp.construapp.microblog.MicroblogActivity;
 import com.construapp.construapp.models.SessionManager;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -52,7 +53,7 @@ public class LoginActivity extends AppCompatActivity {
         btnSignin = findViewById(R.id.btn_sigin);
 
         if (sessionManager.isLoggedIn()) {
-            startActivity(MainActivity.getIntent(LoginActivity.this));
+            startActivity(MicroblogActivity.getIntent(LoginActivity.this));
         } else {
             btnSignin.setOnClickListener(new View.OnClickListener() {
                 @Override
