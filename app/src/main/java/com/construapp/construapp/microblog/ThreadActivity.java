@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
@@ -72,8 +73,8 @@ public class ThreadActivity extends AppCompatActivity
     private Button deleteThreadButton;
     private Button editThreadButton;
     private Button saveEditThreadButton;
-    private LinearLayout threadsLayout;
-    private LinearLayout editSectionLayout;
+    private CoordinatorLayout threadCommentsLayout;
+    private LinearLayout editThreadLayout;
 
 
     private String title;
@@ -141,8 +142,8 @@ public class ThreadActivity extends AppCompatActivity
         editThreadButton = findViewById(R.id.btn_edit);
         deleteThreadButton = findViewById(R.id.btn_delete);
 
-        threadsLayout = findViewById(R.id.linear_layout_thread);
-        editSectionLayout = findViewById(R.id.layout_edit_thread_form);
+        threadCommentsLayout = findViewById(R.id.main_content);
+        editThreadLayout = findViewById(R.id.layout_edit_thread_form);
 
         editThreadName = findViewById(R.id.text_edit_thread_name);
         editThreadDescription = findViewById(R.id.text_edit_thread_description);
@@ -170,17 +171,17 @@ public class ThreadActivity extends AppCompatActivity
         editThreadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                threadsLayout.setVisibility(View.GONE);
+                threadCommentsLayout.setVisibility(View.GONE);
                 editThreadName.setText(title);
                 editThreadDescription.setText(text);
-                editSectionLayout.setVisibility(View.VISIBLE);
+                editThreadLayout.setVisibility(View.VISIBLE);
             }
         });
         saveEditThreadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                editSectionLayout.setVisibility(View.GONE);
-                threadsLayout.setVisibility(View.VISIBLE);
+                editThreadLayout.setVisibility(View.GONE);
+                threadCommentsLayout.setVisibility(View.VISIBLE);
             }
         });
 

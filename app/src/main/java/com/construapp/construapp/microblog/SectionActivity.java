@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -23,7 +24,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -66,13 +69,20 @@ public class SectionActivity extends AppCompatActivity
     private ViewPager sectionsView;
     private SwipeRefreshLayout.OnRefreshListener swipeRefreshListener;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private LinearLayout editSectionFormLayout;
+    private CoordinatorLayout sectionThreadsLayout;
+    private LinearLayout bottomBarLayout;
 
     private String name;
     private String description;
     private String section_id;
     private Button editSectionButton;
     private Button deleteSectionButton;
+    private Button saveEditSectionButton;
     private FloatingActionButton newThread;
+    private EditText editSectionName;
+    private EditText editSectionDescription;
+
 
     JSONArray jsonArray;
     Map<String, String> projects;
@@ -102,9 +112,18 @@ public class SectionActivity extends AppCompatActivity
         TextView sectionDescription = findViewById(R.id.section_description);
         sectionDescription.setText(description);
 
+        sectionThreadsLayout = findViewById(R.id.main_content);
+        editSectionFormLayout = findViewById(R.id.layout_edit_section_form);
+        bottomBarLayout = findViewById(R.id.linear_edition);
+
         editSectionButton = findViewById(R.id.btn_edit);
         deleteSectionButton = findViewById(R.id.btn_delete);
+        saveEditSectionButton = findViewById(R.id.button_edit_section);
         newThread = findViewById(R.id.fab_new_thread);
+
+        editSectionName = findViewById(R.id.text_edit_section_name);
+        editSectionDescription = findViewById(R.id.text_edit_section_description);
+
         newThread.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -128,10 +147,24 @@ public class SectionActivity extends AppCompatActivity
                 finish();
             }
         });
+
         editSectionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                sectionThreadsLayout.setVisibility(View.GONE);
+                bottomBarLayout.setVisibility(View.GONE);
+                editSectionName.setText(name);
+                editSectionDescription.setText(description);
+                editSectionFormLayout.setVisibility(View.VISIBLE);
+            }
+        });
 
+        saveEditSectionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                editSectionFormLayout.setVisibility(View.GONE);
+                sectionThreadsLayout.setVisibility(View.VISIBLE);
+                bottomBarLayout.setVisibility(View.VISIBLE);
             }
         });
 
