@@ -5,6 +5,7 @@ package com.construapp.construapp.microblog;
  */
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
@@ -16,6 +17,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -130,17 +132,8 @@ public class SectionActivity extends AppCompatActivity
         deleteSectionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                VolleyDeleteSection.volleyDeleteSection(new VolleyStringCallback() {
-                    @Override
-                    public void onSuccess(String result) {
-                        sessionManager.setSection(result);
-                    }
-
-                    @Override
-                    public void onErrorResponse(VolleyError result) {
-                    }
-                },SectionActivity.this,section_id);
-                finish();
+                AlertDialog diaBox = AskOption();
+                diaBox.show();
             }
         });
 
@@ -389,6 +382,36 @@ public class SectionActivity extends AppCompatActivity
             //overridePendingTransition(R.anim.animation_back1,R.anim.animation_back2);
             finish();
         }
+    }
+
+    private AlertDialog AskOption()
+    {
+        AlertDialog myQuittingDialogBox =new AlertDialog.Builder(this)
+                .setTitle("Salir")
+                .setMessage("¿Estás seguro que quieres eliminar esta sección?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        VolleyDeleteSection.volleyDeleteSection(new VolleyStringCallback() {
+                            @Override
+                            public void onSuccess(String result) {
+                                sessionManager.setSection(result);
+                            }
+
+                            @Override
+                            public void onErrorResponse(VolleyError result) {
+                            }
+                        },SectionActivity.this,section_id);
+                        finish();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .create();
+        return myQuittingDialogBox;
+
     }
 
 }
