@@ -22,6 +22,7 @@ import android.view.View;
 
 import com.android.volley.VolleyError;
 import com.construapp.construapp.LoginActivity;
+import com.construapp.construapp.PanoramicViewActivity;
 import com.construapp.construapp.R;
 import com.construapp.construapp.api.VolleyGetPendingValidations;
 import com.construapp.construapp.cache.LRUCache;

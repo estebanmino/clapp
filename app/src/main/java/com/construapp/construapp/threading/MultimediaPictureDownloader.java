@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.media.ThumbnailUtils;
+import android.util.Log;
 import android.view.View;
 
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
@@ -15,6 +16,9 @@ import com.construapp.construapp.cache.LRUCache;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.MultimediaFile;
 import com.construapp.construapp.multimedia.MultimediaAdapter;
+import com.drew.imaging.ImageMetadataReader;
+import com.drew.metadata.Directory;
+import com.drew.metadata.Metadata;
 
 import java.io.File;
 import java.io.IOException;
@@ -57,7 +61,19 @@ public class MultimediaPictureDownloader {
                 public void onStateChanged(int id, TransferState state) {
                     if (state == COMPLETED) {
                         Bitmap bitmap = BitmapFactory.decodeFile(multimediaFile.getmPath());
+
                         if (bitmap!=null) {
+                            try {
+                                Metadata metadata = ImageMetadataReader.readMetadata(new File(multimediaFile.getmPath()));
+                                for (Directory directory : metadata.getDirectories()) {
+                                    if(directory.getName().equals(Constants.IMAGE_ICC_PROFILE)) {
+                                        holder.isPanoramic = true;
+                                        holder.imagePanoramic.setVisibility(View.VISIBLE);
+                                        break;
+                                    }
+                                }
+                            } catch (Exception e) {}
+
                             Bitmap rotatedBitmap = rotateBitmap(bitmap, multimediaFile);
                             holder.imageThumbnail.setImageBitmap(ThumbnailUtils.extractThumbnail(rotatedBitmap, 80, 80));
                             LRUCache.getInstance().getLru().put(fileKey, rotatedBitmap);
