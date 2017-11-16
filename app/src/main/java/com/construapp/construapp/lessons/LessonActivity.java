@@ -24,9 +24,12 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.android.volley.VolleyError;
+import com.construapp.construapp.LoginActivity;
 import com.construapp.construapp.api.VolleyDeleteFavouriteLesson;
+import com.construapp.construapp.api.VolleyGetCompanyAttributes;
 import com.construapp.construapp.api.VolleyGetFavouriteLessons;
 import com.construapp.construapp.api.VolleyPostFavouriteLesson;
+import com.construapp.construapp.main.LessonsFragment;
 import com.construapp.construapp.main.MainActivity;
 import com.construapp.construapp.R;
 import com.construapp.construapp.ShowInfo;
@@ -76,6 +79,10 @@ public class LessonActivity extends LessonBaseActivity {
     private TextView textAudios;
     private TextView textDocuments;
 
+    private TextView textDisciplines;
+    private TextView textDepartments;
+    private TextView textClassifications;
+
     private Boolean editing = false;
 
     private RecyclerView mPicturesRecyclerView;
@@ -83,8 +90,12 @@ public class LessonActivity extends LessonBaseActivity {
     private RecyclerView mDocumentsRecyclerView;
     private RecyclerView mAudiosRecyclerView;
 
+    private RecyclerView mClassificationsRecyclerView;
     private RecyclerView mDisciplinesRecyclerView;
-    private LessonAttributesAdapter lessonAttributesAdapter;
+    private RecyclerView mDepartmentsRecyclerView;
+    private LessonAttributesAdapter disciplinesAttributesAdapter;
+    private LessonAttributesAdapter departmentsAttributesAdapter;
+    private LessonAttributesAdapter classificationsAttributesAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,6 +126,10 @@ public class LessonActivity extends LessonBaseActivity {
         textDocuments = findViewById(R.id.text_documents);
         textAttachments = findViewById(R.id.text_attachments);
 
+        textDisciplines = findViewById(R.id.text_disciplines);
+        textClassifications = findViewById(R.id.text_classifications);
+        textDepartments = findViewById(R.id.text_departments);
+
         fabCamera = findViewById(R.id.fab_camera);
         fabGallery = findViewById(R.id.fab_gallery);
         fabRecordAudio = findViewById(R.id.fab_record_audio);
@@ -132,14 +147,8 @@ public class LessonActivity extends LessonBaseActivity {
         setImageAttachListener();
 
         tagEditTags = findViewById(R.id.edit_tags);
-        tagEditDisciplines = findViewById(R.id.edit_disciplines);
-        tagEditClassifications = findViewById(R.id.edit_classifications);
-        tagEditDepartments = findViewById(R.id.edit_departments);
 
         tagEditTags.setInputType(InputType.TYPE_NULL);
-        tagEditDisciplines.setInputType(InputType.TYPE_NULL);
-        tagEditClassifications.setInputType(InputType.TYPE_NULL);
-        tagEditDepartments.setInputType(InputType.TYPE_NULL);
 
         setLesson();
 
@@ -178,7 +187,8 @@ public class LessonActivity extends LessonBaseActivity {
         picturesLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mPicturesRecyclerView = findViewById(R.id.recycler_horizontal_pictures);
         mPicturesRecyclerView.setLayoutManager(picturesLayoutManager);
-        multimediaPictureAdapter = new MultimediaPictureAdapter(lesson.getMultimediaPicturesFiles(),LessonActivity.this,lesson);
+        multimediaPictureAdapter = new MultimediaPictureAdapter(lesson.getMultimediaPicturesFiles(),
+                LessonActivity.this,lesson);
         mPicturesRecyclerView.setAdapter(multimediaPictureAdapter);
 
         //VIDEOS SCROLLING
@@ -186,7 +196,8 @@ public class LessonActivity extends LessonBaseActivity {
         videosLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mVideosRecyclerView = findViewById(R.id.recycler_horizontal_videos);
         mVideosRecyclerView.setLayoutManager(videosLayoutManager);
-        multimediaVideoAdapter = new MultimediaVideoAdapter(lesson.getMultimediaVideosFiles(),LessonActivity.this,lesson);
+        multimediaVideoAdapter = new MultimediaVideoAdapter(lesson.getMultimediaVideosFiles(),
+                LessonActivity.this,lesson);
         mVideosRecyclerView.setAdapter(multimediaVideoAdapter);
 
         //AUDIOS SCROLLING
@@ -194,7 +205,8 @@ public class LessonActivity extends LessonBaseActivity {
         audiosLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mAudiosRecyclerView = findViewById(R.id.recycler_horizontal_audios);
         mAudiosRecyclerView.setLayoutManager(audiosLayoutManager);
-        multimediaAudioAdapter = new MultimediaAudioAdapter(lesson.getMultimediaAudiosFiles(),LessonActivity.this,lesson);
+        multimediaAudioAdapter = new MultimediaAudioAdapter(lesson.getMultimediaAudiosFiles(),
+                LessonActivity.this,lesson);
         mAudiosRecyclerView.setAdapter(multimediaAudioAdapter);
 
         //DOCUMENTS SCROLLING
@@ -202,22 +214,60 @@ public class LessonActivity extends LessonBaseActivity {
         documentsLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mDocumentsRecyclerView = findViewById(R.id.recycler_horizontal_documents);
         mDocumentsRecyclerView.setLayoutManager(documentsLayoutManager);
-        multimediaDocumentAdapter = new MultimediaDocumentAdapter(lesson.getMultimediaDocumentsFiles(),LessonActivity.this,lesson);
+        multimediaDocumentAdapter = new MultimediaDocumentAdapter(lesson.getMultimediaDocumentsFiles(),
+                LessonActivity.this,lesson);
         mDocumentsRecyclerView.setAdapter(multimediaDocumentAdapter);
 
-        //DOCUMENTS SCROLLING
+        //DISCIPLINES SCROLLING
         LinearLayoutManager disciplinesLayoutManager = new LinearLayoutManager(this);
         disciplinesLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mDisciplinesRecyclerView = findViewById(R.id.recycler_horizontal_disciplines);
         mDisciplinesRecyclerView.setLayoutManager(disciplinesLayoutManager);
-        final String[] mToppings = new String[5];
-        mToppings[0] = "Cheese";
-        mToppings[1] = "Pepperoni";
-        mToppings[2] = "Black Olives";
-        mToppings[3] = "Black Olives";
-        mToppings[4] = "Black Olives";
-        lessonAttributesAdapter = new LessonAttributesAdapter(mToppings,LessonActivity.this,lesson,editing);
-        mDisciplinesRecyclerView.setAdapter(lessonAttributesAdapter);
+        //String[] disciplinesArray =  sessionManager.getDisciplines();
+        String[] disciplinesArray =  lesson.getDisciplinesArray();
+        if (disciplinesArray.length != 0) {
+            disciplinesAttributesAdapter = new LessonAttributesAdapter(disciplinesArray,
+                    LessonActivity.this, lesson, editing);
+            mDisciplinesRecyclerView.setAdapter(disciplinesAttributesAdapter);
+        } else {
+            textDisciplines.setText("Disciplinas (no hay disciplinas asignadas)");
+            mDisciplinesRecyclerView.setVisibility(View.GONE);
+        }
+
+        //CLASSIFICATIONS SCROLLING
+        LinearLayoutManager classificationsLayoutManager = new LinearLayoutManager(this);
+        classificationsLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        mClassificationsRecyclerView = findViewById(R.id.recycler_horizontal_classifications);
+        mClassificationsRecyclerView.setLayoutManager(classificationsLayoutManager);
+        ///String[] classificationsArray =  sessionManager.getClassifications();
+        String[] classificationsArray =  lesson.getClassificationsArray();
+        if (classificationsArray.length != 0) {
+            classificationsAttributesAdapter = new LessonAttributesAdapter(classificationsArray,
+                    LessonActivity.this, lesson, editing);
+            mClassificationsRecyclerView.setAdapter(classificationsAttributesAdapter);
+        } else {
+            textClassifications.setText("Clasificación (no hay clasificaciones asignadas)");
+            mClassificationsRecyclerView.setVisibility(View.GONE);
+        }
+
+        //DEPARTMENT SCROLLING
+        LinearLayoutManager departmentsLayoutManager = new LinearLayoutManager(this);
+        departmentsLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        mDepartmentsRecyclerView = findViewById(R.id.recycler_horizontal_departments);
+        mDepartmentsRecyclerView.setLayoutManager(departmentsLayoutManager);
+        //String[] departmentsArray =  sessionManager.getDepartments();
+        String[] departmentsArray =  lesson.getDepartmentsArray();
+        if (departmentsArray.length != 0) {
+            departmentsAttributesAdapter = new LessonAttributesAdapter(departmentsArray,
+                    LessonActivity.this, lesson, editing);
+            mDepartmentsRecyclerView.setAdapter(departmentsAttributesAdapter);
+        } else {
+            textDepartments.setText("Departamento (no hay departamentos asignados)");
+            mDepartmentsRecyclerView.setVisibility(View.GONE);
+        }
+
+        //TAGS
+        tagEditTags.setText(lesson.getTags());
 
         // Create an S3 client
         AmazonS3 s3 = new AmazonS3Client(constants.getCredentialsProvider(LessonActivity.this));
@@ -389,14 +439,44 @@ public class LessonActivity extends LessonBaseActivity {
                 editing = !editing;
                 if (editing) {
                     constraintActionBar.setVisibility(View.VISIBLE);
-
                     btnEdit.setText("Cancelar");
                     btnDelete.setVisibility(View.GONE);
-
                     tagEditTags.setInputType(InputType.TYPE_CLASS_TEXT);
-                    tagEditDisciplines.setInputType(InputType.TYPE_CLASS_TEXT);
-                    tagEditClassifications.setInputType(InputType.TYPE_CLASS_TEXT);
-                    tagEditDepartments.setInputType(InputType.TYPE_CLASS_TEXT);
+
+                    if (Connectivity.isConnected(LessonActivity.this)) {
+                        VolleyGetCompanyAttributes.volleyGetCompanyAttributes(new VolleyJSONCallback() {
+                            @Override
+                            public void onSuccess(JSONObject result) {
+                                String[] classificationsArray =  sessionManager.getClassifications();
+                                Log.i("GETCLASSIFICATOIN",classificationsArray.toString());
+                                if (classificationsArray.length != 0) {
+                                    textClassifications.setText("Clasificación (seleccione para agregar)");
+                                    classificationsAttributesAdapter = new LessonAttributesAdapter(classificationsArray,
+                                            LessonActivity.this, lesson, editing);
+                                    mClassificationsRecyclerView.setAdapter(classificationsAttributesAdapter);
+                                    mClassificationsRecyclerView.setVisibility(View.VISIBLE);
+                                } else {
+                                    textClassifications.setText("Clasificación (no hay clasificaciones asignadas)");
+                                    mClassificationsRecyclerView.setVisibility(View.GONE);
+                                }
+                            }
+
+                            @Override
+                            public void onErrorResponse(VolleyError result) {
+                            }
+                        }, LessonActivity.this);
+                    } else {
+                        String[] classificationsArray =  sessionManager.getClassifications();
+                        if (classificationsArray.length != 0) {
+                            classificationsAttributesAdapter = new LessonAttributesAdapter(classificationsArray,
+                                    LessonActivity.this, lesson, editing);
+                            mClassificationsRecyclerView.setAdapter(classificationsAttributesAdapter);
+                        } else {
+                            textClassifications.setText("Clasificación (no hay clasificaciones asignadas)");
+                            mClassificationsRecyclerView.setVisibility(View.GONE);
+                        }
+                    }
+
 
                     Bundle bundle = new Bundle();
                     bundle.putStringArrayList(Constants.B_LESSON_ARRAY_LIST, lesson.getFormAttributes());
@@ -404,7 +484,7 @@ public class LessonActivity extends LessonBaseActivity {
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                     LessonEditFragment lessonEditFragment = new LessonEditFragment();
                     lessonEditFragment.setArguments(bundle);
-                    fragmentTransaction.replace(R.id.constraint_fragment_container,lessonEditFragment);
+                    fragmentTransaction.replace(R.id.constraint_fragment_container, lessonEditFragment);
                     fragmentTransaction.commit();
                 }
                 else {
@@ -533,7 +613,6 @@ public class LessonActivity extends LessonBaseActivity {
         String lesson_motivation = editLessonMotivation.getText().toString();
         String lesson_learning = editLessonLearning.getText().toString();
         String project_id = lesson.getProject_id();
-        //String validation = lesson.getValidation();
         ArrayList<String> array_added =  lesson.getAddedMultimediaKeysS3();
         ArrayList<String> array_deleted =  lesson.getDeletedMultimediaFilesS3Keys();
         VolleyPutLesson.volleyPutLesson(new VolleyJSONCallback() {

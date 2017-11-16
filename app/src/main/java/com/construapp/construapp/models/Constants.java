@@ -59,6 +59,7 @@ public interface Constants {
     String SP_DISCIPLINES = "disciplines";
     String SP_CLASSIFICATIONS = "classifications";
     String SP_DEPARTMENTS = "departments";
+    String SP_TAGS = "tags";
 
     //Queries
     String Q_AUTHORIZATION = "Authorization";

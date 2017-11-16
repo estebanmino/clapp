@@ -130,31 +130,8 @@ public class LessonValidateFragment extends Fragment {
                 VolleyGetLessons.volleyGetLessons(new VolleyStringCallback() {
                 @Override
                 public void onSuccess(String result) {
-                    Lesson lesson = new Lesson();
-                    JSONArray jsonLessons;
                     try {
-                        jsonLessons = new JSONArray(result);
-                        for (int i = 0; i < jsonLessons.length(); i++) {
-                            //Log.i("JSON", jsonLessons.get(i).toString());
-                            JSONObject object = (JSONObject) jsonLessons.get(i);
-                            lesson.setName(object.get("name").toString());
-                            lesson.setSummary(object.get("summary").toString());
-                            lesson.setId(object.get("id").toString());
-                            lesson.setMotivation(object.get("motivation").toString());
-                            lesson.setLearning(object.get("learning").toString());
-                            lesson.setValidation(object.get("validation").toString());
-                            lesson.setUser_id(object.get("user_id").toString());
-                            lesson.setProject_id(object.get("project_id").toString());
-                            lesson.setCompany_id(object.get("company_id").toString());
-                            lesson.setReject_comment(object.get("reject_comment").toString());
-                            lesson.setValidator("true");
-                            try {
-                                new InsertLessonTask(lesson, getContext()).execute().get();
-                            } catch (ExecutionException e) {
-                            } catch (InterruptedException e) {
-                            }
-                        }
-                        lessonList = new GetValidationsTask(getActivity(), project_id).execute().get();
+                        lessonList = new GetLessonsTask(getActivity(), project_id, user_id, Constants.R_WAITING).execute().get();
                         lessonsAdapter = new LessonsAdapter(getActivity(), lessonList);
                         validateLessonsList.setAdapter(lessonsAdapter);
                     } catch (Exception e) {}

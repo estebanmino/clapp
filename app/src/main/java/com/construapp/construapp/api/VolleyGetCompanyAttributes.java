@@ -15,7 +15,11 @@ import com.android.volley.toolbox.Volley;
 import com.construapp.construapp.listeners.VolleyJSONCallback;
 import com.construapp.construapp.listeners.VolleyStringCallback;
 import com.construapp.construapp.models.Constants;
+import com.construapp.construapp.models.SessionManager;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import org.json.JSONObject;
 
@@ -35,6 +39,8 @@ public class VolleyGetCompanyAttributes  {
         final String userToken = sharedpreferences.getString(Constants.SP_TOKEN, "");
         final String companyId = sharedpreferences.getString(Constants.SP_COMPANY, "");
 
+        final SessionManager sessionManager = new SessionManager(context);
+
         final String url = Constants.BASE_URL + "/" + Constants.COMPANIES + "/" + companyId + "/" + Constants.ATTRIBUTES;
 
         final RequestQueue queue = Volley.newRequestQueue(context);
@@ -44,8 +50,35 @@ public class VolleyGetCompanyAttributes  {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, jsonObject,
                 new com.android.volley.Response.Listener<JSONObject>() {
                     @Override
-                    public void onResponse(JSONObject response) {
-                        callback.onSuccess(response);
+                    public void onResponse(JSONObject result) {
+                        Log.i("ATTRIBUTES", result.toString());
+                        String classificationsStringArray = "";
+                        String departmentsStringArray = "";
+                        String disciplinesStringArray = "";
+                        Log.i("GETJSONCLASSIFICATIONS","hole " + result.toString());
+
+                        JsonParser parser = new JsonParser();
+                        JsonObject json = parser.parse(result.toString()).getAsJsonObject();
+                        JsonArray jsonClassifications = (JsonArray) json.get(Constants.SP_CLASSIFICATIONS);
+
+                        for (int i = 0; i < jsonClassifications.size(); i++) {
+                            JsonElement jsonObject = jsonClassifications.get(i);
+                            classificationsStringArray += "/"+jsonObject.getAsJsonObject().get("name").getAsString();
+                        }
+                        sessionManager.setClassifications(classificationsStringArray);
+                        JsonArray jsonDisciplines = (JsonArray) json.get(Constants.SP_DISCIPLINES);
+                        for (int i = 0; i < jsonDisciplines.size(); i++) {
+                            JsonElement jsonObject = jsonDisciplines.get(i);
+                            disciplinesStringArray += "/"+jsonObject.getAsJsonObject().get("name").toString();
+                        }
+                        sessionManager.setDisciplines(disciplinesStringArray);
+                        JsonArray jsonDepartments = (JsonArray) json.get(Constants.SP_DEPARTMENTS);
+                        for (int i = 0; i < jsonDepartments.size(); i++) {
+                            JsonElement jsonObject = jsonDepartments.get(i);
+                            departmentsStringArray += "/"+jsonObject.getAsJsonObject().get("name").toString();
+                        }
+                        sessionManager.setDepartments(departmentsStringArray);
+                        callback.onSuccess(result);
                     }
                 },
                 new Response.ErrorListener() {

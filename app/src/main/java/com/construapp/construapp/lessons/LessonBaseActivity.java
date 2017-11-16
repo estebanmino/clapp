@@ -133,9 +133,6 @@ public class LessonBaseActivity extends AppCompatActivity {
     public ImageView imageUndoFavourite;
 
     public TagEditText tagEditTags;
-    public TagEditText tagEditDisciplines;
-    public TagEditText tagEditClassifications;
-    public TagEditText tagEditDepartments;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

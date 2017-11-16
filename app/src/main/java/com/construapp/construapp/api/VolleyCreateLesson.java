@@ -45,15 +45,15 @@ public class VolleyCreateLesson extends AsyncTask<Void,Void,Boolean> {
     private String lesson_learning;
     private String validation;
     private String tagsString;
-    private String disciplinesString;
-    private String classificationsString;
-    private String departmentsString;
+    private ArrayList<String> disciplinesString;
+    private ArrayList<String> classificationsString;
+    private ArrayList<String> departmentsString;
 
     public VolleyCreateLesson(VolleyJSONCallback callback,
                               Context context, String lesson_name, String lesson_summary,
                               String lesson_motivation, String lesson_learning,
                               String project_id, String validation, String tagsString,
-                              String disciplinesString, String classificationsString, String departmentsString) {
+                              ArrayList<String> disciplinesString, ArrayList<String> classificationsString,  ArrayList<String> departmentsString) {
 
 
         this.callback = callback;
@@ -87,20 +87,17 @@ public class VolleyCreateLesson extends AsyncTask<Void,Void,Boolean> {
                 {
                     if (!tagsStringArray[i].isEmpty()) tagsArray.add(new JsonPrimitive(tagsStringArray[i]));
                 }
-                String[] disciplinesStringArray = disciplinesString.split(" ");
-                for(int i=0;i<disciplinesStringArray.length;i++)
+                for(int i=0;i<disciplinesString.size();i++)
                 {
-                    if (!disciplinesStringArray[i].isEmpty())  disciplinesArray.add(new JsonPrimitive(disciplinesStringArray[i]));
+                    if (!disciplinesString.get(i).isEmpty())  disciplinesArray.add(new JsonPrimitive(disciplinesString.get(i)));
                 }
-                String[] classificationsStringArray = classificationsString.split(" ");
-                for(int i=0;i<classificationsStringArray.length;i++)
+                for(int i=0;i<classificationsString.size();i++)
                 {
-                    if (!classificationsStringArray[i].isEmpty())  classificationArray.add(new JsonPrimitive(classificationsStringArray[i]));
+                    if (!classificationsString.get(i).isEmpty())  classificationArray.add(new JsonPrimitive(classificationsString.get(i)));
                 }
-                String[] departmentsStringArray = departmentsString.split(" ");
-                for(int i=0;i<departmentsStringArray.length;i++)
+                for(int i=0;i<departmentsString.size();i++)
                 {
-                    if (!departmentsStringArray[i].isEmpty()) departmentsArray.add(new JsonPrimitive(departmentsStringArray[i]));
+                    if (!departmentsString.get(i).isEmpty()) departmentsArray.add(new JsonPrimitive(departmentsString.get(i)));
                 }
 
                 sent = true;

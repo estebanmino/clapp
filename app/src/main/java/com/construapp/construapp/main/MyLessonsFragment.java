@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.construapp.construapp.R;
@@ -37,7 +36,6 @@ public class MyLessonsFragment extends Fragment {
     private LessonsAdapter lessonsAdapter;
     private List<Lesson> lessonList;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private SwipeRefreshLayout.OnRefreshListener swipeRefreshListener;
 
     private String user_id;
     private String project_id;
@@ -45,7 +43,6 @@ public class MyLessonsFragment extends Fragment {
     private Button btnLessonsSaved;
     private Button btnLessonsRejected;
     private String lessonsValidationState;
-    private TextView noLessons;
 
     private SessionManager sessionManager;
     @Override
@@ -79,13 +76,12 @@ public class MyLessonsFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        noLessons = view.findViewById(R.id.textViewNoMyLessons);
         myLessonsList = view.findViewById(R.id.my_lessons_list);
 
         btnLessonsRejected  = view.findViewById(R.id.btn_lessons_rejected);
         btnLessonsSaved  = view.findViewById(R.id.btn_lessons_saved);
         btnLessonsSaved.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-        lessonsValidationState = Constants.R_SAVED;
+        lessonsValidationState = Constants.R_REJECTED;
 
         btnLessonsRejected.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,27 +115,12 @@ public class MyLessonsFragment extends Fragment {
             }
         });
 
-
-        setSwipeRefreshLayout();
         swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_my_lessons);
-        swipeRefreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                swipeRefreshLayout.setRefreshing(true);
-                swipeRefreshListener.onRefresh();
-            }
-        });
-        swipeRefreshLayout.setOnRefreshListener(swipeRefreshListener);
-        if (lessonList.isEmpty()){
-            noLessons.setVisibility(View.VISIBLE);
-        }
-        else {
-            noLessons.setVisibility(View.GONE);
-        }
+        setSwipeRefreshLayout();
     }
 
     public void setSwipeRefreshLayout() {
-        swipeRefreshListener = (new SwipeRefreshLayout.OnRefreshListener() {
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 refreshData();
@@ -155,35 +136,12 @@ public class MyLessonsFragment extends Fragment {
             VolleyGetLessons.volleyGetLessons(new VolleyStringCallback() {
                 @Override
                 public void onSuccess(String result) {
-                    Lesson lesson = new Lesson();
-                    JSONArray jsonLessons;
+
                     try {
-                        jsonLessons = new JSONArray(result);
-                        for (int i = 0; i < jsonLessons.length(); i++) {
-                            JSONObject object = (JSONObject) jsonLessons.get(i);
-                            lesson.setName(object.get("name").toString());
-                            lesson.setSummary(object.get("summary").toString());
-                            lesson.setId(object.get("id").toString());
-                            lesson.setMotivation(object.get("motivation").toString());
-                            lesson.setLearning(object.get("learning").toString());
-                            lesson.setValidation(object.get("validation").toString());
-                            lesson.setUser_id(object.get("user_id").toString());
-                            lesson.setProject_id(object.get("project_id").toString());
-                            lesson.setCompany_id(object.get("company_id").toString());
-                            lesson.setReject_comment(object.get("reject_comment").toString());
-                            try {
-                                new InsertLessonTask(lesson, getContext()).execute().get();
-                            } catch (ExecutionException e) {
-                                e.printStackTrace();
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        lessonList = new GetLessonsTask(getActivity(), project_id, user_id,lessonsValidationState).execute().get();
+                        lessonList = new GetLessonsTask(getActivity(), project_id, user_id, lessonsValidationState).execute().get();
                         lessonsAdapter = new LessonsAdapter(getActivity(), lessonList);
                         myLessonsList.setAdapter(lessonsAdapter);
-                    } catch (Exception e) {
-                    }
+                    } catch (Exception e) {}
                 }
 
                 @Override

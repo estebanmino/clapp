@@ -219,6 +219,8 @@ public class SessionManager {
         editor.apply();
     }
     public void setClassifications(String classifications) {
+
+        Log.i("SETCLASSIFICATIONS",classifications);
         editor.putString(Constants.SP_CLASSIFICATIONS,  classifications);
         editor.apply();
     }
@@ -227,13 +229,29 @@ public class SessionManager {
         editor.apply();
     }
 
-    public String getDisciplines() {
-        return sharedPreferences.getString(Constants.SP_DISCIPLINES, "");
+    public String[] getDisciplines() {
+        String disciplines =  sharedPreferences.getString(Constants.SP_DISCIPLINES, "");
+        if (!disciplines.isEmpty()) {
+            return disciplines.substring(1).split("/");
+        } else {
+            return new String[0];
+        }
     }
-    public String getClassifications() {
-        return sharedPreferences.getString(Constants.SP_CLASSIFICATIONS, "");
+    public String[] getClassifications() {
+        String classifications = sharedPreferences.getString(Constants.SP_CLASSIFICATIONS, "");
+        Log.i("CLASSIFICATIONS",classifications);
+        if (!classifications.isEmpty()) {
+            return classifications.substring(1).split("/");
+        } else {
+            return new String[0];
+        }
     }
-    public String getDepartments() {
-        return sharedPreferences.getString(Constants.SP_DEPARTMENTS, "");
+    public String[] getDepartments() {
+        String departments = sharedPreferences.getString(Constants.SP_DEPARTMENTS, "");
+        if (!departments.isEmpty()) {
+            return departments.substring(1).split("/");
+        } else {
+            return new String[0];
+        }
     }
 }

@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
@@ -35,7 +36,19 @@ import com.construapp.construapp.api.VolleyPostS3;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 public class LessonFormActivity extends LessonBaseActivity {
+
+    private RecyclerView mClassificationsRecyclerView;
+    private RecyclerView mDisciplinesRecyclerView;
+    private RecyclerView mDepartmentsRecyclerView;
+    private LessonAttributesAdapter disciplinesAttributesAdapter;
+    private LessonAttributesAdapter departmentsAttributesAdapter;
+    private LessonAttributesAdapter classificationsAttributesAdapter;
+    private TextView textDisciplines;
+    private TextView textDepartments;
+    private TextView textClassifications;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,10 +88,11 @@ public class LessonFormActivity extends LessonBaseActivity {
         imageAttach = findViewById(R.id.image_attach);
         setImageAttachListener();
 
+        textDisciplines = findViewById(R.id.text_disciplines);
+        textClassifications = findViewById(R.id.text_classifications);
+        textDepartments = findViewById(R.id.text_departments);
+
         tagEditTags = findViewById(R.id.edit_tags);
-        tagEditDisciplines = findViewById(R.id.edit_disciplines);
-        tagEditClassifications = findViewById(R.id.edit_classifications);
-        tagEditDepartments = findViewById(R.id.edit_departments);
 
         //INIT NEW LESSON
         lesson = new Lesson();
@@ -154,14 +168,61 @@ public class LessonFormActivity extends LessonBaseActivity {
         mDocumentsRecyclerView.setLayoutManager(documentsLayoutManager);
         multimediaDocumentAdapter = new MultimediaDocumentAdapter(lesson.getMultimediaDocumentsFiles(), LessonFormActivity.this, lesson);
         mDocumentsRecyclerView.setAdapter(multimediaDocumentAdapter);
+
+        //DISCIPLINES SCROLLING
+        LinearLayoutManager disciplinesLayoutManager = new LinearLayoutManager(this);
+        disciplinesLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        mDisciplinesRecyclerView = findViewById(R.id.recycler_horizontal_disciplines);
+        mDisciplinesRecyclerView.setLayoutManager(disciplinesLayoutManager);
+        String[] disciplinesArray =  sessionManager.getDisciplines();
+        //String[] disciplinesArray =  lesson.getDisciplinesArray();
+        if (disciplinesArray.length != 0) {
+            disciplinesAttributesAdapter = new LessonAttributesAdapter(disciplinesArray,
+                    LessonFormActivity.this, lesson, true);
+            mDisciplinesRecyclerView.setAdapter(disciplinesAttributesAdapter);
+        } else {
+            textDisciplines.setText("Disciplinas (no hay disciplinas asignadas)");
+            mDisciplinesRecyclerView.setVisibility(View.GONE);
+        }
+
+        //CLASSIFICATIONS SCROLLING
+        LinearLayoutManager classificationsLayoutManager = new LinearLayoutManager(this);
+        classificationsLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        mClassificationsRecyclerView = findViewById(R.id.recycler_horizontal_classifications);
+        mClassificationsRecyclerView.setLayoutManager(classificationsLayoutManager);
+        String[] classificationsArray =  sessionManager.getClassifications();
+        //String[] classificationsArray =  lesson.getClassificationsArray();
+        if (classificationsArray.length != 0) {
+            classificationsAttributesAdapter = new LessonAttributesAdapter(classificationsArray,
+                    LessonFormActivity.this, lesson, true);
+            mClassificationsRecyclerView.setAdapter(classificationsAttributesAdapter);
+        } else {
+            textClassifications.setText("Clasificación (no hay clasificaciones asignadas)");
+            mClassificationsRecyclerView.setVisibility(View.GONE);
+        }
+
+        //DEPARTMENT SCROLLING
+        LinearLayoutManager departmentsLayoutManager = new LinearLayoutManager(this);
+        departmentsLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        mDepartmentsRecyclerView = findViewById(R.id.recycler_horizontal_departments);
+        mDepartmentsRecyclerView.setLayoutManager(departmentsLayoutManager);
+        String[] departmentsArray =  sessionManager.getDepartments();
+        //String[] departmentsArray =  lesson.getDepartmentsArray();
+        if (departmentsArray.length != 0) {
+            departmentsAttributesAdapter = new LessonAttributesAdapter(departmentsArray,
+                    LessonFormActivity.this, lesson, true);
+            mDepartmentsRecyclerView.setAdapter(departmentsAttributesAdapter);
+        } else {
+            textDepartments.setText("Departamento (no hay departamentos asignados)");
+            mDepartmentsRecyclerView.setVisibility(View.GONE);
+        }
     }
 
     public void setFabSendOnClickListener() {
         fabSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i("TAGS",tagEditTags.getText().toString());
-                /*Snackbar mySnackbar = Snackbar.make(findViewById(R.id.lesson_form_layout),
+                Snackbar mySnackbar = Snackbar.make(findViewById(R.id.lesson_form_layout),
                         "Confirme que desea enviar la lección a validar", Snackbar.LENGTH_LONG);
                 mySnackbar.setAction("Confirmar", new View.OnClickListener() {
                     @Override
@@ -169,7 +230,7 @@ public class LessonFormActivity extends LessonBaseActivity {
                         createLesson(Constants.R_WAITING);
                     }
                 });
-                mySnackbar.show();*/
+                mySnackbar.show();
             }
         });
     }
@@ -278,9 +339,9 @@ public class LessonFormActivity extends LessonBaseActivity {
           }, LessonFormActivity.this, lesson_name, lesson_summary,
         lesson_motivation, lesson_learning,project_id, validateState,
                 tagEditTags.getText().toString(),
-                tagEditDisciplines.getText().toString(),
-                tagEditClassifications.getText().toString(),
-                tagEditDepartments.getText().toString()
+                (disciplinesAttributesAdapter!=null) ? disciplinesAttributesAdapter.getSelectedAttributes() : new ArrayList<String>(),
+                (classificationsAttributesAdapter!=null) ? classificationsAttributesAdapter.getSelectedAttributes() : new ArrayList<String>(),
+                (departmentsAttributesAdapter!=null) ? departmentsAttributesAdapter.getSelectedAttributes() : new ArrayList<String>()
                 ).execute();
 
         if (!Connectivity.isConnected(LessonFormActivity.this)) {
