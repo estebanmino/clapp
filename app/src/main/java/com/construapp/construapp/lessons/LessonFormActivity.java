@@ -3,6 +3,7 @@ package com.construapp.construapp.lessons;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
@@ -103,6 +104,21 @@ public class LessonFormActivity extends LessonBaseActivity {
         constants = new General();
 
         mStartRecording = true;
+        linearLayoutTriggers = findViewById(R.id.linear_triggers);
+        linearLayoutTriggers.setClickable(false);
+        btnTriggerError = findViewById(R.id.btn_trigger_trerror);
+        btnTriggerOmision = findViewById(R.id.btn_trigger_omision);
+        btnTriggerGoodPractice = findViewById(R.id.btn_trigger_good_practices);
+        btnTriggerImprovement = findViewById(R.id.btn_trigger_improvement);
+
+        btnTriggerError.setClickable(true);
+        btnTriggerError.setTag("true");
+        btnTriggerError.setBackgroundColor(Color.parseColor("#f7772f"));
+        btnTriggerOmision.setClickable(true);
+        btnTriggerGoodPractice.setClickable(true);
+        btnTriggerImprovement.setClickable(true);
+        setLinearTriggersButtonClick();
+
 
         Bundle bundle = new Bundle();
         bundle.putStringArrayList(Constants.B_LESSON_ARRAY_LIST, lesson.getFormAttributes());
@@ -264,6 +280,7 @@ public class LessonFormActivity extends LessonBaseActivity {
         String lesson_summary = editLessonSummary.getText().toString();
         String lesson_motivation = editLessonMotivation.getText().toString();
         String lesson_learning = editLessonLearning.getText().toString();
+        lesson.setTrigger_id(linearTriggersGetTriggerId());
         String project_id = sessionManager.getActualProjectId();
 
         new VolleyCreateLesson(new VolleyJSONCallback() {
@@ -341,7 +358,8 @@ public class LessonFormActivity extends LessonBaseActivity {
                 tagEditTags.getText().toString(),
                 (disciplinesAttributesAdapter!=null) ? disciplinesAttributesAdapter.getSelectedAttributes() : new ArrayList<String>(),
                 (classificationsAttributesAdapter!=null) ? classificationsAttributesAdapter.getSelectedAttributes() : new ArrayList<String>(),
-                (departmentsAttributesAdapter!=null) ? departmentsAttributesAdapter.getSelectedAttributes() : new ArrayList<String>()
+                (departmentsAttributesAdapter!=null) ? departmentsAttributesAdapter.getSelectedAttributes() : new ArrayList<String>(),
+                lesson
                 ).execute();
 
         if (!Connectivity.isConnected(LessonFormActivity.this)) {

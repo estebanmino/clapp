@@ -16,6 +16,7 @@ import com.android.volley.toolbox.Volley;
 import com.construapp.construapp.db.Connectivity;
 import com.construapp.construapp.listeners.VolleyJSONCallback;
 import com.construapp.construapp.models.Constants;
+import com.construapp.construapp.models.Lesson;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -48,12 +49,14 @@ public class VolleyCreateLesson extends AsyncTask<Void,Void,Boolean> {
     private ArrayList<String> disciplinesString;
     private ArrayList<String> classificationsString;
     private ArrayList<String> departmentsString;
+    private Lesson lesson;
 
     public VolleyCreateLesson(VolleyJSONCallback callback,
                               Context context, String lesson_name, String lesson_summary,
                               String lesson_motivation, String lesson_learning,
                               String project_id, String validation, String tagsString,
-                              ArrayList<String> disciplinesString, ArrayList<String> classificationsString,  ArrayList<String> departmentsString) {
+                              ArrayList<String> disciplinesString, ArrayList<String> classificationsString,
+                              ArrayList<String> departmentsString,Lesson lesson) {
 
 
         this.callback = callback;
@@ -68,6 +71,7 @@ public class VolleyCreateLesson extends AsyncTask<Void,Void,Boolean> {
         this.disciplinesString = disciplinesString;
         this.classificationsString = classificationsString;
         this.departmentsString = departmentsString;
+        this.lesson = lesson;
     }
 
     @Override
@@ -122,6 +126,7 @@ public class VolleyCreateLesson extends AsyncTask<Void,Void,Boolean> {
                 jsonLessonBody.addProperty("user_id",user_id);
                 jsonLessonBody.addProperty("company_id",company_id);
                 jsonLessonBody.addProperty("project_id",project_id);
+                jsonLessonBody.addProperty("trigger_id",lesson.getTrigger_id());
 
                 //jsonTags.addProperty("tags_list",tags);
 
