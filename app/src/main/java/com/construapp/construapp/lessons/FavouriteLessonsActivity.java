@@ -183,7 +183,7 @@ public class FavouriteLessonsActivity extends AppCompatActivity
                             lesson.setMotivation(object.get("motivation").toString());
                             lesson.setLearning(object.get("learning").toString());
                             lesson.setValidation(object.get("validation").toString());
-                            lesson.setUser_id(object.get("user_id").toString());
+                            lesson.setAuthor_id(object.get("user_id").toString());
                             lesson.setProject_id(object.get("project_id").toString());
                             lesson.setCompany_id(object.get("company_id").toString());
                             lesson.setReject_comment(object.get("reject_comment").toString());

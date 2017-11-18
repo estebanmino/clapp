@@ -3,14 +3,7 @@ package com.construapp.construapp.models;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
-import android.util.Log;
 
-import com.drew.imaging.ImageMetadataReader;
-import com.drew.metadata.Directory;
-import com.drew.metadata.Metadata;
-import com.drew.metadata.Tag;
-
-import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -43,7 +36,12 @@ public class Lesson {
     private String motivation;
     private String learning;
     private String validation;
-    private String user_id;
+    private String author_id;
+    private String author_first_name;
+    private String author_last_name;
+    private String author_position;
+    private String author_email;
+    private String author_admin;
     private String project_id;
     private String reject_comment;
     private String company_id;
@@ -55,6 +53,46 @@ public class Lesson {
     private String departments;
     private String classifications;
     private String tags;
+
+    public String getAuthor_first_name() {
+        return author_first_name;
+    }
+
+    public void setAuthor_first_name(String author_first_name) {
+        this.author_first_name = author_first_name;
+    }
+
+    public String getAuthor_last_name() {
+        return author_last_name;
+    }
+
+    public void setAuthor_last_name(String author_last_name) {
+        this.author_last_name = author_last_name;
+    }
+
+    public String getAuthor_position() {
+        return author_position;
+    }
+
+    public void setAuthor_position(String author_position) {
+        this.author_position = author_position;
+    }
+
+    public String getAuthor_email() {
+        return author_email;
+    }
+
+    public void setAuthor_email(String author_email) {
+        this.author_email = author_email;
+    }
+
+    public String getAuthor_admin() {
+        return author_admin;
+    }
+
+    public void setAuthor_admin(String author_admin) {
+        this.author_admin = author_admin;
+    }
 
     public int getTrigger_id() {
         return trigger_id;
@@ -202,12 +240,12 @@ public class Lesson {
     }
 
 
-    public String getUser_id() {
-        return user_id;
+    public String getAuthor_id() {
+        return author_id;
     }
 
-    public void setUser_id(String user_id) {
-        this.user_id = user_id;
+    public void setAuthor_id(String author_id) {
+        this.author_id = author_id;
     }
 
     public String getCompany_id() {

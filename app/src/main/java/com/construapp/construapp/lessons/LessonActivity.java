@@ -24,13 +24,11 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.android.volley.VolleyError;
-import com.construapp.construapp.LoginActivity;
 import com.construapp.construapp.api.VolleyDeleteFavouriteLesson;
 import com.construapp.construapp.api.VolleyGetCompanyAttributes;
 import com.construapp.construapp.api.VolleyGetFavouriteLessons;
 import com.construapp.construapp.api.VolleyPostFavouriteLesson;
 import com.construapp.construapp.dbTasks.InsertLessonTask;
-import com.construapp.construapp.main.LessonsFragment;
 import com.construapp.construapp.main.MainActivity;
 import com.construapp.construapp.R;
 import com.construapp.construapp.ShowInfo;
@@ -612,7 +610,7 @@ public class LessonActivity extends LessonBaseActivity {
         int deletePermission = constants.xmlPermissionTagToInt((btnEdit.getTag().toString()));
 
         if (editPermission <= userPermission || sessionManager.getUserAdmin().equals(Constants.S_ADMIN_ADMIN)
-                || (sessionManager.getUserId().equals(lesson.getUser_id()) &&
+                || (sessionManager.getUserId().equals(lesson.getAuthor_id()) &&
                 !lesson.getValidation().equals(Constants.R_VALIDATED)
                 ))
         {

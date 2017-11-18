@@ -15,10 +15,6 @@ import com.construapp.construapp.dbTasks.InsertLessonTask;
 import com.construapp.construapp.listeners.VolleyStringCallback;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.Lesson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -61,7 +57,13 @@ public class VolleyGetLessons {
                             lesson.setMotivation(object.get("motivation").toString());
                             lesson.setLearning(object.get("learning").toString());
                             lesson.setValidation(object.get("validation").toString());
-                            lesson.setUser_id(object.get("user_id").toString());
+                            JSONObject objectUser = (JSONObject) object.get("user");
+                            lesson.setAuthor_id(objectUser.get("id").toString());
+                            lesson.setAuthor_admin(objectUser.get("admin").toString());
+                            lesson.setAuthor_email(objectUser.get("email").toString());
+                            lesson.setAuthor_first_name(objectUser.get("first_name").toString());
+                            lesson.setAuthor_last_name(objectUser.get("last_name").toString());
+                            lesson.setAuthor_position(objectUser.get("position").toString());
                             lesson.setProject_id(object.get("project_id").toString());
                             lesson.setCompany_id(object.get("company_id").toString());
                             lesson.setTrigger_id((int) object.get("trigger_id"));
