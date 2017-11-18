@@ -29,6 +29,8 @@ public interface Constants {
     String FAVOURITES = "favourites";
     String ALL_PROJECTS_KEY = "null";
     String ALL_PROJECTS_NAME = "Todos los proyectos";
+    String SEARCH = "search";
+    String PATTERN = "pattern";
 
     String API_VALIDATE = "validate";
     String API_SEND = "send";
