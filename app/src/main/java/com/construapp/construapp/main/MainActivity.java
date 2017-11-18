@@ -1,7 +1,9 @@
 package com.construapp.construapp.main;
 
 import android.app.ActivityOptions;
+import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -10,6 +12,7 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -32,15 +35,19 @@ import com.construapp.construapp.R;
 import com.construapp.construapp.api.VolleyGetPendingValidations;
 import com.construapp.construapp.cache.LRUCache;
 import com.construapp.construapp.db.Connectivity;
+import com.construapp.construapp.dbTasks.GetLessonTask;
+import com.construapp.construapp.dbTasks.GetLessonsTask;
 import com.construapp.construapp.lessons.FavouriteLessonsActivity;
 import com.construapp.construapp.lessons.LessonFormActivity;
 import com.construapp.construapp.listeners.VolleyStringCallback;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.General;
+import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.models.SessionManager;
 import com.construapp.construapp.dbTasks.DeleteLessonTable;
 import com.construapp.construapp.threading.GetLessons;
 
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,15 +55,19 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import java.util.zip.Inflater;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
 
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
+    private SearchAdapter mSearchAdapter;
     //CONSTANTS
     private General general;
     private ViewPager mViewPager;
@@ -179,26 +190,37 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu)
+    public boolean onCreateOptionsMenu(final Menu menu)
     {
-        MenuInflater inflater = getMenuInflater();
+        final MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.search_menu,menu);
-        MenuItem item = menu.findItem(R.id.menuSearch);
-        SearchView searchView = (SearchView) item.getActionView();
+        SearchView searchView =
+                (SearchView) menu.findItem(R.id.menuSearch).getActionView();
 
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
-                    @Override
-                    public boolean onQueryTextChange (String newText){
-                        return false;
-                    }
-                    @Override
-                    public boolean onQueryTextSubmit(String query){
-                        Toast.makeText(getApplicationContext(),query,Toast.LENGTH_SHORT).show();
-                        return false;
-                    }
-                });
+        // Associate searchable configuration with the SearchView
+        SearchManager searchManager =
+                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        searchView.setSearchableInfo(
+                searchManager.getSearchableInfo(getComponentName()));
 
-        return super.onCreateOptionsMenu(menu);
+        return true;
+
+    }
+
+    /**@Override
+    public boolean onSearchRequested() {
+        Log.i("SEARCH","ONSEARCHRQ");
+        //pauseSomeStuff();
+        return super.onSearchRequested();
+    }
+     */
+
+    private void handleIntent(Intent intent) {
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            Toast.makeText(getApplicationContext(),"Estoy buscando..",Toast.LENGTH_SHORT).show();
+            //doMySearch(query);
+        }
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
