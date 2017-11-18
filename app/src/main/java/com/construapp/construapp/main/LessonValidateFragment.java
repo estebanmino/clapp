@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.construapp.construapp.dbTasks.GetLessonTask;
 import com.construapp.construapp.dbTasks.GetLessonsTask;
+import com.construapp.construapp.dbTasks.InsertCommentTask;
 import com.construapp.construapp.lessons.LessonValidationActivity;
 import com.construapp.construapp.R;
 import com.construapp.construapp.api.VolleyGetLessons;
@@ -22,9 +23,14 @@ import com.construapp.construapp.db.Connectivity;
 import com.construapp.construapp.dbTasks.GetValidationsTask;
 import com.construapp.construapp.dbTasks.InsertLessonTask;
 import com.construapp.construapp.listeners.VolleyStringCallback;
+import com.construapp.construapp.models.Comment;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.models.SessionManager;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -130,31 +136,8 @@ public class LessonValidateFragment extends Fragment {
                 VolleyGetLessons.volleyGetLessons(new VolleyStringCallback() {
                 @Override
                 public void onSuccess(String result) {
-                    Lesson lesson = new Lesson();
-                    JSONArray jsonLessons;
                     try {
-                        jsonLessons = new JSONArray(result);
-                        for (int i = 0; i < jsonLessons.length(); i++) {
-                            //Log.i("JSON", jsonLessons.get(i).toString());
-                            JSONObject object = (JSONObject) jsonLessons.get(i);
-                            lesson.setName(object.get("name").toString());
-                            lesson.setSummary(object.get("summary").toString());
-                            lesson.setId(object.get("id").toString());
-                            lesson.setMotivation(object.get("motivation").toString());
-                            lesson.setLearning(object.get("learning").toString());
-                            lesson.setValidation(object.get("validation").toString());
-                            lesson.setUser_id(object.get("user_id").toString());
-                            lesson.setProject_id(object.get("project_id").toString());
-                            lesson.setCompany_id(object.get("company_id").toString());
-                            lesson.setReject_comment(object.get("reject_comment").toString());
-                            lesson.setValidator("true");
-                            try {
-                                new InsertLessonTask(lesson, getContext()).execute().get();
-                            } catch (ExecutionException e) {
-                            } catch (InterruptedException e) {
-                            }
-                        }
-                        lessonList = new GetValidationsTask(getActivity(), project_id).execute().get();
+                        lessonList = new GetLessonsTask(getActivity(), project_id, user_id, Constants.R_WAITING).execute().get();
                         lessonsAdapter = new LessonsAdapter(getActivity(), lessonList);
                         validateLessonsList.setAdapter(lessonsAdapter);
                     } catch (Exception e) {}

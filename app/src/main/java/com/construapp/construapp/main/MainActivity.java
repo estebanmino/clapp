@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -37,9 +36,11 @@ import com.construapp.construapp.cache.LRUCache;
 import com.construapp.construapp.db.Connectivity;
 import com.construapp.construapp.dbTasks.GetLessonTask;
 import com.construapp.construapp.dbTasks.GetLessonsTask;
+import com.construapp.construapp.dbTasks.DeleteLessonCommentTableTask;
 import com.construapp.construapp.lessons.FavouriteLessonsActivity;
 import com.construapp.construapp.lessons.LessonFormActivity;
 import com.construapp.construapp.listeners.VolleyStringCallback;
+import com.construapp.construapp.microblog.MicroblogActivity;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.General;
 import com.construapp.construapp.models.Lesson;
@@ -234,6 +235,7 @@ public class MainActivity extends AppCompatActivity
             } catch (Exception e) {}
             try {
                 new DeleteLessonTable(getApplicationContext()).execute().get();
+                new DeleteLessonCommentTableTask(getApplicationContext()).execute().get();
                 deleteDir(this.getCacheDir());
             } catch (InterruptedException e) {
                 e.printStackTrace();

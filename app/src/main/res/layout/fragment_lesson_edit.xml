@@ -11,7 +11,7 @@
     <!-- TODO: Update blank fragment layout -->
 
     <TextView
-        android:id="@+id/text_label_name"
+        android:id="@+id/text_label_new_section"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -28,7 +28,7 @@
         app:layout_constraintTop_toBottomOf="@+id/text_project_name" />
 
     <EditText
-        android:id="@+id/edit_lesson_name"
+        android:id="@+id/new_section_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"

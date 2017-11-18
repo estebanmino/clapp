@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
-        tools:context="com.construapp.construapp.main.MicroblogActivity">
+        tools:context="com.construapp.construapp.microblog.MicroblogActivity">
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/appbar"
@@ -35,15 +35,55 @@
 
             </android.support.v7.widget.Toolbar>
 
-            <TextView
-                android:id="@+id/thread_title"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/linear_edition"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="15dp"
-                android:layout_weight="1" />
+                android:elevation="4dp"
+                android:gravity="bottom"
+                android:orientation="horizontal"
+                android:visibility="visible">
+
+                <TextView
+                    android:id="@+id/thread_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_weight="1" />
+
+                <Button
+                    android:id="@+id/btn_edit"
+                    android:layout_width="30dp"
+                    android:layout_height="25dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:background="@color/colorSecondary"
+                    android:tag="@integer/admin_permission"
+                    android:text="EDITAR POST"
+                    android:textColor="@color/cardview_light_background"
+                    android:textSize="12sp"
+                    android:visibility="visible" />
+
+                <Button
+                    android:id="@+id/btn_delete"
+                    android:layout_width="30dp"
+                    android:layout_height="25dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:background="@android:color/holo_red_dark"
+                    android:tag="@integer/admin_permission"
+                    android:text="ELIMINAR POST"
+                    android:textColor="@color/cardview_light_background"
+                    android:textSize="12sp"
+                    android:visibility="visible" />
+
+            </LinearLayout>
 
         </android.support.design.widget.AppBarLayout>
+
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/swipe_refresh_posts"
             android:layout_width="match_parent"
@@ -150,18 +190,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/textview_comments_tag"
+                android:focusable="true"
+                android:clickable="true"
                 tools:layout_editor_absoluteX="8dp"
                 tools:layout_editor_absoluteY="8dp" />
 
 
         </RelativeLayout>
+
         <LinearLayout
             android:id="@+id/linear_layout_posts"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
             android:orientation="vertical">
 
         </LinearLayout>
+
     </LinearLayout>
 </ScrollView>
     </android.support.v4.widget.SwipeRefreshLayout>
@@ -178,6 +224,93 @@
         app:headerLayout="@layout/nav_header_main"
         app:menu="@menu/activity_main_drawer" />
 
+    <LinearLayout
+        android:id="@+id/layout_edit_thread_form"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
 
+        <TextView
+            android:id="@+id/text_label_thread_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:text="Nombre"
+            android:textColor="#08088A"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_project_name" />
+
+        <EditText
+            android:id="@+id/text_edit_thread_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:textSize="14sp"
+            android:visibility="visible"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_lesson_description_edit" />
+
+        <TextView
+            android:id="@+id/text_label_thread_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:text="Descripción"
+            android:textColor="#08088A"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_project_name" />
+
+        <EditText
+            android:id="@+id/text_edit_thread_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:textSize="14sp"
+            android:visibility="visible"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_lesson_description_edit" />
+
+        <Button
+            android:id="@+id/button_edit_thread"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:text="Guardar Edición"
+            android:textColor="@color/cardview_light_background" />
+    </LinearLayout>
 
 </android.support.v4.widget.DrawerLayout>

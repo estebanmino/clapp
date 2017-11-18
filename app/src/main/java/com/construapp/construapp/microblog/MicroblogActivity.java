@@ -1,18 +1,13 @@
-package com.construapp.construapp.main;
+package com.construapp.construapp.microblog;
 
-import android.app.ActivityOptions;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -22,7 +17,6 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,21 +24,13 @@ import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.construapp.construapp.LoginActivity;
 import com.construapp.construapp.R;
-import com.construapp.construapp.api.VolleyGetLessons;
 import com.construapp.construapp.api.VolleyGetSections;
 import com.construapp.construapp.db.Connectivity;
 import com.construapp.construapp.dbTasks.DeleteLessonTable;
-import com.construapp.construapp.dbTasks.GetLessonsTask;
-import com.construapp.construapp.dbTasks.InsertLessonTask;
 import com.construapp.construapp.lessons.FavouriteLessonsActivity;
-import com.construapp.construapp.lessons.LessonActivity;
-import com.construapp.construapp.lessons.LessonViewFragment;
 import com.construapp.construapp.listeners.VolleyStringCallback;
 import com.construapp.construapp.main.MainActivity;
-import com.construapp.construapp.microblog.MicroblogFragment;
 import com.construapp.construapp.models.Constants;
-import com.construapp.construapp.models.General;
-import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.models.Section;
 import com.construapp.construapp.models.SessionManager;
 
@@ -53,7 +39,6 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -68,6 +53,7 @@ public class MicroblogActivity extends AppCompatActivity
     private String[] mProjectTitles;
     private ViewPager sectionsView;
     private SwipeRefreshLayout.OnRefreshListener swipeRefreshListener;
+    private FloatingActionButton fabNewSection;
 
 
     JSONArray jsonArray;
@@ -87,10 +73,9 @@ public class MicroblogActivity extends AppCompatActivity
         toolbar.setTitle("Microblog");
         setSupportActionBar(toolbar);
 
-        Log.i("TEST","voy aca");
+        TextView description = findViewById(R.id.section_description);
+        description.setText("Secciones");
 
-
-        //TODO jose fix obtener y hacer get
         sectionsList = new ArrayList<Section>();
         swipeRefreshLayout = findViewById(R.id.swipe_refresh_sections);
 
@@ -104,9 +89,6 @@ public class MicroblogActivity extends AppCompatActivity
         });
         swipeRefreshLayout.setOnRefreshListener(swipeRefreshListener);
 
-        //sectionsList.add(new Section("1","General","Cosas generales"));
-        //sectionsList.add(new Section("2","Otros","Cosas varias"));
-
         sessionManager = new SessionManager(MicroblogActivity.this);
         sectionsListListView = findViewById(R.id.sections_list);
         sectionsAdapter = new SectionsAdapter(getApplicationContext(), sectionsList);
@@ -117,8 +99,20 @@ public class MicroblogActivity extends AppCompatActivity
 
 
         navigationView = findViewById(R.id.nav_view);
+        fabNewSection = findViewById(R.id.fab_new_thread);
 
-
+        if (sessionManager.getUserAdmin().equals(Constants.S_ADMIN_ADMIN)){
+            fabNewSection.setVisibility(View.VISIBLE);
+            fabNewSection.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(NewSectionActivity.getIntent(MicroblogActivity.this));
+                }
+            });
+        }
+        else {
+            fabNewSection.setVisibility(View.GONE);
+        }
 
 
         navigationView.setNavigationItemSelectedListener(this);
@@ -149,11 +143,19 @@ public class MicroblogActivity extends AppCompatActivity
                 startActivity(intent,bndlanimation);
             }
         });
-
-
-
     }
 
+    @Override
+    protected void onRestart(){
+        super.onRestart();
+        swipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                swipeRefreshLayout.setRefreshing(true);
+                swipeRefreshListener.onRefresh();
+            }
+        });
+    }
     public void setSwipeRefreshLayout() {
         swipeRefreshListener = (new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -175,7 +177,7 @@ public class MicroblogActivity extends AppCompatActivity
                                     Log.i("JSON", jsonSections.get(i).toString());
                                     JSONObject object = (JSONObject) jsonSections.get(i);
                                     section.setName(object.get("name").toString());
-                                    //section.setDescription("Aqui van cosas varias");
+                                    section.setDescription(object.get("description").toString());
                                     section.setId(object.get("id").toString());
                                     sectionsList.add(section);
 

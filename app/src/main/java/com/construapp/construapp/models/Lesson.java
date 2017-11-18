@@ -3,14 +3,7 @@ package com.construapp.construapp.models;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
-import android.util.Log;
 
-import com.drew.imaging.ImageMetadataReader;
-import com.drew.metadata.Directory;
-import com.drew.metadata.Metadata;
-import com.drew.metadata.Tag;
-
-import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -43,13 +36,151 @@ public class Lesson {
     private String motivation;
     private String learning;
     private String validation;
-    private String user_id;
+    private String author_id;
+    private String author_first_name;
+    private String author_last_name;
+    private String author_position;
+    private String author_email;
+    private String author_admin;
     private String project_id;
     private String reject_comment;
     private String company_id;
+    private int trigger_id;
     private String validator;
     private String validator_sec;
+    private String comments;
+    private String disciplines;
+    private String departments;
+    private String classifications;
+    private String tags;
 
+    public String getAuthor_first_name() {
+        return author_first_name;
+    }
+
+    public void setAuthor_first_name(String author_first_name) {
+        this.author_first_name = author_first_name;
+    }
+
+    public String getAuthor_last_name() {
+        return author_last_name;
+    }
+
+    public void setAuthor_last_name(String author_last_name) {
+        this.author_last_name = author_last_name;
+    }
+
+    public String getAuthor_position() {
+        return author_position;
+    }
+
+    public void setAuthor_position(String author_position) {
+        this.author_position = author_position;
+    }
+
+    public String getAuthor_email() {
+        return author_email;
+    }
+
+    public void setAuthor_email(String author_email) {
+        this.author_email = author_email;
+    }
+
+    public String getAuthor_admin() {
+        return author_admin;
+    }
+
+    public void setAuthor_admin(String author_admin) {
+        this.author_admin = author_admin;
+    }
+
+    public int getTrigger_id() {
+        return trigger_id;
+    }
+
+    public void setTrigger_id(int trigger_id) {
+        this.trigger_id = trigger_id;
+    }
+
+    public String getDisciplines() {
+        return disciplines;
+    }
+
+    public String getDepartments() {
+        return departments;
+    }
+
+    public String getClassifications() {
+        return classifications;
+    }
+
+    public String getTags() {
+        return tags;
+    }
+
+    public String[] getDisciplinesArray() {
+        if (disciplines == null || disciplines.isEmpty()) {
+            return new String[0];
+        } else {
+            return disciplines.substring(1).split("/");
+        }
+    }
+
+    public void setDisciplines(String disciplines) {
+        this.disciplines = disciplines;
+    }
+
+    public String[] getDepartmentsArray() {
+        if (departments == null ||  departments.isEmpty()){
+            return new String[0];
+        } else {
+            return departments.substring(1).split("/");
+        }
+    }
+
+    public void setDepartments(String departments) {
+        this.departments = departments;
+    }
+
+    public String[] getClassificationsArray() {
+        if (classifications == null || classifications.isEmpty()) {
+            return new String[0];
+        } else {
+            return classifications.substring(1).split("/");
+        }
+    }
+
+    public void setClassifications(String classifications) {
+        this.classifications = classifications;
+    }
+
+    public String[] getTagsArray() {
+        if (tags == null ||  tags.isEmpty()){
+            return new String[0];
+        } else {
+            return tags.substring(1).split("/");
+        }
+    }
+
+    public String getTagsSpaced() {
+        if (tags == null ||  tags.isEmpty()){
+            return "";
+        } else {
+            return tags.substring(1).replace("/"," ");
+        }
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
+
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
+    }
 
     public String getReject_comment() {
         return reject_comment;
@@ -109,12 +240,12 @@ public class Lesson {
     }
 
 
-    public String getUser_id() {
-        return user_id;
+    public String getAuthor_id() {
+        return author_id;
     }
 
-    public void setUser_id(String user_id) {
-        this.user_id = user_id;
+    public void setAuthor_id(String author_id) {
+        this.author_id = author_id;
     }
 
     public String getCompany_id() {

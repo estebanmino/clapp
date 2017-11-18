@@ -3,13 +3,16 @@ package com.construapp.construapp.lessons;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
@@ -34,7 +37,19 @@ import com.construapp.construapp.api.VolleyPostS3;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 public class LessonFormActivity extends LessonBaseActivity {
+
+    private RecyclerView mClassificationsRecyclerView;
+    private RecyclerView mDisciplinesRecyclerView;
+    private RecyclerView mDepartmentsRecyclerView;
+    private LessonAttributesAdapter disciplinesAttributesAdapter;
+    private LessonAttributesAdapter departmentsAttributesAdapter;
+    private LessonAttributesAdapter classificationsAttributesAdapter;
+    private TextView textDisciplines;
+    private TextView textDepartments;
+    private TextView textClassifications;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +89,11 @@ public class LessonFormActivity extends LessonBaseActivity {
         imageAttach = findViewById(R.id.image_attach);
         setImageAttachListener();
 
+        textDisciplines = findViewById(R.id.text_disciplines);
+        textClassifications = findViewById(R.id.text_classifications);
+        textDepartments = findViewById(R.id.text_departments);
+
+        tagEditTags = findViewById(R.id.edit_tags);
 
         //INIT NEW LESSON
         lesson = new Lesson();
@@ -84,6 +104,21 @@ public class LessonFormActivity extends LessonBaseActivity {
         constants = new General();
 
         mStartRecording = true;
+        linearLayoutTriggers = findViewById(R.id.linear_triggers);
+        linearLayoutTriggers.setClickable(false);
+        btnTriggerError = findViewById(R.id.btn_trigger_trerror);
+        btnTriggerOmision = findViewById(R.id.btn_trigger_omision);
+        btnTriggerGoodPractice = findViewById(R.id.btn_trigger_good_practices);
+        btnTriggerImprovement = findViewById(R.id.btn_trigger_improvement);
+
+        btnTriggerError.setClickable(true);
+        btnTriggerError.setTag("true");
+        btnTriggerError.setBackgroundColor(Color.parseColor("#f7772f"));
+        btnTriggerOmision.setClickable(true);
+        btnTriggerGoodPractice.setClickable(true);
+        btnTriggerImprovement.setClickable(true);
+        setLinearTriggersButtonClick();
+
 
         Bundle bundle = new Bundle();
         bundle.putStringArrayList(Constants.B_LESSON_ARRAY_LIST, lesson.getFormAttributes());
@@ -149,6 +184,54 @@ public class LessonFormActivity extends LessonBaseActivity {
         mDocumentsRecyclerView.setLayoutManager(documentsLayoutManager);
         multimediaDocumentAdapter = new MultimediaDocumentAdapter(lesson.getMultimediaDocumentsFiles(), LessonFormActivity.this, lesson);
         mDocumentsRecyclerView.setAdapter(multimediaDocumentAdapter);
+
+        //DISCIPLINES SCROLLING
+        LinearLayoutManager disciplinesLayoutManager = new LinearLayoutManager(this);
+        disciplinesLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        mDisciplinesRecyclerView = findViewById(R.id.recycler_horizontal_disciplines);
+        mDisciplinesRecyclerView.setLayoutManager(disciplinesLayoutManager);
+        String[] disciplinesArray =  sessionManager.getDisciplines();
+        //String[] disciplinesArray =  lesson.getDisciplinesArray();
+        if (disciplinesArray.length != 0) {
+            disciplinesAttributesAdapter = new LessonAttributesAdapter(disciplinesArray,
+                    LessonFormActivity.this, lesson, true, Constants.TAG_DISCIPLINES);
+            mDisciplinesRecyclerView.setAdapter(disciplinesAttributesAdapter);
+        } else {
+            textDisciplines.setText("Disciplinas (no hay disciplinas asignadas)");
+            mDisciplinesRecyclerView.setVisibility(View.GONE);
+        }
+
+        //CLASSIFICATIONS SCROLLING
+        LinearLayoutManager classificationsLayoutManager = new LinearLayoutManager(this);
+        classificationsLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        mClassificationsRecyclerView = findViewById(R.id.recycler_horizontal_classifications);
+        mClassificationsRecyclerView.setLayoutManager(classificationsLayoutManager);
+        String[] classificationsArray =  sessionManager.getClassifications();
+        //String[] classificationsArray =  lesson.getClassificationsArray();
+        if (classificationsArray.length != 0) {
+            classificationsAttributesAdapter = new LessonAttributesAdapter(classificationsArray,
+                    LessonFormActivity.this, lesson, true, Constants.TAG_CLASSIFICATIONS);
+            mClassificationsRecyclerView.setAdapter(classificationsAttributesAdapter);
+        } else {
+            textClassifications.setText("Clasificación (no hay clasificaciones asignadas)");
+            mClassificationsRecyclerView.setVisibility(View.GONE);
+        }
+
+        //DEPARTMENT SCROLLING
+        LinearLayoutManager departmentsLayoutManager = new LinearLayoutManager(this);
+        departmentsLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        mDepartmentsRecyclerView = findViewById(R.id.recycler_horizontal_departments);
+        mDepartmentsRecyclerView.setLayoutManager(departmentsLayoutManager);
+        String[] departmentsArray =  sessionManager.getDepartments();
+        //String[] departmentsArray =  lesson.getDepartmentsArray();
+        if (departmentsArray.length != 0) {
+            departmentsAttributesAdapter = new LessonAttributesAdapter(departmentsArray,
+                    LessonFormActivity.this, lesson, true, Constants.TAG_DEPARTMENTS);
+            mDepartmentsRecyclerView.setAdapter(departmentsAttributesAdapter);
+        } else {
+            textDepartments.setText("Departamento (no hay departamentos asignados)");
+            mDepartmentsRecyclerView.setVisibility(View.GONE);
+        }
     }
 
     public void setFabSendOnClickListener() {
@@ -188,7 +271,7 @@ public class LessonFormActivity extends LessonBaseActivity {
     public void createLesson(String validateState) {
         SessionManager sessionManager = new SessionManager(LessonFormActivity.this);
         Fragment fragment = getFragmentManager().findFragmentById(R.id.constraint_fragment_container);
-        EditText editLessonName = fragment.getView().findViewById(R.id.edit_lesson_name);
+        EditText editLessonName = fragment.getView().findViewById(R.id.new_section_name);
         EditText editLessonSummary = fragment.getView().findViewById(R.id.edit_lesson_summary);
         EditText editLessonMotivation = fragment.getView().findViewById(R.id.edit_lesson_motivation);
         EditText editLessonLearning = fragment.getView().findViewById(R.id.edit_lesson_learning);
@@ -197,6 +280,7 @@ public class LessonFormActivity extends LessonBaseActivity {
         String lesson_summary = editLessonSummary.getText().toString();
         String lesson_motivation = editLessonMotivation.getText().toString();
         String lesson_learning = editLessonLearning.getText().toString();
+        lesson.setTrigger_id(linearTriggersGetTriggerId());
         String project_id = sessionManager.getActualProjectId();
 
         new VolleyCreateLesson(new VolleyJSONCallback() {
@@ -270,7 +354,13 @@ public class LessonFormActivity extends LessonBaseActivity {
                   Toast.makeText(LessonFormActivity.this, "No se pudo crear lección. Revisar que todos los campos estén completos", Toast.LENGTH_LONG).show();
               }
           }, LessonFormActivity.this, lesson_name, lesson_summary,
-        lesson_motivation, lesson_learning,project_id, validateState).execute();
+        lesson_motivation, lesson_learning,project_id, validateState,
+                tagEditTags.getText().toString(),
+                (disciplinesAttributesAdapter!=null) ? disciplinesAttributesAdapter.getSelectedAttributes() : new ArrayList<String>(),
+                (classificationsAttributesAdapter!=null) ? classificationsAttributesAdapter.getSelectedAttributes() : new ArrayList<String>(),
+                (departmentsAttributesAdapter!=null) ? departmentsAttributesAdapter.getSelectedAttributes() : new ArrayList<String>(),
+                lesson
+                ).execute();
 
         if (!Connectivity.isConnected(LessonFormActivity.this)) {
             Toast.makeText(LessonFormActivity.this, "Estás sin conexión, cuando se conecte se enviará automáticamente", Toast.LENGTH_LONG).show();
