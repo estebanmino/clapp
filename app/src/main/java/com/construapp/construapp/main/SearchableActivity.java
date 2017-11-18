@@ -18,8 +18,17 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.android.volley.VolleyError;
 import com.construapp.construapp.R;
+import com.construapp.construapp.api.VolleyGetLessonsBySearch;
+import com.construapp.construapp.dbTasks.GetLessonsTask;
+import com.construapp.construapp.lessons.LessonActivity;
+import com.construapp.construapp.listeners.VolleyStringCallback;
+import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.Lesson;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,17 +61,53 @@ public class SearchableActivity extends Activity {
     }
 
     private void doMySearch(String query){
-        List<Lesson> lesson_list = new ArrayList<Lesson>();
-        Lesson l1 = new Lesson();
-        l1.setName("Jose");
-        l1.setSummary("nada");
-        Lesson l2 = new Lesson();
-        l2.setName("Jose");
-        l2.setSummary("nada");
-        lesson_list.add(l1);
-        lesson_list.add(l2);
-        mSearchAdapter = new SearchAdapter(getApplicationContext(), lesson_list);
-        listView.setAdapter(mSearchAdapter);
+
+        final List<Lesson> lesson_list = new ArrayList<Lesson>();
+
+        VolleyGetLessonsBySearch.volleyGetLessonsBySearch(new VolleyStringCallback(){
+            @Override
+            public void onSuccess(String result) {
+
+                JSONArray jsonLessons;
+                try {
+                    jsonLessons = new JSONArray(result);
+                    for (int i = 0; i < jsonLessons.length(); i++) {
+                        Lesson lesson = new Lesson();
+                        Log.i("JSON", jsonLessons.get(i).toString());
+                        JSONObject object = (JSONObject) jsonLessons.get(i);
+                        lesson.setName(object.get("name").toString());
+                        lesson.setSummary(object.get("summary").toString());
+                        lesson.setId(object.get("id").toString());
+                        lesson.setMotivation(object.get("motivation").toString());
+                        lesson.setLearning(object.get("learning").toString());
+                        lesson.setValidation(object.get("validation").toString());
+                        lesson.setUser_id(object.get("user_id").toString());
+                        lesson.setProject_id(object.get("project_id").toString());
+                        lesson.setCompany_id(object.get("company_id").toString());
+                        lesson.setReject_comment(object.get("reject_comment").toString());
+                        lesson_list.add(lesson);
+
+
+                    }
+                    mSearchAdapter = new SearchAdapter(getApplicationContext(), lesson_list);
+                    listView.setAdapter(mSearchAdapter);
+                    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                            Lesson lesson = (Lesson) mSearchAdapter.getItem(position);
+                            startActivity(LessonActivity.getIntent(getApplicationContext(), lesson.getName(),
+                                    lesson.getSummary(), lesson.getId()));
+                        }
+                    });
+                } catch (Exception e) {
+                }
+            }
+
+                @Override
+                public void onErrorResponse(VolleyError result) {
+
+                }
+            },getApplicationContext(),query);
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
