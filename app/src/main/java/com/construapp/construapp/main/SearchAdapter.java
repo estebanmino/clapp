@@ -1,6 +1,7 @@
 package com.construapp.construapp.main;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,11 +51,13 @@ public class SearchAdapter extends BaseAdapter {
         if(convertView == null){
             LayoutInflater layoutInflater =
                     (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = layoutInflater.inflate(R.layout.lesson_list_item, parent, false);
+            convertView = layoutInflater.inflate(R.layout.lesson_list_item,null);
 
         }
         lessonName = convertView.findViewById(R.id.lesson_name);
+        lessonName.setTextColor(Color.parseColor("#555555"));
         lessonDescription = convertView.findViewById(R.id.lesson_description);
+        lessonDescription.setTextColor(Color.parseColor("#555555"));
 
         final String elementName = listItemStorage.get(position).getName();
         final String elementDescription = listItemStorage.get(position).getSummary();
