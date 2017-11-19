@@ -12,7 +12,6 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.construapp.construapp.R;
 import com.construapp.construapp.models.General;
-import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.models.MultimediaFile;
 import com.construapp.construapp.threading.MultimediaDocumentDownloader;
 
@@ -27,8 +26,8 @@ public class MultimediaDocumentAdapter extends MultimediaAdapter {
 
     private TransferUtility transferUtility;
 
-    public MultimediaDocumentAdapter(ArrayList<MultimediaFile> mMultimediaFiles, Context context, Lesson thisLesson) {
-        super(mMultimediaFiles, context, thisLesson);
+    public MultimediaDocumentAdapter(ArrayList<MultimediaFile> mMultimediaFiles, Context context) {
+        super(mMultimediaFiles, context);
     }
 
     @Override
@@ -53,7 +52,7 @@ public class MultimediaDocumentAdapter extends MultimediaAdapter {
                     MultimediaDocumentDownloader downloadDocumentMultimedia = new MultimediaDocumentDownloader(
                             new File(multimediaFile.getmPath()),
                             transferUtility,
-                            multimediaFile.getFileS3Key(),
+                            multimediaFile.getApiFileKey(),
                             holder,
                             multimediaFile);
                     downloadDocumentMultimedia.download();

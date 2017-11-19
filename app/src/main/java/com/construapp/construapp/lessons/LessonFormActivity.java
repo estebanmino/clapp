@@ -158,7 +158,7 @@ public class LessonFormActivity extends LessonBaseActivity {
         picturesLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         RecyclerView mPicturesRecyclerView = findViewById(R.id.recycler_horizontal_pictures);
         mPicturesRecyclerView.setLayoutManager(picturesLayoutManager);
-        multimediaPictureAdapter = new MultimediaPictureAdapter(lesson.getMultimediaPicturesFiles(), LessonFormActivity.this, lesson);
+        multimediaPictureAdapter = new MultimediaPictureAdapter(lesson.getMultimediaPicturesFiles(), LessonFormActivity.this);
         mPicturesRecyclerView.setAdapter(multimediaPictureAdapter);
 
         //VIDEOS SCROLLING
@@ -166,7 +166,7 @@ public class LessonFormActivity extends LessonBaseActivity {
         videosLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         RecyclerView mVideosRecyclerView = findViewById(R.id.recycler_horizontal_videos);
         mVideosRecyclerView.setLayoutManager(videosLayoutManager);
-        multimediaVideoAdapter = new MultimediaVideoAdapter(lesson.getMultimediaVideosFiles(), LessonFormActivity.this, lesson);
+        multimediaVideoAdapter = new MultimediaVideoAdapter(lesson.getMultimediaVideosFiles(), LessonFormActivity.this);
         mVideosRecyclerView.setAdapter(multimediaVideoAdapter);
 
         //AUDIOS SCROLLING
@@ -174,7 +174,7 @@ public class LessonFormActivity extends LessonBaseActivity {
         audiosLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         RecyclerView mAudiosRecyclerView = findViewById(R.id.recycler_horizontal_audios);
         mAudiosRecyclerView.setLayoutManager(audiosLayoutManager);
-        multimediaAudioAdapter = new MultimediaAudioAdapter(lesson.getMultimediaAudiosFiles(), LessonFormActivity.this, lesson);
+        multimediaAudioAdapter = new MultimediaAudioAdapter(lesson.getMultimediaAudiosFiles(), LessonFormActivity.this);
         mAudiosRecyclerView.setAdapter(multimediaAudioAdapter);
 
         //DOCUMENTS SCROLLING
@@ -182,7 +182,7 @@ public class LessonFormActivity extends LessonBaseActivity {
         documentsLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         RecyclerView mDocumentsRecyclerView = findViewById(R.id.recycler_horizontal_documents);
         mDocumentsRecyclerView.setLayoutManager(documentsLayoutManager);
-        multimediaDocumentAdapter = new MultimediaDocumentAdapter(lesson.getMultimediaDocumentsFiles(), LessonFormActivity.this, lesson);
+        multimediaDocumentAdapter = new MultimediaDocumentAdapter(lesson.getMultimediaDocumentsFiles(), LessonFormActivity.this);
         mDocumentsRecyclerView.setAdapter(multimediaDocumentAdapter);
 
         //DISCIPLINES SCROLLING
@@ -290,32 +290,8 @@ public class LessonFormActivity extends LessonBaseActivity {
 
                       try {
                           final String new_lesson_id = result.get("id").toString();
-                          String path_input = "";
-                          for (MultimediaFile multimediaFile : lesson.getMultimediaPicturesFiles()) {
-                              multimediaFile.setExtension(Constants.S3_LESSONS_PATH + "/" + new_lesson_id + "/" +
-                                      multimediaFile.getExtension());
-                              path_input += multimediaFile.getExtension() + "/" +
-                                      multimediaFile.getmPath().substring(multimediaFile.getmPath().lastIndexOf("/") + 1) + ";";
-                          }
-                          for (MultimediaFile multimediaFile : lesson.getMultimediaAudiosFiles()) {
-                              multimediaFile.setExtension(Constants.S3_LESSONS_PATH + "/" + new_lesson_id + "/" +
-                                      multimediaFile.getExtension());
-                              path_input += multimediaFile.getExtension() + "/"
-                                      + multimediaFile.getmPath().substring(multimediaFile.getmPath().lastIndexOf("/") + 1) + ";";
-                          }
-                          for (MultimediaFile multimediaFile : lesson.getMultimediaDocumentsFiles()) {
-                              multimediaFile.setExtension(Constants.S3_LESSONS_PATH + "/" + new_lesson_id + "/" +
-                                      multimediaFile.getExtension());
-                              path_input += multimediaFile.getExtension() + "/"
-                                      + multimediaFile.getmPath().substring(multimediaFile.getmPath().lastIndexOf("/") + 1) + ";";
-                          }
 
-                          for (MultimediaFile multimediaFile : lesson.getMultimediaVideosFiles()) {
-                              multimediaFile.setExtension(Constants.S3_LESSONS_PATH + "/" + new_lesson_id + "/" +
-                                      multimediaFile.getExtension());
-                              path_input += multimediaFile.getExtension() + "/"
-                                      + multimediaFile.getmPath().substring(multimediaFile.getmPath().lastIndexOf("/") + 1) + ";";
-                          }
+                          String path_input = lesson.getMultimediaFileKeys(new_lesson_id);
 
                           VolleyPostS3.volleyPostS3(new VolleyJSONCallback() {
                               @Override
