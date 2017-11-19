@@ -64,6 +64,7 @@ public class LessonBaseActivity extends AppCompatActivity {
     public static final String EXTENSION_AUDIO_FORMAT = ".3gp";
     public static final String VIDEO_FORMAT = ".mp4";
 
+    public Boolean editing = false;
 
     //XML ELEMENTS
     public TextView textLessonName;
@@ -127,6 +128,7 @@ public class LessonBaseActivity extends AppCompatActivity {
 
     public int notAdded = 0;
     public int added = 1;
+
     private Boolean multimediaIsOpen = false;
 
     public LinearLayout linearLayoutMultimedia;
@@ -489,7 +491,13 @@ public class LessonBaseActivity extends AppCompatActivity {
                                 }
                             });
 
-                    lesson.getMultimediaPicturesFiles().add(new MultimediaFile(Constants.S3_IMAGES_PATH,mPath, null,transferUtility,added));
+                    lesson.getMultimediaPicturesFiles().add(
+                            new MultimediaFile(
+                                    Constants.S3_IMAGES_PATH,
+                                    mPath,
+                                    transferUtility,
+                                    lesson.getId(),
+                                    added));
                     multimediaPictureAdapter.notifyDataSetChanged();
                     break;
 
@@ -509,7 +517,13 @@ public class LessonBaseActivity extends AppCompatActivity {
                     //imageAttachment.setImageDrawable(ContextCompat.getDrawable(ChatRoomActivity.this, R.drawable.ic_play_video));
                     //imageAttachment.setVisibility(View.VISIBLE);
 
-                    lesson.getMultimediaVideosFiles().add(new MultimediaFile(Constants.S3_VIDEOS_PATH,mPath, null,transferUtility,added));
+                    lesson.getMultimediaVideosFiles().add(
+                            new MultimediaFile(
+                                    Constants.S3_VIDEOS_PATH,
+                                    mPath,
+                                    transferUtility,
+                                    lesson.getId(),
+                                    added));
                     multimediaVideoAdapter.notifyDataSetChanged();
 
                     break;
@@ -524,7 +538,13 @@ public class LessonBaseActivity extends AppCompatActivity {
                             mPath = RealPathUtil.getRealPathFromURI_API19(getApplicationContext(), data.getData());
                         }
 
-                        lesson.getMultimediaPicturesFiles().add(new MultimediaFile(Constants.S3_IMAGES_PATH,mPath, null,transferUtility,added));
+                        lesson.getMultimediaPicturesFiles().add(
+                                new MultimediaFile(
+                                    Constants.S3_IMAGES_PATH,
+                                    mPath,
+                                    transferUtility,
+                                    lesson.getId(),
+                                        added));
                         multimediaPictureAdapter.notifyDataSetChanged();
 
 
@@ -539,8 +559,13 @@ public class LessonBaseActivity extends AppCompatActivity {
                     } else {
                         mPath = RealPathUtil.getRealPathFromURI_API19(getApplicationContext(), data.getData());
                     }
-                    lesson.getMultimediaDocumentsFiles().add(new MultimediaFile(Constants.S3_DOCS_PATH,
-                            mPath,null, transferUtility,added));
+                    lesson.getMultimediaDocumentsFiles().add(
+                            new MultimediaFile(
+                                Constants.S3_DOCS_PATH,
+                                mPath,
+                                transferUtility,
+                                lesson.getId(),
+                                    added));
                     multimediaDocumentAdapter.notifyDataSetChanged();
                     break;
 
@@ -699,7 +724,12 @@ public class LessonBaseActivity extends AppCompatActivity {
             Long tsLong = System.currentTimeMillis() / 1000;
             String ts = tsLong.toString();
             MultimediaFile audioMultimedia = new MultimediaFile(
-                    Constants.S3_AUDIOS_PATH, ABSOLUTE_STORAGE_PATH + ts.toString() + EXTENSION_AUDIO_FORMAT, null,transferUtility,added);
+                    Constants.S3_AUDIOS_PATH,
+                    ABSOLUTE_STORAGE_PATH + ts.toString() + EXTENSION_AUDIO_FORMAT,
+                    transferUtility,
+                    lesson.getId(),
+                    added);
+
             startRecording(audioMultimedia);
             lesson.getMultimediaAudiosFiles().add(audioMultimedia);
         } else {
@@ -828,6 +858,10 @@ public class LessonBaseActivity extends AppCompatActivity {
             btnTriggerImprovement.setTag("true");
             btnTriggerImprovement.setBackgroundColor(Color.parseColor("#f7772f"));
         }
+    }
+
+    public Boolean getEditing(){
+        return editing;
     }
 
 

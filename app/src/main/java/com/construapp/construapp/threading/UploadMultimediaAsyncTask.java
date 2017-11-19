@@ -16,22 +16,21 @@ import java.io.File;
 public class UploadMultimediaAsyncTask extends AsyncTask {
     private File file;
     private TransferUtility transferUtility;
-    private String fileKey;
-    private String extension;
+    private String apiFileKey;
 
-    public UploadMultimediaAsyncTask(File file, TransferUtility transferUtility, String fileKey, String extension) {
+    public UploadMultimediaAsyncTask(File file, TransferUtility transferUtility, String apiFileKey) {
         this.file = file;
         this.transferUtility = transferUtility;
-        this.fileKey = fileKey;
-        this.extension = extension;
+        this.apiFileKey = apiFileKey;
     }
 
     @Override
     protected Object doInBackground(Object[] objects) {
         try {
+            Log.i("UPLOADINGTO",apiFileKey);
             transferUtility.upload(
                     Constants.S3_BUCKET,     /* The bucket to upload to */
-                    extension+"/"+fileKey,    /* The key for the uploaded object */
+                    apiFileKey,    /* The key for the uploaded object */
                     file        /* The file where the data to upload exists */
             );
         }catch (Exception ex){}

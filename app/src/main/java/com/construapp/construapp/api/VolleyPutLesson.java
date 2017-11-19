@@ -20,6 +20,7 @@ import com.construapp.construapp.listeners.VolleyJSONCallback;
 import com.construapp.construapp.listeners.VolleyStringCallback;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.Lesson;
+import com.construapp.construapp.models.MultimediaFile;
 import com.google.gson.JsonArray;
 
 import org.json.JSONArray;
@@ -39,10 +40,11 @@ public class VolleyPutLesson {
     public static void volleyPutLesson(final VolleyJSONCallback callback,
                                        Context context, String lesson_id, String lesson_name,
                                        String lesson_summary, String lesson_motivation,
-                                       String lesson_learning, ArrayList<String> array_added, ArrayList<String> array_deleted,
+                                       String lesson_learning,
                                        String validation,
                                        String newTags, ArrayList<String> newDisciplines,
                                        ArrayList<String> newClassifications, ArrayList<String> newDepartments,
+                                       ArrayList<MultimediaFile> selectedMultimediaFiles,
                                        Lesson lesson) {
 
         SharedPreferences sharedpreferences = context.getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
@@ -54,21 +56,7 @@ public class VolleyPutLesson {
         final RequestQueue queue = Volley.newRequestQueue(context);
 
         JSONObject jsonObject = new JSONObject();
-        // TODO: 18-10-2017 refactor json body
         try {
-            JSONArray added_array = new JSONArray();
-            for(int i=0;i<array_added.size();i++)
-            {
-                added_array.put(array_added.get(i));
-            }
-
-            JSONArray deleted_array = new JSONArray();
-            for(int i=0;i<array_deleted.size();i++)
-            {
-                deleted_array.put(array_deleted.get(i));
-            }
-
-
             String[] newTagsStringArray = newTags.split(" ");
             ArrayList<String> newTagsArray = new ArrayList<>();
             for (int i =0; i < newTagsStringArray.length; i++) {
@@ -76,6 +64,15 @@ public class VolleyPutLesson {
                     newTagsArray.add(newTagsStringArray[i]);
                 }
             }
+
+            ArrayList<String> newFileKeysArray = new ArrayList<>();
+            for (MultimediaFile multimediaFile: selectedMultimediaFiles) {
+                newFileKeysArray.add(multimediaFile.getApiFileKey());
+            }
+
+
+            JSONArray jsonArrayAddedFileKeys = getAddedArray(lesson.getSavedMultimediaFileKeys(), newFileKeysArray);
+            JSONArray jsonArrayDeletedFileKeys = getDeletedArray(lesson.getSavedMultimediaFileKeys(), newFileKeysArray);
 
             JSONArray jsonArrayAddedTags = getAddedArray(lesson.getTagsArray(), newTagsArray);
             JSONArray jsonArrayDeletedTags = getDeletedArray(lesson.getTagsArray(), newTagsArray);
@@ -93,8 +90,8 @@ public class VolleyPutLesson {
                     "{\"lesson\":{\"name\":\"" + lesson_name + "\",\"summary\":\"" + lesson_summary + "\"," +
                             "\"motivation\":\"" + lesson_motivation + "\",\"trigger_id\":" + lesson.getTrigger_id() +",\"learning\":\"" + lesson_learning + "\"," +
                             "\"validation\":\"" + validation + "\"}," +
-                            "\"array_add_path\":" + added_array + "," +
-                            "\"array_delete_path\":" + deleted_array + "," +
+                            "\"array_add_path\":" + jsonArrayAddedFileKeys + "," +
+                            "\"array_delete_path\":" + jsonArrayDeletedFileKeys + "," +
 
                             "\"add_tags\":" + jsonArrayAddedTags + "," +
                             "\"del_tags\":" + jsonArrayDeletedTags + "," +
@@ -107,13 +104,6 @@ public class VolleyPutLesson {
                             "\"add_departments\":" + jsonArrayAddedDepartments + "," +
                             "\"del_departments\":" + jsonArrayDeletedDepartments
                             + "}";
-
-            Log.i("EDITCLASSOFICATIONS", jsonArrayAddedClassifications + " // " +jsonArrayDeletedClassifications );
-            Log.i("EDITDEPARTMENTS", jsonArrayAddedDepartments + " // " +jsonArrayDeletedDepartments );
-            Log.i("EDITDTAGS", jsonArrayAddedTags + " // " +jsonArrayDeletedTags );
-
-            Log.i("EDITREQUEST",requestBody);
-
 
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PUT, url, jsonObject,
                     new com.android.volley.Response.Listener<JSONObject>() {
@@ -165,8 +155,8 @@ public class VolleyPutLesson {
         }
         JSONArray jsonArray = new JSONArray();
         for (String endString: end) {
-            if (!original.contains(endString)) {
-                jsonArray.put(endString);
+            if (!original.contains(endString.replace("\\\\",""))) {
+                jsonArray.put(endString.replace("\\\\",""));
             }
         }
         return jsonArray;
@@ -179,8 +169,8 @@ public class VolleyPutLesson {
         }
         JSONArray jsonArray = new JSONArray();
         for (String originalString: original) {
-            if (!end.contains(originalString)){
-                jsonArray.put(originalString);
+            if (!end.contains(originalString.replace("\\\\",""))){
+                jsonArray.put(originalString.replace("\\\\",""));
             }
         }
         return jsonArray;

@@ -9,7 +9,6 @@ import android.media.ExifInterface;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +22,6 @@ import com.construapp.construapp.R;
 import com.construapp.construapp.cache.LRUCache;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.General;
-import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.models.MultimediaFile;
 import com.construapp.construapp.threading.MultimediaPictureDownloader;
 import com.drew.imaging.ImageMetadataReader;
@@ -46,8 +44,8 @@ public class MultimediaPictureAdapter extends MultimediaAdapter {
     private static String FILE_TYPE = "image/*";
 
 
-    public MultimediaPictureAdapter(ArrayList<MultimediaFile> mMultimediaFiles, Context context, Lesson thisLesson) {
-        super(mMultimediaFiles, context,thisLesson);
+    public MultimediaPictureAdapter(ArrayList<MultimediaFile> mMultimediaFiles, Context context) {
+        super(mMultimediaFiles, context);
     }
 
     @Override
@@ -67,8 +65,8 @@ public class MultimediaPictureAdapter extends MultimediaAdapter {
             }
         } catch (Exception e) {}
 
-        if (multimediaFile.getFileS3Key() != null && LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key()) != null) {
-            Bitmap bitmap =  (Bitmap)LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key());
+        if (multimediaFile.getApiFileKey() != null && LRUCache.getInstance().getLru().get(multimediaFile.getApiFileKey()) != null) {
+            Bitmap bitmap =  (Bitmap)LRUCache.getInstance().getLru().get(multimediaFile.getApiFileKey());
             holder.imageThumbnail.setImageBitmap(ThumbnailUtils.extractThumbnail(bitmap, 80, 80));
         }
         else if (multimediaFile.getmPath() != null && new File(multimediaFile.getmPath()).exists()) {
@@ -80,10 +78,12 @@ public class MultimediaPictureAdapter extends MultimediaAdapter {
             General constants = new General();
             AmazonS3 s3 = new AmazonS3Client(constants.getCredentialsProvider(getContext()));
             transferUtility = new TransferUtility(s3, getContext());
+            Log.i("TRYINGTODOWN",multimediaFile.getApiFileKey());
+
             MultimediaPictureDownloader downloadPictureMultimedia = new MultimediaPictureDownloader(
                     new File(multimediaFile.getmPath()),
                     transferUtility,
-                    multimediaFile.getFileS3Key(),
+                    multimediaFile.getApiFileKey(),
                     holder,
                     multimediaFile);
             holder.progressBar.setVisibility(View.VISIBLE);
@@ -116,9 +116,9 @@ public class MultimediaPictureAdapter extends MultimediaAdapter {
 
                         intent.setAction(Intent.ACTION_VIEW);
 
-                        if (multimediaFile.getFileS3Key() != null && LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key()) != null) {
+                        if (multimediaFile.getApiFileKey() != null && LRUCache.getInstance().getLru().get(multimediaFile.getApiFileKey()) != null) {
                             String path = MediaStore.Images.Media.insertImage(getContext().getContentResolver(),
-                                    (Bitmap) LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key()), "Title", null);
+                                    (Bitmap) LRUCache.getInstance().getLru().get(multimediaFile.getApiFileKey()), "Title", null);
                             intent.setDataAndType(Uri.parse(path), FILE_TYPE);
                         } else {
                             File file = new File(getContext().getCacheDir(), multimediaFile.getFileName());

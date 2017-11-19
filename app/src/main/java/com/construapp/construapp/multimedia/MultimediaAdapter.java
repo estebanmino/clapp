@@ -27,7 +27,6 @@ public abstract class MultimediaAdapter  extends RecyclerView.Adapter<Multimedia
 
     private ArrayList<MultimediaFile> mMultimediaFiles;
     private Context context;
-    private Lesson thisLesson;
 
     public Context getContext() {
         return context;
@@ -45,10 +44,9 @@ public abstract class MultimediaAdapter  extends RecyclerView.Adapter<Multimedia
         this.mMultimediaFiles = mMultimediaFiles;
     }
 
-    public MultimediaAdapter(ArrayList<MultimediaFile> mMultimediaFiles, Context context,Lesson thisLesson) {
+    public MultimediaAdapter(ArrayList<MultimediaFile> mMultimediaFiles, Context context) {
         this.mMultimediaFiles = mMultimediaFiles;
         this.context = context;
-        this.thisLesson = thisLesson;
     }
 
     @Override
@@ -101,7 +99,6 @@ public abstract class MultimediaAdapter  extends RecyclerView.Adapter<Multimedia
                 imageButtonDelete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        thisLesson.getDeletedMultimediaFilesS3Keys().add(multimediaFile.getFileS3Key());
                         MultimediaAdapter.this.mMultimediaFiles.remove(multimediaFile.getArrayPosition());
                         MultimediaAdapter.this.notifyDataSetChanged();
                     }

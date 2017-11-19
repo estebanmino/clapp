@@ -12,7 +12,6 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.construapp.construapp.R;
 import com.construapp.construapp.models.General;
-import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.models.MultimediaFile;
 import com.construapp.construapp.threading.MultimediaDocumentDownloader;
 
@@ -28,8 +27,8 @@ public class MultimediaVideoAdapter extends MultimediaAdapter {
 
     private TransferUtility transferUtility;
 
-    public MultimediaVideoAdapter(ArrayList<MultimediaFile> mMultimediaFiles, Context context, Lesson thisLesson) {
-        super(mMultimediaFiles, context,thisLesson);
+    public MultimediaVideoAdapter(ArrayList<MultimediaFile> mMultimediaFiles, Context context) {
+        super(mMultimediaFiles, context);
     }
 
     public void openFile(Context context, Uri uri, String url) throws IOException {
@@ -59,7 +58,7 @@ public class MultimediaVideoAdapter extends MultimediaAdapter {
                     MultimediaDocumentDownloader downloadDocumentMultimedia = new MultimediaDocumentDownloader(
                             new File(multimediaFile.getmPath()),
                             transferUtility,
-                            multimediaFile.getFileS3Key(),
+                            multimediaFile.getApiFileKey(),
                             holder,
                             multimediaFile);
                     downloadDocumentMultimedia.download();
