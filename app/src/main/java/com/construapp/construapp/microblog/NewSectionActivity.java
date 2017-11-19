@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.app.Activity;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -21,28 +23,32 @@ import org.json.JSONObject;
 
 public class NewSectionActivity extends Activity {
 
-    Button createNewSectionButton;
-    EditText name;
-    EditText description;
+    FloatingActionButton fabCreateSection;
+    EditText editName;
+    EditText editDescription;
+    Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_section);
-        createNewSectionButton = findViewById(R.id.button_new_section);
-        name = findViewById(R.id.new_section_name);
-        description = findViewById(R.id.new_section_description);
-        setCreateNewSectionListener();
+        fabCreateSection = findViewById(R.id.fab_send);
+        editName = findViewById(R.id.new_section_name);
+        editDescription = findViewById(R.id.new_section_description);
+        toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("Nueva sección");
+        setFabCreateSectionListener();
     }
     public static Intent getIntent(Context context) {
         Intent intent = new Intent(context,NewSectionActivity.class);
         return intent;
     }
-    public void setCreateNewSectionListener(){
-        createNewSectionButton.setOnClickListener(new View.OnClickListener() {
+    public void setFabCreateSectionListener(){
+        fabCreateSection.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i("NAME",name.getText().toString());
-                Log.i("DESCRIPTION",description.getText().toString());
+                Log.i("NAME",editName.getText().toString());
+                Log.i("DESCRIPTION",editDescription.getText().toString());
                 VolleyPostSections.volleyPostSections(new VolleyJSONCallback() {
                     @Override
                     public void onSuccess(JSONObject result) {
@@ -61,7 +67,7 @@ public class NewSectionActivity extends Activity {
                     @Override
                     public void onErrorResponse(VolleyError result) {
                     }
-                },NewSectionActivity.this, name.getText().toString(), description.getText().toString()) ;
+                },NewSectionActivity.this, editName.getText().toString(), editDescription.getText().toString()) ;
                 finish();
             }
         });

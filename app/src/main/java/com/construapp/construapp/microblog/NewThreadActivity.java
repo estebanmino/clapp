@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.app.Activity;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -20,19 +22,22 @@ import com.construapp.construapp.models.SessionManager;
 
 public class NewThreadActivity extends Activity {
 
-    Button createNewThreadButton;
-    EditText title;
-    EditText description;
+    FloatingActionButton fabCreateThread;
+    EditText editTitle;
+    EditText editDescription;
     SessionManager sessionManager;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_thread);
-        createNewThreadButton = findViewById(R.id.button_new_thread);
-        title = findViewById(R.id.new_thread_name);
-        description = findViewById(R.id.new_thread_description);
-        setCreateNewThreadListener();
+        toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("Nuevo Post");
+        fabCreateThread = findViewById(R.id.fab_send);
+        editTitle = findViewById(R.id.new_thread_name);
+        editDescription = findViewById(R.id.new_thread_description);
+        setFabCreateThreadListener();
         sessionManager = new SessionManager(NewThreadActivity.this);
     }
 
@@ -40,32 +45,32 @@ public class NewThreadActivity extends Activity {
         Intent intent = new Intent(context,NewThreadActivity.class);
         return intent;
     }
-    public void setCreateNewThreadListener(){
-        createNewThreadButton.setOnClickListener(new View.OnClickListener() {
+    public void setFabCreateThreadListener(){
+        fabCreateThread.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i("TITLE",title.getText().toString());
-                Log.i("DESCRIPTION",description.getText().toString());
-                VolleyPostThreads.volleyPostThreads(new VolleyStringCallback() {
-                    @Override
-                    public void onSuccess(String result) {
-                        VolleyGetThreads.volleyGetThreads(new VolleyStringCallback() {
-                            @Override
-                            public void onSuccess(String result) {
+            Log.i("TITLE",editTitle.getText().toString());
+            Log.i("DESCRIPTION",editDescription.getText().toString());
+            VolleyPostThreads.volleyPostThreads(new VolleyStringCallback() {
+                @Override
+                public void onSuccess(String result) {
+                    VolleyGetThreads.volleyGetThreads(new VolleyStringCallback() {
+                        @Override
+                        public void onSuccess(String result) {
 
-                            }
+                        }
 
-                            @Override
-                            public void onErrorResponse(VolleyError result) {
-                            }
-                        },NewThreadActivity.this);
-                    }
+                        @Override
+                        public void onErrorResponse(VolleyError result) {
+                        }
+                    },NewThreadActivity.this);
+                }
 
-                    @Override
-                    public void onErrorResponse(VolleyError result) {
-                    }
-                },NewThreadActivity.this, sessionManager.getSection(),title.getText().toString(),description.getText().toString());
-                finish();
+                @Override
+                public void onErrorResponse(VolleyError result) {
+                }
+            },NewThreadActivity.this, sessionManager.getSection(),editTitle.getText().toString(),editDescription.getText().toString());
+            finish();
             }
         });
     }
