@@ -2,6 +2,7 @@ package com.construapp.construapp.api;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -13,10 +14,14 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.construapp.construapp.listeners.VolleyStringCallback;
 import com.construapp.construapp.models.Constants;
+import com.construapp.construapp.models.MultimediaFile;
+import com.construapp.construapp.models.ThreadBlog;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,7 +31,9 @@ import java.util.Map;
 
 public class VolleyPutThread {
     public static void volleyPutThread(final VolleyStringCallback callback,
-                                        Context context, String name, String description, String thread_id) {
+                                       Context context, String name, String description, String thread_id,
+                                       ArrayList<MultimediaFile> selectedMultimediaFiles,
+                                       ThreadBlog threadBlog) {
 
         SharedPreferences sharedpreferences = context.getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
         String company_id = sharedpreferences.getString(Constants.SP_COMPANY, "");
@@ -41,12 +48,25 @@ public class VolleyPutThread {
 
         final JSONObject jsonObject1 = new JSONObject();
 
+        ArrayList<String> newFileKeysArray = new ArrayList<>();
+        for (MultimediaFile multimediaFile: selectedMultimediaFiles) {
+;            newFileKeysArray.add(multimediaFile.getApiFileKey());
+        }
 
+
+        JSONArray jsonArrayAddedFileKeys = getAddedArray(threadBlog.getSavedMultimediaFileKeys(), newFileKeysArray);
+        JSONArray jsonArrayDeletedFileKeys = getDeletedArray(threadBlog.getSavedMultimediaFileKeys(), newFileKeysArray);
 
         try {
             jsonObject1.put("id", thread_id);
             jsonObject1.put("title",name);
             jsonObject1.put("text",description);
+            jsonObject1.put("delete_files", jsonArrayDeletedFileKeys);
+            jsonObject1.put("add_files", jsonArrayAddedFileKeys);
+
+            Log.i("PUTLESSON",jsonArrayAddedFileKeys.toString());
+            Log.i("PUTLESSON",jsonArrayDeletedFileKeys.toString());
+
         } catch (Exception e) {}
 
 
@@ -90,5 +110,33 @@ public class VolleyPutThread {
 
         };
         queue.add(jsonObjectRequest);
+    }
+
+    public static JSONArray getAddedArray(String[] originalArray, ArrayList<String> end){
+        ArrayList<String> original = new ArrayList<>();
+        for (int i =0; i < originalArray.length; i++){
+            original.add(originalArray[i]);
+        }
+        JSONArray jsonArray = new JSONArray();
+        for (String endString: end) {
+            if (!original.contains(endString.replace("\\\\",""))) {
+                jsonArray.put(endString.replace("\\\\",""));
+            }
+        }
+        return jsonArray;
+    }
+
+    public static JSONArray getDeletedArray(String[] originalArray, ArrayList<String> end) {
+        ArrayList<String> original = new ArrayList<>();
+        for (int i =0; i < originalArray.length; i++){
+            original.add(originalArray[i]);
+        }
+        JSONArray jsonArray = new JSONArray();
+        for (String originalString: original) {
+            if (!end.contains(originalString.replace("\\\\",""))){
+                jsonArray.put(originalString.replace("\\\\",""));
+            }
+        }
+        return jsonArray;
     }
 }

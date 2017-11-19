@@ -493,6 +493,7 @@ public class LessonBaseActivity extends AppCompatActivity {
 
                     lesson.getMultimediaPicturesFiles().add(
                             new MultimediaFile(
+                                    Constants.S3_LESSONS_PATH,
                                     Constants.S3_IMAGES_PATH,
                                     mPath,
                                     transferUtility,
@@ -519,6 +520,7 @@ public class LessonBaseActivity extends AppCompatActivity {
 
                     lesson.getMultimediaVideosFiles().add(
                             new MultimediaFile(
+                                    Constants.S3_LESSONS_PATH,
                                     Constants.S3_VIDEOS_PATH,
                                     mPath,
                                     transferUtility,
@@ -540,6 +542,7 @@ public class LessonBaseActivity extends AppCompatActivity {
 
                         lesson.getMultimediaPicturesFiles().add(
                                 new MultimediaFile(
+                                    Constants.S3_LESSONS_PATH,
                                     Constants.S3_IMAGES_PATH,
                                     mPath,
                                     transferUtility,
@@ -561,6 +564,7 @@ public class LessonBaseActivity extends AppCompatActivity {
                     }
                     lesson.getMultimediaDocumentsFiles().add(
                             new MultimediaFile(
+                                Constants.S3_LESSONS_PATH,
                                 Constants.S3_DOCS_PATH,
                                 mPath,
                                 transferUtility,
@@ -724,6 +728,7 @@ public class LessonBaseActivity extends AppCompatActivity {
             Long tsLong = System.currentTimeMillis() / 1000;
             String ts = tsLong.toString();
             MultimediaFile audioMultimedia = new MultimediaFile(
+                    Constants.S3_LESSONS_PATH,
                     Constants.S3_AUDIOS_PATH,
                     ABSOLUTE_STORAGE_PATH + ts.toString() + EXTENSION_AUDIO_FORMAT,
                     transferUtility,

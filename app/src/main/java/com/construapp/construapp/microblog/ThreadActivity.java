@@ -47,6 +47,7 @@ import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.General;
 import com.construapp.construapp.models.Post;
 import com.construapp.construapp.models.SessionManager;
+import com.construapp.construapp.models.ThreadBlog;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -106,6 +107,9 @@ public class ThreadActivity extends AppCompatActivity
     private EditText editThreadDescription;
 
     private ConstraintLayout constraintLayoutFvourites;
+
+    private ThreadBlog threadBlog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -155,6 +159,8 @@ public class ThreadActivity extends AppCompatActivity
         }
 
 
+        threadBlog = new ThreadBlog();
+
         deleteThreadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -189,11 +195,10 @@ public class ThreadActivity extends AppCompatActivity
                     public void onErrorResponse(VolleyError result) {
                         Toast.makeText(getApplicationContext(),"No se pudo editar el post.",Toast.LENGTH_SHORT).show();
                     }
-                },ThreadActivity.this,editThreadName.getText().toString(),editThreadDescription.getText().toString(),thread_id);
+                },ThreadActivity.this,editThreadName.getText().toString(),editThreadDescription.getText().toString(),thread_id, null, threadBlog);
             }
         });
 
-        Log.i("USER_THREAD", userThreadId);
 
         postsList = new ArrayList<Post>();
 
@@ -341,6 +346,7 @@ public class ThreadActivity extends AppCompatActivity
                         public void onSuccess(String result) {
                             Post post;
                             JSONArray jsonPosts;
+                            Log.i("THREADRESULT", result);
                             try {
                                 JSONObject request = new JSONObject(result);
                                 JSONObject user = new JSONObject(request.getString("user"));

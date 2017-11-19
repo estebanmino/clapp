@@ -23,7 +23,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,13 +32,14 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.android.volley.VolleyError;
 import com.construapp.construapp.R;
-import com.construapp.construapp.api.VolleyGetFavouriteLessons;
 import com.construapp.construapp.api.VolleyGetThreads;
-import com.construapp.construapp.api.VolleyPostSections;
-import com.construapp.construapp.api.VolleyPostThreads;
-import com.construapp.construapp.lessons.LessonActivity;
-import com.construapp.construapp.lessons.LessonBaseActivity;
+import com.construapp.construapp.api.VolleyPostS3;
+import com.construapp.construapp.api.VolleyPostThread;
+import com.construapp.construapp.api.VolleyPutThread;
+import com.construapp.construapp.lessons.LessonFormActivity;
+import com.construapp.construapp.listeners.VolleyJSONCallback;
 import com.construapp.construapp.listeners.VolleyStringCallback;
+import com.construapp.construapp.main.MainActivity;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.General;
 import com.construapp.construapp.models.MultimediaFile;
@@ -51,8 +51,11 @@ import com.construapp.construapp.multimedia.MultimediaPictureAdapter;
 import com.construapp.construapp.multimedia.MultimediaVideoAdapter;
 import com.construapp.construapp.utils.RealPathUtil;
 
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class NewThreadActivity extends Activity {
 
@@ -123,6 +126,11 @@ public class NewThreadActivity extends Activity {
     public MultimediaAudioAdapter multimediaAudioAdapter;
     public MultimediaDocumentAdapter multimediaDocumentAdapter;
 
+    private int notAdded = 0;
+    private int added = 1;
+    private String CACHE_FOLDER;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -131,6 +139,7 @@ public class NewThreadActivity extends Activity {
         toolbar.setTitle("Nuevo Post");
 
         ABSOLUTE_STORAGE_PATH = getExternalCacheDir().getAbsolutePath();
+        CACHE_FOLDER = NewThreadActivity.this.getCacheDir().toString();
 
         fabCreateThread = findViewById(R.id.fab_send);
         fabFiles = findViewById(R.id.fab_files);
@@ -157,6 +166,7 @@ public class NewThreadActivity extends Activity {
         threadBlog = new ThreadBlog();
         threadBlog.initMultimediaFiles();
 
+
         // Create an S3 client
         General general = new General();
         AmazonS3 s3 = new AmazonS3Client(general.getCredentialsProvider(NewThreadActivity.this));
@@ -171,7 +181,7 @@ public class NewThreadActivity extends Activity {
         mPicturesRecyclerView = findViewById(R.id.recycler_horizontal_pictures);
         mPicturesRecyclerView.setLayoutManager(picturesLayoutManager);
         multimediaPictureAdapter = new MultimediaPictureAdapter(threadBlog.getMultimediaPictureFiles(),
-                NewThreadActivity.this,lesson);
+                NewThreadActivity.this);
         mPicturesRecyclerView.setAdapter(multimediaPictureAdapter);
 
         //VIDEOS SCROLLING
@@ -180,7 +190,7 @@ public class NewThreadActivity extends Activity {
         mVideosRecyclerView = findViewById(R.id.recycler_horizontal_videos);
         mVideosRecyclerView.setLayoutManager(videosLayoutManager);
         multimediaVideoAdapter = new MultimediaVideoAdapter(threadBlog.getMultimediaVideosFiles(),
-                NewThreadActivity.this,lesson);
+                NewThreadActivity.this);
         mVideosRecyclerView.setAdapter(multimediaVideoAdapter);
 
         //AUDIOS SCROLLING
@@ -189,7 +199,7 @@ public class NewThreadActivity extends Activity {
         mAudiosRecyclerView = findViewById(R.id.recycler_horizontal_audios);
         mAudiosRecyclerView.setLayoutManager(audiosLayoutManager);
         multimediaAudioAdapter = new MultimediaAudioAdapter(threadBlog.getMultimediaAudioFiles(),
-                NewThreadActivity.this,threadBlog);
+                NewThreadActivity.this);
         mAudiosRecyclerView.setAdapter(multimediaAudioAdapter);
 
         //DOCUMENTS SCROLLING
@@ -198,7 +208,7 @@ public class NewThreadActivity extends Activity {
         mDocumentsRecyclerView = findViewById(R.id.recycler_horizontal_documents);
         mDocumentsRecyclerView.setLayoutManager(documentsLayoutManager);
         multimediaDocumentAdapter = new MultimediaDocumentAdapter(threadBlog.getMultimediaDocumentsFiles(),
-                NewThreadActivity.this,lesson);
+                NewThreadActivity.this);
         mDocumentsRecyclerView.setAdapter(multimediaDocumentAdapter);
 
 
@@ -222,9 +232,58 @@ public class NewThreadActivity extends Activity {
         fabCreateThread.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            VolleyPostThreads.volleyPostThreads(new VolleyStringCallback() {
+            threadBlog.setSavedMultimediaFileKeys();
+            VolleyPostThread.volleyPostThread(new VolleyJSONCallback() {
                 @Override
-                public void onSuccess(String result) {
+                public void onSuccess(JSONObject result) {
+                    Log.i("NEWTHREAD",result.toString());
+
+                    if(!threadBlog.isEmptyMultimedia()) {
+
+                        ArrayList<MultimediaFile> selectedMultimediaFiles = new ArrayList<>();
+                        selectedMultimediaFiles.addAll(multimediaPictureAdapter.getmMultimediaFiles());
+                        selectedMultimediaFiles.addAll(multimediaAudioAdapter.getmMultimediaFiles());
+                        selectedMultimediaFiles.addAll(multimediaDocumentAdapter.getmMultimediaFiles());
+                        selectedMultimediaFiles.addAll(multimediaVideoAdapter.getmMultimediaFiles());
+
+                        try {
+                            final String new_thread_blog_id = result.get("id").toString();
+                            String path_input = threadBlog.getMultimediaFileKeys(new_thread_blog_id);
+
+                            VolleyPutThread.volleyPutThread(new VolleyStringCallback() {
+                                @Override
+                                public void onSuccess(String result) {
+                                    Toast.makeText(NewThreadActivity.this, "Post editado correctamente", Toast.LENGTH_LONG).show();
+
+                                    for (MultimediaFile multimediaFile : threadBlog.getMultimediaPictureFiles()) {
+                                        multimediaFile.initUploadThread();
+                                    }
+                                    for (MultimediaFile multimediaFile : threadBlog.getMultimediaAudioFiles()) {
+                                        multimediaFile.initUploadThread();
+                                    }
+                                    for (MultimediaFile multimediaFile : threadBlog.getMultimediaDocumentsFiles()) {
+                                        multimediaFile.initUploadThread();
+                                    }
+                                    for (MultimediaFile multimediaFile : threadBlog.getMultimediaVideosFiles()) {
+                                        multimediaFile.initUploadThread();
+                                    }
+                                    startActivity(MainActivity.getIntent(NewThreadActivity.this));
+                                }
+
+                                @Override
+                                public void onErrorResponse(VolleyError result) {
+                                }
+                            }, NewThreadActivity.this, editTitle.getText().toString(), editDescription.getText().toString(),
+                                    new_thread_blog_id, selectedMultimediaFiles, threadBlog);
+                        } catch (Exception e) {
+                            Toast.makeText(NewThreadActivity.this, "Error con archivos multimedia", Toast.LENGTH_LONG).show();
+                        }
+                    } else {
+                        Toast.makeText(NewThreadActivity.this, "Nueva post creado", Toast.LENGTH_LONG).show();
+                        startActivity(MainActivity.getIntent(NewThreadActivity.this));
+                    }
+
+
                     VolleyGetThreads.volleyGetThreads(new VolleyStringCallback() {
                         @Override
                         public void onSuccess(String result) {
@@ -235,6 +294,10 @@ public class NewThreadActivity extends Activity {
                         public void onErrorResponse(VolleyError result) {
                         }
                     },NewThreadActivity.this);
+
+
+
+
                 }
 
                 @Override
@@ -496,7 +559,15 @@ public class NewThreadActivity extends Activity {
                                 }
                             });
 
-                    threadBlog.getMultimediaPictureFiles().add(new MultimediaFile(Constants.S3_IMAGES_PATH,mPath, null,transferUtility,added));
+                    threadBlog.getMultimediaPictureFiles().add(
+                        new MultimediaFile(
+                            Constants.S3_THREADS_PATH,
+                            Constants.S3_IMAGES_PATH,
+                            //CACHE_FOLDER+ "/"+mPath.substring(mPath.lastIndexOf("/")+1,mPath.length()),
+                            mPath,
+                            transferUtility,
+                            threadBlog.getId(),
+                            notAdded));
                     multimediaPictureAdapter.notifyDataSetChanged();
                     break;
 
@@ -516,7 +587,15 @@ public class NewThreadActivity extends Activity {
                     //imageAttachment.setImageDrawable(ContextCompat.getDrawable(ChatRoomActivity.this, R.drawable.ic_play_video));
                     //imageAttachment.setVisibility(View.VISIBLE);
 
-                    threadBlog.getMultimediaVideosFiles().add(new MultimediaFile(Constants.S3_VIDEOS_PATH,mPath, null,transferUtility,added));
+                    threadBlog.getMultimediaVideosFiles().add(
+                        new MultimediaFile(
+                            Constants.S3_THREADS_PATH,
+                            Constants.S3_VIDEOS_PATH,
+                            //CACHE_FOLDER+ "/"+mPath.substring(mPath.lastIndexOf("/")+1,mPath.length()),
+                            mPath,
+                            transferUtility,
+                            threadBlog.getId(),
+                            notAdded));
                     multimediaVideoAdapter.notifyDataSetChanged();
 
                     break;
@@ -531,7 +610,15 @@ public class NewThreadActivity extends Activity {
                             mPath = RealPathUtil.getRealPathFromURI_API19(getApplicationContext(), data.getData());
                         }
 
-                        threadBlog.getMultimediaPictureFiles().add(new MultimediaFile(Constants.S3_IMAGES_PATH,mPath, null,transferUtility,added));
+                        threadBlog.getMultimediaPictureFiles().add(
+                            new MultimediaFile(
+                                Constants.S3_THREADS_PATH,
+                                Constants.S3_IMAGES_PATH,
+                                //CACHE_FOLDER+ "/"+mPath.substring(mPath.lastIndexOf("/")+1,mPath.length()),
+                                mPath,
+                                transferUtility,
+                                threadBlog.getId(),
+                                notAdded));
                         multimediaPictureAdapter.notifyDataSetChanged();
 
 
@@ -546,8 +633,16 @@ public class NewThreadActivity extends Activity {
                     } else {
                         mPath = RealPathUtil.getRealPathFromURI_API19(getApplicationContext(), data.getData());
                     }
-                    threadBlog.getMultimediaDocumentsFiles().add(new MultimediaFile(Constants.S3_DOCS_PATH,
-                            mPath,null, transferUtility,added));
+                    threadBlog.getMultimediaDocumentsFiles().add(
+                        new MultimediaFile(
+                            Constants.S3_THREADS_PATH,
+                            Constants.S3_DOCS_PATH,
+                            //CACHE_FOLDER+ "/"+mPath.substring(mPath.lastIndexOf("/")+1,mPath.length()),
+                            mPath,
+                            transferUtility,
+                            threadBlog.getId(),
+                            notAdded));
+
                     multimediaDocumentAdapter.notifyDataSetChanged();
                     break;
 
@@ -692,10 +787,17 @@ public class NewThreadActivity extends Activity {
         if (start) {
             Long tsLong = System.currentTimeMillis() / 1000;
             String ts = tsLong.toString();
-            MultimediaFile audioMultimedia = new MultimediaFile(
-                    Constants.S3_AUDIOS_PATH, ABSOLUTE_STORAGE_PATH + ts.toString() + EXTENSION_AUDIO_FORMAT, null,transferUtility,added);
+            MultimediaFile audioMultimedia =
+                    new MultimediaFile(
+                        Constants.S3_THREADS_PATH,
+                        Constants.S3_AUDIOS_PATH,
+                        ABSOLUTE_STORAGE_PATH + ts.toString() + EXTENSION_AUDIO_FORMAT,
+                        transferUtility,
+                        threadBlog.getId(),
+                        notAdded);
+
             startRecording(audioMultimedia);
-            lesson.getMultimediaAudiosFiles().add(audioMultimedia);
+            threadBlog.getMultimediaAudioFiles().add(audioMultimedia);
         } else {
             stopRecording();
         }

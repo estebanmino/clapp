@@ -339,7 +339,7 @@ public class SectionActivity extends AppCompatActivity
                                 threadsList.clear();
 
                                 for (int i = 0; i < jsonThreads.length(); i++) {
-                                    thread = new ThreadBlog("","","","");
+                                    thread = new ThreadBlog();
                                     Log.i("JSON", jsonThreads.get(i).toString());
                                     JSONObject object = (JSONObject) jsonThreads.get(i);
                                     JSONObject object2 = new JSONObject(object.get("user").toString());
