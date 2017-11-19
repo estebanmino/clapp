@@ -47,9 +47,94 @@ public class Lesson {
     private String project_id;
     private String reject_comment;
     private String company_id;
+    private int trigger_id;
     private String validator;
     private String validator_sec;
     private String comments;
+    private String disciplines;
+    private String departments;
+    private String classifications;
+    private String tags;
+
+    public int getTrigger_id() {
+        return trigger_id;
+    }
+
+    public void setTrigger_id(int trigger_id) {
+        this.trigger_id = trigger_id;
+    }
+
+    public String getDisciplines() {
+        return disciplines;
+    }
+
+    public String getDepartments() {
+        return departments;
+    }
+
+    public String getClassifications() {
+        return classifications;
+    }
+
+    public String getTags() {
+        return tags;
+    }
+
+    public String[] getDisciplinesArray() {
+        if (disciplines == null || disciplines.isEmpty()) {
+            return new String[0];
+        } else {
+            return disciplines.substring(1).split("/");
+        }
+    }
+
+    public void setDisciplines(String disciplines) {
+        this.disciplines = disciplines;
+    }
+
+    public String[] getDepartmentsArray() {
+        if (departments == null ||  departments.isEmpty()){
+            return new String[0];
+        } else {
+            return departments.substring(1).split("/");
+        }
+    }
+
+    public void setDepartments(String departments) {
+        this.departments = departments;
+    }
+
+    public String[] getClassificationsArray() {
+        if (classifications == null || classifications.isEmpty()) {
+            return new String[0];
+        } else {
+            return classifications.substring(1).split("/");
+        }
+    }
+
+    public void setClassifications(String classifications) {
+        this.classifications = classifications;
+    }
+
+    public String[] getTagsArray() {
+        if (tags == null ||  tags.isEmpty()){
+            return new String[0];
+        } else {
+            return tags.substring(1).split("/");
+        }
+    }
+
+    public String getTagsSpaced() {
+        if (tags == null ||  tags.isEmpty()){
+            return "";
+        } else {
+            return tags.substring(1).replace("/"," ");
+        }
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
 
     public String getComments() {
         return comments;

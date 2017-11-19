@@ -217,4 +217,45 @@ public class SessionManager {
         editor.remove(Constants.SP_THREAD_ID);
         editor.commit();
     }
+
+    public void setDisciplines(String disciplines) {
+        editor.putString(Constants.SP_DISCIPLINES,  disciplines);
+        editor.apply();
+    }
+    public void setClassifications(String classifications) {
+
+        Log.i("SETCLASSIFICATIONS",classifications);
+        editor.putString(Constants.SP_CLASSIFICATIONS,  classifications);
+        editor.apply();
+    }
+    public void setDepartments(String departments) {
+        editor.putString(Constants.SP_DEPARTMENTS,  departments);
+        editor.apply();
+    }
+
+    public String[] getDisciplines() {
+        String disciplines =  sharedPreferences.getString(Constants.SP_DISCIPLINES, "");
+        if (!disciplines.isEmpty()) {
+            return disciplines.substring(1).split("/");
+        } else {
+            return new String[0];
+        }
+    }
+    public String[] getClassifications() {
+        String classifications = sharedPreferences.getString(Constants.SP_CLASSIFICATIONS, "");
+        Log.i("CLASSIFICATIONS",classifications);
+        if (!classifications.isEmpty()) {
+            return classifications.substring(1).split("/");
+        } else {
+            return new String[0];
+        }
+    }
+    public String[] getDepartments() {
+        String departments = sharedPreferences.getString(Constants.SP_DEPARTMENTS, "");
+        if (!departments.isEmpty()) {
+            return departments.substring(1).split("/");
+        } else {
+            return new String[0];
+        }
+    }
 }

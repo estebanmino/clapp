@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.construapp.construapp.R;
@@ -48,8 +47,6 @@ public class LessonsFragment extends Fragment {
     private ListView lessonsList;
     private List<Lesson> lessonList;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private SwipeRefreshLayout.OnRefreshListener swipeRefreshListener;
-    private TextView noLessons;
 
     private SharedPreferences sharedPreferences;
     private String user_id = "null";
@@ -79,7 +76,6 @@ public class LessonsFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        noLessons = view.findViewById(R.id.textViewNoLessons);
         lessonsList = view.findViewById(R.id.lessons_list);
 
         lessonsList.setAdapter(lessonsAdapter);
@@ -89,29 +85,14 @@ public class LessonsFragment extends Fragment {
                 Lesson lesson = (Lesson) lessonsAdapter.getItem(position);
                 startActivity(LessonActivity.getIntent(getActivity(), lesson.getName(),
                         lesson.getSummary(), lesson.getId()));
-
             }
         });
-        setSwipeRefreshLayout();
         swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_lessons);
-        swipeRefreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                swipeRefreshLayout.setRefreshing(true);
-                swipeRefreshListener.onRefresh();
-            }
-        });
-        swipeRefreshLayout.setOnRefreshListener(swipeRefreshListener);
-        if (lessonList.isEmpty()){
-            noLessons.setVisibility(View.VISIBLE);
-        }
-        else {
-            noLessons.setVisibility(View.GONE);
-        }
+        setSwipeRefreshLayout();
     }
 
     public void setSwipeRefreshLayout() {
-        swipeRefreshListener = (new SwipeRefreshLayout.OnRefreshListener() {
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 boolean is_connected = Connectivity.isConnected(getContext());
@@ -120,49 +101,7 @@ public class LessonsFragment extends Fragment {
                     VolleyGetLessons.volleyGetLessons(new VolleyStringCallback() {
                         @Override
                         public void onSuccess(String result) {
-                            Lesson lesson = new Lesson();
-                            JSONArray jsonLessons;
                             try {
-                                jsonLessons = new JSONArray(result);
-                                for (int i = 0; i < jsonLessons.length(); i++) {
-                                    JSONObject object = (JSONObject) jsonLessons.get(i);
-                                    lesson.setName(object.get("name").toString());
-                                    lesson.setSummary(object.get("summary").toString());
-                                    lesson.setId(object.get("id").toString());
-                                    lesson.setMotivation(object.get("motivation").toString());
-                                    lesson.setLearning(object.get("learning").toString());
-                                    lesson.setValidation(object.get("validation").toString());
-                                    lesson.setUser_id(object.get("user_id").toString());
-                                    lesson.setProject_id(object.get("project_id").toString());
-                                    lesson.setCompany_id(object.get("company_id").toString());
-                                    lesson.setReject_comment(object.get("reject_comment").toString());
-                                    lesson.setComments(object.get("comments").toString());
-
-                                    JsonParser parser = new JsonParser();
-                                    JsonArray json = parser.parse(lesson.getComments()).getAsJsonArray();
-                                    for (int j = 0; j < json.size(); j++) {
-                                        JsonElement jsonObject = json.get(j);
-                                        Comment comment = new Comment();
-                                        comment.setText(jsonObject.getAsJsonObject().get("text").toString());
-                                        comment.setId(jsonObject.getAsJsonObject().get("id").toString());
-                                        JsonObject jsonObject1 = jsonObject.getAsJsonObject().get("user").getAsJsonObject();
-                                        comment.setFirst_name(jsonObject1.get("first_name").toString());
-                                        comment.setLast_name(jsonObject1.get("last_name").toString());
-                                        comment.setPosition(jsonObject1.get("position").toString());
-                                        comment.setAuthorId(jsonObject1.get("id").toString());
-                                        comment.setLessonId(lesson.getId());
-                                        try {
-                                            new InsertCommentTask(comment, getContext()).execute().get();
-                                        } catch (Exception e) {}
-                                    }
-                                    try {
-                                        new InsertLessonTask(lesson, getContext()).execute().get();
-                                    } catch (ExecutionException e) {
-                                        e.printStackTrace();
-                                    } catch (InterruptedException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
                                 lessonList = new GetLessonsTask(getActivity(), project_id, user_id, Constants.R_WAITING).execute().get();
                                 lessonsAdapter = new LessonsAdapter(getActivity(), lessonList);
                                 lessonsList.setAdapter(lessonsAdapter);
@@ -172,7 +111,12 @@ public class LessonsFragment extends Fragment {
 
                         @Override
                         public void onErrorResponse(VolleyError result) {
-
+                            try {
+                                lessonList = new GetLessonsTask(getActivity(), project_id, user_id, Constants.R_WAITING).execute().get();
+                                lessonsAdapter = new LessonsAdapter(getActivity(), lessonList);
+                                lessonsList.setAdapter(lessonsAdapter);
+                            } catch (Exception e) {
+                            }
                         }
                     }, getContext());
                 } else {

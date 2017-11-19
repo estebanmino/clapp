@@ -22,7 +22,7 @@ import com.construapp.construapp.dbTasks.GetCommentsTask;
 import com.construapp.construapp.dbTasks.GetLessonTask;
 import com.construapp.construapp.dbTasks.InsertCommentTask;
 import com.construapp.construapp.listeners.VolleyStringCallback;
-import com.construapp.construapp.main.PostsAdapter;
+import com.construapp.construapp.microblog.PostsAdapter;
 import com.construapp.construapp.models.Comment;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.Lesson;

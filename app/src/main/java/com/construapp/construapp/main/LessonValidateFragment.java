@@ -136,50 +136,8 @@ public class LessonValidateFragment extends Fragment {
                 VolleyGetLessons.volleyGetLessons(new VolleyStringCallback() {
                 @Override
                 public void onSuccess(String result) {
-                    Lesson lesson = new Lesson();
-                    JSONArray jsonLessons;
                     try {
-                        jsonLessons = new JSONArray(result);
-                        for (int i = 0; i < jsonLessons.length(); i++) {
-                            JSONObject object = (JSONObject) jsonLessons.get(i);
-                            lesson.setName(object.get("name").toString());
-                            lesson.setSummary(object.get("summary").toString());
-                            lesson.setId(object.get("id").toString());
-                            lesson.setMotivation(object.get("motivation").toString());
-                            lesson.setLearning(object.get("learning").toString());
-                            lesson.setValidation(object.get("validation").toString());
-                            lesson.setUser_id(object.get("user_id").toString());
-                            lesson.setProject_id(object.get("project_id").toString());
-                            lesson.setCompany_id(object.get("company_id").toString());
-                            lesson.setReject_comment(object.get("reject_comment").toString());
-                            lesson.setComments(object.get("comments").toString());
-
-                            lesson.setValidator("true");
-
-                            JsonParser parser = new JsonParser();
-                            JsonArray json = parser.parse(lesson.getComments()).getAsJsonArray();
-                            for (int j = 0; j < json.size(); j++) {
-                                JsonElement jsonObject = json.get(j);
-                                Comment comment = new Comment();
-                                comment.setText(jsonObject.getAsJsonObject().get("text").toString());
-                                comment.setId(jsonObject.getAsJsonObject().get("id").toString());
-                                JsonObject jsonObject1 = jsonObject.getAsJsonObject().get("user").getAsJsonObject();
-                                comment.setFirst_name(jsonObject1.get("first_name").toString());
-                                comment.setLast_name(jsonObject1.get("last_name").toString());
-                                comment.setPosition(jsonObject1.get("position").toString());
-                                comment.setAuthorId(jsonObject1.get("id").toString());
-                                comment.setLessonId(lesson.getId());
-                                try {
-                                    new InsertCommentTask(comment, getContext()).execute().get();
-                                } catch (Exception e) {}
-                            }
-                            try {
-                                new InsertLessonTask(lesson, getContext()).execute().get();
-                            } catch (ExecutionException e) {
-                            } catch (InterruptedException e) {
-                            }
-                        }
-                        lessonList = new GetValidationsTask(getActivity(), project_id).execute().get();
+                        lessonList = new GetLessonsTask(getActivity(), project_id, user_id, Constants.R_WAITING).execute().get();
                         lessonsAdapter = new LessonsAdapter(getActivity(), lessonList);
                         validateLessonsList.setAdapter(lessonsAdapter);
                     } catch (Exception e) {}

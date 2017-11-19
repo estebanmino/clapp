@@ -7,7 +7,7 @@ package com.construapp.construapp.models;
 public interface Constants {
 
     // General
-    String BASE_URL = "http://construapp-api.ing.puc.cl";
+    String BASE_URL = "http://18.231.22.248";
     String COMPANIES = "companies";
     String MICROBLOG = "microblogs";
     String SECTIONS = "sections";
@@ -16,6 +16,7 @@ public interface Constants {
     String POSTS = "posts";
     String POST = "Post";
     String LESSONS = "lessons";
+    String ATTRIBUTES = "attributes";
     String USERS = "users";
     String GET_PROJECTS = "get_projects";
     String GET_PERMISSION = "get_permission";
@@ -58,6 +59,10 @@ public interface Constants {
     String SP_PENDING_VALIDATIONS = "pending_validations";
     String SP_FAVOURITE_LESSONS = "favourite_lessons";
     String SP_THREAD_ID = "thread_id";
+    String SP_DISCIPLINES = "disciplines";
+    String SP_CLASSIFICATIONS = "classifications";
+    String SP_DEPARTMENTS = "departments";
+    String SP_TAGS = "tags";
 
     //Queries
     String Q_AUTHORIZATION = "Authorization";
@@ -106,5 +111,11 @@ public interface Constants {
 
     //IMAGES
     String IMAGE_ICC_PROFILE = "ICC Profile";
+
+    //TAGS
+    String TAG_TAGS = "TAG_TAGS";
+    String TAG_DISCIPLINES = "TAG_DISCIPLINES";
+    String TAG_CLASSIFICATIONS = "TAG_CLASSIFICATIONS";
+    String TAG_DEPARTMENTS = "TAG_DEPARTMENTS";
 
 }
