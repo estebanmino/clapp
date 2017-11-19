@@ -21,6 +21,7 @@ import com.android.volley.VolleyError;
 import com.construapp.construapp.LoginActivity;
 import com.construapp.construapp.R;
 import com.construapp.construapp.api.VolleyGetFavouriteLessons;
+import com.construapp.construapp.api.VolleyGetRecommendedLessons;
 import com.construapp.construapp.db.Connectivity;
 import com.construapp.construapp.dbTasks.DeleteLessonTable;
 import com.construapp.construapp.dbTasks.GetLessonsTask;
@@ -40,12 +41,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-public class FavouriteLessonsActivity extends AppCompatActivity
+public class RecommendedLessonsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
 
     private NavigationView navigationView;
     private SessionManager sessionManager;
-    private ListView listFavouriteLessons;
+    private ListView listRecommendedLessons;
 
     TextView mUserName;
 
@@ -57,22 +58,18 @@ public class FavouriteLessonsActivity extends AppCompatActivity
     private LessonsAdapter lessonsAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
 
-    private TextView textNoFavouriteLessons;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.activity_favourite_lessons);
+        setContentView(R.layout.activity_recommended_lessons);
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle(Constants.TITLE_FAVOURITE_LESSONS);
+        toolbar.setTitle(Constants.TITLE_RECOMMENDED_LESSONS);
         setSupportActionBar(toolbar);
 
-        sessionManager = new SessionManager(FavouriteLessonsActivity.this);
+        sessionManager = new SessionManager(RecommendedLessonsActivity.this);
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        textNoFavouriteLessons = findViewById(R.id.text_no_favourite_lessons);
         //back toolbar
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_menu_ham));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -83,16 +80,16 @@ public class FavouriteLessonsActivity extends AppCompatActivity
             }
         });
 
-        listFavouriteLessons = findViewById(R.id.list_favourite_lessons);
+        listRecommendedLessons = findViewById(R.id.list_recomended_lessons);
         lessonList = new ArrayList<>();
-        lessonsAdapter = new LessonsAdapter(FavouriteLessonsActivity.this, lessonList);
+        lessonsAdapter = new LessonsAdapter(RecommendedLessonsActivity.this, lessonList);
 
-        listFavouriteLessons.setAdapter(lessonsAdapter);
-        listFavouriteLessons.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listRecommendedLessons.setAdapter(lessonsAdapter);
+        listRecommendedLessons.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Lesson lesson = (Lesson) lessonsAdapter.getItem(position);
-                startActivity(LessonActivity.getIntent(FavouriteLessonsActivity.this, lesson.getName(),
+                startActivity(LessonActivity.getIntent(RecommendedLessonsActivity.this, lesson.getName(),
                         lesson.getSummary(),lesson.getId()));
             }
         });
@@ -104,7 +101,7 @@ public class FavouriteLessonsActivity extends AppCompatActivity
     }
 
     public static Intent getIntent(Context context) {
-        Intent intent = new Intent(context,FavouriteLessonsActivity.class);
+        Intent intent = new Intent(context,RecommendedLessonsActivity.class);
         return intent;
     }
 
@@ -126,16 +123,16 @@ public class FavouriteLessonsActivity extends AppCompatActivity
                 e.printStackTrace();
             }
             Toast.makeText(this,"Se ha  cerrado su sesión",Toast.LENGTH_LONG).show();
-            startActivity(LoginActivity.getIntent(FavouriteLessonsActivity.this));
+            startActivity(LoginActivity.getIntent(RecommendedLessonsActivity.this));
         } else if (item.getItemId() == R.id.to_all_projects) {
             sessionManager.setActualProject(Constants.ALL_PROJECTS_KEY,Constants.ALL_PROJECTS_NAME);
-            startActivity(MainActivity.getIntent(FavouriteLessonsActivity.this));
+            startActivity(MainActivity.getIntent(RecommendedLessonsActivity.this));
         } else  if (item.getItemId() == R.id.to_blog) {
-            startActivity(MicroblogActivity.getIntent(FavouriteLessonsActivity.this));
+            startActivity(MicroblogActivity.getIntent(RecommendedLessonsActivity.this));
         } else  if (item.getItemId() == R.id.to_favourites) {
-            startActivity(FavouriteLessonsActivity.getIntent(FavouriteLessonsActivity.this));
+            startActivity(FavouriteLessonsActivity.getIntent(RecommendedLessonsActivity.this));
         } else  if (item.getItemId() == R.id.to_recommended) {
-            startActivity(RecommendedLessonsActivity.getIntent(FavouriteLessonsActivity.this));
+            startActivity(RecommendedLessonsActivity.getIntent(RecommendedLessonsActivity.this));
         }
         else {
             String map = item.getTitle().toString();
@@ -163,16 +160,15 @@ public class FavouriteLessonsActivity extends AppCompatActivity
     }
 
     public void refreshData(){
-        boolean is_connected = Connectivity.isConnected(FavouriteLessonsActivity.this);
+        boolean is_connected = Connectivity.isConnected(RecommendedLessonsActivity.this);
         user_id = sessionManager.getUserId();
         project_id = sessionManager.getActualProjectId();
         lessonList.clear();
         if(is_connected) {
-            VolleyGetFavouriteLessons.volleyGetFavouriteLessons(new VolleyStringCallback() {
+            VolleyGetRecommendedLessons.volleyGetRecommendedLessons(new VolleyStringCallback() {
                 @Override
                 public void onSuccess(String result) {
                     JSONArray jsonLessons;
-                    sessionManager.setFavouriteLessons(result);
                     try {
                         jsonLessons = new JSONArray(result);
                         for (int i = 0; i < jsonLessons.length(); i++) {
@@ -193,8 +189,6 @@ public class FavouriteLessonsActivity extends AppCompatActivity
                                 lessonList.add(lesson);
                             }
                         }
-                        if (lessonList.isEmpty())textNoFavouriteLessons.setVisibility(View.VISIBLE);
-                        lessonsAdapter.notifyDataSetChanged();
                     } catch (Exception e) {
                     }
                 }
@@ -202,19 +196,19 @@ public class FavouriteLessonsActivity extends AppCompatActivity
                 @Override
                 public void onErrorResponse(VolleyError result) {
                     try {
-                        lessonList = new GetLessonsTask(FavouriteLessonsActivity.this,
+                        lessonList = new GetLessonsTask(RecommendedLessonsActivity.this,
                                 project_id, user_id, Constants.R_VALIDATED).execute().get();
-                        lessonsAdapter = new LessonsAdapter(FavouriteLessonsActivity.this, lessonList);
-                        listFavouriteLessons.setAdapter(lessonsAdapter);
+                        lessonsAdapter = new LessonsAdapter(RecommendedLessonsActivity.this, lessonList);
+                        listRecommendedLessons.setAdapter(lessonsAdapter);
                     }catch (Exception e) {}
                 }
-            }, FavouriteLessonsActivity.this);
+            }, RecommendedLessonsActivity.this);
         } else {
             try {
-                lessonList = new GetLessonsTask(FavouriteLessonsActivity.this, project_id,
+                lessonList = new GetLessonsTask(RecommendedLessonsActivity.this, project_id,
                         user_id,Constants.R_VALIDATED).execute().get();
-                lessonsAdapter = new LessonsAdapter(FavouriteLessonsActivity.this, lessonList);
-                listFavouriteLessons.setAdapter(lessonsAdapter);
+                lessonsAdapter = new LessonsAdapter(RecommendedLessonsActivity.this, lessonList);
+                listRecommendedLessons.setAdapter(lessonsAdapter);
             } catch (Exception e) {}
 
         }
@@ -246,4 +240,5 @@ public class FavouriteLessonsActivity extends AppCompatActivity
             }
         });
     }
+
 }

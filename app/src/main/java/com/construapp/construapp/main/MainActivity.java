@@ -1,17 +1,13 @@
 package com.construapp.construapp.main;
 
-import android.app.ActivityOptions;
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -29,39 +25,31 @@ import android.view.View;
 
 import com.android.volley.VolleyError;
 import com.construapp.construapp.LoginActivity;
-import com.construapp.construapp.PanoramicViewActivity;
 import com.construapp.construapp.R;
 import com.construapp.construapp.api.VolleyGetPendingValidations;
 import com.construapp.construapp.cache.LRUCache;
 import com.construapp.construapp.db.Connectivity;
-import com.construapp.construapp.dbTasks.GetLessonTask;
-import com.construapp.construapp.dbTasks.GetLessonsTask;
 import com.construapp.construapp.dbTasks.DeleteLessonCommentTableTask;
 import com.construapp.construapp.lessons.FavouriteLessonsActivity;
 import com.construapp.construapp.lessons.LessonFormActivity;
+import com.construapp.construapp.lessons.RecommendedLessonsActivity;
 import com.construapp.construapp.listeners.VolleyStringCallback;
 import com.construapp.construapp.microblog.MicroblogActivity;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.General;
-import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.models.SessionManager;
 import com.construapp.construapp.dbTasks.DeleteLessonTable;
 import com.construapp.construapp.threading.GetLessons;
 
-import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
-import java.util.zip.Inflater;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
@@ -121,7 +109,7 @@ public class MainActivity extends AppCompatActivity
         general = new General();
         pendingValidations = sessionManager.getHasPendingValidations();
 
-        FloatingActionButton fab = findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab_new_lesson);
         lruCache = LRUCache.getInstance();
         general.setUserPermission(MainActivity.this);
         userPermission = Integer.parseInt(sessionManager.getActualUserPermission());
@@ -254,6 +242,8 @@ public class MainActivity extends AppCompatActivity
 
         } else  if (item.getItemId() == R.id.to_favourites) {
             startActivity(FavouriteLessonsActivity.getIntent(MainActivity.this));
+        } else if (item.getItemId() == R.id.to_recommended){
+            startActivity(RecommendedLessonsActivity.getIntent(MainActivity.this));
         }
         else {
             String map = item.getTitle().toString();

@@ -60,5 +60,6 @@
     Site in 1983. In 2007, Machu Picchu was voted one of the New Seven Wonders of the World in a
     worldwide Internet poll.
   </string>
+    <string name="title_activity_recommended_lessons">RecommendedLessonsActivity</string>
 
 </resources>
