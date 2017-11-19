@@ -105,6 +105,9 @@ public class VolleyPutLesson {
                     "\"del_departments\":" + jsonArrayDeletedDepartments
                     + "}";
 
+            Log.i("PUTLESSON",requestBody.replace("\\\\",""));
+
+
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PUT, url, jsonObject,
                     new com.android.volley.Response.Listener<JSONObject>() {
                         @Override

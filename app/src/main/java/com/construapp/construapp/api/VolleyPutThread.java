@@ -45,9 +45,6 @@ public class VolleyPutThread {
 
         final RequestQueue queue = Volley.newRequestQueue(context);
 
-
-        final JSONObject jsonObject1 = new JSONObject();
-
         ArrayList<String> newFileKeysArray = new ArrayList<>();
         for (MultimediaFile multimediaFile: selectedMultimediaFiles) {
 ;            newFileKeysArray.add(multimediaFile.getApiFileKey());
@@ -57,18 +54,14 @@ public class VolleyPutThread {
         JSONArray jsonArrayAddedFileKeys = getAddedArray(threadBlog.getSavedMultimediaFileKeys(), newFileKeysArray);
         JSONArray jsonArrayDeletedFileKeys = getDeletedArray(threadBlog.getSavedMultimediaFileKeys(), newFileKeysArray);
 
-        try {
-            jsonObject1.put("id", thread_id);
-            jsonObject1.put("title",name);
-            jsonObject1.put("text",description);
-            jsonObject1.put("delete_files", jsonArrayDeletedFileKeys);
-            jsonObject1.put("add_files", jsonArrayAddedFileKeys);
+        final String requestBody =
+                "{\"id\":\"" + thread_id +
+                "\",\"title\":\"" + name +
+                "\",\"text\":\"" + description +
+                "\",\"delete_files\":" + jsonArrayDeletedFileKeys +
+                ",\"add_files\":" + jsonArrayAddedFileKeys + "}" ;
 
-            Log.i("PUTLESSON",jsonArrayAddedFileKeys.toString());
-            Log.i("PUTLESSON",jsonArrayDeletedFileKeys.toString());
-
-        } catch (Exception e) {}
-
+        Log.i("PUTLESSON",requestBody.replace("\\\\",""));
 
         StringRequest jsonObjectRequest = new StringRequest(Request.Method.PUT, url,
                 new com.android.volley.Response.Listener<String>() {
@@ -80,6 +73,7 @@ public class VolleyPutThread {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        Log.i("ERRORPUT", error.toString());
                         callback.onErrorResponse(error);
                     }
                 }
@@ -101,9 +95,9 @@ public class VolleyPutThread {
             @Override
             public byte[] getBody() {
                 try {
-                    return jsonObject1 == null ? null : jsonObject1.toString().getBytes("utf-8");
+                    return requestBody == null ? null : requestBody.toString().getBytes("utf-8");
                 } catch (UnsupportedEncodingException uee) {
-                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", jsonObject1.toString(), "utf-8");
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody.toString(), "utf-8");
                     return null;
                 }
             }

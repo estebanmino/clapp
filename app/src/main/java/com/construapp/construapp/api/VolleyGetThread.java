@@ -25,15 +25,14 @@ import java.util.Map;
 public class VolleyGetThread {
 
     public static void volleyGetThread(final VolleyStringCallback callback,
-                                        Context context) {
+                                        Context context, String thread_id) {
 
         SharedPreferences sharedpreferences = context.getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
         final String userToken = sharedpreferences.getString(Constants.SP_TOKEN, "");
         final String company_id = sharedpreferences.getString(Constants.SP_COMPANY,"");
-        final String thread_id = sharedpreferences.getString(Constants.SP_THREAD_ID,"");
-        //// TODO: 06-11-17 jose conseguir section id y terminar request, y luego hacer el override de onresponse en la clase
         final String section_id = sharedpreferences.getString(Constants.SP_ACTUAL_SECTION,"");
-        final String url = Constants.BASE_URL + "/" + Constants.COMPANIES + "/" + company_id + "/" + Constants.SECTIONS+"/"+section_id+"/"+Constants.THREADS+"?thread_id="+thread_id;
+        final String url = Constants.BASE_URL + "/" + Constants.COMPANIES + "/" + company_id + "/" +
+                Constants.SECTIONS+"/"+section_id+"/"+Constants.THREADS+"?thread_id="+thread_id;
 
         final RequestQueue queue = Volley.newRequestQueue(context);
 

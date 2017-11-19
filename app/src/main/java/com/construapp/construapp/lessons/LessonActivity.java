@@ -355,7 +355,7 @@ public class LessonActivity extends LessonBaseActivity {
                             new MultimediaFile(
                                     Constants.S3_LESSONS_PATH,
                                     Constants.S3_DOCS_PATH,
-                                    CACHE_FOLDER+ "/"+documentPath.substring(documentPath.lastIndexOf("/")+1,documentPath.length()-1),
+                                    ABSOLUTE_STORAGE_PATH+ "/"+documentPath.substring(documentPath.lastIndexOf("/")+1,documentPath.length()-1),
                                     transferUtility,
                                     lesson.getId(),
                                     notAdded));
@@ -368,7 +368,7 @@ public class LessonActivity extends LessonBaseActivity {
                             new MultimediaFile(
                                 Constants.S3_LESSONS_PATH,
                                 Constants.S3_VIDEOS_PATH,
-                                CACHE_FOLDER+ "/"+videoPath.substring(videoPath.lastIndexOf("/")+1,videoPath.length()-1),
+                                    ABSOLUTE_STORAGE_PATH+ "/"+videoPath.substring(videoPath.lastIndexOf("/")+1,videoPath.length()-1),
                                 transferUtility,
                                 lesson.getId(),
                                 notAdded));

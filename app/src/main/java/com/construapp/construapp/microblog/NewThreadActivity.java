@@ -253,7 +253,7 @@ public class NewThreadActivity extends Activity {
                             VolleyPutThread.volleyPutThread(new VolleyStringCallback() {
                                 @Override
                                 public void onSuccess(String result) {
-                                    Toast.makeText(NewThreadActivity.this, "Post editado correctamente", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(NewThreadActivity.this, "Nuevo post creado", Toast.LENGTH_LONG).show();
 
                                     for (MultimediaFile multimediaFile : threadBlog.getMultimediaPictureFiles()) {
                                         multimediaFile.initUploadThread();
@@ -279,7 +279,7 @@ public class NewThreadActivity extends Activity {
                             Toast.makeText(NewThreadActivity.this, "Error con archivos multimedia", Toast.LENGTH_LONG).show();
                         }
                     } else {
-                        Toast.makeText(NewThreadActivity.this, "Nueva post creado", Toast.LENGTH_LONG).show();
+                        Toast.makeText(NewThreadActivity.this, "Nuevo post creado", Toast.LENGTH_LONG).show();
                         startActivity(MainActivity.getIntent(NewThreadActivity.this));
                     }
 
@@ -294,9 +294,6 @@ public class NewThreadActivity extends Activity {
                         public void onErrorResponse(VolleyError result) {
                         }
                     },NewThreadActivity.this);
-
-
-
 
                 }
 

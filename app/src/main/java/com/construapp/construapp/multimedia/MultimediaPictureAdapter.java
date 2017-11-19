@@ -78,7 +78,6 @@ public class MultimediaPictureAdapter extends MultimediaAdapter {
             General constants = new General();
             AmazonS3 s3 = new AmazonS3Client(constants.getCredentialsProvider(getContext()));
             transferUtility = new TransferUtility(s3, getContext());
-            Log.i("TRYINGTODOWN",multimediaFile.getApiFileKey());
 
             MultimediaPictureDownloader downloadPictureMultimedia = new MultimediaPictureDownloader(
                     new File(multimediaFile.getmPath()),

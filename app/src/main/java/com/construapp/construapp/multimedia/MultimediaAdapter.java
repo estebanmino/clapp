@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.construapp.construapp.lessons.LessonActivity;
 import com.construapp.construapp.lessons.LessonValidationActivity;
 import com.construapp.construapp.R;
+import com.construapp.construapp.microblog.ThreadActivity;
 import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.models.MultimediaFile;
 
@@ -91,7 +92,9 @@ public abstract class MultimediaAdapter  extends RecyclerView.Adapter<Multimedia
             progressBar = view.findViewById(R.id.progress_bar);
             btnDownload = view.findViewById(R.id.btn_download);
 
-            if ((getContext().getClass() == LessonActivity.class && !((LessonActivity)context).getEditing()) ||
+            if (
+                    (getContext().getClass() == ThreadActivity.class && !((ThreadActivity)context).getEditing()) ||
+                    (getContext().getClass() == LessonActivity.class && !((LessonActivity)context).getEditing()) ||
                     getContext().getClass() == LessonValidationActivity.class) {
                 imageButtonDelete.setVisibility(View.GONE);
             }
