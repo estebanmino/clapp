@@ -28,26 +28,21 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.construapp.construapp.LoginActivity;
 import com.construapp.construapp.R;
-import com.construapp.construapp.api.VolleyDeleteFavouriteLesson;
 import com.construapp.construapp.api.VolleyDeleteSection;
 import com.construapp.construapp.api.VolleyGetThreads;
-import com.construapp.construapp.api.VolleyPutPost;
 import com.construapp.construapp.api.VolleyPutSection;
 import com.construapp.construapp.db.Connectivity;
 import com.construapp.construapp.dbTasks.DeleteLessonTable;
-import com.construapp.construapp.lessons.LessonActivity;
 import com.construapp.construapp.listeners.VolleyStringCallback;
 import com.construapp.construapp.main.MainActivity;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.General;
-import com.construapp.construapp.models.Section;
 import com.construapp.construapp.models.SessionManager;
 
 import org.json.JSONArray;
@@ -59,14 +54,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-import com.construapp.construapp.models.Threadblog;
-import com.google.gson.JsonObject;
+import com.construapp.construapp.models.ThreadBlog;
 
 public class SectionActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
 
     private ListView threadsListListView;
-    private ArrayList<Threadblog> threadsList;
+    private ArrayList<ThreadBlog> threadsList;
     private ThreadsAdapter threadsAdapter;
     private NavigationView navigationView;
     private SessionManager sessionManager;
@@ -177,7 +171,7 @@ public class SectionActivity extends AppCompatActivity
             }
         });
 
-        threadsList = new ArrayList<Threadblog>();
+        threadsList = new ArrayList<ThreadBlog>();
 
         swipeRefreshLayout = findViewById(R.id.swipe_refresh_threads);
 
@@ -235,7 +229,7 @@ public class SectionActivity extends AppCompatActivity
         threadsListListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Threadblog thread = (Threadblog) threadsAdapter.getItem(position);
+                ThreadBlog thread = (ThreadBlog) threadsAdapter.getItem(position);
                 Intent intent = new Intent(getBaseContext(),ThreadActivity.class);
                 intent.putExtra("TITLE",thread.getTitle());
                 intent.putExtra("TEXT",thread.getAllText());
@@ -337,7 +331,7 @@ public class SectionActivity extends AppCompatActivity
                     VolleyGetThreads.volleyGetThreads(new VolleyStringCallback() {
                         @Override
                         public void onSuccess(String result) {
-                            Threadblog thread;
+                            ThreadBlog thread;
                             JSONArray jsonThreads;
                             try {
                                 JSONObject request = new JSONObject(result);
@@ -345,7 +339,7 @@ public class SectionActivity extends AppCompatActivity
                                 threadsList.clear();
 
                                 for (int i = 0; i < jsonThreads.length(); i++) {
-                                    thread = new Threadblog("","","","");
+                                    thread = new ThreadBlog("","","","");
                                     Log.i("JSON", jsonThreads.get(i).toString());
                                     JSONObject object = (JSONObject) jsonThreads.get(i);
                                     JSONObject object2 = new JSONObject(object.get("user").toString());
