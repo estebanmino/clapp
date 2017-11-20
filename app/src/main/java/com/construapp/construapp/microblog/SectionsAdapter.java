@@ -1,4 +1,4 @@
-package com.construapp.construapp.main;
+package com.construapp.construapp.microblog;
 
 
 import android.content.Context;
@@ -10,7 +10,6 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.construapp.construapp.R;
-import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.models.Section;
 
 import java.util.List;
@@ -64,7 +63,7 @@ public class SectionsAdapter extends BaseAdapter {
             convertView = layoutInflater.inflate(R.layout.section_list_item,null);
         }
 
-        sectionName = convertView.findViewById(R.id.section_name);
+        sectionName = convertView.findViewById(R.id.textview_fullname);
         sectionDescription = convertView.findViewById(R.id.section_description);
 
         final String elementName = sectionModelList.get(position).getName();

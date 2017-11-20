@@ -48,6 +48,10 @@ public class SessionManager {
         return sharedPreferences.getString(Constants.SP_TOKEN,"");
     }
 
+    public String getCompany() {
+        return sharedPreferences.getString(Constants.SP_COMPANY,"");
+    }
+
     public String getUserAdmin() {
         return sharedPreferences.getString(Constants.SP_ADMIN,"");
     }
@@ -195,5 +199,63 @@ public class SessionManager {
         Log.i("SP_FAVOURITE_LESSONS",favouriteLessons);
 
         editor.apply();
+    }
+
+    public void setThreadId(String threadId)
+    {
+        editor.putString(Constants.SP_THREAD_ID,  threadId);
+        editor.apply();
+    }
+
+    public String getThreadId()
+    {
+        return sharedPreferences.getString(Constants.SP_THREAD_ID, "");
+    }
+
+    public void clearThreadId()
+    {
+        editor.remove(Constants.SP_THREAD_ID);
+        editor.commit();
+    }
+
+    public void setDisciplines(String disciplines) {
+        editor.putString(Constants.SP_DISCIPLINES,  disciplines);
+        editor.apply();
+    }
+    public void setClassifications(String classifications) {
+
+        Log.i("SETCLASSIFICATIONS",classifications);
+        editor.putString(Constants.SP_CLASSIFICATIONS,  classifications);
+        editor.apply();
+    }
+    public void setDepartments(String departments) {
+        editor.putString(Constants.SP_DEPARTMENTS,  departments);
+        editor.apply();
+    }
+
+    public String[] getDisciplines() {
+        String disciplines =  sharedPreferences.getString(Constants.SP_DISCIPLINES, "");
+        if (!disciplines.isEmpty()) {
+            return disciplines.substring(1).split("/");
+        } else {
+            return new String[0];
+        }
+    }
+    public String[] getClassifications() {
+        String classifications = sharedPreferences.getString(Constants.SP_CLASSIFICATIONS, "");
+        Log.i("CLASSIFICATIONS",classifications);
+        if (!classifications.isEmpty()) {
+            return classifications.substring(1).split("/");
+        } else {
+            return new String[0];
+        }
+    }
+    public String[] getDepartments() {
+        String departments = sharedPreferences.getString(Constants.SP_DEPARTMENTS, "");
+        if (!departments.isEmpty()) {
+            return departments.substring(1).split("/");
+        } else {
+            return new String[0];
+        }
     }
 }

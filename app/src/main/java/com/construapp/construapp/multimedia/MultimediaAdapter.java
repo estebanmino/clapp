@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.construapp.construapp.lessons.LessonActivity;
 import com.construapp.construapp.lessons.LessonValidationActivity;
 import com.construapp.construapp.R;
+import com.construapp.construapp.microblog.ThreadActivity;
 import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.models.MultimediaFile;
 
@@ -27,7 +28,6 @@ public abstract class MultimediaAdapter  extends RecyclerView.Adapter<Multimedia
 
     private ArrayList<MultimediaFile> mMultimediaFiles;
     private Context context;
-    private Lesson thisLesson;
 
     public Context getContext() {
         return context;
@@ -45,10 +45,9 @@ public abstract class MultimediaAdapter  extends RecyclerView.Adapter<Multimedia
         this.mMultimediaFiles = mMultimediaFiles;
     }
 
-    public MultimediaAdapter(ArrayList<MultimediaFile> mMultimediaFiles, Context context,Lesson thisLesson) {
+    public MultimediaAdapter(ArrayList<MultimediaFile> mMultimediaFiles, Context context) {
         this.mMultimediaFiles = mMultimediaFiles;
         this.context = context;
-        this.thisLesson = thisLesson;
     }
 
     @Override
@@ -58,7 +57,7 @@ public abstract class MultimediaAdapter  extends RecyclerView.Adapter<Multimedia
 
 
         holder.multimediaFile = multimediaFile;
-
+        holder.isPanoramic =  false;
     }
 
     @Override
@@ -71,6 +70,7 @@ public abstract class MultimediaAdapter  extends RecyclerView.Adapter<Multimedia
             implements View.OnClickListener {
 
         public ImageView imageThumbnail;
+        public ImageView imagePanoramic;
         public TextView textPath;
         public ImageButton imageButtonDelete;
         public ProgressBar progressBar;
@@ -79,17 +79,22 @@ public abstract class MultimediaAdapter  extends RecyclerView.Adapter<Multimedia
 
 
         MultimediaFile multimediaFile;
+        public Boolean isPanoramic;
         ArrayList<MultimediaFile> multimediaFileArrayList;
 
         public MultimediaViewHolder(View view) {
             super(view);
+            isPanoramic = false;
+            imagePanoramic =  view.findViewById(R.id.image_panoramic);
             imageThumbnail = view.findViewById(R.id.image_thumbnail);
             textPath = view.findViewById(R.id.image_path);
             imageButtonDelete = view.findViewById(R.id.image_button_delete);
             progressBar = view.findViewById(R.id.progress_bar);
             btnDownload = view.findViewById(R.id.btn_download);
 
-            if ((getContext().getClass() == LessonActivity.class && !((LessonActivity)context).getEditing()) ||
+            if (
+                    (getContext().getClass() == ThreadActivity.class && !((ThreadActivity)context).getEditing()) ||
+                    (getContext().getClass() == LessonActivity.class && !((LessonActivity)context).getEditing()) ||
                     getContext().getClass() == LessonValidationActivity.class) {
                 imageButtonDelete.setVisibility(View.GONE);
             }
@@ -97,7 +102,6 @@ public abstract class MultimediaAdapter  extends RecyclerView.Adapter<Multimedia
                 imageButtonDelete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        thisLesson.getDeletedMultimediaFilesS3Keys().add(multimediaFile.getFileS3Key());
                         MultimediaAdapter.this.mMultimediaFiles.remove(multimediaFile.getArrayPosition());
                         MultimediaAdapter.this.notifyDataSetChanged();
                     }

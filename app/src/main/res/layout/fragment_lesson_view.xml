@@ -10,7 +10,7 @@
     android:focusableInTouchMode="true">
 
     <TextView
-        android:id="@+id/text_label_name"
+        android:id="@+id/text_label_new_section"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"

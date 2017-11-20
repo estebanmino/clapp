@@ -18,14 +18,29 @@ public class MultimediaFile {
     private String mPath;
     private UploadMultimediaAsyncTask uploadThread;
     private String fileKey;
-    private String fileS3Key;
+    private String apiFileKey;
     private TransferUtility transferUtility;
+    private int added;
+    private String fromObject;
+
+    public MultimediaFile(String fromObject, String extension, String mPath, TransferUtility transferUtility,String lesson_id, int added){
+        this.fromObject = fromObject;
+        this.extension = extension;
+        this.mPath = mPath;
+        this.transferUtility = transferUtility;
+        this.apiFileKey = fromObject+File.separator+lesson_id+File.separator+extension+ File.separator +
+                mPath.substring(mPath.lastIndexOf(File.separator) + 1);
+        this.added = added;
+    }
 
     public int getAdded() {
         return added;
     }
 
-    private int added;
+    public void setAdded(int added) {
+        this.added = added;
+    }
+
 
     public void setExtension(String extension) {
         this.extension = extension;
@@ -33,6 +48,16 @@ public class MultimediaFile {
 
     private String extension;
     private int arrayPosition;
+
+
+    public String getApiFileKey() {
+        return apiFileKey;
+    }
+
+    public void setApiFileKey(String apiFileKey) {
+        this.apiFileKey = apiFileKey;
+    }
+
 
     public String getFileKey() {
         return fileKey;
@@ -62,23 +87,6 @@ public class MultimediaFile {
         this.uploadThread = uploadThread;
     }
 
-
-    public MultimediaFile(String extension, String mPath, String fileS3Key, TransferUtility transferUtility,int added){
-        this.extension = extension;
-        this.mPath = mPath;
-        this.transferUtility = transferUtility;
-        this.fileS3Key = fileS3Key;
-        this.added = added;
-    }
-
-    public String getFileS3Key() {
-        return fileS3Key;
-    }
-
-    public void setFileS3Key(String fileS3Key) {
-        this.fileS3Key = fileS3Key;
-    }
-
     public String getmPath() {
         return mPath;
     }
@@ -90,7 +98,7 @@ public class MultimediaFile {
     public void initUploadThread() {
         File file = new File(mPath);
         fileKey = file.getName();
-        this.uploadThread = new UploadMultimediaAsyncTask(file,transferUtility,fileKey, extension);
+        this.uploadThread = new UploadMultimediaAsyncTask(file,transferUtility,apiFileKey);
         try {
             this.uploadThread.execute().get();
         } catch (ExecutionException e) {

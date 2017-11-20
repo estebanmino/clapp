@@ -1,15 +1,15 @@
 package com.construapp.construapp.main;
 
-import android.app.ActivityOptions;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 
 import android.support.v4.app.Fragment;
@@ -19,6 +19,7 @@ import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -28,16 +29,18 @@ import com.construapp.construapp.R;
 import com.construapp.construapp.api.VolleyGetPendingValidations;
 import com.construapp.construapp.cache.LRUCache;
 import com.construapp.construapp.db.Connectivity;
+import com.construapp.construapp.dbTasks.DeleteLessonCommentTableTask;
 import com.construapp.construapp.lessons.FavouriteLessonsActivity;
 import com.construapp.construapp.lessons.LessonFormActivity;
+import com.construapp.construapp.lessons.RecommendedLessonsActivity;
 import com.construapp.construapp.listeners.VolleyStringCallback;
+import com.construapp.construapp.microblog.MicroblogActivity;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.General;
 import com.construapp.construapp.models.SessionManager;
 import com.construapp.construapp.dbTasks.DeleteLessonTable;
 import com.construapp.construapp.threading.GetLessons;
 
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import org.json.JSONArray;
@@ -53,6 +56,7 @@ public class MainActivity extends AppCompatActivity
 
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
+    private SearchAdapter mSearchAdapter;
     //CONSTANTS
     private General general;
     private ViewPager mViewPager;
@@ -105,7 +109,7 @@ public class MainActivity extends AppCompatActivity
         general = new General();
         pendingValidations = sessionManager.getHasPendingValidations();
 
-        FloatingActionButton fab = findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab_new_lesson);
         lruCache = LRUCache.getInstance();
         general.setUserPermission(MainActivity.this);
         userPermission = Integer.parseInt(sessionManager.getActualUserPermission());
@@ -165,7 +169,47 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
+        if (navigationView.isShown())
+        {
+            DrawerLayout drawer = findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
+        }
 
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(final Menu menu)
+    {
+        final MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.search_menu,menu);
+        SearchView searchView =
+                (SearchView) menu.findItem(R.id.menuSearch).getActionView();
+
+        // Associate searchable configuration with the SearchView
+        SearchManager searchManager =
+                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        searchView.setSearchableInfo(
+                searchManager.getSearchableInfo(getComponentName()));
+
+        return true;
+
+    }
+
+    /**@Override
+    public boolean onSearchRequested() {
+        Log.i("SEARCH","ONSEARCHRQ");
+        //pauseSomeStuff();
+        return super.onSearchRequested();
+    }
+     */
+
+    private void handleIntent(Intent intent) {
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            Toast.makeText(getApplicationContext(),"Estoy buscando..",Toast.LENGTH_SHORT).show();
+            //doMySearch(query);
+        }
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -179,6 +223,7 @@ public class MainActivity extends AppCompatActivity
             } catch (Exception e) {}
             try {
                 new DeleteLessonTable(getApplicationContext()).execute().get();
+                new DeleteLessonCommentTableTask(getApplicationContext()).execute().get();
                 deleteDir(this.getCacheDir());
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -197,6 +242,8 @@ public class MainActivity extends AppCompatActivity
 
         } else  if (item.getItemId() == R.id.to_favourites) {
             startActivity(FavouriteLessonsActivity.getIntent(MainActivity.this));
+        } else if (item.getItemId() == R.id.to_recommended){
+            startActivity(RecommendedLessonsActivity.getIntent(MainActivity.this));
         }
         else {
             String map = item.getTitle().toString();
