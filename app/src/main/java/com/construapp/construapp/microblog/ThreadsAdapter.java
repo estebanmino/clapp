@@ -12,27 +12,11 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.construapp.construapp.R;
-import com.construapp.construapp.models.Section;
 
 import java.util.List;
 
 
-import android.content.Context;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.TextView;
-
-import com.construapp.construapp.R;
-import com.construapp.construapp.models.Lesson;
-import com.construapp.construapp.models.Section;
-import com.construapp.construapp.models.Threadblog;
-
-import org.w3c.dom.Text;
-
-import java.util.List;
+import com.construapp.construapp.models.ThreadBlog;
 
 
 /**
@@ -41,12 +25,12 @@ import java.util.List;
 
 public class ThreadsAdapter extends BaseAdapter {
     private final Context context;
-    private final List<Threadblog> threadModelList;
+    private final List<ThreadBlog> threadModelList;
 
     private TextView threadTitle;
     private TextView threadText;
 
-    public ThreadsAdapter(Context context, List<Threadblog> threadModelList) {
+    public ThreadsAdapter(Context context, List<ThreadBlog> threadModelList) {
         this.context = context;
         this.threadModelList = threadModelList;
     }

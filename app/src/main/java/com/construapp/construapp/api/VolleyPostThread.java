@@ -10,6 +10,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.construapp.construapp.listeners.VolleyJSONCallback;
@@ -27,9 +28,9 @@ import java.util.Map;
  * Created by user on 12/11/2017.
  */
 
-public class VolleyPostThreads {
-    public static void volleyPostThreads(final VolleyStringCallback callback,
-                                         Context context, String section_id, String name, String description) {
+public class VolleyPostThread {
+    public static void volleyPostThread(final VolleyJSONCallback callback,
+                                        Context context, String section_id, String name, String description) {
 
         SharedPreferences sharedpreferences = context.getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
         String company_id = sharedpreferences.getString(Constants.SP_COMPANY, "");
@@ -41,6 +42,7 @@ public class VolleyPostThreads {
         final RequestQueue queue = Volley.newRequestQueue(context);
 
 
+        final JSONObject jsonObject = new JSONObject();
         final JSONObject jsonObject1 = new JSONObject();
 
         try {
@@ -48,10 +50,10 @@ public class VolleyPostThreads {
             jsonObject1.put("text",description);
         } catch (Exception e) {}
 
-        StringRequest jsonObjectRequest = new StringRequest(Request.Method.POST, url,
-                new com.android.volley.Response.Listener<String>() {
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jsonObject,
+                new com.android.volley.Response.Listener<JSONObject>() {
                     @Override
-                    public void onResponse(String  response) {
+                    public void onResponse(JSONObject  response) {
                         callback.onSuccess(response);
                     }
                 },

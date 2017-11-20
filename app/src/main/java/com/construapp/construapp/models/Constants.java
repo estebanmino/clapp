@@ -80,6 +80,7 @@ public interface Constants {
     String S3_AUDIOS_PATH = "audios";
     String S3_DOCS_PATH = "docs";
     String S3_LESSONS_PATH = "lessons";
+    String S3_THREADS_PATH = "threads";
 
     //MMEDIA
     String M_APP_DIRECTORY = "Clapp";

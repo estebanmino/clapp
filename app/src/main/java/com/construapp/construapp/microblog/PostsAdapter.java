@@ -13,25 +13,6 @@ import android.widget.TextView;
 
 import com.construapp.construapp.R;
 import com.construapp.construapp.models.Post;
-import com.construapp.construapp.models.Section;
-
-import java.util.List;
-
-
-import android.content.Context;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.TextView;
-
-import com.construapp.construapp.R;
-import com.construapp.construapp.models.Lesson;
-import com.construapp.construapp.models.Section;
-import com.construapp.construapp.models.Threadblog;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -86,10 +67,10 @@ public class PostsAdapter extends BaseAdapter {
             convertView = layoutInflater.inflate(R.layout.thread_comments_list_item,null);
         }
 
-        postText = convertView.findViewById(R.id.textview_text);
-        postTimestamp = convertView.findViewById(R.id.textview_post_timestamp);
-        postFullname = convertView.findViewById(R.id.textview_fullname);
-        postPosition = convertView.findViewById(R.id.textview_position);
+        postText = convertView.findViewById(R.id.text_post);
+        postTimestamp = convertView.findViewById(R.id.text_post_timestamp);
+        postFullname = convertView.findViewById(R.id.text_post_author_fullname);
+        postPosition = convertView.findViewById(R.id.text_post_author_position);
 
 
         final String postComment = postModelList.get(position).getText();

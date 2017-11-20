@@ -21,12 +21,14 @@ public class MultimediaFile {
     private String apiFileKey;
     private TransferUtility transferUtility;
     private int added;
+    private String fromObject;
 
-    public MultimediaFile(String extension, String mPath, TransferUtility transferUtility,String lesson_id, int added){
+    public MultimediaFile(String fromObject, String extension, String mPath, TransferUtility transferUtility,String lesson_id, int added){
+        this.fromObject = fromObject;
         this.extension = extension;
         this.mPath = mPath;
         this.transferUtility = transferUtility;
-        this.apiFileKey = Constants.S3_LESSONS_PATH+File.separator+lesson_id+File.separator+extension+ File.separator +
+        this.apiFileKey = fromObject+File.separator+lesson_id+File.separator+extension+ File.separator +
                 mPath.substring(mPath.lastIndexOf(File.separator) + 1);
         this.added = added;
     }

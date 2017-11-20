@@ -299,6 +299,7 @@ public class LessonFormActivity extends LessonBaseActivity {
                                   Toast.makeText(LessonFormActivity.this, "Nueva lección creada", Toast.LENGTH_LONG).show();
 
                                   for (MultimediaFile multimediaFile : lesson.getMultimediaPicturesFiles()) {
+                                      Log.i("UPLOADINGMULTIMEDIA",multimediaFile.getApiFileKey());
                                       multimediaFile.initUploadThread();
                                   }
                                   for (MultimediaFile multimediaFile : lesson.getMultimediaAudiosFiles()) {

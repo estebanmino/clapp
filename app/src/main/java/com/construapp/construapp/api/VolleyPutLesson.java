@@ -88,22 +88,25 @@ public class VolleyPutLesson {
 
             final String requestBody =
                     "{\"lesson\":{\"name\":\"" + lesson_name + "\",\"summary\":\"" + lesson_summary + "\"," +
-                            "\"motivation\":\"" + lesson_motivation + "\",\"trigger_id\":" + lesson.getTrigger_id() +",\"learning\":\"" + lesson_learning + "\"," +
-                            "\"validation\":\"" + validation + "\"}," +
-                            "\"array_add_path\":" + jsonArrayAddedFileKeys + "," +
-                            "\"array_delete_path\":" + jsonArrayDeletedFileKeys + "," +
+                    "\"motivation\":\"" + lesson_motivation + "\",\"trigger_id\":" + lesson.getTrigger_id() +",\"learning\":\"" + lesson_learning + "\"," +
+                    "\"validation\":\"" + validation + "\"}," +
+                    "\"array_add_path\":" + jsonArrayAddedFileKeys + "," +
+                    "\"array_delete_path\":" + jsonArrayDeletedFileKeys + "," +
 
-                            "\"add_tags\":" + jsonArrayAddedTags + "," +
-                            "\"del_tags\":" + jsonArrayDeletedTags + "," +
+                    "\"add_tags\":" + jsonArrayAddedTags + "," +
+                    "\"del_tags\":" + jsonArrayDeletedTags + "," +
 
-                            "\"add_disciplines\":" + jsonArrayAddedDisciplines + "," +
-                            "\"del_disciplines\":" + jsonArrayDeletedDisciplines + "," +
+                    "\"add_disciplines\":" + jsonArrayAddedDisciplines + "," +
+                    "\"del_disciplines\":" + jsonArrayDeletedDisciplines + "," +
 
-                            "\"add_classifications\":" + jsonArrayAddedClassifications + "," +
-                            "\"del_classifications\":" + jsonArrayDeletedClassifications + "," +
-                            "\"add_departments\":" + jsonArrayAddedDepartments + "," +
-                            "\"del_departments\":" + jsonArrayDeletedDepartments
-                            + "}";
+                    "\"add_classifications\":" + jsonArrayAddedClassifications + "," +
+                    "\"del_classifications\":" + jsonArrayDeletedClassifications + "," +
+                    "\"add_departments\":" + jsonArrayAddedDepartments + "," +
+                    "\"del_departments\":" + jsonArrayDeletedDepartments
+                    + "}";
+
+            Log.i("PUTLESSON",requestBody.replace("\\\\",""));
+
 
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PUT, url, jsonObject,
                     new com.android.volley.Response.Listener<JSONObject>() {
