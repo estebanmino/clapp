@@ -103,6 +103,8 @@
         <activity
             android:name=".lessons.RecommendedLessonsActivity"
             android:label="@string/title_activity_recommended_lessons"></activity>
+        <activity
+            android:name=".PanoramicViewActivity"></activity>
     </application>
 
 </manifest>

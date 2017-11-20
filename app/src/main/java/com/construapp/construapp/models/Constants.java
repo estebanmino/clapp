@@ -116,6 +116,7 @@ public interface Constants {
 
     //IMAGES
     String IMAGE_ICC_PROFILE = "ICC Profile";
+    String IMAGE_XMP = "XMP";
 
     //TAGS
     String TAG_TAGS = "TAG_TAGS";
