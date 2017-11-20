@@ -28,6 +28,7 @@ import com.construapp.construapp.api.VolleyGetSections;
 import com.construapp.construapp.db.Connectivity;
 import com.construapp.construapp.dbTasks.DeleteLessonTable;
 import com.construapp.construapp.lessons.FavouriteLessonsActivity;
+import com.construapp.construapp.lessons.RecommendedLessonsActivity;
 import com.construapp.construapp.listeners.VolleyStringCallback;
 import com.construapp.construapp.main.MainActivity;
 import com.construapp.construapp.models.Constants;
@@ -251,6 +252,8 @@ public class MicroblogActivity extends AppCompatActivity
         } else  if (item.getItemId() == R.id.to_favourites) {
             startActivity(FavouriteLessonsActivity.getIntent(MicroblogActivity.this));
             //IMPLEMENT
+        } else  if (item.getItemId() == R.id.to_recommended) {
+            startActivity(RecommendedLessonsActivity.getIntent(MicroblogActivity.this));
         }
         else {
             String map = item.getTitle().toString();
