@@ -67,10 +67,10 @@ public class PostsAdapter extends BaseAdapter {
             convertView = layoutInflater.inflate(R.layout.thread_comments_list_item,null);
         }
 
-        postText = convertView.findViewById(R.id.textview_text);
-        postTimestamp = convertView.findViewById(R.id.textview_post_timestamp);
-        postFullname = convertView.findViewById(R.id.textview_fullname);
-        postPosition = convertView.findViewById(R.id.textview_position);
+        postText = convertView.findViewById(R.id.text_post);
+        postTimestamp = convertView.findViewById(R.id.text_post_timestamp);
+        postFullname = convertView.findViewById(R.id.text_post_author_fullname);
+        postPosition = convertView.findViewById(R.id.text_post_author_position);
 
 
         final String postComment = postModelList.get(position).getText();

@@ -9,23 +9,27 @@
     android:fitsSystemWindows="true"
     >
 
-    <ScrollView
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_posts"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="0dp"
-        android:layout_marginTop="0dp"
         app:layout_constraintBottom_toTopOf="@+id/constraint_multimedia_bar"
-        app:layout_constraintTop_toBottomOf="@+id/appbar"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="0dp"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginLeft="0dp"
-        app:layout_constraintLeft_toLeftOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/appbar">
+
+        <ScrollView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="0dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="0dp">
 
 
-
-        <LinearLayout
+            <LinearLayout
                 android:id="@+id/linear_layout_thread"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
@@ -320,14 +324,24 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/textview_comments_tag"
+                        android:id="@+id/text_comments_tag"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"
                         android:layout_marginTop="10dp"
-                        android:text=""
+                        android:text="Comentarios"
                         android:textColor="@color/colorSecondary"
                         android:textSize="20sp" />
+
+                    <ListView
+                        android:id="@+id/posts_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_below="@id/text_comments_tag"
+                        android:clickable="true"
+                        android:focusable="true"
+                        tools:layout_editor_absoluteX="8dp"
+                        tools:layout_editor_absoluteY="8dp" />
 
                     <LinearLayout
                         android:id="@+id/linear_layout_posts"
@@ -339,27 +353,19 @@
 
                     </LinearLayout>
 
-                    <ListView
-                        android:id="@+id/posts_list"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_below="@id/textview_comments_tag"
-                        android:clickable="true"
-                        android:focusable="true"
-                        tools:layout_editor_absoluteX="8dp"
-                        tools:layout_editor_absoluteY="8dp" />
                 </LinearLayout>
 
             </LinearLayout>
 
 
-    </ScrollView>
+        </ScrollView>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/constraint_multimedia_bar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="-9dp"
         android:background="@color/colorPrimary"
         android:elevation="4dp"
         android:visibility="gone"
@@ -373,9 +379,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
             android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:clickable="true"
@@ -412,9 +416,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
             android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_weight="1"
@@ -482,7 +484,6 @@
         android:id="@+id/constraint_action_bar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="0dp"
         android:background="@color/colorPrimary"
         android:elevation="4dp"
         android:visibility="gone"
@@ -496,7 +497,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"

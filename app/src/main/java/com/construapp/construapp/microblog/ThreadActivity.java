@@ -256,6 +256,8 @@ public class ThreadActivity extends AppCompatActivity
         linearThreadContent = findViewById(R.id.linear_thread_content);
         linearThreadEdition = findViewById(R.id.linear_thread_edition);
 
+        mContainerView = (LinearLayout)findViewById(R.id.linear_layout_posts);
+
         textImages = findViewById(R.id.text_images);
         textVideos = findViewById(R.id.text_videos);
         textDocuments = findViewById(R.id.text_documents);
@@ -337,13 +339,7 @@ public class ThreadActivity extends AppCompatActivity
             }
         });
 
-        postsList = new ArrayList<Post>();
-
-
         sessionManager.setThreadId(thread_id);
-
-        postsListListView = findViewById(R.id.posts_list);
-        postsAdapter = new PostsAdapter(getApplicationContext(), postsList);
 
         try {
             jsonArray = new JSONArray(sessionManager.getProjects());
@@ -360,7 +356,33 @@ public class ThreadActivity extends AppCompatActivity
 
         general = new General();
 
+        // Create an S3 client
+        constants = new General();
+        AmazonS3 s3 = new AmazonS3Client(constants.getCredentialsProvider(ThreadActivity.this));
+        transferUtility = new TransferUtility(s3, ThreadActivity.this);
+
+        CACHE_FOLDER = ThreadActivity.this.getCacheDir().toString();
+
+        postsList = new ArrayList<Post>();
+        swipeRefreshLayout = findViewById(R.id.swipe_refresh_posts);
+        setSwipeRefreshLayout();
+        swipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                swipeRefreshLayout.setRefreshing(true);
+                swipeRefreshListener.onRefresh();
+            }
+        });
+
+        swipeRefreshLayout.setOnRefreshListener(swipeRefreshListener);
+        showComments();
+
+        sessionManager.setThreadId(thread_id);
+
+        postsListListView = findViewById(R.id.posts_list);
+        postsAdapter = new PostsAdapter(getApplicationContext(), postsList);
         postsListListView.setAdapter(postsAdapter);
+
         postsListListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
@@ -369,19 +391,10 @@ public class ThreadActivity extends AppCompatActivity
         });
 
         postsListListView.setOnTouchListener(new View.OnTouchListener() {
-
             public boolean onTouch(View v, MotionEvent event) {
                 return (event.getAction() == MotionEvent.ACTION_MOVE);
             }
         });
-
-        // Create an S3 client
-        constants = new General();
-        AmazonS3 s3 = new AmazonS3Client(constants.getCredentialsProvider(ThreadActivity.this));
-        transferUtility = new TransferUtility(s3, ThreadActivity.this);
-
-        CACHE_FOLDER = ThreadActivity.this.getCacheDir().toString();
-
 
         ////HORIZONTAL IMAGES SCROLLING
 
@@ -594,12 +607,12 @@ public class ThreadActivity extends AppCompatActivity
                             textAudios.setText(Constants.NO_AUDIOS);
                             mAudiosRecyclerView.setVisibility(View.GONE);
                         }
-                        if (threadBlog.getMultimediaVideosFiles().isEmpty()){
-                            textDocuments.setText(Constants.NO_VIDEOS);
+                        if (threadBlog.getMultimediaDocumentsFiles().isEmpty()){
+                            textDocuments.setText(Constants.NO_DOCUMENTS);
                             mDocumentsRecyclerView.setVisibility(View.GONE);
                         }
-                        if (threadBlog.getMultimediaDocumentsFiles().isEmpty()){
-                            textVideos.setText(Constants.NO_DOCUMENTS);
+                        if (threadBlog.getMultimediaVideosFiles().isEmpty()){
+                            textVideos.setText(Constants.NO_VIDEOS);
                             mVideosRecyclerView.setVisibility(View.GONE);
                         }
                     }
@@ -611,69 +624,7 @@ public class ThreadActivity extends AppCompatActivity
             public void onErrorResponse(VolleyError result) {
 
             }
-        }, ThreadActivity.this, thread_id);
-    }
-
-
-    private AlertDialog AskOptionThread()
-    {
-        AlertDialog myQuittingDialogBoxThread =new AlertDialog.Builder(this)
-                .setTitle("Salir")
-                .setMessage("¿Estás seguro que quieres eliminar este post?")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        VolleyDeleteThread.volleyDeleteThread(new VolleyJSONCallback() {
-                            @Override
-                            public void onSuccess(JSONObject result) {
-                                sessionManager.setSection(result.toString());
-                            }
-
-                            @Override
-                            public void onErrorResponse(VolleyError result) {
-                                Log.i("ERROR","erroooooor");
-                            }
-                        },ThreadActivity.this,sessionManager.getSection(),thread_id);
-                        finish();
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
-                .create();
-        return myQuittingDialogBoxThread;
-
-    }
-    private AlertDialog AskOptionPost(final String post_id)
-    {
-        AlertDialog myQuittingDialogBoxPost =new AlertDialog.Builder(this)
-                .setTitle("Salir")
-                .setMessage("¿Estás seguro que quieres eliminar este comentario?")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        String postId = post_id;
-                        VolleyDeletePost.volleyDeletePost(new VolleyStringCallback() {
-                            @Override
-                            public void onSuccess(String result) {
-                                finish();
-                            }
-
-                            @Override
-                            public void onErrorResponse(VolleyError result) {
-                                Toast.makeText(getApplicationContext(),"No se pudo eliminar el comentario.",Toast.LENGTH_SHORT).show();
-                            }
-                        },ThreadActivity.this,postId);
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
-                .create();
-        return myQuittingDialogBoxPost;
-
+        }, ThreadActivity.this, getIntent().getStringExtra("ID"));
     }
 
     public Boolean getEditing() {return editing;}
@@ -1240,6 +1191,249 @@ public class ThreadActivity extends AppCompatActivity
         mRecorder.release();
         mRecorder = null;
         multimediaAudioAdapter.notifyDataSetChanged();
+    }
+
+    public void setSwipeRefreshLayout() {
+        swipeRefreshListener = (new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                showComments();
+            }
+        });
+    }
+
+    private void showComments(){
+        boolean is_connected = Connectivity.isConnected(getApplicationContext());
+        if(is_connected) {
+            VolleyGetThread.volleyGetThread(new VolleyStringCallback() {
+                @Override
+                public void onSuccess(String result) {
+                    Post post;
+                    JSONArray jsonPosts;
+                    try {
+                        JSONObject request = new JSONObject(result);
+                        JSONObject user = new JSONObject(request.getString("user"));
+
+                        jsonPosts = new JSONArray(request.getString("posts"));
+                        //postsList.clear();
+
+                        mContainerView.removeAllViews();
+
+                        for (int i = 0; i < jsonPosts.length(); i++) {
+                            //post = new Post();
+                            LayoutInflater inflater =(LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                            View myView = inflater.inflate(R.layout.thread_comments_list_item, null);
+
+                            Log.i("JSON", jsonPosts.get(i).toString());
+                            final JSONObject object = (JSONObject) jsonPosts.get(i);
+                            final String post_id = object.get("id").toString();
+                            JSONObject object2 = new JSONObject(object.getString("user"));
+                            final String postUserId = object2.get("id").toString();
+
+                            final Button editPostButton = myView.findViewById(R.id.btn_edit);
+                            final Button deletePostButton = (Button) myView.findViewById(R.id.btn_delete);
+                            final Button updatePostButton = myView.findViewById(R.id.btn_update);
+
+                            final TextView textPost = myView.findViewById(R.id.text_post);
+                            final TextView textPostTimestamp = myView.findViewById(R.id.text_post_timestamp);
+                            final TextView textPostAuthorFullName = myView.findViewById(R.id.text_post_author_fullname);
+                            final TextView textPostAuthorPosition = myView.findViewById(R.id.text_post_author_position);
+
+                            final EditText editPostText = myView.findViewById(R.id.edit_post_text);
+
+                            String authorFullName = object2.getString("first_name")+" "+object2.getString("last_name");
+                            textPost.setText(object.getString("text"));
+                            textPostTimestamp.setText(object.getString("updated_at"));
+                            textPostAuthorFullName.setText(authorFullName);
+                            textPostAuthorPosition.setText(object2.getString("position"));
+
+
+                            if (sessionManager.getUserId().equals(postUserId) ||
+                                    sessionManager.getUserAdmin().equals(Constants.S_ADMIN_ADMIN)){
+                                editPostButton.setVisibility(myView.VISIBLE);
+                                deletePostButton.setVisibility(myView.VISIBLE);
+                            }
+                            else {
+                                editPostButton.setVisibility(myView.GONE);
+                                deletePostButton.setVisibility(myView.GONE);
+                            }
+
+                            mContainerView.addView(myView);
+
+                            deletePostButton.setOnClickListener(new View.OnClickListener(){
+                                @Override
+                                public void onClick(View v) {
+                                    AlertDialog diaBox = AskOptionPost(post_id);
+                                    diaBox.show();
+                                }
+
+                            });
+
+                            editPostButton.setOnClickListener(new View.OnClickListener(){
+                                @Override
+                                public void onClick(View v) {
+
+                                    editPostButton.setVisibility(View.GONE);
+                                    deletePostButton.setVisibility(View.GONE);
+                                    textPost.setVisibility(View.GONE);
+                                    updatePostButton.setVisibility(View.VISIBLE);
+                                    editPostText.setVisibility(View.VISIBLE);
+                                    editPostText.setText(textPost.getText().toString());
+                                    editPostText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                                        @Override
+                                        public void onFocusChange(View v, boolean hasFocus) {
+                                            if(hasFocus){
+                                                editPostText.setSelection(editPostText.getText().length());
+                                            }
+                                        }
+                                    });
+                                    editPostText.requestFocus();
+                                }
+
+                            });
+                            updatePostButton.setOnClickListener(new View.OnClickListener(){
+                                @Override
+                                public void onClick(View v) {
+
+                                    VolleyPutPost.volleyPutPost(new VolleyStringCallback() {
+                                        @Override
+                                        public void onSuccess(String result) {
+                                            editPostButton.setVisibility(View.VISIBLE);
+                                            deletePostButton.setVisibility(View.VISIBLE);
+                                            textPost.setVisibility(View.VISIBLE);
+                                            updatePostButton.setVisibility(View.GONE);
+                                            editPostText.setVisibility(View.GONE);
+                                            onRestart();
+                                        }
+
+                                        @Override
+                                        public void onErrorResponse(VolleyError result) {
+                                            Toast.makeText(getApplicationContext(),"No se pudo editar el comentario.",
+                                                    Toast.LENGTH_SHORT).show();
+                                        }
+                                    },ThreadActivity.this,editPostText.getText().toString(),Integer.parseInt(post_id));
+
+                                    editPostButton.setVisibility(View.GONE);
+                                    deletePostButton.setVisibility(View.GONE);
+                                    textPost.setVisibility(View.GONE);
+                                    updatePostButton.setVisibility(View.VISIBLE);
+                                    editPostText.setVisibility(View.VISIBLE);
+                                }
+                            });
+                        }
+
+                        LayoutInflater inflater =(LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                        View myView = inflater.inflate(R.layout.thread_new_comment, null);
+                        mContainerView.addView(myView);
+
+                        createPost = (AppCompatButton) myView.findViewById(R.id.button_newpost);
+                        newComment = (EditText) myView.findViewById(R.id.edittext_new_comment);
+
+                        createPost.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+
+                                Log.i("TEXT",newComment.getText().toString());
+                                VolleyPostPosts.volleyPostPosts(new VolleyStringCallback() {
+                                    @Override
+                                    public void onSuccess(String result) {
+                                        onRestart();
+                                    }
+
+                                    @Override
+                                    public void onErrorResponse(VolleyError result) {
+                                        Toast.makeText(getApplicationContext(),"No se pudo publicar el comentario."
+                                                ,Toast.LENGTH_SHORT).show();
+                                    }
+                                },ThreadActivity.this,newComment.getText().toString());
+                            }
+                        });
+                    } catch (Exception e) {
+                    }
+                }
+                @Override
+                public void onErrorResponse(VolleyError result) {
+
+                }
+            }, getApplicationContext(), threadBlog.getId());
+        } else {
+
+        }
+        swipeRefreshLayout.setRefreshing(false);
+    }
+
+    private AlertDialog AskOptionThread()
+    {
+        AlertDialog myQuittingDialogBoxThread =new AlertDialog.Builder(this)
+                .setTitle("Salir")
+                .setMessage("¿Estás seguro que quieres eliminar este post?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        VolleyDeleteThread.volleyDeleteThread(new VolleyJSONCallback() {
+                            @Override
+                            public void onSuccess(JSONObject result) {
+                                sessionManager.setSection(result.toString());
+                            }
+
+                            @Override
+                            public void onErrorResponse(VolleyError result) {
+                                Log.i("ERROR","erroooooor");
+                            }
+                        },ThreadActivity.this,sessionManager.getSection(),thread_id);
+                        finish();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .create();
+        return myQuittingDialogBoxThread;
+
+    }
+    private AlertDialog AskOptionPost(final String post_id)
+    {
+        AlertDialog myQuittingDialogBoxPost =new AlertDialog.Builder(this)
+                .setTitle("Salir")
+                .setMessage("¿Estás seguro que quieres eliminar este comentario?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        String postId = post_id;
+                        VolleyDeletePost.volleyDeletePost(new VolleyStringCallback() {
+                            @Override
+                            public void onSuccess(String result) {
+                                onRestart();
+                            }
+
+                            @Override
+                            public void onErrorResponse(VolleyError result) {
+                                Toast.makeText(getApplicationContext(),"No se pudo eliminar el comentario.",Toast.LENGTH_SHORT).show();
+                            }
+                        },ThreadActivity.this,postId);
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .create();
+        return myQuittingDialogBoxPost;
+
+    }
+
+    @Override
+    protected void onRestart(){
+        super.onRestart();
+        swipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                swipeRefreshLayout.setRefreshing(true);
+                swipeRefreshListener.onRefresh();
+            }
+        });
     }
 
 }

@@ -2,6 +2,7 @@ package com.construapp.construapp.microblog;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
@@ -18,12 +19,17 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,10 +38,13 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.android.volley.VolleyError;
 import com.construapp.construapp.R;
+import com.construapp.construapp.api.VolleyDeleteThread;
+import com.construapp.construapp.api.VolleyGetThread;
 import com.construapp.construapp.api.VolleyGetThreads;
 import com.construapp.construapp.api.VolleyPostS3;
 import com.construapp.construapp.api.VolleyPostThread;
 import com.construapp.construapp.api.VolleyPutThread;
+import com.construapp.construapp.db.Connectivity;
 import com.construapp.construapp.lessons.LessonFormActivity;
 import com.construapp.construapp.listeners.VolleyJSONCallback;
 import com.construapp.construapp.listeners.VolleyStringCallback;
@@ -43,6 +52,7 @@ import com.construapp.construapp.main.MainActivity;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.General;
 import com.construapp.construapp.models.MultimediaFile;
+import com.construapp.construapp.models.Post;
 import com.construapp.construapp.models.SessionManager;
 import com.construapp.construapp.models.ThreadBlog;
 import com.construapp.construapp.multimedia.MultimediaAudioAdapter;
@@ -51,6 +61,7 @@ import com.construapp.construapp.multimedia.MultimediaPictureAdapter;
 import com.construapp.construapp.multimedia.MultimediaVideoAdapter;
 import com.construapp.construapp.utils.RealPathUtil;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -273,7 +284,8 @@ public class NewThreadActivity extends Activity {
                                 @Override
                                 public void onErrorResponse(VolleyError result) {
                                 }
-                            }, NewThreadActivity.this, editTitle.getText().toString(), editDescription.getText().toString(),
+                            },
+                                    NewThreadActivity.this, editTitle.getText().toString(), editDescription.getText().toString(),
                                     new_thread_blog_id, selectedMultimediaFiles, threadBlog);
                         } catch (Exception e) {
                             Toast.makeText(NewThreadActivity.this, "Error con archivos multimedia", Toast.LENGTH_LONG).show();
