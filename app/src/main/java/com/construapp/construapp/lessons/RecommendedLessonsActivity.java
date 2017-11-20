@@ -24,6 +24,7 @@ import com.construapp.construapp.api.VolleyGetFavouriteLessons;
 import com.construapp.construapp.api.VolleyGetRecommendedLessons;
 import com.construapp.construapp.db.Connectivity;
 import com.construapp.construapp.dbTasks.DeleteLessonTable;
+import com.construapp.construapp.dbTasks.GetLessonTask;
 import com.construapp.construapp.dbTasks.GetLessonsTask;
 import com.construapp.construapp.listeners.VolleyStringCallback;
 import com.construapp.construapp.main.LessonsAdapter;
@@ -57,6 +58,8 @@ public class RecommendedLessonsActivity extends AppCompatActivity
 
     private LessonsAdapter lessonsAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private TextView textNoRecommendedLessons;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +68,8 @@ public class RecommendedLessonsActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(Constants.TITLE_RECOMMENDED_LESSONS);
         setSupportActionBar(toolbar);
+
+        textNoRecommendedLessons = findViewById(R.id.text_no_recommended_lessons);
 
         sessionManager = new SessionManager(RecommendedLessonsActivity.this);
         navigationView = findViewById(R.id.nav_view);
@@ -169,26 +174,18 @@ public class RecommendedLessonsActivity extends AppCompatActivity
                 @Override
                 public void onSuccess(String result) {
                     JSONArray jsonLessons;
+                    sessionManager.setFavouriteLessons(result);
                     try {
                         jsonLessons = new JSONArray(result);
                         for (int i = 0; i < jsonLessons.length(); i++) {
-                            Lesson lesson = new Lesson();
                             JSONObject object = (JSONObject) jsonLessons.get(i);
                             Log.i("oo",object.toString());
-                            lesson.setName(object.get("name").toString());
-                            lesson.setSummary(object.get("summary").toString());
-                            lesson.setId(object.get("id").toString());
-                            lesson.setMotivation(object.get("motivation").toString());
-                            lesson.setLearning(object.get("learning").toString());
-                            lesson.setValidation(object.get("validation").toString());
-                            lesson.setAuthor_id(object.get("user_id").toString());
-                            lesson.setProject_id(object.get("project_id").toString());
-                            lesson.setCompany_id(object.get("company_id").toString());
-                            lesson.setReject_comment(object.get("reject_comment").toString());
-                            if (lesson.getValidation() == Constants.R_VALIDATED) {
-                                lessonList.add(lesson);
+                            if (object.get("validation").toString().equals(Constants.R_VALIDATED)) {
+                                lessonList.add(new GetLessonTask(RecommendedLessonsActivity.this, object.get("id").toString()).execute().get());
                             }
                         }
+                        if (lessonList.isEmpty())textNoRecommendedLessons.setVisibility(View.VISIBLE);
+                        lessonsAdapter.notifyDataSetChanged();
                     } catch (Exception e) {
                     }
                 }
