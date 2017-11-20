@@ -12,23 +12,6 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.construapp.construapp.R;
-import com.construapp.construapp.models.Section;
-
-import java.util.List;
-
-
-import android.content.Context;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.TextView;
-
-import com.construapp.construapp.R;
-import com.construapp.construapp.models.Lesson;
-import com.construapp.construapp.models.Section;
-import com.construapp.construapp.models.Threadblog;
 
 import java.util.List;
 
