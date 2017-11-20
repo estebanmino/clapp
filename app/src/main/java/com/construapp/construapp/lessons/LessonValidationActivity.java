@@ -154,7 +154,7 @@ public class LessonValidationActivity extends LessonBaseActivity {
         picturesLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mPicturesRecyclerView = findViewById(R.id.recycler_horizontal_pictures);
         mPicturesRecyclerView.setLayoutManager(picturesLayoutManager);
-        multimediaPictureAdapter = new MultimediaPictureAdapter(lesson.getMultimediaPicturesFiles(),LessonValidationActivity.this,lesson);
+        multimediaPictureAdapter = new MultimediaPictureAdapter(lesson.getMultimediaPicturesFiles(),LessonValidationActivity.this);
         mPicturesRecyclerView.setAdapter(multimediaPictureAdapter);
 
         //AUDIOS SCROLLING
@@ -162,7 +162,7 @@ public class LessonValidationActivity extends LessonBaseActivity {
         audiosLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mAudiosRecyclerView = findViewById(R.id.recycler_horizontal_audios);
         mAudiosRecyclerView.setLayoutManager(audiosLayoutManager);
-        multimediaAudioAdapter = new MultimediaAudioAdapter(lesson.getMultimediaAudiosFiles(),LessonValidationActivity.this,lesson);
+        multimediaAudioAdapter = new MultimediaAudioAdapter(lesson.getMultimediaAudiosFiles(),LessonValidationActivity.this);
         mAudiosRecyclerView.setAdapter(multimediaAudioAdapter);
 
         //VIDEOS SCROLLING
@@ -170,7 +170,7 @@ public class LessonValidationActivity extends LessonBaseActivity {
         videosLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mVideosRecyclerView = findViewById(R.id.recycler_horizontal_videos);
         mVideosRecyclerView.setLayoutManager(videosLayoutManager);
-        multimediaVideoAdapter = new MultimediaVideoAdapter(lesson.getMultimediaVideosFiles(),LessonValidationActivity.this,lesson);
+        multimediaVideoAdapter = new MultimediaVideoAdapter(lesson.getMultimediaVideosFiles(),LessonValidationActivity.this);
         mVideosRecyclerView.setAdapter(multimediaVideoAdapter);
 
         //DOCUMENTS SCROLLING
@@ -178,7 +178,7 @@ public class LessonValidationActivity extends LessonBaseActivity {
         documentsLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mDocumentsRecyclerView = findViewById(R.id.recycler_horizontal_documents);
         mDocumentsRecyclerView.setLayoutManager(documentsLayoutManager);
-        multimediaDocumentAdapter = new MultimediaDocumentAdapter(lesson.getMultimediaDocumentsFiles(),LessonValidationActivity.this,lesson);
+        multimediaDocumentAdapter = new MultimediaDocumentAdapter(lesson.getMultimediaDocumentsFiles(),LessonValidationActivity.this);
         mDocumentsRecyclerView.setAdapter(multimediaDocumentAdapter);
 
 
@@ -365,39 +365,50 @@ public class LessonValidationActivity extends LessonBaseActivity {
 
                     String[] pictureArray = picturePathsList.toArray(new String[0]);
                     for (String path: pictureArray){
-                        lesson.getMultimediaPicturesFiles().add(new MultimediaFile(
-                                Constants.S3_LESSONS_PATH+"/"+lesson.getId()+"/"+
-                                        Constants.S3_IMAGES_PATH,CACHE_FOLDER+"/"+path.substring(path.lastIndexOf("/")+1,path.length()-1),
-                                path.replace("\"", ""),transferUtility,0));
+                        lesson.getMultimediaPicturesFiles().add(
+                                new MultimediaFile(
+                                        Constants.S3_LESSONS_PATH,
+                                        Constants.S3_IMAGES_PATH,
+                                        CACHE_FOLDER+ "/"+path.substring(path.lastIndexOf("/")+1,path.length()-1),
+                                        transferUtility,
+                                        lesson.getId(),
+                                        notAdded));
                     }
                     multimediaPictureAdapter.notifyDataSetChanged();
 
                     for (String videoPath: videosPathsList) {
-                        MultimediaFile documentMultimedia = new MultimediaFile(
-                                Constants.S3_LESSONS_PATH+"/"+lesson.getId()+"/"+
-                                        Constants.S3_VIDEOS_PATH,ABSOLUTE_STORAGE_PATH+"/"+PROJECT_FOLDER+"/"+
-                                videoPath.substring(videoPath.lastIndexOf("/")+1,videoPath.length()-1),
-                                videoPath.replace("\"", ""),transferUtility,notAdded);
-                        lesson.getMultimediaVideosFiles().add(documentMultimedia);
+                        lesson.getMultimediaPicturesFiles().add(
+                                new MultimediaFile(
+                                        Constants.S3_LESSONS_PATH,
+                                        Constants.S3_VIDEOS_PATH,
+                                        CACHE_FOLDER+ "/"+videoPath.substring(videoPath.lastIndexOf("/")+1,videoPath.length()-1),
+                                        transferUtility,
+                                        lesson.getId(),
+                                        notAdded));
                     }
                     multimediaVideoAdapter.notifyDataSetChanged();
 
                     for (String audioPath: audioPathsList) {
-                        MultimediaFile audioMultimedia = new MultimediaFile(
-                                Constants.S3_LESSONS_PATH+"/"+lesson.getId()+"/"+
-                                        Constants.S3_AUDIOS_PATH,CACHE_FOLDER+"/"+audioPath.substring(audioPath.lastIndexOf("/")+1,audioPath.length()-1),
-                                audioPath.replace("\"", ""),transferUtility,0);
-                        lesson.getMultimediaAudiosFiles().add(audioMultimedia);
+                        lesson.getMultimediaAudiosFiles().add(
+                                new MultimediaFile(
+                                        Constants.S3_LESSONS_PATH,
+                                        Constants.S3_VIDEOS_PATH,
+                                        CACHE_FOLDER+ "/"+audioPath.substring(audioPath.lastIndexOf("/")+1,audioPath.length()-1),
+                                        transferUtility,
+                                        lesson.getId(),
+                                        notAdded));
                     }
                     multimediaAudioAdapter.notifyDataSetChanged();
 
                     for (String documentPath: documentPathsList) {
-                        MultimediaFile documentMultimedia = new MultimediaFile(
-                                Constants.S3_LESSONS_PATH+"/"+lesson.getId()+"/"+
-                                        Constants.S3_DOCS_PATH,ABSOLUTE_STORAGE_PATH+"/"+
-                                PROJECT_FOLDER+"/"+documentPath.substring(documentPath.lastIndexOf("/")+1,documentPath.length()-1),
-                                documentPath.replace("\"", ""),transferUtility,0);
-                        lesson.getMultimediaDocumentsFiles().add(documentMultimedia);
+                        lesson.getMultimediaDocumentsFiles().add(
+                            new MultimediaFile(
+                                Constants.S3_LESSONS_PATH,
+                                Constants.S3_VIDEOS_PATH,
+                                CACHE_FOLDER+ "/"+documentPath.substring(documentPath.lastIndexOf("/")+1,documentPath.length()-1),
+                                transferUtility,
+                                lesson.getId(),
+                                notAdded));
                     }
                     multimediaDocumentAdapter.notifyDataSetChanged();
 

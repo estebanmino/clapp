@@ -12,7 +12,6 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.construapp.construapp.R;
 import com.construapp.construapp.cache.LRUCache;
 import com.construapp.construapp.models.General;
-import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.models.MultimediaFile;
 import com.construapp.construapp.threading.MultimediaAudioDownloader;
 
@@ -28,8 +27,8 @@ public class MultimediaAudioAdapter extends MultimediaAdapter {
 
     private TransferUtility transferUtility;
 
-    public MultimediaAudioAdapter(ArrayList<MultimediaFile> mMultimediaFiles, Context context,Lesson thisLesson) {
-        super(mMultimediaFiles, context,thisLesson);
+    public MultimediaAudioAdapter(ArrayList<MultimediaFile> mMultimediaFiles, Context context) {
+        super(mMultimediaFiles, context);
     }
 
     @Override
@@ -38,7 +37,7 @@ public class MultimediaAudioAdapter extends MultimediaAdapter {
         MultimediaFile multimediaFile = super.getmMultimediaFiles().get(position);
         multimediaFile.setArrayPosition(position);
 
-        if (multimediaFile.getFileS3Key() != null && LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key()) != null) {
+        if (multimediaFile.getApiFileKey() != null && LRUCache.getInstance().getLru().get(multimediaFile.getApiFileKey()) != null) {
         }
         else if (multimediaFile.getmPath() != null && new File(multimediaFile.getmPath()).exists()) {
         }
@@ -49,7 +48,7 @@ public class MultimediaAudioAdapter extends MultimediaAdapter {
             MultimediaAudioDownloader downloadAudioMultimedia = new MultimediaAudioDownloader(
                     new File(multimediaFile.getmPath()),
                     transferUtility,
-                    multimediaFile.getFileS3Key(),
+                    multimediaFile.getApiFileKey(),
                     holder,
                     multimediaFile);
             holder.progressBar.setVisibility(View.VISIBLE);

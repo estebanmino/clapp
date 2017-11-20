@@ -7,12 +7,17 @@ package com.construapp.construapp.models;
 public interface Constants {
 
     // General
-    String BASE_URL = "http://construapp-api.ing.puc.cl";
+    String BASE_URL = "http://54.207.39.160";
     String COMPANIES = "companies";
     String MICROBLOG = "microblogs";
     String SECTIONS = "sections";
     String THREADS = "threads";
+    String COMMENTS = "comments";
+    String POSTS = "posts";
+    String POST = "Post";
     String LESSONS = "lessons";
+    String RECOMMEND = "recommend";
+    String ATTRIBUTES = "attributes";
     String USERS = "users";
     String GET_PROJECTS = "get_projects";
     String GET_PERMISSION = "get_permission";
@@ -25,6 +30,8 @@ public interface Constants {
     String FAVOURITES = "favourites";
     String ALL_PROJECTS_KEY = "null";
     String ALL_PROJECTS_NAME = "Todos los proyectos";
+    String SEARCH = "search";
+    String PATTERN = "pattern";
 
     String API_VALIDATE = "validate";
     String API_SEND = "send";
@@ -54,6 +61,11 @@ public interface Constants {
     String SP_HAS_PENDING_VALIDATIONS = "has_pending_validations";
     String SP_PENDING_VALIDATIONS = "pending_validations";
     String SP_FAVOURITE_LESSONS = "favourite_lessons";
+    String SP_THREAD_ID = "thread_id";
+    String SP_DISCIPLINES = "disciplines";
+    String SP_CLASSIFICATIONS = "classifications";
+    String SP_DEPARTMENTS = "departments";
+    String SP_TAGS = "tags";
 
     //Queries
     String Q_AUTHORIZATION = "Authorization";
@@ -68,6 +80,7 @@ public interface Constants {
     String S3_AUDIOS_PATH = "audios";
     String S3_DOCS_PATH = "docs";
     String S3_LESSONS_PATH = "lessons";
+    String S3_THREADS_PATH = "threads";
 
     //MMEDIA
     String M_APP_DIRECTORY = "Clapp";
@@ -85,8 +98,10 @@ public interface Constants {
 
     //BUNDLE FRAGMENTS
     String B_LESSON_ARRAY_LIST = "lesson_array_list";
-    String B_LESSON_COMMENT = "lesson_COMMENT";
+    String B_LESSON_REJECT_COMMENT = "lesson_reject_comment";
     String B_SECTION_ARRAY_LIST = "sections_array_list";
+    String B_LESSON_COMMENTS = "lesson_comment";
+    String B_LESSON_ID = "lesson_id";
 
     //MESSAGES
     String NO_ATTACHMENTS = "NO EXISTEN ARCHIVOS ADJUNTOS";
@@ -97,6 +112,16 @@ public interface Constants {
 
     //TITLES
     String TITLE_FAVOURITE_LESSONS = "Lecciones favoritas";
+    String TITLE_RECOMMENDED_LESSONS = "Lecciones recomendadas";
 
+    //IMAGES
+    String IMAGE_ICC_PROFILE = "ICC Profile";
+    String IMAGE_XMP = "XMP";
+
+    //TAGS
+    String TAG_TAGS = "TAG_TAGS";
+    String TAG_DISCIPLINES = "TAG_DISCIPLINES";
+    String TAG_CLASSIFICATIONS = "TAG_CLASSIFICATIONS";
+    String TAG_DEPARTMENTS = "TAG_DEPARTMENTS";
 
 }

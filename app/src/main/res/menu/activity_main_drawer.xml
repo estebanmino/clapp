@@ -1,12 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-
     <group android:id="@+id/lessons_menu">
         <item android:title="Favoritas">
             <menu>
                 <item
                     android:id="@+id/to_favourites"
                     android:title="Lecciones Favoritas" />
+            </menu>
+        </item>
+
+    </group>
+
+    <group android:id="@+id/recommended_menu">
+        <item android:title="Recomendadas">
+            <menu>
+                <item
+                    android:id="@+id/to_recommended"
+                    android:title="Lecciones Recomendadas" />
             </menu>
         </item>
 

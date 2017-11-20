@@ -9,6 +9,7 @@ import android.media.ExifInterface;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,14 +17,19 @@ import android.view.ViewGroup;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.construapp.construapp.PanoramicViewActivity;
 import com.construapp.construapp.R;
 import com.construapp.construapp.cache.LRUCache;
+import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.General;
-import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.models.MultimediaFile;
 import com.construapp.construapp.threading.MultimediaPictureDownloader;
+import com.drew.imaging.ImageMetadataReader;
+import com.drew.metadata.Directory;
+import com.drew.metadata.Metadata;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -37,8 +43,9 @@ public class MultimediaPictureAdapter extends MultimediaAdapter {
 
     private static String FILE_TYPE = "image/*";
 
-    public MultimediaPictureAdapter(ArrayList<MultimediaFile> mMultimediaFiles, Context context, Lesson thisLesson) {
-        super(mMultimediaFiles, context,thisLesson);
+
+    public MultimediaPictureAdapter(ArrayList<MultimediaFile> mMultimediaFiles, Context context) {
+        super(mMultimediaFiles, context);
     }
 
     @Override
@@ -47,8 +54,19 @@ public class MultimediaPictureAdapter extends MultimediaAdapter {
         MultimediaFile multimediaFile = super.getmMultimediaFiles().get(position);
         multimediaFile.setArrayPosition(position);
 
-        if (multimediaFile.getFileS3Key() != null && LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key()) != null) {
-            Bitmap bitmap =  (Bitmap)LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key());
+        try {
+            Metadata metadata = ImageMetadataReader.readMetadata(new File(multimediaFile.getmPath()));
+            for (Directory directory : metadata.getDirectories()) {
+                if(directory.getName().equals(Constants.IMAGE_XMP)) {
+                    holder.isPanoramic = true;
+                    holder.imagePanoramic.setVisibility(View.VISIBLE);
+                    break;
+                }
+            }
+        } catch (Exception e) {}
+
+        if (multimediaFile.getApiFileKey() != null && LRUCache.getInstance().getLru().get(multimediaFile.getApiFileKey()) != null) {
+            Bitmap bitmap =  (Bitmap)LRUCache.getInstance().getLru().get(multimediaFile.getApiFileKey());
             holder.imageThumbnail.setImageBitmap(ThumbnailUtils.extractThumbnail(bitmap, 80, 80));
         }
         else if (multimediaFile.getmPath() != null && new File(multimediaFile.getmPath()).exists()) {
@@ -60,10 +78,11 @@ public class MultimediaPictureAdapter extends MultimediaAdapter {
             General constants = new General();
             AmazonS3 s3 = new AmazonS3Client(constants.getCredentialsProvider(getContext()));
             transferUtility = new TransferUtility(s3, getContext());
+
             MultimediaPictureDownloader downloadPictureMultimedia = new MultimediaPictureDownloader(
                     new File(multimediaFile.getmPath()),
                     transferUtility,
-                    multimediaFile.getFileS3Key(),
+                    multimediaFile.getApiFileKey(),
                     holder,
                     multimediaFile);
             holder.progressBar.setVisibility(View.VISIBLE);
@@ -87,20 +106,28 @@ public class MultimediaPictureAdapter extends MultimediaAdapter {
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent();
-                    intent.setAction(Intent.ACTION_VIEW);
+
                     //IF CACHE
-                    if (multimediaFile.getFileS3Key() != null && LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key()) != null) {
-                        String path = MediaStore.Images.Media.insertImage(getContext().getContentResolver(),
-                                (Bitmap) LRUCache.getInstance().getLru().get(multimediaFile.getFileS3Key()), "Title", null);
-                        intent.setDataAndType(Uri.parse(path), FILE_TYPE);
+                    if (MultimediaViewHolder.super.isPanoramic) {
+                        view.getContext().startActivity(PanoramicViewActivity.getIntent(getContext(),multimediaFile.getmPath()));
                     } else {
-                        intent.setDataAndType(Uri.parse(
-                                Uri.fromFile(new File(MultimediaViewHolder.super.multimediaFile.getmPath())).toString()
-                        ), FILE_TYPE);
+                        Intent intent = new Intent();
+
+                        intent.setAction(Intent.ACTION_VIEW);
+
+                        if (multimediaFile.getApiFileKey() != null && LRUCache.getInstance().getLru().get(multimediaFile.getApiFileKey()) != null) {
+                            String path = MediaStore.Images.Media.insertImage(getContext().getContentResolver(),
+                                    (Bitmap) LRUCache.getInstance().getLru().get(multimediaFile.getApiFileKey()), "Title", null);
+                            intent.setDataAndType(Uri.parse(path), FILE_TYPE);
+                        } else {
+                            File file = new File(getContext().getCacheDir(), multimediaFile.getFileName());
+                            intent.setDataAndType(Uri.parse(multimediaFile.getmPath()
+                            ), FILE_TYPE);
+                        }
+                        view.getContext().startActivity(intent);
                     }
-                    view.getContext().startActivity(intent);
                 }
+
             });
         }
 

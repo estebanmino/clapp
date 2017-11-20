@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.media.MediaScannerConnection;
@@ -22,15 +23,15 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageSwitcher;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
-import com.construapp.construapp.lessonForm.RealPathUtil;
+import com.construapp.construapp.utils.RealPathUtil;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.General;
 import com.construapp.construapp.models.Lesson;
@@ -40,9 +41,11 @@ import com.construapp.construapp.multimedia.MultimediaAudioAdapter;
 import com.construapp.construapp.multimedia.MultimediaDocumentAdapter;
 import com.construapp.construapp.multimedia.MultimediaPictureAdapter;
 import com.construapp.construapp.multimedia.MultimediaVideoAdapter;
+import com.ryanpope.tagedittext.TagEditText;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class LessonBaseActivity extends AppCompatActivity {
 
@@ -61,6 +64,7 @@ public class LessonBaseActivity extends AppCompatActivity {
     public static final String EXTENSION_AUDIO_FORMAT = ".3gp";
     public static final String VIDEO_FORMAT = ".mp4";
 
+    public Boolean editing = false;
 
     //XML ELEMENTS
     public TextView textLessonName;
@@ -124,6 +128,7 @@ public class LessonBaseActivity extends AppCompatActivity {
 
     public int notAdded = 0;
     public int added = 1;
+
     private Boolean multimediaIsOpen = false;
 
     public LinearLayout linearLayoutMultimedia;
@@ -131,6 +136,14 @@ public class LessonBaseActivity extends AppCompatActivity {
 
     public ImageView imageSetFavourite;
     public ImageView imageUndoFavourite;
+
+    public TagEditText tagEditTags;
+
+    public LinearLayout linearLayoutTriggers;
+    public Button btnTriggerError;
+    public Button btnTriggerOmision;
+    public Button btnTriggerGoodPractice;
+    public Button btnTriggerImprovement;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -478,7 +491,14 @@ public class LessonBaseActivity extends AppCompatActivity {
                                 }
                             });
 
-                    lesson.getMultimediaPicturesFiles().add(new MultimediaFile(Constants.S3_IMAGES_PATH,mPath, null,transferUtility,added));
+                    lesson.getMultimediaPicturesFiles().add(
+                            new MultimediaFile(
+                                    Constants.S3_LESSONS_PATH,
+                                    Constants.S3_IMAGES_PATH,
+                                    mPath,
+                                    transferUtility,
+                                    lesson.getId(),
+                                    added));
                     multimediaPictureAdapter.notifyDataSetChanged();
                     break;
 
@@ -498,7 +518,14 @@ public class LessonBaseActivity extends AppCompatActivity {
                     //imageAttachment.setImageDrawable(ContextCompat.getDrawable(ChatRoomActivity.this, R.drawable.ic_play_video));
                     //imageAttachment.setVisibility(View.VISIBLE);
 
-                    lesson.getMultimediaVideosFiles().add(new MultimediaFile(Constants.S3_VIDEOS_PATH,mPath, null,transferUtility,added));
+                    lesson.getMultimediaVideosFiles().add(
+                            new MultimediaFile(
+                                    Constants.S3_LESSONS_PATH,
+                                    Constants.S3_VIDEOS_PATH,
+                                    mPath,
+                                    transferUtility,
+                                    lesson.getId(),
+                                    added));
                     multimediaVideoAdapter.notifyDataSetChanged();
 
                     break;
@@ -513,7 +540,14 @@ public class LessonBaseActivity extends AppCompatActivity {
                             mPath = RealPathUtil.getRealPathFromURI_API19(getApplicationContext(), data.getData());
                         }
 
-                        lesson.getMultimediaPicturesFiles().add(new MultimediaFile(Constants.S3_IMAGES_PATH,mPath, null,transferUtility,added));
+                        lesson.getMultimediaPicturesFiles().add(
+                                new MultimediaFile(
+                                    Constants.S3_LESSONS_PATH,
+                                    Constants.S3_IMAGES_PATH,
+                                    mPath,
+                                    transferUtility,
+                                    lesson.getId(),
+                                        added));
                         multimediaPictureAdapter.notifyDataSetChanged();
 
 
@@ -528,8 +562,14 @@ public class LessonBaseActivity extends AppCompatActivity {
                     } else {
                         mPath = RealPathUtil.getRealPathFromURI_API19(getApplicationContext(), data.getData());
                     }
-                    lesson.getMultimediaDocumentsFiles().add(new MultimediaFile(Constants.S3_DOCS_PATH,
-                            mPath,null, transferUtility,added));
+                    lesson.getMultimediaDocumentsFiles().add(
+                            new MultimediaFile(
+                                Constants.S3_LESSONS_PATH,
+                                Constants.S3_DOCS_PATH,
+                                mPath,
+                                transferUtility,
+                                lesson.getId(),
+                                    added));
                     multimediaDocumentAdapter.notifyDataSetChanged();
                     break;
 
@@ -688,7 +728,13 @@ public class LessonBaseActivity extends AppCompatActivity {
             Long tsLong = System.currentTimeMillis() / 1000;
             String ts = tsLong.toString();
             MultimediaFile audioMultimedia = new MultimediaFile(
-                    Constants.S3_AUDIOS_PATH, ABSOLUTE_STORAGE_PATH + ts.toString() + EXTENSION_AUDIO_FORMAT, null,transferUtility,added);
+                    Constants.S3_LESSONS_PATH,
+                    Constants.S3_AUDIOS_PATH,
+                    ABSOLUTE_STORAGE_PATH + ts.toString() + EXTENSION_AUDIO_FORMAT,
+                    transferUtility,
+                    lesson.getId(),
+                    added);
+
             startRecording(audioMultimedia);
             lesson.getMultimediaAudiosFiles().add(audioMultimedia);
         } else {
@@ -716,5 +762,112 @@ public class LessonBaseActivity extends AppCompatActivity {
         mRecorder = null;
         multimediaAudioAdapter.notifyDataSetChanged();
     }
+
+    public void setLinearTriggersButtonClick() {
+        btnTriggerError.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (btnTriggerError.getTag().equals("false")){
+                    btnTriggerError.setBackgroundColor(Color.parseColor("#f7772f"));
+                    btnTriggerError.setTag("true");
+                    linearTriggersDeleteSelected(btnTriggerError);
+                } else {
+                    btnTriggerError.setBackgroundColor(Color.parseColor("#161542"));
+                    btnTriggerError.setTag("false");
+                }
+            }
+        });
+        btnTriggerImprovement.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (btnTriggerImprovement.getTag().equals("false")){
+                    btnTriggerImprovement.setBackgroundColor(Color.parseColor("#f7772f"));
+                    btnTriggerImprovement.setTag("true");
+                    linearTriggersDeleteSelected(btnTriggerImprovement);
+                } else {
+                    btnTriggerImprovement.setBackgroundColor(Color.parseColor("#161542"));
+                    btnTriggerImprovement.setTag("false");
+                }
+            }
+        });
+        btnTriggerGoodPractice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (btnTriggerGoodPractice.getTag().equals("false")){
+                    btnTriggerGoodPractice.setBackgroundColor(Color.parseColor("#f7772f"));
+                    btnTriggerGoodPractice.setTag("true");
+                    linearTriggersDeleteSelected(btnTriggerGoodPractice);
+                } else {
+                    btnTriggerGoodPractice.setBackgroundColor(Color.parseColor("#161542"));
+                    btnTriggerGoodPractice.setTag("false");
+                }
+            }
+        });
+        btnTriggerOmision.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (btnTriggerOmision.getTag().equals("false")){
+                    btnTriggerOmision.setBackgroundColor(Color.parseColor("#f7772f"));
+                    btnTriggerOmision.setTag("true");
+                    linearTriggersDeleteSelected(btnTriggerOmision);
+                } else {
+                    btnTriggerOmision.setBackgroundColor(Color.parseColor("#161542"));
+                    btnTriggerOmision.setTag("false");
+                }
+            }
+        });
+    }
+
+    public void linearTriggersDeleteSelected(Button fromButton) {
+        ArrayList<Button> buttons = new ArrayList<>();
+        buttons.add(btnTriggerError);
+        buttons.add(btnTriggerImprovement);
+        buttons.add(btnTriggerGoodPractice);
+        buttons.add(btnTriggerOmision);
+        for (Button button : buttons) {
+            if (button != fromButton) {
+                button.setTag("false");
+                button.setBackgroundColor(Color.parseColor("#161542"));
+            }
+        }
+    }
+
+    public int linearTriggersGetTriggerId() {
+        ArrayList<Button> buttons = new ArrayList<>();
+        buttons.add(btnTriggerError);
+        buttons.add(btnTriggerOmision);
+        buttons.add(btnTriggerGoodPractice);
+        buttons.add(btnTriggerImprovement);
+        int i = 0;
+        for (Button button : buttons) {
+            i++;
+            if (button.getTag().toString().equals("true")) {
+                return i;
+            }
+        }
+        return 1;
+    }
+
+    public void linearTriggersSetTriggerIdClicked(int i) {
+        Log.i("LESSONSTRIGGERSSET",Integer.toString(i));
+        if (i == 1) {
+            btnTriggerError.setTag("true");
+            btnTriggerError.setBackgroundColor(Color.parseColor("#f7772f"));
+        } else if (i == 2){
+            btnTriggerOmision.setTag("true");
+            btnTriggerOmision.setBackgroundColor(Color.parseColor("#f7772f"));
+        } else if (i ==3){
+            btnTriggerGoodPractice.setTag("true");
+            btnTriggerGoodPractice.setBackgroundColor(Color.parseColor("#f7772f"));
+        } else if (i == 4) {
+            btnTriggerImprovement.setTag("true");
+            btnTriggerImprovement.setBackgroundColor(Color.parseColor("#f7772f"));
+        }
+    }
+
+    public Boolean getEditing(){
+        return editing;
+    }
+
 
 }

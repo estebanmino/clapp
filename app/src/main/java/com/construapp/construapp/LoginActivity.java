@@ -13,15 +13,19 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.construapp.construapp.api.VolleyGetCompanyAttributes;
 import com.construapp.construapp.api.VolleyGetFavouriteLessons;
 import com.construapp.construapp.listeners.VolleyJSONCallback;
 import com.construapp.construapp.listeners.VolleyStringCallback;
 import com.construapp.construapp.api.VolleyGetUserProject;
 import com.construapp.construapp.api.VolleyLoginConnection;
 import com.construapp.construapp.main.MainActivity;
+import com.construapp.construapp.microblog.MicroblogActivity;
+import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.SessionManager;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import org.json.JSONObject;
@@ -74,16 +78,6 @@ public class LoginActivity extends AppCompatActivity {
 
                             Log.i("PERMISSION",admin);
 
-                            VolleyGetFavouriteLessons.volleyGetFavouriteLessons(new VolleyStringCallback() {
-                                @Override
-                                public void onSuccess(String result) {
-                                    sessionManager.setFavouriteLessons(result);
-                                }
-
-                                @Override
-                                public void onErrorResponse(VolleyError result) {
-                                }
-                            }, LoginActivity.this);
 
                             VolleyGetUserProject.volleyGetUserProject(new VolleyStringCallback() {
                                 @Override
@@ -117,6 +111,25 @@ public class LoginActivity extends AppCompatActivity {
                                     Toast.makeText(LoginActivity.this, "No se pudo ingresar a su cuenta", Toast.LENGTH_SHORT).show();
                                 }
                             }, LoginActivity.this, user_id);
+
+                            VolleyGetFavouriteLessons.volleyGetFavouriteLessons(new VolleyStringCallback() {
+                                @Override
+                                public void onSuccess(String result) {
+                                    sessionManager.setFavouriteLessons(result);
+                                }
+
+                                @Override
+                                public void onErrorResponse(VolleyError result) {
+                                }
+                            }, LoginActivity.this);
+
+                            VolleyGetCompanyAttributes.volleyGetCompanyAttributes(new VolleyJSONCallback() {
+                                @Override
+                                public void onSuccess(JSONObject result) {}
+
+                                @Override
+                                public void onErrorResponse(VolleyError result) {}
+                            }, LoginActivity.this);
                         }
 
                         @Override

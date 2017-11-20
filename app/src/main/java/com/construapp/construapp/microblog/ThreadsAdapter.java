@@ -1,4 +1,4 @@
-package com.construapp.construapp.main;
+package com.construapp.construapp.microblog;
 
 /**
  * Created by jose on 06-11-17.
@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.construapp.construapp.R;
 
 import java.util.List;
+import com.construapp.construapp.models.ThreadBlog;
 
 
 /**
@@ -22,11 +23,12 @@ import java.util.List;
 
 public class ThreadsAdapter extends BaseAdapter {
     private final Context context;
-    private final List<Threadblog> threadModelList;
+    private final List<ThreadBlog> threadModelList;
 
     private TextView threadTitle;
+    private TextView threadText;
 
-    public ThreadsAdapter(Context context, List<Threadblog> threadModelList) {
+    public ThreadsAdapter(Context context, List<ThreadBlog> threadModelList) {
         this.context = context;
         this.threadModelList = threadModelList;
     }
@@ -63,13 +65,16 @@ public class ThreadsAdapter extends BaseAdapter {
             convertView = layoutInflater.inflate(R.layout.thread_list_item,null);
         }
 
-        threadTitle = convertView.findViewById(R.id.section_title);
+        threadTitle = convertView.findViewById(R.id.textview_thread_title);
+        threadText = convertView.findViewById(R.id.textview_thread_text);
 
 
         final String elementTitle = threadModelList.get(position).getTitle();
+        final String elementText = threadModelList.get(position).getText();
 
 
         threadTitle.setText(elementTitle);
+        threadText.setText(elementText);
 
 
 

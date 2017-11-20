@@ -3,7 +3,9 @@ package com.construapp.construapp.models;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.util.Log;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -28,6 +30,9 @@ public class Lesson {
     @Ignore
     private ArrayList<String> deletedMultimediaFilesS3Keys;
 
+    @Ignore
+    private String[] savedMultimediaFileKeys;
+
     @PrimaryKey
     private String id;
 
@@ -36,13 +41,151 @@ public class Lesson {
     private String motivation;
     private String learning;
     private String validation;
-    private String user_id;
+    private String author_id;
+    private String author_first_name;
+    private String author_last_name;
+    private String author_position;
+    private String author_email;
+    private String author_admin;
     private String project_id;
     private String reject_comment;
     private String company_id;
+    private int trigger_id;
     private String validator;
     private String validator_sec;
+    private String comments;
+    private String disciplines;
+    private String departments;
+    private String classifications;
+    private String tags;
 
+    public String getAuthor_first_name() {
+        return author_first_name;
+    }
+
+    public void setAuthor_first_name(String author_first_name) {
+        this.author_first_name = author_first_name;
+    }
+
+    public String getAuthor_last_name() {
+        return author_last_name;
+    }
+
+    public void setAuthor_last_name(String author_last_name) {
+        this.author_last_name = author_last_name;
+    }
+
+    public String getAuthor_position() {
+        return author_position;
+    }
+
+    public void setAuthor_position(String author_position) {
+        this.author_position = author_position;
+    }
+
+    public String getAuthor_email() {
+        return author_email;
+    }
+
+    public void setAuthor_email(String author_email) {
+        this.author_email = author_email;
+    }
+
+    public String getAuthor_admin() {
+        return author_admin;
+    }
+
+    public void setAuthor_admin(String author_admin) {
+        this.author_admin = author_admin;
+    }
+
+    public int getTrigger_id() {
+        return trigger_id;
+    }
+
+    public void setTrigger_id(int trigger_id) {
+        this.trigger_id = trigger_id;
+    }
+
+    public String getDisciplines() {
+        return disciplines;
+    }
+
+    public String getDepartments() {
+        return departments;
+    }
+
+    public String getClassifications() {
+        return classifications;
+    }
+
+    public String getTags() {
+        return tags;
+    }
+
+    public String[] getDisciplinesArray() {
+        if (disciplines == null || disciplines.isEmpty()) {
+            return new String[0];
+        } else {
+            return disciplines.substring(1).split("/");
+        }
+    }
+
+    public void setDisciplines(String disciplines) {
+        this.disciplines = disciplines;
+    }
+
+    public String[] getDepartmentsArray() {
+        if (departments == null ||  departments.isEmpty()){
+            return new String[0];
+        } else {
+            return departments.substring(1).split("/");
+        }
+    }
+
+    public void setDepartments(String departments) {
+        this.departments = departments;
+    }
+
+    public String[] getClassificationsArray() {
+        if (classifications == null || classifications.isEmpty()) {
+            return new String[0];
+        } else {
+            return classifications.substring(1).split("/");
+        }
+    }
+
+    public void setClassifications(String classifications) {
+        this.classifications = classifications;
+    }
+
+    public String[] getTagsArray() {
+        if (tags == null ||  tags.isEmpty()){
+            return new String[0];
+        } else {
+            return tags.substring(1).split("/");
+        }
+    }
+
+    public String getTagsSpaced() {
+        if (tags == null ||  tags.isEmpty()){
+            return "";
+        } else {
+            return tags.substring(1).replace("/"," ");
+        }
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
+
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
+    }
 
     public String getReject_comment() {
         return reject_comment;
@@ -102,12 +245,12 @@ public class Lesson {
     }
 
 
-    public String getUser_id() {
-        return user_id;
+    public String getAuthor_id() {
+        return author_id;
     }
 
-    public void setUser_id(String user_id) {
-        this.user_id = user_id;
+    public void setAuthor_id(String author_id) {
+        this.author_id = author_id;
     }
 
     public String getCompany_id() {
@@ -186,46 +329,6 @@ public class Lesson {
         return summary;
     }
 
-    public ArrayList<String> getDeletedMultimediaFilesS3Keys() {
-        return deletedMultimediaFilesS3Keys;
-    }
-
-    public void setDeletedMultimediaFilesS3Keys(ArrayList<String> deletedMultimediaFilesS3Keys) {
-        this.deletedMultimediaFilesS3Keys = deletedMultimediaFilesS3Keys;
-    }
-
-    public ArrayList<String> getAddedMultimediaKeysS3(){
-        ArrayList<String> addedKeys = new ArrayList<>();
-        String start = Constants.S3_LESSONS_PATH+"/"+id+"/";
-        String key = "";
-
-        for (MultimediaFile mmVideo: multimediaVideosFiles) {
-            if (mmVideo.getAdded() == 1) {
-                key = Constants.S3_VIDEOS_PATH+"/"+mmVideo.getmPath().substring(mmVideo.getmPath().lastIndexOf("/")+1);
-                addedKeys.add(start+key);
-            }
-        }
-        for (MultimediaFile mmVideo: multimediaDocumentsFiles) {
-            if (mmVideo.getAdded() == 1) {
-                key = Constants.S3_DOCS_PATH+"/"+mmVideo.getmPath().substring(mmVideo.getmPath().lastIndexOf("/")+1);
-                addedKeys.add(start+key);
-            }
-        }
-        for (MultimediaFile mmVideo: multimediaAudioFiles) {
-            if (mmVideo.getAdded() == 1) {
-                key = Constants.S3_AUDIOS_PATH+"/"+mmVideo.getmPath().substring(mmVideo.getmPath().lastIndexOf("/")+1);
-                addedKeys.add(start+key);
-            }
-        }
-        for (MultimediaFile mmVideo: multimediaPictureFiles) {
-            if (mmVideo.getAdded() == 1) {
-                key = Constants.S3_IMAGES_PATH+"/"+mmVideo.getmPath().substring(mmVideo.getmPath().lastIndexOf("/")+1);
-                addedKeys.add(start+key);
-            }
-        }
-        return addedKeys;
-    }
-
     public Boolean isEmptyMultimedia() {
         return multimediaAudioFiles.size() == 0 && multimediaPictureFiles.size() == 0
                 && multimediaDocumentsFiles.size() == 0 && multimediaVideosFiles.size() == 0;
@@ -246,5 +349,105 @@ public class Lesson {
                 multimediaAudioFiles.size() > 0 ||
                 multimediaVideosFiles.size() > 0 ||
                 multimediaDocumentsFiles.size() > 0 ;
+    }
+
+    public String getMultimediaFileKeys(String new_lesson_id) {
+        String path_input = "";
+        for (MultimediaFile multimediaFile : this.getMultimediaPicturesFiles()) {
+            String apiFileKey = Constants.S3_LESSONS_PATH + "/" + new_lesson_id + "/" +
+                    Constants.S3_IMAGES_PATH + "/" +multimediaFile.getmPath().substring(multimediaFile.getmPath().lastIndexOf("/") + 1);
+            multimediaFile.setApiFileKey(apiFileKey);
+            path_input += apiFileKey + ";";
+        }
+        for (MultimediaFile multimediaFile : this.getMultimediaAudiosFiles()) {
+            String apiFileKey = Constants.S3_LESSONS_PATH + "/" + new_lesson_id + "/" +
+                    Constants.S3_AUDIOS_PATH + "/" +multimediaFile.getmPath().substring(multimediaFile.getmPath().lastIndexOf("/") + 1);
+            multimediaFile.setApiFileKey(apiFileKey);
+            path_input += apiFileKey + ";";
+        }
+        for (MultimediaFile multimediaFile : this.getMultimediaDocumentsFiles()) {
+            String apiFileKey = Constants.S3_LESSONS_PATH + "/" + new_lesson_id + "/" +
+                    Constants.S3_DOCS_PATH +"/" + multimediaFile.getmPath().substring(multimediaFile.getmPath().lastIndexOf("/") + 1);
+            multimediaFile.setApiFileKey(apiFileKey);
+            path_input += apiFileKey + ";";
+        }
+
+        for (MultimediaFile multimediaFile : this.getMultimediaVideosFiles()) {
+            String apiFileKey = Constants.S3_LESSONS_PATH + "/" + new_lesson_id + "/" +
+                    Constants.S3_VIDEOS_PATH +"/" + multimediaFile.getmPath().substring(multimediaFile.getmPath().lastIndexOf("/") + 1);
+            multimediaFile.setApiFileKey(apiFileKey);
+            path_input += apiFileKey + ";";
+        }
+        return path_input;
+    }
+
+    public String[] getMultimediaFileKeysArray() {
+        if (getMultimediaFileKeys(id) == null ||  getMultimediaFileKeys(id).isEmpty()){
+            return new String[0];
+        } else {
+            for(String string: getMultimediaFileKeys(id).split(";")){
+                Log.i("FROMLESSON",string);
+            }
+            return getMultimediaFileKeys(id).split(";");
+        }
+    }
+
+    public String getMultimediaOriginalFileKeys(String new_lesson_id) {
+        String path_input = "";
+        for (MultimediaFile multimediaFile : this.getMultimediaPicturesFiles()) {
+            Log.i("ISORGINNAL",Integer.toString(multimediaFile.getAdded()) + " -- " + multimediaFile.getApiFileKey());
+            if (multimediaFile.getAdded() == 0) {
+                Log.i("ISORGINNAL",Integer.toString(multimediaFile.getAdded()) + " -- " + multimediaFile.getApiFileKey() + "IN");
+                String apiFileKey = Constants.S3_LESSONS_PATH + File.separator + new_lesson_id + File.separator +
+                        Constants.S3_IMAGES_PATH + File.separator + multimediaFile.getmPath().substring(multimediaFile.getmPath().lastIndexOf(File.separator) + 1);
+                multimediaFile.setApiFileKey(apiFileKey);
+                path_input += apiFileKey + ";";
+            }
+        }
+        for (MultimediaFile multimediaFile : this.getMultimediaAudiosFiles()) {
+            if (multimediaFile.getAdded() == 0) {
+                String apiFileKey = Constants.S3_LESSONS_PATH + File.separator + new_lesson_id + File.separator +
+                        Constants.S3_AUDIOS_PATH + File.separator + multimediaFile.getmPath().substring(multimediaFile.getmPath().lastIndexOf(File.separator) + 1);
+                multimediaFile.setApiFileKey(apiFileKey);
+                path_input += apiFileKey + ";";
+            }
+        }
+        for (MultimediaFile multimediaFile : this.getMultimediaDocumentsFiles()) {
+            if (multimediaFile.getAdded() == 0) {
+                String apiFileKey = Constants.S3_LESSONS_PATH + File.separator + new_lesson_id + File.separator +
+                        Constants.S3_DOCS_PATH + File.separator + multimediaFile.getmPath().substring(multimediaFile.getmPath().lastIndexOf(File.separator) + 1);
+                multimediaFile.setApiFileKey(apiFileKey);
+                path_input += apiFileKey + ";";
+            }
+        }
+
+        for (MultimediaFile multimediaFile : this.getMultimediaVideosFiles()) {
+            if (multimediaFile.getAdded() == 0) {
+                String apiFileKey = Constants.S3_LESSONS_PATH + File.separator + new_lesson_id + File.separator +
+                        Constants.S3_VIDEOS_PATH + File.separator + multimediaFile.getmPath().substring(multimediaFile.getmPath().lastIndexOf(File.separator) + 1);
+                multimediaFile.setApiFileKey(apiFileKey);
+                path_input += apiFileKey + ";";
+            }
+        }
+        return path_input;
+    }
+
+    public String[] getMultimediaOriginalFileKeysArray() {
+        if (getMultimediaOriginalFileKeys(id) == null ||  getMultimediaOriginalFileKeys(id).isEmpty()){
+            return new String[0];
+        } else {
+            for(String string: getMultimediaOriginalFileKeys(id).split(";")){
+                Log.i("FROMLESSON",string);
+            }
+            return getMultimediaOriginalFileKeys(id).split(";");
+        }
+    }
+
+    public void setSavedMultimediaFileKeys() {
+        savedMultimediaFileKeys = getMultimediaOriginalFileKeysArray();
+    }
+
+    public String[] getSavedMultimediaFileKeys() {
+        return savedMultimediaFileKeys;
     }
 }

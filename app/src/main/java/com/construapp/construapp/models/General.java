@@ -23,7 +23,7 @@ public class General {
     public CognitoCachingCredentialsProvider getCredentialsProvider(Context context) {
         return new CognitoCachingCredentialsProvider(
                 context,
-                "us-east-1:4990ac44-6c36-4b4c-8193-70148fbd35d6", // Identity pool ID
+                "us-east-1:d7b13ecc-c9d1-405c-a1ae-bb15abd67859", // Identity pool ID
                 Regions.US_EAST_1 // Region
         );
     }

@@ -21,14 +21,14 @@ import com.android.volley.VolleyError;
 import com.construapp.construapp.LoginActivity;
 import com.construapp.construapp.R;
 import com.construapp.construapp.api.VolleyGetFavouriteLessons;
-import com.construapp.construapp.api.VolleyGetLessons;
 import com.construapp.construapp.db.Connectivity;
 import com.construapp.construapp.dbTasks.DeleteLessonTable;
+import com.construapp.construapp.dbTasks.GetLessonTask;
 import com.construapp.construapp.dbTasks.GetLessonsTask;
-import com.construapp.construapp.dbTasks.InsertLessonTask;
 import com.construapp.construapp.listeners.VolleyStringCallback;
 import com.construapp.construapp.main.LessonsAdapter;
 import com.construapp.construapp.main.MainActivity;
+import com.construapp.construapp.microblog.MicroblogActivity;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.Lesson;
 import com.construapp.construapp.models.SessionManager;
@@ -132,9 +132,11 @@ public class FavouriteLessonsActivity extends AppCompatActivity
             sessionManager.setActualProject(Constants.ALL_PROJECTS_KEY,Constants.ALL_PROJECTS_NAME);
             startActivity(MainActivity.getIntent(FavouriteLessonsActivity.this));
         } else  if (item.getItemId() == R.id.to_blog) {
-            //
+            startActivity(MicroblogActivity.getIntent(FavouriteLessonsActivity.this));
         } else  if (item.getItemId() == R.id.to_favourites) {
             startActivity(FavouriteLessonsActivity.getIntent(FavouriteLessonsActivity.this));
+        } else  if (item.getItemId() == R.id.to_recommended) {
+            startActivity(RecommendedLessonsActivity.getIntent(FavouriteLessonsActivity.this));
         }
         else {
             String map = item.getTitle().toString();
@@ -175,21 +177,10 @@ public class FavouriteLessonsActivity extends AppCompatActivity
                     try {
                         jsonLessons = new JSONArray(result);
                         for (int i = 0; i < jsonLessons.length(); i++) {
-                            Lesson lesson = new Lesson();
                             JSONObject object = (JSONObject) jsonLessons.get(i);
                             Log.i("oo",object.toString());
-                            lesson.setName(object.get("name").toString());
-                            lesson.setSummary(object.get("summary").toString());
-                            lesson.setId(object.get("id").toString());
-                            lesson.setMotivation(object.get("motivation").toString());
-                            lesson.setLearning(object.get("learning").toString());
-                            lesson.setValidation(object.get("validation").toString());
-                            lesson.setUser_id(object.get("user_id").toString());
-                            lesson.setProject_id(object.get("project_id").toString());
-                            lesson.setCompany_id(object.get("company_id").toString());
-                            lesson.setReject_comment(object.get("reject_comment").toString());
-                            if (lesson.getValidation() == Constants.R_VALIDATED) {
-                                lessonList.add(lesson);
+                            if (object.get("validation").toString().equals(Constants.R_VALIDATED)) {
+                                lessonList.add(new GetLessonTask(FavouriteLessonsActivity.this, object.get("id").toString()).execute().get());
                             }
                         }
                         if (lessonList.isEmpty())textNoFavouriteLessons.setVisibility(View.VISIBLE);
@@ -219,6 +210,22 @@ public class FavouriteLessonsActivity extends AppCompatActivity
         }
 
         swipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (navigationView.isShown())
+        {
+            DrawerLayout drawer = findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
+        }
+        else
+        {
+            finish();
+
+        }
+
+
     }
 
     public void setSwipeRefreshLayout() {

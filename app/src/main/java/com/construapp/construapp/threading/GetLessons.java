@@ -2,7 +2,6 @@ package com.construapp.construapp.threading;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.android.volley.VolleyError;
 import com.construapp.construapp.api.VolleyGetLessons;
@@ -42,7 +41,6 @@ public class GetLessons extends AsyncTask {
                     try {
                         jsonLessons = new JSONArray(result);
                         for (int i = 0; i  < jsonLessons.length(); i++) {
-                            Log.i("JSON",jsonLessons.get(i).toString());
                             JSONObject object = (JSONObject) jsonLessons.get(i);
                             lesson.setName(object.get("name").toString());
                             lesson.setSummary(object.get("summary").toString());
@@ -51,7 +49,7 @@ public class GetLessons extends AsyncTask {
                             lesson.setMotivation(object.get("motivation").toString());
                             lesson.setLearning(object.get("learning").toString());
                             lesson.setValidation(object.get("validation").toString());
-                            lesson.setUser_id(object.get("user_id").toString());
+                            lesson.setAuthor_id(object.get("user_id").toString());
                             lesson.setProject_id(object.get("project_id").toString());
                             lesson.setCompany_id(object.get("company_id").toString());
                             try {
