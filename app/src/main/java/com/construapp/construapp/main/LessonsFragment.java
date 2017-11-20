@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.construapp.construapp.R;
@@ -51,7 +52,7 @@ public class LessonsFragment extends Fragment {
     private SharedPreferences sharedPreferences;
     private String user_id = "null";
     private String project_id;
-
+    private TextView textViewNoLessons;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -77,6 +78,7 @@ public class LessonsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         lessonsList = view.findViewById(R.id.lessons_list);
+        textViewNoLessons = view.findViewById(R.id.textViewNoLessons);
 
         lessonsList.setAdapter(lessonsAdapter);
         lessonsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -88,6 +90,9 @@ public class LessonsFragment extends Fragment {
             }
         });
         swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_lessons);
+        if (lessonList.isEmpty()) {
+            textViewNoLessons.setVisibility(View.VISIBLE);
+        }
         setSwipeRefreshLayout();
     }
 
@@ -107,6 +112,9 @@ public class LessonsFragment extends Fragment {
                                 lessonsList.setAdapter(lessonsAdapter);
                             } catch (Exception e) {
                             }
+                            if (lessonList.isEmpty()) {
+                                textViewNoLessons.setVisibility(View.VISIBLE);
+                            }
                         }
 
                         @Override
@@ -117,6 +125,9 @@ public class LessonsFragment extends Fragment {
                                 lessonsList.setAdapter(lessonsAdapter);
                             } catch (Exception e) {
                             }
+                            if (lessonList.isEmpty()) {
+                                textViewNoLessons.setVisibility(View.VISIBLE);
+                            }
                         }
                     }, getContext());
                 } else {
@@ -126,7 +137,9 @@ public class LessonsFragment extends Fragment {
                         lessonsAdapter = new LessonsAdapter(getActivity(), lessonList);
                         lessonsList.setAdapter(lessonsAdapter);
                     } catch (Exception e) {}
-
+                    if (lessonList.isEmpty()) {
+                        textViewNoLessons.setVisibility(View.VISIBLE);
+                    }
                 }
                 swipeRefreshLayout.setRefreshing(false);
             }

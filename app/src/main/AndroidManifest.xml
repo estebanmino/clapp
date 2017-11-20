@@ -100,6 +100,9 @@
         <activity
             android:name=".microblog.NewThreadActivity"
             android:label="@string/title_activity_new_thread" />
+        <activity
+            android:name=".lessons.RecommendedLessonsActivity"
+            android:label="@string/title_activity_recommended_lessons"></activity>
     </application>
 
 </manifest>

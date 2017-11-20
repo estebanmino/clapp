@@ -16,6 +16,7 @@ public interface Constants {
     String POSTS = "posts";
     String POST = "Post";
     String LESSONS = "lessons";
+    String RECOMMEND = "recommend";
     String ATTRIBUTES = "attributes";
     String USERS = "users";
     String GET_PROJECTS = "get_projects";
@@ -111,6 +112,7 @@ public interface Constants {
 
     //TITLES
     String TITLE_FAVOURITE_LESSONS = "Lecciones favoritas";
+    String TITLE_RECOMMENDED_LESSONS = "Lecciones recomendadas";
 
     //IMAGES
     String IMAGE_ICC_PROFILE = "ICC Profile";

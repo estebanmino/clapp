@@ -54,6 +54,8 @@ public class LessonValidateFragment extends Fragment {
     private String project_id;
     public ArrayList<String> validationProjectsArray;
 
+    private TextView textViewNoLessons;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -86,6 +88,7 @@ public class LessonValidateFragment extends Fragment {
 
         noLessons = view.findViewById(R.id.textViewNoValidateLessons);
         validateLessonsList = view.findViewById(R.id.validation_lessons_list);
+        textViewNoLessons = view.findViewById(R.id.textViewNoValidateLessons);
 
         validateLessonsList.setAdapter(lessonsAdapter);
         validateLessonsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -141,6 +144,9 @@ public class LessonValidateFragment extends Fragment {
                         lessonsAdapter = new LessonsAdapter(getActivity(), lessonList);
                         validateLessonsList.setAdapter(lessonsAdapter);
                     } catch (Exception e) {}
+                    if (lessonList.isEmpty()) {
+                        textViewNoLessons.setVisibility(View.VISIBLE);
+                    }
                 }
                 @Override
                 public void onErrorResponse(VolleyError result) {
@@ -149,6 +155,9 @@ public class LessonValidateFragment extends Fragment {
                         lessonsAdapter = new LessonsAdapter(getActivity(), lessonList);
                         validateLessonsList.setAdapter(lessonsAdapter);
                     } catch ( Exception e ){}
+                    if (lessonList.isEmpty()) {
+                        textViewNoLessons.setVisibility(View.VISIBLE);
+                    }
                 }
             }, getContext());
             } else {
@@ -161,6 +170,9 @@ public class LessonValidateFragment extends Fragment {
                 }
                 lessonsAdapter = new LessonsAdapter(getActivity(), lessonList);
                 validateLessonsList.setAdapter(lessonsAdapter);
+                if (lessonList.isEmpty()) {
+                    textViewNoLessons.setVisibility(View.VISIBLE);
+                }
             }
         } else {
             try {
@@ -168,6 +180,9 @@ public class LessonValidateFragment extends Fragment {
                 lessonsAdapter = new LessonsAdapter(getActivity(), lessonList);
                 validateLessonsList.setAdapter(lessonsAdapter);
             } catch (Exception e) {}
+            if (lessonList.isEmpty()) {
+                textViewNoLessons.setVisibility(View.VISIBLE);
+            }
         }
     }
 }
