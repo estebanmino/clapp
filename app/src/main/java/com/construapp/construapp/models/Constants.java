@@ -74,7 +74,7 @@ public interface Constants {
     String Q_CONTENTTYPE_JSON_UTF8 = "application/json; charset=utf-8";
 
     //S3
-    String S3_BUCKET = "construapp";
+    String S3_BUCKET = "clappproductionm";
     String S3_IMAGES_PATH = "images";
     String S3_VIDEOS_PATH = "videos";
     String S3_AUDIOS_PATH = "audios";
