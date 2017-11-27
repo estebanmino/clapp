@@ -257,7 +257,7 @@ public class MainActivity extends AppCompatActivity
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }
-            Toast.makeText(this,"Se ha  cerrado su sesión",Toast.LENGTH_LONG).show();
+            Toast.makeText(this,"Se ha cerrado su sesión",Toast.LENGTH_LONG).show();
             startActivity(LoginActivity.getIntent(MainActivity.this));
         } else if (item.getItemId() == R.id.to_all_projects) {
             Intent intent = getIntent();
