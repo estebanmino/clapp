@@ -158,13 +158,15 @@ public class LessonActivity extends LessonBaseActivity {
         lessonViewFragment.setArguments(bundle);
         fragmentTransaction.add(R.id.constraint_fragment_container,lessonViewFragment);
 
-        Bundle bundleComments = new Bundle();
-        bundleComments.putString(Constants.B_LESSON_COMMENTS, lesson.getComments());
-        bundleComments.putString(Constants.B_LESSON_ID, lesson.getId());
-        LessonCommentsFragment lessonCommentsFragment = new LessonCommentsFragment();
-        lessonCommentsFragment.setArguments(bundleComments);
-        fragmentTransaction.add(R.id.constraint_comments_container,lessonCommentsFragment);
-        fragmentTransaction.commit();
+        if (lesson.getValidation().equals(Constants.R_VALIDATED)) {
+            Bundle bundleComments = new Bundle();
+            bundleComments.putString(Constants.B_LESSON_COMMENTS, lesson.getComments());
+            bundleComments.putString(Constants.B_LESSON_ID, lesson.getId());
+            LessonCommentsFragment lessonCommentsFragment = new LessonCommentsFragment();
+            lessonCommentsFragment.setArguments(bundleComments);
+            fragmentTransaction.add(R.id.constraint_comments_container, lessonCommentsFragment);
+            fragmentTransaction.commit();
+        }
 
 
         if (lesson.getReject_comment() !=  null && lesson.getValidation().equals(Constants.R_REJECTED)) {
