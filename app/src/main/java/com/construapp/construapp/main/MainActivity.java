@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject project = (JSONObject) jsonArray.get(i);
-                menu.add(0, i+1, Menu.NONE, project.getString("name"));
+                menu.add(0, Integer.parseInt(project.getString("id")), Menu.NONE, project.getString("name"));
             }
         } catch (Exception e) {}
 
