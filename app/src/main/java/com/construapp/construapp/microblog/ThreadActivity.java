@@ -624,7 +624,7 @@ public class ThreadActivity extends AppCompatActivity
             public void onErrorResponse(VolleyError result) {
 
             }
-        }, ThreadActivity.this, getIntent().getStringExtra("ID"));
+        }, ThreadActivity.this, sessionManager.getThreadId());
     }
 
     public Boolean getEditing() {return editing;}
@@ -1356,7 +1356,7 @@ public class ThreadActivity extends AppCompatActivity
                 public void onErrorResponse(VolleyError result) {
 
                 }
-            }, getApplicationContext(), threadBlog.getId());
+            }, getApplicationContext(), sessionManager.getThreadId());
         } else {
 
         }
