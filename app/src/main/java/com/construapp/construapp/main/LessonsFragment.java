@@ -115,6 +115,8 @@ public class LessonsFragment extends Fragment {
                             }
                             if (lessonList.isEmpty()) {
                                 textViewNoLessons.setVisibility(View.VISIBLE);
+                            } else {
+                                textViewNoLessons.setVisibility(View.GONE);
                             }
                         }
 
@@ -128,6 +130,8 @@ public class LessonsFragment extends Fragment {
                             }
                             if (lessonList.isEmpty()) {
                                 textViewNoLessons.setVisibility(View.VISIBLE);
+                            } else {
+                                textViewNoLessons.setVisibility(View.GONE);
                             }
                         }
                     }, getContext());
@@ -140,6 +144,8 @@ public class LessonsFragment extends Fragment {
                     } catch (Exception e) {}
                     if (lessonList.isEmpty()) {
                         textViewNoLessons.setVisibility(View.VISIBLE);
+                    } else {
+                        textViewNoLessons.setVisibility(View.GONE);
                     }
                 }
                 swipeRefreshLayout.setRefreshing(false);
