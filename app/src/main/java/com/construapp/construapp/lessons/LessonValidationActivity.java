@@ -481,7 +481,7 @@ public class LessonValidationActivity extends LessonBaseActivity {
                     multimediaPictureAdapter.notifyDataSetChanged();
 
                     for (String videoPath: videosPathsList) {
-                        lesson.getMultimediaPicturesFiles().add(
+                        lesson.getMultimediaVideosFiles().add(
                                 new MultimediaFile(
                                         Constants.S3_LESSONS_PATH,
                                         Constants.S3_VIDEOS_PATH,

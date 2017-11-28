@@ -150,6 +150,9 @@ public class LessonActivity extends LessonBaseActivity {
 
         setLesson();
 
+        Log.i("INACTIVITYLESSON", "lesson");
+        Log.i("INACTIVITYLESSON", lesson.getFormAttributes().get(0));
+
         Bundle bundle = new Bundle();
         bundle.putStringArrayList(Constants.B_LESSON_ARRAY_LIST, lesson.getFormAttributes());
         FragmentManager  fragmentManager = getFragmentManager();
@@ -165,6 +168,8 @@ public class LessonActivity extends LessonBaseActivity {
             LessonCommentsFragment lessonCommentsFragment = new LessonCommentsFragment();
             lessonCommentsFragment.setArguments(bundleComments);
             fragmentTransaction.add(R.id.constraint_comments_container, lessonCommentsFragment);
+            fragmentTransaction.commit();
+        } else {
             fragmentTransaction.commit();
         }
 
@@ -378,7 +383,7 @@ public class LessonActivity extends LessonBaseActivity {
                     multimediaVideoAdapter.notifyDataSetChanged();
 
                     if (!lesson.hasMultimediaFiles()) {
-                        linearLayoutMultimedia.setVisibility(View.GONE);
+                        //linearLayoutMultimedia.setVisibility(View.GONE);
                         textAttachments.setText(Constants.NO_ATTACHMENTS);
                     } else {
                         if (lesson.getMultimediaPicturesFiles().isEmpty()){
@@ -390,12 +395,12 @@ public class LessonActivity extends LessonBaseActivity {
                             mAudiosRecyclerView.setVisibility(View.GONE);
                         }
                         if (lesson.getMultimediaVideosFiles().isEmpty()){
-                            textDocuments.setText(Constants.NO_VIDEOS);
-                            mDocumentsRecyclerView.setVisibility(View.GONE);
+                            textVideos.setText(Constants.NO_VIDEOS);
+                            mVideosRecyclerView.setVisibility(View.GONE);
                         }
                         if (lesson.getMultimediaDocumentsFiles().isEmpty()){
-                            textVideos.setText(Constants.NO_DOCUMENTS);
-                            mVideosRecyclerView.setVisibility(View.GONE);
+                            textDocuments.setText(Constants.NO_DOCUMENTS);
+                            mDocumentsRecyclerView.setVisibility(View.GONE);
                         }
                     }
                 }
