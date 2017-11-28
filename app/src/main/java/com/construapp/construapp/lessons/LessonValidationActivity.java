@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -72,6 +73,7 @@ public class LessonValidationActivity extends LessonBaseActivity {
     private Switch validateVideosSwitch;
     private Switch validateAudiosSwitch;
     private Switch validateDocumentsSwitch;
+    private Switch validateTagsSwitch;
 
     private EditText editCommentName;
     private EditText editCommentSummary;
@@ -81,6 +83,7 @@ public class LessonValidationActivity extends LessonBaseActivity {
     private EditText editCommentVideos;
     private EditText editCommentAudios;
     private EditText editCommentDocuments;
+    private EditText editCommentTags;
     private FloatingActionButton fabValidateLesson;
     private FloatingActionButton fabCommentLesson;
     private FloatingActionButton fabCancel;
@@ -91,12 +94,23 @@ public class LessonValidationActivity extends LessonBaseActivity {
     private TextView textAudios;
     private TextView textDocuments;
 
+    private TextView textDisciplines;
+    private TextView textDepartments;
+    private TextView textClassifications;
+
     private Boolean editing = true;
 
     private RecyclerView mPicturesRecyclerView;
     private RecyclerView mVideosRecyclerView;
     private RecyclerView mDocumentsRecyclerView;
     private RecyclerView mAudiosRecyclerView;
+
+    private RecyclerView mClassificationsRecyclerView;
+    private RecyclerView mDisciplinesRecyclerView;
+    private RecyclerView mDepartmentsRecyclerView;
+    private LessonAttributesAdapter disciplinesAttributesAdapter;
+    private LessonAttributesAdapter departmentsAttributesAdapter;
+    private LessonAttributesAdapter classificationsAttributesAdapter;
 
     private LinearLayout linearLayoutMultimedia;
 
@@ -140,12 +154,34 @@ public class LessonValidationActivity extends LessonBaseActivity {
         textLessonMotivation = findViewById(R.id.text_lesson_motivation);
         textLessonLearning = findViewById(R.id.text_lesson_learning);
 
+        textDisciplines = findViewById(R.id.text_disciplines);
+        textClassifications = findViewById(R.id.text_classifications);
+        textDepartments = findViewById(R.id.text_departments);
+
+        tagEditTags = findViewById(R.id.edit_tags);
+
+        tagEditTags.setInputType(InputType.TYPE_NULL);
+
         setLesson();
 
         textLessonName.setText(lesson.getName());
         textLessonSummary.setText(lesson.getSummary());
         textLessonMotivation.setText(lesson.getMotivation());
         textLessonLearning.setText(lesson.getLearning());
+
+        linearLayoutTriggers = findViewById(R.id.linear_triggers);
+        linearLayoutTriggers.setClickable(false);
+        btnTriggerError = findViewById(R.id.btn_trigger_trerror);
+        btnTriggerOmision = findViewById(R.id.btn_trigger_omision);
+        btnTriggerGoodPractice = findViewById(R.id.btn_trigger_good_practices);
+        btnTriggerImprovement = findViewById(R.id.btn_trigger_improvement);
+
+        btnTriggerError.setClickable(false);
+        btnTriggerOmision.setClickable(false);
+        btnTriggerGoodPractice.setClickable(false);
+        btnTriggerImprovement.setClickable(false);
+
+        linearTriggersSetTriggerIdClicked(lesson.getTrigger_id());
         ////HORIZONTAL IMAGES SCROLLING
 
         //GENRAL LAYOUT SCROLL
@@ -181,6 +217,57 @@ public class LessonValidationActivity extends LessonBaseActivity {
         multimediaDocumentAdapter = new MultimediaDocumentAdapter(lesson.getMultimediaDocumentsFiles(),LessonValidationActivity.this);
         mDocumentsRecyclerView.setAdapter(multimediaDocumentAdapter);
 
+        //DISCIPLINES SCROLLING
+        LinearLayoutManager disciplinesLayoutManager = new LinearLayoutManager(this);
+        disciplinesLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        mDisciplinesRecyclerView = findViewById(R.id.recycler_horizontal_disciplines);
+        mDisciplinesRecyclerView.setLayoutManager(disciplinesLayoutManager);
+        //String[] disciplinesArray =  sessionManager.getDisciplines();
+        String[] disciplinesArray =  lesson.getDisciplinesArray();
+        if (disciplinesArray.length != 0) {
+            disciplinesAttributesAdapter = new LessonAttributesAdapter(disciplinesArray,
+                    LessonValidationActivity.this, lesson, editing, Constants.TAG_DISCIPLINES);
+            mDisciplinesRecyclerView.setAdapter(disciplinesAttributesAdapter);
+        } else {
+            textDisciplines.setText("Disciplinas (no hay disciplinas asignadas)");
+            mDisciplinesRecyclerView.setVisibility(View.GONE);
+        }
+
+        //CLASSIFICATIONS SCROLLING
+        LinearLayoutManager classificationsLayoutManager = new LinearLayoutManager(this);
+        classificationsLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        mClassificationsRecyclerView = findViewById(R.id.recycler_horizontal_classifications);
+        mClassificationsRecyclerView.setLayoutManager(classificationsLayoutManager);
+        ///String[] classificationsArray =  sessionManager.getClassifications();
+        String[] classificationsArray =  lesson.getClassificationsArray();
+        if (classificationsArray.length != 0) {
+            classificationsAttributesAdapter = new LessonAttributesAdapter(classificationsArray,
+                    LessonValidationActivity.this, lesson, editing, Constants.TAG_CLASSIFICATIONS);
+            mClassificationsRecyclerView.setAdapter(classificationsAttributesAdapter);
+        } else {
+            textClassifications.setText("Clasificación (no hay clasificaciones asignadas)");
+            mClassificationsRecyclerView.setVisibility(View.GONE);
+        }
+
+        //DEPARTMENT SCROLLING
+        LinearLayoutManager departmentsLayoutManager = new LinearLayoutManager(this);
+        departmentsLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        mDepartmentsRecyclerView = findViewById(R.id.recycler_horizontal_departments);
+        mDepartmentsRecyclerView.setLayoutManager(departmentsLayoutManager);
+        //String[] departmentsArray =  sessionManager.getDepartments();
+        String[] departmentsArray =  lesson.getDepartmentsArray();
+        if (departmentsArray.length != 0) {
+            departmentsAttributesAdapter = new LessonAttributesAdapter(departmentsArray,
+                    LessonValidationActivity.this, lesson, editing, Constants.TAG_DEPARTMENTS);
+            mDepartmentsRecyclerView.setAdapter(departmentsAttributesAdapter);
+        } else {
+            textDepartments.setText("Departamento (no hay departamentos asignados)");
+            mDepartmentsRecyclerView.setVisibility(View.GONE);
+        }
+
+        //TAGS
+        tagEditTags.setText(lesson.getTagsSpaced());
+        if (!editing) {tagEditTags.setClickable(false);};
 
         validateNameSwitch = findViewById(R.id.switch_lesson_name);
         validateSummarySwitch = findViewById(R.id.switch_lesson_summary);
@@ -190,6 +277,7 @@ public class LessonValidationActivity extends LessonBaseActivity {
         validateVideosSwitch = findViewById(R.id.switch_lesson_videos);
         validateAudiosSwitch = findViewById(R.id.switch_lesson_audios);
         validateDocumentsSwitch = findViewById(R.id.switch_lesson_documents);
+        validateTagsSwitch = findViewById(R.id.switch_lesson_tags);
 
         editCommentName = findViewById(R.id.edit_comment_name);
         editCommentSummary = findViewById(R.id.edit_comment_summary);
@@ -199,6 +287,7 @@ public class LessonValidationActivity extends LessonBaseActivity {
         editCommentVideos = findViewById(R.id.edit_comment_videos);
         editCommentAudios = findViewById(R.id.edit_comment_audios);
         editCommentDocuments = findViewById(R.id.edit_comment_documents);
+        editCommentTags = findViewById(R.id.edit_comment_tags);
 
         textValidate = findViewById(R.id.text_validate);
         textComment = findViewById(R.id.text_comment);
@@ -328,6 +417,21 @@ public class LessonValidationActivity extends LessonBaseActivity {
                 else {
                     editCommentDocuments.setVisibility(View.VISIBLE);
                     validateDocumentsSwitch.setText("Comentar");
+                }
+                checkedComments();
+            }
+        });
+
+        validateTagsSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (isChecked){
+                    editCommentTags.setVisibility(View.GONE);
+                    validateTagsSwitch.setText("OK");
+                }
+                else {
+                    editCommentTags.setVisibility(View.VISIBLE);
+                    validateTagsSwitch.setText("Comentar");
                 }
                 checkedComments();
             }
@@ -493,16 +597,19 @@ public class LessonValidationActivity extends LessonBaseActivity {
             public void onClick(View view) {
                 String comment = "COMENTARIOS POR SEGMENTO: \n";
                 if (!editCommentName.getText().toString().isEmpty()) {
-                    comment = comment + "NOMBRE: " + editCommentName.getText() + "\n";
+                    comment = comment + "NOMBRE LECCIÓN: " + editCommentName.getText() + "\n";
                 }
                 if (!editCommentSummary.getText().toString().isEmpty()) {
                     comment = comment + "RESUMEN: " + editCommentSummary.getText() + "\n";
                 }
                 if (!editCommentMotivation.getText().toString().isEmpty()) {
-                    comment = comment + "MOTIVACIÓN: " + editCommentMotivation.getText() + "\n";
+                    comment = comment + "SITUACIÓN OCURRIDA: " + editCommentMotivation.getText() + "\n";
                 }
                 if (!editCommentLearning.getText().toString().isEmpty()) {
                     comment = comment + "APRENDIZAJE: " + editCommentLearning.getText() + "\n";
+                }
+                if (!editCommentTags.getText().toString().isEmpty()) {
+                    comment = comment + "TAGS: " + editCommentTags.getText() + "\n";
                 }
                 if (!editCommentPictures.getText().toString().isEmpty()) {
                     comment = comment + "IMÁGENES: " + editCommentPictures.getText() + "\n";
@@ -547,7 +654,9 @@ public class LessonValidationActivity extends LessonBaseActivity {
         if (!validateNameSwitch.isChecked() || !validateSummarySwitch.isChecked() ||
             !validateMotivationSwitch.isChecked() || !validateLearningSwitch.isChecked() ||
             !validateImagesSwitch.isChecked() || !validateVideosSwitch.isChecked() ||
-            !validateAudiosSwitch.isChecked() || !validateDocumentsSwitch.isChecked()){
+            !validateAudiosSwitch.isChecked() || !validateDocumentsSwitch.isChecked() ||
+            !validateTagsSwitch.isChecked()){
+
             textValidate.setVisibility(View.GONE);
             fabValidateLesson.setVisibility(View.GONE);
             textComment.setVisibility(View.VISIBLE);
