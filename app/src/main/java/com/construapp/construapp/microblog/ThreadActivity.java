@@ -227,9 +227,10 @@ public class ThreadActivity extends AppCompatActivity
         thread_id=getIntent().getStringExtra("ID");
         sessionManager = new SessionManager(ThreadActivity.this);
 
-        getThreadBlog();
         threadBlog = new ThreadBlog();
         threadBlog.initMultimediaFiles();
+        getThreadBlog();
+
 
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -287,7 +288,7 @@ public class ThreadActivity extends AppCompatActivity
 
 
         if (sessionManager.getUserId().equals(userThreadId) ||
-            sessionManager.getUserAdmin().equals(Constants.S_ADMIN_ADMIN)){
+                sessionManager.getUserAdmin().equals(Constants.S_ADMIN_ADMIN)){
             editThreadButton.setVisibility(View.VISIBLE);
             deleteThreadButton.setVisibility(View.VISIBLE);
         }
@@ -310,32 +311,32 @@ public class ThreadActivity extends AppCompatActivity
                 threadBlog.setSavedMultimediaFileKeys();
 
                 editing = !editing;
-            //startActivity(ThreadEditActivity.getIntent(ThreadActivity.this));
-            linearThreadComments.setVisibility(View.GONE);
-            linearAuthorInformation.setVisibility(View.GONE);
-            linearThreadContent.setVisibility(View.GONE);
-            linearThreadEdition.setVisibility(View.VISIBLE);
+                //startActivity(ThreadEditActivity.getIntent(ThreadActivity.this));
+                linearThreadComments.setVisibility(View.GONE);
+                linearAuthorInformation.setVisibility(View.GONE);
+                linearThreadContent.setVisibility(View.GONE);
+                linearThreadEdition.setVisibility(View.VISIBLE);
 
-            constraintActionBar.setVisibility(View.VISIBLE);
+                constraintActionBar.setVisibility(View.VISIBLE);
 
-            editTitle.setText(threadTitle);
-            editText.setText(threadText);
+                editTitle.setText(threadTitle);
+                editText.setText(threadText);
 
-            mDocumentsRecyclerView.setVisibility(View.VISIBLE);
-            mPicturesRecyclerView.setVisibility(View.VISIBLE);
-            mVideosRecyclerView.setVisibility(View.VISIBLE);
-            mAudiosRecyclerView.setVisibility(View.VISIBLE);
+                mDocumentsRecyclerView.setVisibility(View.VISIBLE);
+                mPicturesRecyclerView.setVisibility(View.VISIBLE);
+                mVideosRecyclerView.setVisibility(View.VISIBLE);
+                mAudiosRecyclerView.setVisibility(View.VISIBLE);
 
-            multimediaDocumentAdapter = new MultimediaDocumentAdapter(threadBlog.getMultimediaDocumentsFiles(),ThreadActivity.this);
-            mDocumentsRecyclerView.setAdapter(multimediaDocumentAdapter);
-            multimediaAudioAdapter.notifyDataSetChanged();
-            multimediaPictureAdapter = new MultimediaPictureAdapter(threadBlog.getMultimediaPictureFiles(),ThreadActivity.this);
-            mPicturesRecyclerView.setAdapter(multimediaPictureAdapter);
-            multimediaPictureAdapter.notifyDataSetChanged();
-            multimediaVideoAdapter = new MultimediaVideoAdapter(threadBlog.getMultimediaVideosFiles(),ThreadActivity.this);
-            mVideosRecyclerView.setAdapter(multimediaVideoAdapter);
-            multimediaAudioAdapter = new MultimediaAudioAdapter(threadBlog.getMultimediaAudioFiles(),ThreadActivity.this);
-            mAudiosRecyclerView.setAdapter(multimediaAudioAdapter);
+                multimediaDocumentAdapter = new MultimediaDocumentAdapter(threadBlog.getMultimediaDocumentsFiles(),ThreadActivity.this);
+                mDocumentsRecyclerView.setAdapter(multimediaDocumentAdapter);
+                multimediaAudioAdapter.notifyDataSetChanged();
+                multimediaPictureAdapter = new MultimediaPictureAdapter(threadBlog.getMultimediaPictureFiles(),ThreadActivity.this);
+                mPicturesRecyclerView.setAdapter(multimediaPictureAdapter);
+                multimediaPictureAdapter.notifyDataSetChanged();
+                multimediaVideoAdapter = new MultimediaVideoAdapter(threadBlog.getMultimediaVideosFiles(),ThreadActivity.this);
+                mVideosRecyclerView.setAdapter(multimediaVideoAdapter);
+                multimediaAudioAdapter = new MultimediaAudioAdapter(threadBlog.getMultimediaAudioFiles(),ThreadActivity.this);
+                mAudiosRecyclerView.setAdapter(multimediaAudioAdapter);
             }
         });
 
@@ -375,7 +376,7 @@ public class ThreadActivity extends AppCompatActivity
         });
 
         swipeRefreshLayout.setOnRefreshListener(swipeRefreshListener);
-        showComments();
+        //showComments();
 
         sessionManager.setThreadId(thread_id);
 
@@ -511,18 +512,28 @@ public class ThreadActivity extends AppCompatActivity
                     JsonObject json = parser.parse(result.toString()).getAsJsonObject();
                     ArrayList<String> arrayList = new ArrayList<>();
                     threadBlog.setId((String) json.get("id").getAsString());
-                    Log.i("GETTHREADID",json.get("id").getAsString());
-
 
                     textThreadTitle.setText(json.get("title").getAsString());
                     textThreadText.setText(json.get("text").getAsString());
-                    JsonObject jsonUser = (JsonObject) json.get("user").getAsJsonObject();
-                    String fullName = jsonUser.get("first_name").getAsString() + " " + jsonUser.get("last_name").getAsString();
-                    userName.setText(fullName);
+                    JsonObject jsonUser = json.get("user").getAsJsonObject();
+                    final String firstName, lastName;
+                    if (!jsonUser.get("first_name").toString().equals("null")){
+                        firstName = jsonUser.get("first_name").getAsString();
+                    } else {
+                        firstName = "";
+                    }
+                    if (!jsonUser.get("last_name").toString().equals("null")){
+                        lastName = jsonUser.get("last_name").getAsString();
+                    } else {
+                        lastName = "";
+                    }
+                    userName.setText(firstName + " "+ lastName );
                     userPosition.setText(jsonUser.get("position").getAsString());
 
-                    JsonArray jsonArray = (JsonArray) json.get("thread_files");
+                    Log.i("THREADFILES",json.get("thread_files").toString());
+                    JsonArray jsonArray = (JsonArray) json.get("thread_files").getAsJsonArray();
                     for (int i = 0; i < jsonArray.size(); i++) {
+                        Log.i("FILEKEY",jsonArray.get(i).toString());
                         JsonElement jsonObject = jsonArray.get(i);
                         arrayList.add(jsonObject.getAsJsonObject().get("path").toString());
                     }
@@ -547,51 +558,51 @@ public class ThreadActivity extends AppCompatActivity
                     String[] pictureArray = picturePathsList.toArray(new String[0]);
                     for (String path: pictureArray){
                         threadBlog.getMultimediaPictureFiles().add(
-                            new MultimediaFile(
-                                Constants.S3_THREADS_PATH,
-                                Constants.S3_IMAGES_PATH,
-                                CACHE_FOLDER+ "/"+path.substring(path.lastIndexOf("/")+1,path.length()-1),
-                                transferUtility,
-                                threadBlog.getId(),
-                                notAdded));
+                                new MultimediaFile(
+                                        Constants.S3_THREADS_PATH,
+                                        Constants.S3_IMAGES_PATH,
+                                        CACHE_FOLDER+ "/"+path.substring(path.lastIndexOf("/")+1,path.length()-1),
+                                        transferUtility,
+                                        threadBlog.getId(),
+                                        notAdded));
                     }
                     multimediaPictureAdapter.notifyDataSetChanged();
 
 
                     for (String audioPath: audioPathsList) {
                         threadBlog.getMultimediaAudioFiles().add(
-                            new MultimediaFile(
-                                Constants.S3_THREADS_PATH,
-                                Constants.S3_AUDIOS_PATH,
-                                CACHE_FOLDER+ "/"+audioPath.substring(audioPath.lastIndexOf("/")+1,audioPath.length()-1),
-                                transferUtility,
-                                threadBlog.getId(),
-                                notAdded));
+                                new MultimediaFile(
+                                        Constants.S3_THREADS_PATH,
+                                        Constants.S3_AUDIOS_PATH,
+                                        CACHE_FOLDER+ "/"+audioPath.substring(audioPath.lastIndexOf("/")+1,audioPath.length()-1),
+                                        transferUtility,
+                                        threadBlog.getId(),
+                                        notAdded));
                     }
                     multimediaAudioAdapter.notifyDataSetChanged();
 
                     for (String documentPath: documentPathsList) {
                         threadBlog.getMultimediaDocumentsFiles().add(
-                            new MultimediaFile(
-                                Constants.S3_THREADS_PATH,
-                                Constants.S3_DOCS_PATH,
-                                ABSOLUTE_STORAGE_PATH+ "/"+documentPath.substring(documentPath.lastIndexOf("/")+1,documentPath.length()-1),
-                                transferUtility,
-                                threadBlog.getId(),
-                                notAdded));
+                                new MultimediaFile(
+                                        Constants.S3_THREADS_PATH,
+                                        Constants.S3_DOCS_PATH,
+                                        ABSOLUTE_STORAGE_PATH+ "/"+documentPath.substring(documentPath.lastIndexOf("/")+1,documentPath.length()-1),
+                                        transferUtility,
+                                        threadBlog.getId(),
+                                        notAdded));
 
                     }
                     multimediaDocumentAdapter.notifyDataSetChanged();
 
                     for (String videoPath: videosPathsList) {
                         threadBlog.getMultimediaVideosFiles().add(
-                            new MultimediaFile(
-                                Constants.S3_THREADS_PATH,
-                                Constants.S3_VIDEOS_PATH,
-                                ABSOLUTE_STORAGE_PATH+ "/"+videoPath.substring(videoPath.lastIndexOf("/")+1,videoPath.length()-1),
-                                transferUtility,
-                                threadBlog.getId(),
-                                notAdded));
+                                new MultimediaFile(
+                                        Constants.S3_THREADS_PATH,
+                                        Constants.S3_VIDEOS_PATH,
+                                        ABSOLUTE_STORAGE_PATH+ "/"+videoPath.substring(videoPath.lastIndexOf("/")+1,videoPath.length()-1),
+                                        transferUtility,
+                                        threadBlog.getId(),
+                                        notAdded));
                     }
                     multimediaVideoAdapter.notifyDataSetChanged();
 
@@ -624,7 +635,7 @@ public class ThreadActivity extends AppCompatActivity
             public void onErrorResponse(VolleyError result) {
 
             }
-        }, ThreadActivity.this, sessionManager.getThreadId());
+        }, ThreadActivity.this, getIntent().getStringExtra("ID"));
     }
 
     public Boolean getEditing() {return editing;}
@@ -1224,7 +1235,6 @@ public class ThreadActivity extends AppCompatActivity
                             LayoutInflater inflater =(LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                             View myView = inflater.inflate(R.layout.thread_comments_list_item, null);
 
-                            Log.i("JSON", jsonPosts.get(i).toString());
                             final JSONObject object = (JSONObject) jsonPosts.get(i);
                             final String post_id = object.get("id").toString();
                             JSONObject object2 = new JSONObject(object.getString("user"));
@@ -1356,7 +1366,7 @@ public class ThreadActivity extends AppCompatActivity
                 public void onErrorResponse(VolleyError result) {
 
                 }
-            }, getApplicationContext(), sessionManager.getThreadId());
+            }, getApplicationContext(), getIntent().getStringExtra("ID"));
         } else {
 
         }

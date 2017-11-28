@@ -150,8 +150,6 @@ public class LessonActivity extends LessonBaseActivity {
 
         setLesson();
 
-        Log.i("INACTIVITYLESSON", "lesson");
-        Log.i("INACTIVITYLESSON", lesson.getFormAttributes().get(0));
 
         Bundle bundle = new Bundle();
         bundle.putStringArrayList(Constants.B_LESSON_ARRAY_LIST, lesson.getFormAttributes());

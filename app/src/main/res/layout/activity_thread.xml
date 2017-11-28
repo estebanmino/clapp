@@ -128,7 +128,8 @@
                             android:paddingRight="10dp"
                             android:text="9 Nov 2017, 03:33 PM"
                             android:textAlignment="textEnd"
-                            android:textSize="9sp" />
+                            android:textSize="9sp"
+                            android:visibility="gone" />
 
                         <TextView
                             android:id="@+id/textview_position"
