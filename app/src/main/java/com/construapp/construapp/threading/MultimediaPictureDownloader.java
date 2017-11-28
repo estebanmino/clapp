@@ -66,7 +66,7 @@ public class MultimediaPictureDownloader {
                             try {
                                 Metadata metadata = ImageMetadataReader.readMetadata(new File(multimediaFile.getmPath()));
                                 for (Directory directory : metadata.getDirectories()) {
-                                    if(directory.getName().equals(Constants.IMAGE_ICC_PROFILE)) {
+                                    if(directory.getName().equals(Constants.IMAGE_XMP)) {
                                         holder.isPanoramic = true;
                                         holder.imagePanoramic.setVisibility(View.VISIBLE);
                                         break;
