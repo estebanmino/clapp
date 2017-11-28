@@ -11,8 +11,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.construapp.construapp.dbTasks.InsertCommentTask;
 import com.construapp.construapp.dbTasks.InsertLessonTask;
+import com.construapp.construapp.listeners.VolleyJSONCallback;
 import com.construapp.construapp.listeners.VolleyStringCallback;
+import com.construapp.construapp.models.Comment;
 import com.construapp.construapp.models.Constants;
 import com.construapp.construapp.models.Lesson;
 
@@ -43,7 +46,7 @@ public class VolleyGetLessons {
         StringRequest jsonObjectRequest = new StringRequest(Request.Method.GET, url,
             new com.android.volley.Response.Listener<String>() {
                 @Override
-                public void onResponse(String  response) {
+                public void onResponse(final String  response) {
                     Lesson lesson = new Lesson();
                     JSONArray jsonLessons;
                     try {
@@ -93,6 +96,29 @@ public class VolleyGetLessons {
                             for (int j = 0; j < jsonTags.length(); j++) {
                                 JSONObject jsonObject = (JSONObject) jsonTags.get(j);
                                 tagsStringArray += "/"+jsonObject.get("name");
+                            }
+                            JSONArray jsonComments;
+                            try {
+                                jsonComments = new JSONArray(object.get("comments").toString());
+                                for (int j = 0; j < jsonComments.length(); j++) {
+                                    try {
+                                        Comment comment = new Comment();
+                                        JSONObject jsonComment = (JSONObject) jsonComments.get(j);
+                                        comment.setId(jsonComment.get("id").toString());
+                                        comment.setText(jsonComment.get("text").toString());
+                                        JSONObject jsonObject1 = (JSONObject) jsonComment.get("user");
+                                        comment.setFirst_name(jsonObject1.get("first_name").toString());
+                                        comment.setLast_name(jsonObject1.get("last_name").toString());
+                                        comment.setAuthorId(jsonObject1.get("id").toString());
+                                        comment.setPosition(jsonObject1.get("position").toString());
+                                        comment.setLessonId(lesson.getId());
+                                        new InsertCommentTask(comment, context).execute().get();
+                                    } catch (Exception e) {
+                                        Log.i("EXCEPTIONS", e.toString());
+                                    }
+                                }
+                            } catch (Exception e) {
+                                Log.i("GETLESSONSEXCEPTION",e.toString());
                             }
 
                             lesson.setClassifications(classificationsStringArray);
