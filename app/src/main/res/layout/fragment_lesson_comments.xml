@@ -9,6 +9,45 @@
 
     <!-- TODO: Update blank fragment layout -->
 
+    <LinearLayout
+        android:id="@+id/linear_thread_comments"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/text_comments_tag"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:text="Comentarios"
+            android:textColor="@color/colorSecondary"
+            android:textSize="20sp" />
+
+        <ListView
+            android:id="@+id/posts_list"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_below="@id/text_comments_tag"
+            android:clickable="true"
+            android:focusable="true"
+            tools:layout_editor_absoluteX="8dp"
+            tools:layout_editor_absoluteY="8dp" />
+
+        <LinearLayout
+            android:id="@+id/linear_layout_posts"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:focusable="true"
+            android:orientation="vertical">
+
+        </LinearLayout>
+
+    </LinearLayout>
+
     <TextView
         android:id="@+id/text_title"
         android:layout_width="match_parent"
@@ -22,7 +61,7 @@
         android:layout_weight="1"
         android:text="COMENTARIOS"
         android:textColor="#08088A"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -33,7 +72,8 @@
         android:layout_height="match_parent"
         android:layout_margin="8dp"
         android:layout_weight="1"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <EditText
             android:id="@+id/edit_comment"
@@ -76,6 +116,7 @@
         android:scrollingCache="false"
         android:smoothScrollbar="false"
         android:stackFromBottom="true"
-        android:transcriptMode="alwaysScroll" />
+        android:transcriptMode="alwaysScroll"
+        android:visibility="gone" />
 
 </LinearLayout>

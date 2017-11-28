@@ -122,7 +122,7 @@ public class CommentsAdapter extends BaseAdapter {
                         public void onErrorResponse(VolleyError result) {
                             Log.i("DELETERESULLT", result.toString());
                         }
-                    },context, commentList.get(position).getLessonId(),  commentList.get(position).getId());
+                    },context, commentList.get(position).getLessonId(),  String.valueOf(commentList.get(position).getId()));
                 }
             });
 
@@ -156,7 +156,7 @@ public class CommentsAdapter extends BaseAdapter {
                         public void onSuccess(JSONObject result) {
                             Comment comment = new Comment();
                             try {
-                                comment.setId(result.get("id").toString());
+                                comment.setId(Integer.parseInt(result.get("id").toString()));
                                 comment.setText(result.get("text").toString());
                                 JSONObject jsonObject1 = (JSONObject) result.get("user");
                                 comment.setFirst_name(jsonObject1.get("first_name").toString());
@@ -181,7 +181,7 @@ public class CommentsAdapter extends BaseAdapter {
                             Log.i("EDITION", result.toString());
 
                         }
-                    },context, commentList.get(position).getLessonId(), commentList.get(position).getId(),
+                    },context, commentList.get(position).getLessonId(), String.valueOf(commentList.get(position).getId()),
                             editComment.getText().toString());
                 }
             });
