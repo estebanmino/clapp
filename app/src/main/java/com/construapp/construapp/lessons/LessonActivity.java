@@ -486,6 +486,11 @@ public class LessonActivity extends LessonBaseActivity {
                     btnDelete.setVisibility(View.GONE);
                     tagEditTags.setInputType(InputType.TYPE_CLASS_TEXT);
 
+                    mVideosRecyclerView.setVisibility(View.VISIBLE);
+                    mPicturesRecyclerView.setVisibility(View.VISIBLE);
+                    mAudiosRecyclerView.setVisibility(View.VISIBLE);
+                    mDocumentsRecyclerView.setVisibility(View.VISIBLE);
+
                     if (Connectivity.isConnected(LessonActivity.this)) {
                         VolleyGetCompanyAttributes.volleyGetCompanyAttributes(new VolleyJSONCallback() {
                             @Override
