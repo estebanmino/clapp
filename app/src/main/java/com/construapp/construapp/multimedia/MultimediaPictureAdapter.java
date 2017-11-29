@@ -69,11 +69,11 @@ public class MultimediaPictureAdapter extends MultimediaAdapter {
             Bitmap bitmap =  (Bitmap)LRUCache.getInstance().getLru().get(multimediaFile.getApiFileKey());
             holder.imageThumbnail.setImageBitmap(ThumbnailUtils.extractThumbnail(bitmap, 80, 80));
         }
-        /*else if (multimediaFile.getmPath() != null && new File(multimediaFile.getmPath()).exists()) {
+        else if (multimediaFile.getmPath() != null && new File(multimediaFile.getmPath()).exists()) {
             Bitmap bitmap = BitmapFactory.decodeFile(multimediaFile.getmPath());
             Bitmap bmRotated = rotateBitmap(bitmap, multimediaFile);
             holder.imageThumbnail.setImageBitmap(ThumbnailUtils.extractThumbnail(bmRotated, 80, 80));
-        }*/
+        }
         else {
             General constants = new General();
             AmazonS3 s3 = new AmazonS3Client(constants.getCredentialsProvider(getContext()));
@@ -120,13 +120,13 @@ public class MultimediaPictureAdapter extends MultimediaAdapter {
                             String path = MediaStore.Images.Media.insertImage(getContext().getContentResolver(),
                                     (Bitmap) LRUCache.getInstance().getLru().get(multimediaFile.getApiFileKey()), "Title", null);
                             intent.setDataAndType(Uri.parse(path), FILE_TYPE);
-                        } /*else {
+                        } else {
                             Log.i("INCACHE", "true");
                             File file = new File(getContext().getCacheDir(), multimediaFile.getFileName());
                             Log.i("INCACHE", multimediaFile.getmPath());
                             intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                             intent.setDataAndType(Uri.parse(multimediaFile.getmPath()), FILE_TYPE);
-                        }*/
+                        }
                         view.getContext().startActivity(intent);
                     }
                 }
