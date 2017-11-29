@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.construapp.construapp.R;
@@ -114,6 +115,8 @@ public class LessonsFragment extends Fragment {
                             }
                             if (lessonList.isEmpty()) {
                                 textViewNoLessons.setVisibility(View.VISIBLE);
+                            } else {
+                                textViewNoLessons.setVisibility(View.GONE);
                             }
                         }
 
@@ -127,6 +130,8 @@ public class LessonsFragment extends Fragment {
                             }
                             if (lessonList.isEmpty()) {
                                 textViewNoLessons.setVisibility(View.VISIBLE);
+                            } else {
+                                textViewNoLessons.setVisibility(View.GONE);
                             }
                         }
                     }, getContext());
@@ -139,6 +144,8 @@ public class LessonsFragment extends Fragment {
                     } catch (Exception e) {}
                     if (lessonList.isEmpty()) {
                         textViewNoLessons.setVisibility(View.VISIBLE);
+                    } else {
+                        textViewNoLessons.setVisibility(View.GONE);
                     }
                 }
                 swipeRefreshLayout.setRefreshing(false);

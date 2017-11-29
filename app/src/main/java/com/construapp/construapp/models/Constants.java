@@ -7,7 +7,7 @@ package com.construapp.construapp.models;
 public interface Constants {
 
     // General
-    String BASE_URL = "http://18.231.22.248";
+    String BASE_URL = "http://54.94.193.152";
     String COMPANIES = "companies";
     String MICROBLOG = "microblogs";
     String SECTIONS = "sections";

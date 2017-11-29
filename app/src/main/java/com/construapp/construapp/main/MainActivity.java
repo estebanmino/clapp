@@ -2,12 +2,14 @@ package com.construapp.construapp.main;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -152,7 +154,7 @@ public class MainActivity extends AppCompatActivity
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject project = (JSONObject) jsonArray.get(i);
-                menu.add(0, i+1, Menu.NONE, project.getString("name"));
+                menu.add(0, Integer.parseInt(project.getString("id")), Menu.NONE, project.getString("name"));
             }
         } catch (Exception e) {}
 
@@ -174,7 +176,32 @@ public class MainActivity extends AppCompatActivity
             DrawerLayout drawer = findViewById(R.id.drawer_layout);
             drawer.closeDrawer(GravityCompat.START);
         }
+        else{
+            AlertDialog diaBox = AskOption();
+            diaBox.show();
 
+        }
+
+
+    }
+
+    private AlertDialog AskOption()
+    {
+        AlertDialog myQuittingDialogBox =new AlertDialog.Builder(this)
+                .setTitle("Salir")
+                .setMessage("¿Estás seguro que quieres salir?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        MainActivity.this.finishAffinity();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .create();
+        return myQuittingDialogBox;
 
     }
 
@@ -230,7 +257,7 @@ public class MainActivity extends AppCompatActivity
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }
-            Toast.makeText(this,"Se ha  cerrado su sesión",Toast.LENGTH_LONG).show();
+            Toast.makeText(this,"Se ha cerrado su sesión",Toast.LENGTH_LONG).show();
             startActivity(LoginActivity.getIntent(MainActivity.this));
         } else if (item.getItemId() == R.id.to_all_projects) {
             Intent intent = getIntent();

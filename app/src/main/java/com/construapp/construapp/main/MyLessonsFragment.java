@@ -156,6 +156,8 @@ public class MyLessonsFragment extends Fragment {
                     } catch (Exception e) {}
                     if (lessonList.isEmpty()) {
                         textViewNoLessons.setVisibility(View.VISIBLE);
+                    } else {
+                        textViewNoLessons.setVisibility(View.GONE);
                     }
                 }
 
@@ -168,6 +170,8 @@ public class MyLessonsFragment extends Fragment {
                     }catch (Exception e) {}
                     if (lessonList.isEmpty()) {
                         textViewNoLessons.setVisibility(View.VISIBLE);
+                    } else {
+                        textViewNoLessons.setVisibility(View.GONE);
                     }
                 }
             }, getContext());
@@ -180,6 +184,8 @@ public class MyLessonsFragment extends Fragment {
             } catch (Exception e) {}
             if (lessonList.isEmpty()) {
                 textViewNoLessons.setVisibility(View.VISIBLE);
+            } else {
+                textViewNoLessons.setVisibility(View.GONE);
             }
 
         }

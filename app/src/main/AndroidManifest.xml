@@ -26,6 +26,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:largeHeap="true"
         android:theme="@style/AppTheme.NoActionBar">
         <activity
             android:name=".main.MainActivity"
@@ -104,7 +105,8 @@
             android:name=".lessons.RecommendedLessonsActivity"
             android:label="@string/title_activity_recommended_lessons"></activity>
         <activity
-            android:name=".PanoramicViewActivity"></activity>
+            android:name=".PanoramicViewActivity"
+            android:screenOrientation="portrait" ></activity>
     </application>
 
 </manifest>

@@ -39,7 +39,7 @@
             <menu>
                 <item
                     android:id="@+id/logout"
-                    android:title="Cerrar Sesion" />
+                    android:title="Cerrar Sesión" />
             </menu>
         </item>
     </group>
@@ -49,7 +49,7 @@
             <menu>
                 <item
                     android:id="@+id/to_all_projects"
-                    android:title="Todos las lecciones" />
+                    android:title="Todas las lecciones" />
             </menu>
         </item>
 

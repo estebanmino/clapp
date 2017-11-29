@@ -150,6 +150,7 @@ public class LessonActivity extends LessonBaseActivity {
 
         setLesson();
 
+
         Bundle bundle = new Bundle();
         bundle.putStringArrayList(Constants.B_LESSON_ARRAY_LIST, lesson.getFormAttributes());
         FragmentManager  fragmentManager = getFragmentManager();
@@ -158,13 +159,17 @@ public class LessonActivity extends LessonBaseActivity {
         lessonViewFragment.setArguments(bundle);
         fragmentTransaction.add(R.id.constraint_fragment_container,lessonViewFragment);
 
-        Bundle bundleComments = new Bundle();
-        bundleComments.putString(Constants.B_LESSON_COMMENTS, lesson.getComments());
-        bundleComments.putString(Constants.B_LESSON_ID, lesson.getId());
-        LessonCommentsFragment lessonCommentsFragment = new LessonCommentsFragment();
-        lessonCommentsFragment.setArguments(bundleComments);
-        fragmentTransaction.add(R.id.constraint_comments_container,lessonCommentsFragment);
-        fragmentTransaction.commit();
+        if (lesson.getValidation().equals(Constants.R_VALIDATED)) {
+            Bundle bundleComments = new Bundle();
+            bundleComments.putString(Constants.B_LESSON_COMMENTS, lesson.getComments());
+            bundleComments.putString(Constants.B_LESSON_ID, lesson.getId());
+            LessonCommentsFragment lessonCommentsFragment = new LessonCommentsFragment();
+            lessonCommentsFragment.setArguments(bundleComments);
+            fragmentTransaction.add(R.id.constraint_comments_container, lessonCommentsFragment);
+            fragmentTransaction.commit();
+        } else {
+            fragmentTransaction.commit();
+        }
 
 
         if (lesson.getReject_comment() !=  null && lesson.getValidation().equals(Constants.R_REJECTED)) {
@@ -376,7 +381,7 @@ public class LessonActivity extends LessonBaseActivity {
                     multimediaVideoAdapter.notifyDataSetChanged();
 
                     if (!lesson.hasMultimediaFiles()) {
-                        linearLayoutMultimedia.setVisibility(View.GONE);
+                        //linearLayoutMultimedia.setVisibility(View.GONE);
                         textAttachments.setText(Constants.NO_ATTACHMENTS);
                     } else {
                         if (lesson.getMultimediaPicturesFiles().isEmpty()){
@@ -388,12 +393,12 @@ public class LessonActivity extends LessonBaseActivity {
                             mAudiosRecyclerView.setVisibility(View.GONE);
                         }
                         if (lesson.getMultimediaVideosFiles().isEmpty()){
-                            textDocuments.setText(Constants.NO_VIDEOS);
-                            mDocumentsRecyclerView.setVisibility(View.GONE);
+                            textVideos.setText(Constants.NO_VIDEOS);
+                            mVideosRecyclerView.setVisibility(View.GONE);
                         }
                         if (lesson.getMultimediaDocumentsFiles().isEmpty()){
-                            textVideos.setText(Constants.NO_DOCUMENTS);
-                            mVideosRecyclerView.setVisibility(View.GONE);
+                            textDocuments.setText(Constants.NO_DOCUMENTS);
+                            mDocumentsRecyclerView.setVisibility(View.GONE);
                         }
                     }
                 }
@@ -480,6 +485,11 @@ public class LessonActivity extends LessonBaseActivity {
                     btnEdit.setText("Cancelar");
                     btnDelete.setVisibility(View.GONE);
                     tagEditTags.setInputType(InputType.TYPE_CLASS_TEXT);
+
+                    mVideosRecyclerView.setVisibility(View.VISIBLE);
+                    mPicturesRecyclerView.setVisibility(View.VISIBLE);
+                    mAudiosRecyclerView.setVisibility(View.VISIBLE);
+                    mDocumentsRecyclerView.setVisibility(View.VISIBLE);
 
                     if (Connectivity.isConnected(LessonActivity.this)) {
                         VolleyGetCompanyAttributes.volleyGetCompanyAttributes(new VolleyJSONCallback() {

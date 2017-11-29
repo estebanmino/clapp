@@ -146,6 +146,8 @@ public class LessonValidateFragment extends Fragment {
                     } catch (Exception e) {}
                     if (lessonList.isEmpty()) {
                         textViewNoLessons.setVisibility(View.VISIBLE);
+                    } else {
+                        textViewNoLessons.setVisibility(View.GONE);
                     }
                 }
                 @Override
@@ -157,6 +159,8 @@ public class LessonValidateFragment extends Fragment {
                     } catch ( Exception e ){}
                     if (lessonList.isEmpty()) {
                         textViewNoLessons.setVisibility(View.VISIBLE);
+                    } else {
+                        textViewNoLessons.setVisibility(View.GONE);
                     }
                 }
             }, getContext());
@@ -172,6 +176,8 @@ public class LessonValidateFragment extends Fragment {
                 validateLessonsList.setAdapter(lessonsAdapter);
                 if (lessonList.isEmpty()) {
                     textViewNoLessons.setVisibility(View.VISIBLE);
+                } else {
+                    textViewNoLessons.setVisibility(View.GONE);
                 }
             }
         } else {
@@ -182,6 +188,8 @@ public class LessonValidateFragment extends Fragment {
             } catch (Exception e) {}
             if (lessonList.isEmpty()) {
                 textViewNoLessons.setVisibility(View.VISIBLE);
+            } else {
+                textViewNoLessons.setVisibility(View.GONE);
             }
         }
     }

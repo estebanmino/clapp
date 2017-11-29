@@ -278,7 +278,8 @@ public class NewThreadActivity extends Activity {
                                     for (MultimediaFile multimediaFile : threadBlog.getMultimediaVideosFiles()) {
                                         multimediaFile.initUploadThread();
                                     }
-                                    startActivity(MainActivity.getIntent(NewThreadActivity.this));
+                                    //startActivity(SectionActivity.getIntent(NewThreadActivity.this));
+                                    finish();
                                 }
 
                                 @Override
@@ -292,7 +293,8 @@ public class NewThreadActivity extends Activity {
                         }
                     } else {
                         Toast.makeText(NewThreadActivity.this, "Nuevo post creado", Toast.LENGTH_LONG).show();
-                        startActivity(MainActivity.getIntent(NewThreadActivity.this));
+                        //startActivity(SectionActivity.getIntent(NewThreadActivity.this));
+                        finish();
                     }
 
 

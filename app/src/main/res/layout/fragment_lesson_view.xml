@@ -84,7 +84,7 @@
         android:layout_marginRight="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:text="MOTIVACIÓN"
+        android:text="SITUACIÓN OCURRIDA"
         android:textColor="#08088A"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
