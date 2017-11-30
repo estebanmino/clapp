@@ -69,7 +69,7 @@ public class MultimediaPictureAdapter extends MultimediaAdapter {
             Bitmap bitmap =  (Bitmap)LRUCache.getInstance().getLru().get(multimediaFile.getApiFileKey());
             holder.imageThumbnail.setImageBitmap(ThumbnailUtils.extractThumbnail(bitmap, 80, 80));
         }
-        else if (multimediaFile.getmPath() != null && new File(multimediaFile.getmPath()).exists()) {
+        else if (multimediaFile.getmPath() != null && !multimediaFile.getmPath().contains("cache") && new File(multimediaFile.getmPath()).exists()) {
             Bitmap bitmap = BitmapFactory.decodeFile(multimediaFile.getmPath());
             Bitmap bmRotated = rotateBitmap(bitmap, multimediaFile);
             holder.imageThumbnail.setImageBitmap(ThumbnailUtils.extractThumbnail(bmRotated, 80, 80));
@@ -120,9 +120,9 @@ public class MultimediaPictureAdapter extends MultimediaAdapter {
                                     (Bitmap) LRUCache.getInstance().getLru().get(multimediaFile.getApiFileKey()), "Title", null);
                             intent.setDataAndType(Uri.parse(path), FILE_TYPE);
                         } else {
-                            File file = new File(getContext().getCacheDir(), multimediaFile.getFileName());
-                            intent.setDataAndType(Uri.parse(multimediaFile.getmPath()
-                            ), FILE_TYPE);
+                            intent.setDataAndType(
+                                    Uri.fromFile(new File(multimediaFile.getmPath()))
+                            , FILE_TYPE);
                         }
                         view.getContext().startActivity(intent);
                     }

@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.construapp.construapp.api.VolleyGetCompanyAttributes;
 import com.construapp.construapp.api.VolleyGetFavouriteLessons;
+import com.construapp.construapp.api.VolleyPostDeviceToken;
 import com.construapp.construapp.listeners.VolleyJSONCallback;
 import com.construapp.construapp.listeners.VolleyStringCallback;
 import com.construapp.construapp.api.VolleyGetUserProject;
@@ -111,6 +112,19 @@ public class LoginActivity extends AppCompatActivity {
                                     Toast.makeText(LoginActivity.this, "No se pudo ingresar a su cuenta", Toast.LENGTH_SHORT).show();
                                 }
                             }, LoginActivity.this, user_id);
+
+                            VolleyPostDeviceToken.volleyPostDeviceToken(new VolleyStringCallback() {
+                                @Override
+                                public void onSuccess(String result) {
+                                    Toast.makeText(LoginActivity.this, "Enviado token a api", Toast.LENGTH_LONG).show();
+
+                                }
+
+                                @Override
+                                public void onErrorResponse(VolleyError result) {
+                                    Log.i("UHEUEHD",result.toString());
+                                }
+                            },LoginActivity.this, sessionManager.getFCMToken());
 
                             VolleyGetFavouriteLessons.volleyGetFavouriteLessons(new VolleyStringCallback() {
                                 @Override

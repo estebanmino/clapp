@@ -9,6 +9,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.construapp.construapp.dbTasks.InsertCommentTask;
@@ -27,33 +28,29 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 /**
- * Created by ESTEBANFML on 20-10-2017.
+ * Created by ESTEBANFML on 27-11-2017.
  */
 
-public class VolleyGetLessons {
+public class VolleyGetLesson {
 
-    public static void volleyGetLessons(final VolleyStringCallback callback,
-                                        final Context context) {
+    public static void volleyGetLesson(final VolleyJSONCallback callback,
+                                        final Context context, String lesson_id) {
 
         SharedPreferences sharedpreferences = context.getSharedPreferences(Constants.SP_CONSTRUAPP, Context.MODE_PRIVATE);
         final String userToken = sharedpreferences.getString(Constants.SP_TOKEN, "");
         final String companyId = sharedpreferences.getString(Constants.SP_COMPANY, "");
 
-        final String url = Constants.BASE_URL + "/" + Constants.COMPANIES + "/" + companyId + "/" + Constants.LESSONS;
+        final String url = Constants.BASE_URL + "/" + Constants.COMPANIES + "/" + companyId + "/" + Constants.LESSONS + "/" + lesson_id;
 
         final RequestQueue queue = Volley.newRequestQueue(context);
+        JSONObject jsonObject = new JSONObject();
 
-        StringRequest jsonObjectRequest = new StringRequest(Request.Method.GET, url,
-            new com.android.volley.Response.Listener<String>() {
-                @Override
-                public void onResponse(final String  response) {
-                    Lesson lesson = new Lesson();
-                    JSONArray jsonLessons;
-                    try {
-                        jsonLessons = new JSONArray(response);
-                        for (int i = 0; i < jsonLessons.length(); i++) {
-                            Log.i("JSON", jsonLessons.get(i).toString());
-                            JSONObject object = (JSONObject) jsonLessons.get(i);
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, jsonObject,
+                new com.android.volley.Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(final JSONObject  object) {
+                        Lesson lesson = new Lesson();
+                        try {
                             lesson.setName(object.get("name").toString());
                             lesson.setSummary(object.get("summary").toString());
                             lesson.setId(object.get("id").toString());
@@ -134,22 +131,21 @@ public class VolleyGetLessons {
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
+                        } catch (Exception e) {
+                            Log.i("GETLESSONSEXCEPTION",e.toString());
                         }
-                    } catch (Exception e) {
-                        Log.i("GETLESSONSEXCEPTION",e.toString());
+                        callback.onSuccess(object);
                     }
-                    callback.onSuccess(response);
-                }
                 },
-            new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i("RESPONSEPER", error.toString());
-                Log.i("URL",url);
-                Log.i("TOKEN",userToken);
-                callback.onErrorResponse(error);
-            }
-            }) {
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.i("RESPONSEPER", error.toString());
+                        Log.i("URL",url);
+                        Log.i("TOKEN",userToken);
+                        callback.onErrorResponse(error);
+                    }
+                }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String,String> params = new HashMap<String, String>();
@@ -160,5 +156,6 @@ public class VolleyGetLessons {
         };
         queue.add(jsonObjectRequest);
     }
+
 
 }

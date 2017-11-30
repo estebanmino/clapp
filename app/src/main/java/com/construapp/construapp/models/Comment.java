@@ -11,7 +11,7 @@ import android.arch.persistence.room.PrimaryKey;
 public class Comment {
 
     @PrimaryKey
-    private String id;
+    private int id;
     private String lessonId;
     private String text;
     private String authorId;
@@ -35,11 +35,11 @@ public class Comment {
         this.authorId = authorId;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 

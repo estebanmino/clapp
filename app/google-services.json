@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "430500827374",
+    "firebase_url": "https://clapp-8c2b1.firebaseio.com",
+    "project_id": "clapp-8c2b1",
+    "storage_bucket": "clapp-8c2b1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:430500827374:android:4bd6215b1e6f20fb",
+        "android_client_info": {
+          "package_name": "com.construapp.construapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "430500827374-v808rmv4jtockvsj1nkm5tgf7jhk92bm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDJBx0JyI4y9GmiDvjrO0jy52C-95fSib8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

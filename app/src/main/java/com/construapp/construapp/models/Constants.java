@@ -7,7 +7,7 @@ package com.construapp.construapp.models;
 public interface Constants {
 
     // General
-    String BASE_URL = "http://54.207.39.160";
+    String BASE_URL = "http://54.94.193.152";
     String COMPANIES = "companies";
     String MICROBLOG = "microblogs";
     String SECTIONS = "sections";
@@ -74,7 +74,7 @@ public interface Constants {
     String Q_CONTENTTYPE_JSON_UTF8 = "application/json; charset=utf-8";
 
     //S3
-    String S3_BUCKET = "clappproductionm";
+    String S3_BUCKET = "construapp";
     String S3_IMAGES_PATH = "images";
     String S3_VIDEOS_PATH = "videos";
     String S3_AUDIOS_PATH = "audios";
@@ -123,5 +123,8 @@ public interface Constants {
     String TAG_DISCIPLINES = "TAG_DISCIPLINES";
     String TAG_CLASSIFICATIONS = "TAG_CLASSIFICATIONS";
     String TAG_DEPARTMENTS = "TAG_DEPARTMENTS";
+
+    //FCM
+    String FCM_TOKEN = "firebasetoken";
 
 }

@@ -2,10 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/2017-2-Grupo1-Mobile.iml" filepath="$PROJECT_DIR$/2017-2-Grupo1-Mobile.iml" />
+      <module fileurl="file://C:\Users\ESTEBANFML\AndroidStudioProjects\clappapp\2017-2-Grupo1-Mobile.iml" filepath="C:\Users\ESTEBANFML\AndroidStudioProjects\clappapp\2017-2-Grupo1-Mobile.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/clapp.iml" filepath="$PROJECT_DIR$/clapp.iml" />
-      <module fileurl="file://$PROJECT_DIR$/mobileclapp.iml" filepath="$PROJECT_DIR$/mobileclapp.iml" />
+      <module fileurl="file://C:\Users\ESTEBANFML\AndroidStudioProjects\clappapp\clapp.iml" filepath="C:\Users\ESTEBANFML\AndroidStudioProjects\clappapp\clapp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/clappapp.iml" filepath="$PROJECT_DIR$/clappapp.iml" />
+      <module fileurl="file://C:\Users\ESTEBANFML\AndroidStudioProjects\clappapp\mobileclapp.iml" filepath="C:\Users\ESTEBANFML\AndroidStudioProjects\clappapp\mobileclapp.iml" />
     </modules>
   </component>
 </project>
