@@ -122,7 +122,20 @@ public class SessionManager {
     }
 
     public void eraseSharedPreferences() {
+        String FCM = sharedPreferences.getString(Constants.FCM_TOKEN,"");
         editor.clear();
+        editor.apply();
+        editor.putString(Constants.FCM_TOKEN,FCM);
+        editor.apply();
+    }
+
+    public String getFCMToken() {
+
+        return sharedPreferences.getString(Constants.FCM_TOKEN, "");
+
+    }
+    public void setFCMToken(String fcmToken) {
+        editor.putString(Constants.FCM_TOKEN,  fcmToken);
         editor.apply();
     }
 

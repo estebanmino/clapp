@@ -124,4 +124,7 @@ public interface Constants {
     String TAG_CLASSIFICATIONS = "TAG_CLASSIFICATIONS";
     String TAG_DEPARTMENTS = "TAG_DEPARTMENTS";
 
+    //FCM
+    String FCM_TOKEN = "firebasetoken";
+
 }

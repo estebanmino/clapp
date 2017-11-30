@@ -98,6 +98,19 @@
         <activity
             android:name=".microblog.PostActivity"
             android:label="@string/title_activity_post" />
+        <service android:name="com.construapp.construapp.main.MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <!-- [END firebase_service] -->
+        <!-- [START firebase_iid_service] -->
+        <!-- com.pusher.android.notifications.fcm.FCMInstanceIDService -->
+        <service android:name="com.construapp.construapp.main.MyFirebaseInstanceIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
         <activity
             android:name=".microblog.NewThreadActivity"
             android:label="@string/title_activity_new_thread" />

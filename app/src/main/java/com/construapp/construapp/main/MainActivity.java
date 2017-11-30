@@ -1,12 +1,15 @@
 package com.construapp.construapp.main;
 
 import android.app.SearchManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
@@ -28,6 +31,7 @@ import android.view.View;
 import com.android.volley.VolleyError;
 import com.construapp.construapp.LoginActivity;
 import com.construapp.construapp.R;
+import com.construapp.construapp.api.VolleyDeleteFCMToken;
 import com.construapp.construapp.api.VolleyGetPendingValidations;
 import com.construapp.construapp.cache.LRUCache;
 import com.construapp.construapp.db.Connectivity;
@@ -89,6 +93,7 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         sessionManager = new SessionManager(MainActivity.this);
+        LocalBroadcastManager.getInstance(this).registerReceiver(mHandler,new IntentFilter("com.construapp.construapp_FCM_MESSAGE"));
 
         try {
             jsonArray = new JSONArray(sessionManager.getProjects());
@@ -244,6 +249,17 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
 
         if (item.getItemId()  == R.id.logout){
+            VolleyDeleteFCMToken.volleyDeleteFCMToken(new VolleyStringCallback() {
+                @Override
+                public void onSuccess(String result) {
+
+                }
+
+                @Override
+                public void onErrorResponse(VolleyError result) {
+
+                }
+            },this);
             sessionManager.eraseSharedPreferences();
             try {
 
@@ -426,5 +442,19 @@ public class MainActivity extends AppCompatActivity
         }
         Intent intent = new Intent(context,MainActivity.class);
         return intent;
+    }
+
+    private BroadcastReceiver mHandler = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String message = intent.getStringExtra("message");
+            Toast.makeText(MainActivity.this,message,Toast.LENGTH_SHORT).show();
+        }
+    };
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mHandler);
     }
 }
